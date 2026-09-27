@@ -168,7 +168,7 @@ class HubProtocolParserTest {
         assertEquals(42.50, typesafe.windows.single().remaining!!, 0.001)
         assertEquals("expiry", typesafe.windows.single().boundaryKind)
         assertEquals("Core", snapshot.stats.limits.providers.first { it.provider == "devin" }.plan)
-        assertEquals("v0.62.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals("", snapshot.today.sessions.single().title)
     }
 
     @Test
@@ -185,6 +185,37 @@ class HubProtocolParserTest {
         val refreshed = HubProtocolParser.decodeStats(merged)
         assertEquals(60_000, refreshed.periods.getValue("today").clients.getValue("omp"))
         assertEquals("2026-09-24T14:32:00.000Z", refreshed.limits.updatedAt)
+    }
+
+    @Test
+    fun `v0 63 reads Cursor conversation titles without changing older sessions`() {
+        val snapshot = HubProtocolParser.decodeSnapshot(
+            healthRaw = resource("health.json", "v0.63.0"),
+            statsRaw = resource("stats.json", "v0.63.0"),
+            devicesRaw = resource("devices.json", "v0.63.0"),
+            historyRaw = resource("history.json", "v0.63.0"),
+            subscriptionsRaw = resource("subscriptions.json", "v0.63.0"),
+            capturedAt = 1_800_000_000_000,
+        )
+
+        assertEquals("v0.63.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals(10_000, snapshot.today.clients.getValue("cursor"))
+        assertEquals("Example planning conversation", snapshot.today.sessions.first { it.client == "cursor" }.title)
+        assertEquals("", snapshot.today.sessions.first { it.client == "omp" }.title)
+        assertEquals(10_000, snapshot.history.daily.last().perClient.getValue("cursor").tokens)
+        assertEquals(listOf("codex", "cursor", "pi", "omp"), snapshot.stats.devices.single().trackedClients)
+        assertEquals("codex", snapshot.subscriptions.entries.single().provider)
+
+        val stream = resource("stats-stream.sse", "v0.63.0")
+            .lineSequence().first { it.startsWith("data:") }.removePrefix("data:").trimStart()
+        val today = checkNotNull(HubProtocolParser.decodeStatsStreamEvent(stream)).periods.getValue("today")
+        assertEquals("Example planning conversation", today.sessions.single().title)
+
+        val freshness = resource("stats-freshness.sse", "v0.63.0")
+            .lineSequence().first { it.startsWith("data:") }.removePrefix("data:").trimStart()
+        val merged = HubStreamProtocol.mergeFreshness(resource("stats.json", "v0.63.0"), freshness)
+        assertEquals("Example planning conversation", HubProtocolParser.decodeStats(merged).periods.getValue("today")
+            .sessions.first { it.client == "cursor" }.title)
     }
 
     @Test

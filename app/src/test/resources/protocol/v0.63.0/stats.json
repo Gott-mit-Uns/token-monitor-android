@@ -1,0 +1,78 @@
+{
+  "updatedAt": "2026-09-24T14:30:00.000Z",
+  "periods": {
+    "today": {
+      "totalTokens": 250000,
+      "costUsd": 5.50,
+      "clients": { "codex": 150000, "cursor": 10000, "pi": 30000, "omp": 60000 },
+      "clientCosts": { "codex": 3.25, "cursor": 0.25, "pi": 0.60, "omp": 1.40 },
+      "models": { "gpt-6-sol": 160000, "claude-sonnet-4-5": 90000 },
+      "sessions": {
+        "cursor:conversation-example": {
+          "sessionId": "conversation-example",
+          "client": "cursor",
+          "title": "Example planning conversation",
+          "projectLabel": "Example project",
+          "totalTokens": 10000,
+          "costUsd": 0.25,
+          "models": { "gpt-6-sol": 10000 },
+          "lastUsedAt": "2026-09-24T14:28:00.000Z"
+        },
+        "omp:session-a": {
+          "sessionId": "session-a",
+          "client": "omp",
+          "projectLabel": "Example project",
+          "totalTokens": 60000,
+          "costUsd": 1.40,
+          "models": { "claude-sonnet-4-5": 60000 },
+          "lastUsedAt": "2026-09-24T14:29:00.000Z"
+        }
+      }
+    },
+    "month": {
+      "totalTokens": 970000,
+      "costUsd": 24.00,
+      "clients": { "codex": 660000, "cursor": 10000, "pi": 120000, "omp": 180000 }
+    }
+  },
+  "devices": [{
+    "deviceId": "desktop-a",
+    "hostname": "Studio",
+    "platform": "win32",
+    "updatedAt": "2026-09-24T14:29:59.000Z",
+    "receivedAt": "2026-09-24T14:30:00.000Z",
+    "ageMs": 1000,
+    "stale": false,
+    "trackedClients": ["codex", "cursor", "pi", "omp"],
+    "periods": { "today": { "totalTokens": 250000, "clients": { "codex": 150000, "cursor": 10000, "pi": 30000, "omp": 60000 } } }
+  }],
+  "limits": {
+    "updatedAt": "2026-09-24T14:30:00.000Z",
+    "providers": [
+      {
+        "provider": "typesafe",
+        "status": "ok",
+        "accountLabel": "Pro",
+        "windows": [
+          { "kind": "billing", "metric": "credits", "label": "Balance", "remaining": 42.50, "currency": "USD", "resetsAt": "2026-10-01T00:00:00.000Z", "boundaryKind": "expiry" }
+        ],
+        "balance": { "amount": 42.50, "currency": "USD", "monthSpend": 5.25, "tranches": [{ "amount": 12.50, "currency": "USD", "expiresAt": "2026-10-01T00:00:00.000Z" }] },
+        "usageSummary": { "period": "month", "todayTokens": 25000, "weekTokens": 120000, "totalTokens": 480000 }
+      },
+      {
+        "provider": "devin",
+        "status": "ok",
+        "planLabel": "Core",
+        "windows": [{ "kind": "credits", "metric": "credits", "label": "Credits", "remaining": 82.50, "currency": "USD", "showMeter": false }]
+      },
+      {
+        "provider": "claude",
+        "status": "ok",
+        "windows": [{ "kind": "weekly", "label": "Weekly", "remainingPercent": 70.0, "resetsAt": "2026-09-29T00:00:00.000Z" }],
+        "resetCredits": { "availableCount": 1, "grants": [{ "label": "Example reset grant", "resetsLeft": 1, "clears": ["five_hour"], "usableNow": true }] }
+      }
+    ]
+  },
+  "historyPreview": { "daily": [{ "date": "2026-09-24", "tokens": 250000, "cost": 5.50 }] },
+  "staleAfterMs": 300000
+}

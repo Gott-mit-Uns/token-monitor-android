@@ -1,0 +1,16 @@
+{
+  "devices": [{
+    "deviceId": "desktop-a",
+    "hostname": "Studio",
+    "platform": "win32",
+    "osName": "Windows",
+    "osVersion": "11",
+    "updatedAt": "2026-09-24T14:29:59.000Z",
+    "receivedAt": "2026-09-24T14:30:00.000Z",
+    "ageMs": 1000,
+    "stale": false,
+    "historyAvailable": true,
+    "trackedClients": ["codex", "cursor", "pi", "omp"],
+    "periods": { "today": { "totalTokens": 250000, "clients": { "codex": 150000, "cursor": 10000, "pi": 30000, "omp": 60000 } } }
+  }]
+}

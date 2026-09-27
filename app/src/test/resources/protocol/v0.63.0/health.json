@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "role": "hub",
+  "runtime": "node-hub",
+  "version": 1,
+  "deviceCount": 1,
+  "secretRequired": true,
+  "now": "2026-09-24T14:30:00.000Z"
+}

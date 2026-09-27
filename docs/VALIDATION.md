@@ -1,6 +1,34 @@
 # Validation
 
-The current public release is Android **v0.62.0 r1** (`620001`). Its published
+## v0.63.0 r1 release
+
+Desktop v0.63.0 is pinned to tag commit
+`f756d1d0fdbf415c1cd4a7178f3fe5d7a026fc90` (released September 26,
+2026). Review of the released diff found no change to the five Hub read routes,
+header authentication, or stream-v2 envelope. The documented Antigravity source
+check and Cursor title metadata are additive. Synthetic, sanitized v0.63.0
+fixtures cover every read endpoint, a complete stream event, and a freshness
+event; v0.54.0 through v0.62.0 regressions remain in the suite.
+
+On September 27, all 93 JVM tests, Android lint (zero errors), preview debug
+assembly, fixture JSON parsing, and local documentation-link checks passed.
+All 31 instrumentation tests passed on the API 36 Pixel 10 Pro XL emulator
+(`emulator-5554`), covering the existing dashboard navigation, lifecycle,
+widget controls, and four-page renders. The new Cursor title and untitled-row
+fallback are covered by focused JVM tests; the title was not visually captured
+on a physical phone.
+The release APK was built locally with R8 and signed with the existing release
+certificate (SHA-256
+`eed5a820371ac158c038e5a55243b2e4e7f10ffdf764963b2808d152d3821c2c`).
+It reports package `io.github.theminionooo.tokenmonitor`, version code
+`630001`, and file SHA-256
+`84ff5841e5c4dbec5a11e24c80115d0b23a9f2bd0838843d3255ae3755427492`.
+The owner elected to skip the physical-phone gate for this release. An in-place
+upgrade, saved pairing/widget retention, and battery behavior have therefore
+not been verified for v0.63.0; v0.62.0 r1 remains the latest phone-verified
+build. The Pages widget geometry and type sizes are unchanged.
+
+The previous public release is Android **v0.62.0 r1** (`620001`). Its published
 APK was installed over v0.61.0 r1 on a physical phone without losing the saved
 connection or placed Pages widget registration.
 

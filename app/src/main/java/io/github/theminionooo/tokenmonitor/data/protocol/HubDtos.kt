@@ -50,6 +50,7 @@ internal data class HubProjectDto(
 
 internal data class HubSessionDto(
     val id: String = "",
+    val title: String = "",
     val client: String = "",
     val projectLabel: String = "",
     val totalTokens: Long = 0,
