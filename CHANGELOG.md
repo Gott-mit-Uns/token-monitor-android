@@ -3,7 +3,7 @@
 Android releases use the desktop protocol version plus an Android revision.
 Unreleased work stays under **Next release** until its signed APK is published.
 
-## Next release — v0.63.0 r1
+## v0.63.0 r1 — 2026-09-27
 
 - Verify the desktop v0.63.0 Hub read contract with sanitized examples for all
   five endpoints, complete stream delivery, and freshness-only updates.

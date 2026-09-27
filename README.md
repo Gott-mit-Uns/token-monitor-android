@@ -117,9 +117,9 @@ The Hub does not carry prompt or response bodies. It can carry a conversation ti
 
 ## Get connected
 
-You need Android 8.0 or newer and a desktop running Token Monitor v0.61.0 through v0.63.0 with Hub hosting on. The current public Android release is verified through v0.62.0; this branch prepares v0.63.0 compatibility.
+You need Android 8.0 or newer and a desktop running Token Monitor v0.61.0 through v0.63.0 with Hub hosting on. The v0.63.0 Hub contract is verified in the Android test suite; physical-phone upgrade checks were skipped for this release.
 
-1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.62.0 r1 APK.
+1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.63.0 r1 APK.
 2. Put [Tailscale](https://tailscale.com/) on the desktop and the phone, signed into the same tailnet.
 3. In desktop Token Monitor, open **Settings → Multi-device Sync → Host Hub** and copy the address and shared secret.
 4. In the app, type the address that starts with `100.`, paste the secret, tap **Connect**. Just the numbers are enough.
@@ -131,10 +131,10 @@ You need Android 8.0 or newer and a desktop running Token Monitor v0.61.0 throug
 
 | | |
 | --- | --- |
-| Current public release | [`v0.62.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.62.0-r1) |
+| Current public release | [`v0.63.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.63.0-r1) |
 | Latest phone-verified build | signed `v0.62.0-r1` over v0.61.0 r1; saved connection and placed Pages widget registration preserved |
-| Development candidate | Android `v0.63.0 r1` (`630001`); not yet published or phone-verified |
-| Candidate desktop baseline | Token Monitor `v0.63.0` |
+| v0.63.0 phone checks | Skipped at the owner's request; pairing, placed-widget retention and battery behavior are not yet verified on a phone |
+| Desktop baseline | Token Monitor `v0.63.0` |
 | Upstream commit | [`f756d1d`](https://github.com/Javis603/token-monitor/commit/f756d1d0fdbf415c1cd4a7178f3fe5d7a026fc90) |
 
 The visible version matches the desktop release the phone understands. Android-only

@@ -1,7 +1,7 @@
 # Token Monitor for Android v0.63.0 r1
 
-This candidate updates the Android companion's verified desktop baseline to
-Token Monitor v0.63.0. It is not published yet.
+This release updates the Android companion's verified desktop baseline to
+Token Monitor v0.63.0.
 
 ## What changed
 
@@ -18,10 +18,10 @@ Token Monitor v0.63.0. It is not published yet.
 - Android: 8.0 or newer
 - Desktop Token Monitor: verified through v0.63.0
 - Package: `io.github.theminionooo.tokenmonitor`
-- Planned upgrade: version code `630001` over the published v0.62.0 r1 APK,
-  using the same release-signing certificate
+- Upgrade: version code `630001` over the published v0.62.0 r1 APK, using the
+  same release-signing certificate
 
-Install a future signed release over the existing app; do not uninstall first.
+Install this signed release over the existing app; do not uninstall first.
 The [install guide](https://github.com/The-Minion-oOo/token-monitor-android/blob/main/docs/INSTALL.md)
 explains verification and the user-confirmed installer step.
 
@@ -29,3 +29,6 @@ explains verification and the user-confirmed installer step.
 
 Completed and pending checks are recorded in
 [Validation](https://github.com/The-Minion-oOo/token-monitor-android/blob/main/docs/VALIDATION.md).
+The owner chose to skip physical-phone verification for this release, so saved
+pairing, widget retention, and battery behavior have not been rechecked on a
+phone with this APK.
