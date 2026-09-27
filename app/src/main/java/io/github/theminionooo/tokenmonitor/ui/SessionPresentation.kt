@@ -11,6 +11,22 @@ internal data class SessionContext(
     val percentLeft: Int,
 )
 
+internal data class SessionRowLabels(val title: String, val meta: String)
+
+internal fun sessionRowLabels(session: SessionUsage): SessionRowLabels {
+    val client = session.client.displayName()
+    val title = session.title.ifBlank {
+        listOf(client, session.modelNames.firstOrNull()).filter { !it.isNullOrBlank() }.joinToString(" · ")
+    }.ifBlank { "Session" }
+    val meta = listOf(
+        client.takeIf { session.title.isNotBlank() }.orEmpty(),
+        session.lastUsedAt.shortClockTime(),
+        session.projectLabel,
+        session.messageCount.takeIf { it > 0 }?.let { "$it messages" }.orEmpty(),
+    ).filter { it.isNotBlank() }.joinToString(" · ").ifBlank { session.id }
+    return SessionRowLabels(title, meta)
+}
+
 private const val SESSION_RUNNING_WINDOW_MS = 10 * 60_000L
 
 internal fun sessionActivityState(session: SessionUsage, now: Long): SessionActivityState {

@@ -57,6 +57,7 @@ data class ProjectUsage(
 
 data class SessionUsage(
     val id: String,
+    val title: String = "",
     val client: String,
     val projectLabel: String,
     val totalTokens: Long,

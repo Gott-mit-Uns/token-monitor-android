@@ -4,7 +4,7 @@ This Android app treats the desktop Hub as an external, read-only protocol.
 
 ## Verified baseline
 
-The baseline is upstream Token Monitor **v0.62.0**, released 2026-09-24. The
+The candidate baseline is upstream Token Monitor **v0.63.0**, released 2026-09-26. The
 release and source were checked directly from the `Javis603/token-monitor`
 tag before this implementation. The older local desktop checkout was not
 changed and is not the protocol authority.
@@ -51,9 +51,9 @@ replaces the snapshot with the current read endpoints.
 
 ## Fixtures
 
-Sanitized v0.62.0 examples for all five read endpoints and the live stream live
-in `app/src/test/resources/protocol/v0.62.0/`; the retained v0.54.0, v0.55.0,
-v0.56.0, v0.60.0, and v0.61.0 fixtures prove backward compatibility. They contain no user secrets,
+Sanitized v0.63.0 examples for all five read endpoints and the live stream live
+in `app/src/test/resources/protocol/v0.63.0/`; the retained v0.54.0, v0.55.0,
+v0.56.0, v0.60.0, v0.61.0, and v0.62.0 fixtures prove backward compatibility. They contain no user secrets,
 machine paths, account identifiers, or real usage. Parser tests cover every
 read surface, the SSE envelope, omitted optional fields, and a future unknown
 field. The compatibility parser maps only the fields the dashboard needs and
@@ -91,6 +91,15 @@ Usage identifies Oh My Pi as `omp` separately from `pi`. TypeSafe supplies a
 credit-balance window and its plan in `accountLabel`; Devin may supply
 `planLabel`. Android renders those available values and safely ignores optional
 Claude reset-grant and provider usage-summary details it does not yet display.
+
+v0.63.0 retains those endpoints, header authentication, and stream-v2 envelope.
+The release changes mostly desktop presentation, collection, and limits-account
+setup. Cursor may now send a locally resolved conversation `title` on a session;
+Android reads that optional field and keeps its client/model fallback when absent.
+The title is metadata visible in Sessions, not a prompt or response body. The
+new Antigravity and Qoder CN source checks affect desktop collection, not phone
+access to the Hub. The v0.63.0 fixture is synthetic and follows the released
+wire contract; it is not an unredacted Hub capture.
 
 When the desktop protocol changes, add a new versioned fixture directory and
 tests before changing the Android mapping.

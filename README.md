@@ -17,7 +17,7 @@ Tokens, account limits, models and trends from the desktop Token Monitor Hub, pl
 <p align="center">
   <a href="https://github.com/The-Minion-oOo/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
   <img alt="Android 8 or newer" src="https://img.shields.io/badge/Android-8%2B-6fa79b?style=flat-square&logo=android&logoColor=10221c">
-  <img alt="Desktop baseline v0.62.0" src="https://img.shields.io/badge/Desktop-v0.62.0-73bdf5?style=flat-square">
+  <img alt="Desktop baseline v0.63.0" src="https://img.shields.io/badge/Desktop-v0.63.0-73bdf5?style=flat-square">
   <img alt="Kotlin and Compose" src="https://img.shields.io/badge/Kotlin-Compose-ff9c72?style=flat-square&logo=kotlin&logoColor=white">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-b39cff?style=flat-square"></a>
 </p>
@@ -96,20 +96,20 @@ is no public server, vendor relay, or separate Token Monitor account.
 - Day, week, month, rolling 7, 30 and 90 days, one year, all history and total.
 - Account limits with the desktop's reset countdowns.
 - Tools, devices, models, projects, sessions, subscriptions, service status, activity and trends, each with an `updated 5m ago` freshness.
-- Session activity and context-window use when the desktop reports them, without reading prompt or response text.
+- Session activity, reported conversation titles, and context-window use when the desktop provides them, without reading prompt or response bodies.
 - Trends by tool or model, shown as bars or a K-line chart.
 - Cache hit, cache miss, output and unclassified token details where the Hub provides them.
 - The desktop's Default, Obsidian and Porcelain themes, theme codes pasted as-is, an option to follow the phone's light and dark setting, three text sizes, motion controls, and reorderable views and Home modules.
 - A Back button that goes Home instead of quitting on you, and a light haptic tick on every tab.
 
-The Hub deliberately does not carry prompt or response text, so the phone never sees it. Your conversations stay on your desk.
+The Hub does not carry prompt or response bodies. It can carry a conversation title, which may contain sensitive text; the phone shows it only in Sessions, never on a widget.
 
 ## Private and light
 
 - Read-only. The app cannot change desktop settings, usage data, or files.
 - Hub credentials live in an Android Keystore-backed store and are excluded from backups.
 - No ads, analytics, wake lock, scheduled background work or "please rate us" popup.
-- In the next release, App updates will check published GitHub releases from Settings and verify the signed APK before Android asks to install it.
+- App updates checks published GitHub releases from Settings and verifies a downloaded signed APK before Android asks to install it; there is no background update check or silent install.
 - The visible dashboard streams immediately. Widget Live uses a lightweight 30-second stats refresh and stops after one hour.
 - Android 13 and newer asks for notification permission the first time you start a widget session, so the Stop control has somewhere to live. Ordinary use needs no permission prompts at all.
 
@@ -117,7 +117,7 @@ The Hub deliberately does not carry prompt or response text, so the phone never 
 
 ## Get connected
 
-You need Android 8.0 or newer and a desktop running Token Monitor v0.61.0 or v0.62.0 with Hub hosting on.
+You need Android 8.0 or newer and a desktop running Token Monitor v0.61.0 through v0.63.0 with Hub hosting on. The current public Android release is verified through v0.62.0; this branch prepares v0.63.0 compatibility.
 
 1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.62.0 r1 APK.
 2. Put [Tailscale](https://tailscale.com/) on the desktop and the phone, signed into the same tailnet.
@@ -133,8 +133,9 @@ You need Android 8.0 or newer and a desktop running Token Monitor v0.61.0 or v0.
 | --- | --- |
 | Current public release | [`v0.62.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.62.0-r1) |
 | Latest phone-verified build | signed `v0.62.0-r1` over v0.61.0 r1; saved connection and placed Pages widget registration preserved |
-| Verified desktop baseline | Token Monitor `v0.62.0` |
-| Upstream commit | [`dcccfb0`](https://github.com/Javis603/token-monitor/commit/dcccfb01557e2786888fd5479552f392ac6c0d32) |
+| Development candidate | Android `v0.63.0 r1` (`630001`); not yet published or phone-verified |
+| Candidate desktop baseline | Token Monitor `v0.63.0` |
+| Upstream commit | [`f756d1d`](https://github.com/Javis603/token-monitor/commit/f756d1d0fdbf415c1cd4a7178f3fe5d7a026fc90) |
 
 The visible version matches the desktop release the phone understands. Android-only
 builds bump the release revision and internal version code while the compatibility
