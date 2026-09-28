@@ -1,0 +1,2 @@
+event: stats
+data: {"stats":{"updatedAt":"2026-09-24T14:31:00.000Z","periods":{"today":{"totalTokens":251000,"clients":{"codex":150000,"cursor":10000,"pi":30000,"omp":61000},"sessions":{"cursor:conversation-example":{"sessionId":"conversation-example","client":"cursor","title":"Example planning conversation","totalTokens":10000,"models":{"gpt-6-sol":10000}}}}},"limits":{"updatedAt":"2026-09-24T14:31:00.000Z","providers":[]}}}

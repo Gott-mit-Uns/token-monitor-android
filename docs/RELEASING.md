@@ -7,9 +7,9 @@ Android-only releases keep `versionName` and increment the final three digits of
 `versionCode` and the GitHub tag revision.
 
 ```text
-versionName: v0.62.0
-versionCode: 620001
-release tag: android-v0.62.0-r1
+versionName: v0.63.0
+versionCode: 630001
+release tag: android-v0.63.0-r1
 ```
 
 A newly verified desktop version updates the visible version and starts its
@@ -68,7 +68,11 @@ builds and verifies the signed APK, creates its SHA-256 file and the
 `token-monitor-android-update.json` asset, then opens a draft
 GitHub release. It reads the release body from
 `docs/releases/android-v<version>-r<revision>.md` and refuses to overwrite an
-existing tag.
+existing tag. The workflow requires the four signing secrets to be configured
+in the public repository; do not copy a private keystore into the repository.
+If the workflow is unavailable, sign locally with the same release key and
+create a draft with the APK, checksum, and matching update manifest. Check the
+uploaded asset hashes before publication.
 
 Check that the manifest's version code, APK name, size, and hash match the
 uploaded APK. Review the draft, install its exact APK on the phone, then publish

@@ -3,7 +3,16 @@
 Android releases use the desktop protocol version plus an Android revision.
 Unreleased work stays under **Next release** until its signed APK is published.
 
-## Next release — v0.62.0 r1
+## v0.63.0 r1 — 2026-09-27
+
+- Verify the desktop v0.63.0 Hub read contract with sanitized examples for all
+  five endpoints, complete stream delivery, and freshness-only updates.
+- Show a reported Cursor conversation title in Sessions while retaining the
+  client/model fallback for older or untitled sessions. No transcript bodies are
+  requested or synchronized by the Android app.
+- Keep the four-page widget layout and background-work behavior unchanged.
+
+## v0.62.0 r1 — 2026-09-24
 
 - Add an on-demand update check in Settings for published Android releases.
 - Verify a downloaded APK's size, SHA-256, package, version, and signing

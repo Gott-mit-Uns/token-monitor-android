@@ -1,12 +1,40 @@
 # Validation
 
-The current public release is Android **v0.61.0 r1** (`610001`). The current
-source candidate is **v0.62.0 r1** (`620001`). The published r1 was installed over r7 on a
-physical phone; its saved connection and placed Pages widget survived.
+## v0.63.0 r1 release
 
-## v0.62.0 r1 candidate
+Desktop v0.63.0 is pinned to tag commit
+`f756d1d0fdbf415c1cd4a7178f3fe5d7a026fc90` (released September 26,
+2026). Review of the released diff found no change to the five Hub read routes,
+header authentication, or stream-v2 envelope. The documented Antigravity source
+check and Cursor title metadata are additive. Synthetic, sanitized v0.63.0
+fixtures cover every read endpoint, a complete stream event, and a freshness
+event; v0.54.0 through v0.62.0 regressions remain in the suite.
 
-The candidate is pinned to desktop v0.62.0 tag commit
+On September 27, all 93 JVM tests, Android lint (zero errors), preview debug
+assembly, fixture JSON parsing, and local documentation-link checks passed.
+All 31 instrumentation tests passed on the API 36 Pixel 10 Pro XL emulator
+(`emulator-5554`), covering the existing dashboard navigation, lifecycle,
+widget controls, and four-page renders. The new Cursor title and untitled-row
+fallback are covered by focused JVM tests; the title was not visually captured
+on a physical phone.
+The release APK was built locally with R8 and signed with the existing release
+certificate (SHA-256
+`eed5a820371ac158c038e5a55243b2e4e7f10ffdf764963b2808d152d3821c2c`).
+It reports package `io.github.theminionooo.tokenmonitor`, version code
+`630001`, and file SHA-256
+`84ff5841e5c4dbec5a11e24c80115d0b23a9f2bd0838843d3255ae3755427492`.
+The owner elected to skip the physical-phone gate for this release. An in-place
+upgrade, saved pairing/widget retention, and battery behavior have therefore
+not been verified for v0.63.0; v0.62.0 r1 remains the latest phone-verified
+build. The Pages widget geometry and type sizes are unchanged.
+
+The previous public release is Android **v0.62.0 r1** (`620001`). Its published
+APK was installed over v0.61.0 r1 on a physical phone without losing the saved
+connection or placed Pages widget registration.
+
+## v0.62.0 r1 release
+
+The release is pinned to desktop v0.62.0 tag commit
 `dcccfb01557e2786888fd5479552f392ac6c0d32`; the installed Windows desktop
 executable reports v0.62.0. The released read endpoints and stream envelope
 remain compatible. The Node Hub requires header-based secret authentication,
@@ -18,8 +46,9 @@ plan without containing real Hub credentials, account data, or usage.
 The on-demand updater carries forward from the unpublished v0.61.0 r2 source
 candidate. Its version comparison, release metadata, package, and rollback
 rules passed four focused JVM tests. On this v0.62.0 source, all 91 JVM tests,
-Android lint, and unsigned R8 release assembly pass. The documentation-link
-check also passes.
+Android lint, signed R8 release assembly, and the documentation-link check
+passed. Both public build and emulator interaction checks passed on the release
+commit `6eb97d83f6b4b7966bb1a05201b8bdef79a36747`.
 
 On the API 36 Pixel 10 Pro XL emulator (`emulator-5554`), the side-by-side
 preview paired with the synthetic v0.62.0 fixture Hub. The Home screen showed
@@ -29,7 +58,7 @@ published v0.61.0 r1 Android release as older. All 31 instrumentation tests
 passed after removing the Android CLI layout helper; the first run had two
 `UiAutomation` conflicts while that helper was active, not app assertions.
 
-The locally signed candidate was installed over v0.61.0 r1 on a Galaxy S25
+The published APK was installed over v0.61.0 r1 on a Galaxy S25
 Ultra (`R5CY7205W0B`) without uninstalling. Android reported version code
 `620001`; the release certificate matched the pinned SHA-256 fingerprint.
 The saved Home Wi-Fi connection remained active, the placed Pages widget kept
@@ -37,6 +66,12 @@ its launcher registration (widget ID 42), and Settings showed `v0.62.0 r1`
 with the older public Android release correctly reported as not newer. The
 widget's visual content was not recaptured after this upgrade. The temporary
 Android CLI layout helper was removed from the phone afterward.
+
+The GitHub release APK was downloaded back from the draft and matched the
+phone-tested file byte-for-byte. Its SHA-256 was
+`036044ac4944f7839325b9d95fdba7bb86bb5ed1b73d34feda4ef9e8688827e1`.
+Its manifest, checksum file, size, version code, and pinned signing certificate
+were verified before publication.
 
 End-to-end in-app download and installer handoff still needs a later published
 release carrying update metadata; v0.61.0 r1 has no updater code.

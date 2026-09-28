@@ -31,7 +31,7 @@ import kotlinx.serialization.json.longOrNull
  * Android client renders and intentionally ignores unknown fields.
  */
 object HubProtocolParser {
-    const val SUPPORTED_UPSTREAM_VERSION = "v0.62.0"
+    const val SUPPORTED_UPSTREAM_VERSION = "v0.63.0"
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -191,6 +191,7 @@ object HubProtocolParser {
 
     private fun JsonObject.toSessionDto(key: String) = HubSessionDto(
         id = string("sessionId").ifBlank { string("id").ifBlank { key } },
+        title = string("title").trim().take(96),
         client = string("client"),
         projectLabel = string("projectLabel"),
         totalTokens = long("totalTokens") ?: 0,
@@ -358,6 +359,7 @@ object HubProtocolParser {
 
     private fun HubSessionDto.toDomain() = SessionUsage(
         id = id,
+        title = title,
         client = client,
         projectLabel = projectLabel,
         totalTokens = totalTokens.coerceAtLeast(0),

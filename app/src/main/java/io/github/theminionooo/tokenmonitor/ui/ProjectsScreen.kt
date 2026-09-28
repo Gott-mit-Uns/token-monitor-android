@@ -169,9 +169,8 @@ internal fun LazyListScope.sessionItems(sessions: List<SessionUsage>, period: Da
     else {
         val maximum = sessions.maxOfOrNull { it.totalTokens }?.coerceAtLeast(1L) ?: 1L
         items(sessions.sortedByDescending { it.totalTokens }, key = { it.id }) { session ->
-            val title = listOf(session.client.displayName(), session.modelNames.firstOrNull()).filter { !it.isNullOrBlank() }.joinToString(" · ")
-            val meta = listOf(session.lastUsedAt.shortClockTime(), session.projectLabel, session.messageCount.takeIf { it > 0 }?.let { "$it messages" }.orEmpty()).filter { it.isNotBlank() }.joinToString(" · ")
-            SessionUsageRow(session, title.ifBlank { "Session" }, meta.ifBlank { session.id }, session.totalTokens.toFloat() / maximum)
+            val labels = sessionRowLabels(session)
+            SessionUsageRow(session, labels.title, labels.meta, session.totalTokens.toFloat() / maximum)
         }
     }
 }

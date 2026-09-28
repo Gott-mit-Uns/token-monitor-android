@@ -23,6 +23,17 @@ class SessionPresentationTest {
         assertNull(sessionContextForRow(finished.copy(lastUsedAt = "2026-09-21T11:00:00Z"), now))
     }
 
+    @Test fun `reported title is primary but untitled sessions keep their original labels`() {
+        val untitled = session("2026-09-21T11:59:30Z")
+        val oldLabels = sessionRowLabels(untitled)
+        assertEquals("Codex · gpt-6-astra", oldLabels.title)
+        assertEquals("${untitled.lastUsedAt.shortClockTime()} · Token Monitor · 1 messages", oldLabels.meta)
+
+        val titled = sessionRowLabels(untitled.copy(title = "Example planning conversation"))
+        assertEquals("Example planning conversation", titled.title)
+        assertEquals("Codex · ${oldLabels.meta}", titled.meta)
+    }
+
     private fun session(lastUsedAt: String, turnEnded: Boolean? = null) = SessionUsage(
         id = "session-1",
         client = "codex",

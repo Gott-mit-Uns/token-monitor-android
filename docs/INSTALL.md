@@ -3,17 +3,17 @@
 ## Requirements
 
 - Android 8.0 or newer.
-- Token Monitor desktop v0.61.0 or v0.62.0 with Hub hosting enabled and a shared secret.
+- Token Monitor desktop with Hub hosting enabled and a shared secret. Android v0.63.0 r1 is verified against desktop v0.61.0–v0.63.0 Hub fixtures; the v0.63.0 phone upgrade was not tested.
 - A private route to the desktop: Tailscale is recommended; home Wi-Fi is optional.
 
 ## Install
 
-Download the signed v0.61.0 r1 APK from the public
-[release](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.61.0-r1).
-The published r1 APK was installed over r7 on a physical phone without
-uninstalling. The saved connection and placed Pages widget survived; see
-[Validation](VALIDATION.md). The in-app updater is a v0.62.0 r1 source candidate,
-not a feature of the published v0.61.0 r1 APK.
+Download the signed v0.63.0 r1 APK from the public
+[release](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.63.0-r1).
+It uses the same package and release certificate as v0.62.0 r1, with a higher
+version code. The v0.63.0 in-place upgrade was not tested on a physical phone;
+see [Validation](VALIDATION.md). The older v0.61.0 r1 app has no in-app updater,
+so install a newer release manually once.
 
 To build the current source, install JDK 17 and Android SDK 37, then run:
 
@@ -40,7 +40,7 @@ There is no Play Store or F-Droid listing.
 Each signed release will include an APK and a `.sha256` file. Compare the hash:
 
 ```powershell
-Get-FileHash .\token-monitor-android-v0.61.0-r1.apk -Algorithm SHA256
+Get-FileHash .\token-monitor-android-v0.63.0-r1.apk -Algorithm SHA256
 ```
 
 A matching checksum detects download corruption; download both files from the
@@ -56,7 +56,7 @@ Install the newer release APK over the existing release. The package and signing
 identity stay the same, and the internal version code increases. Do not uninstall
 first: uninstalling removes pairing, preferences and the saved snapshot.
 
-Starting with the v0.62.0 r1 candidate, Settings → App updates checks the latest
+Starting with v0.62.0 r1, Settings → App updates checks the latest
 published GitHub release when opened. For newer releases with an update
 manifest, tap **Download and install**. The
 app checks the APK size, SHA-256, package, version code, and release signing
