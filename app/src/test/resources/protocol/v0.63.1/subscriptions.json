@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "version": 1,
+  "updatedAt": "2026-09-28T12:00:00.000Z",
+  "subscriptions": [{
+    "id": "sample-subscription",
+    "provider": "codex",
+    "planName": "Plus",
+    "amountMinor": 2000,
+    "currency": "USD",
+    "startDate": "2026-09-01",
+    "interval": "month",
+    "autoRenew": true
+  }]
+}

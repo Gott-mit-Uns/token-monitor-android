@@ -7,9 +7,9 @@ Android-only releases keep `versionName` and increment the final three digits of
 `versionCode` and the GitHub tag revision.
 
 ```text
-versionName: v0.63.0
-versionCode: 630001
-release tag: android-v0.63.0-r1
+versionName: v0.63.1
+versionCode: 631001
+release tag: android-v0.63.1-r1
 ```
 
 A newly verified desktop version updates the visible version and starts its

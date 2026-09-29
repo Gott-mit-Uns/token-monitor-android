@@ -198,7 +198,6 @@ class HubProtocolParserTest {
             capturedAt = 1_800_000_000_000,
         )
 
-        assertEquals("v0.63.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
         assertEquals(10_000, snapshot.today.clients.getValue("cursor"))
         assertEquals("Example planning conversation", snapshot.today.sessions.first { it.client == "cursor" }.title)
         assertEquals("", snapshot.today.sessions.first { it.client == "omp" }.title)
@@ -216,6 +215,54 @@ class HubProtocolParserTest {
         val merged = HubStreamProtocol.mergeFreshness(resource("stats.json", "v0.63.0"), freshness)
         assertEquals("Example planning conversation", HubProtocolParser.decodeStats(merged).periods.getValue("today")
             .sessions.first { it.client == "cursor" }.title)
+    }
+
+    @Test
+    fun `v0 63 1 preserves canonical Cursor Auto and reasoning inclusive totals`() {
+        val snapshot = HubProtocolParser.decodeSnapshot(
+            healthRaw = resource("health.json", "v0.63.1"),
+            statsRaw = resource("stats.json", "v0.63.1"),
+            devicesRaw = resource("devices.json", "v0.63.1"),
+            historyRaw = resource("history.json", "v0.63.1"),
+            subscriptionsRaw = resource("subscriptions.json", "v0.63.1"),
+            capturedAt = 1_800_000_000_000,
+        )
+
+        assertEquals("v0.63.1", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertTrue(snapshot.health.ok)
+        assertEquals(280_000, snapshot.today.totalTokens)
+        assertEquals(40_000, snapshot.today.clientModels.getValue("cursor").getValue("cursor-auto"))
+        assertEquals(40_000, snapshot.today.models.getValue("cursor-auto"))
+        assertEquals(listOf("cursor-auto"), snapshot.today.sessions.single().modelNames)
+        assertEquals(55_000, snapshot.today.clientOutputs.values.sum())
+        assertEquals(
+            snapshot.today.totalTokens,
+            snapshot.today.clientOutputs.values.sum() + snapshot.today.clientUnclassifiedTokens.values.sum(),
+        )
+        assertEquals(18_000, snapshot.today.clientOutputs.getValue("opencode"))
+        assertEquals(14_000, snapshot.today.clientOutputs.getValue("zcode"))
+        assertEquals(32_000, snapshot.today.modelOutputs.getValue("qwen3-coder"))
+        assertEquals(40_000, snapshot.history.daily.last().perModel.getValue("cursor-auto").tokens)
+        assertEquals(
+            snapshot.history.daily.last().outputTokens,
+            snapshot.history.daily.last().perClient.values.sumOf { it.outputTokens },
+        )
+        assertEquals(18_000, snapshot.history.daily.last().perClient.getValue("opencode").outputTokens)
+        assertEquals(14_000, snapshot.history.daily.last().perClient.getValue("zcode").outputTokens)
+        assertEquals(listOf("codex", "cursor", "opencode", "zcode"), snapshot.stats.devices.single().trackedClients)
+        assertEquals("codex", snapshot.subscriptions.entries.single().provider)
+
+        val stream = resource("stats-stream.sse", "v0.63.1")
+            .lineSequence().first { it.startsWith("data:") }.removePrefix("data:").trimStart()
+        val today = checkNotNull(HubProtocolParser.decodeStatsStreamEvent(stream)).periods.getValue("today")
+        assertEquals(40_000, today.models.getValue("cursor-auto"))
+
+        val freshness = resource("stats-freshness.sse", "v0.63.1")
+            .lineSequence().first { it.startsWith("data:") }.removePrefix("data:").trimStart()
+        val merged = HubStreamProtocol.mergeFreshness(resource("stats.json", "v0.63.1"), freshness)
+        val refreshed = HubProtocolParser.decodeStats(merged)
+        assertEquals(40_000, refreshed.periods.getValue("today").models.getValue("cursor-auto"))
+        assertEquals("2026-09-28T12:02:00.000Z", refreshed.limits.updatedAt)
     }
 
     @Test

@@ -1,0 +1,58 @@
+{
+  "updatedAt": "2026-09-28T12:00:00.000Z",
+  "periods": {
+    "today": {
+      "totalTokens": 280000,
+      "costUsd": 5.60,
+      "outputTokens": 55000,
+      "unclassifiedTokens": 225000,
+      "clients": { "codex": 120000, "cursor": 40000, "opencode": 70000, "zcode": 50000 },
+      "clientCosts": { "codex": 2.40, "cursor": 0.80, "opencode": 1.40, "zcode": 1.00 },
+      "models": { "gpt-6-sol": 120000, "cursor-auto": 40000, "qwen3-coder": 120000 },
+      "modelCosts": { "gpt-6-sol": 2.40, "cursor-auto": 0.80, "qwen3-coder": 2.40 },
+      "clientModels": {
+        "codex": { "gpt-6-sol": 120000 },
+        "cursor": { "cursor-auto": 40000 },
+        "opencode": { "qwen3-coder": 70000 },
+        "zcode": { "qwen3-coder": 50000 }
+      },
+      "clientOutputs": { "codex": 15000, "cursor": 8000, "opencode": 18000, "zcode": 14000 },
+      "clientUnclassifiedTokens": { "codex": 105000, "cursor": 32000, "opencode": 52000, "zcode": 36000 },
+      "modelOutputs": { "gpt-6-sol": 15000, "cursor-auto": 8000, "qwen3-coder": 32000 },
+      "modelUnclassifiedTokens": { "gpt-6-sol": 105000, "cursor-auto": 32000, "qwen3-coder": 88000 },
+      "sessions": {
+        "cursor:sample-conversation": {
+          "sessionId": "sample-conversation",
+          "client": "cursor",
+          "title": "Example conversation",
+          "totalTokens": 40000,
+          "costUsd": 0.80,
+          "models": { "cursor-auto": 40000 },
+          "lastUsedAt": "2026-09-28T11:59:00.000Z"
+        }
+      }
+    },
+    "month": { "totalTokens": 1200000, "costUsd": 24.00 }
+  },
+  "devices": [{
+    "deviceId": "sample-desktop",
+    "hostname": "Example Desktop",
+    "platform": "win32",
+    "updatedAt": "2026-09-28T11:59:59.000Z",
+    "receivedAt": "2026-09-28T12:00:00.000Z",
+    "ageMs": 1000,
+    "stale": false,
+    "trackedClients": ["codex", "cursor", "opencode", "zcode"],
+    "periods": { "today": { "totalTokens": 280000 } }
+  }],
+  "limits": {
+    "updatedAt": "2026-09-28T12:00:00.000Z",
+    "providers": [{
+      "provider": "claude",
+      "status": "ok",
+      "windows": [{ "kind": "weekly", "label": "Weekly", "remainingPercent": 70.0, "resetsAt": "2026-10-01T00:00:00.000Z" }]
+    }]
+  },
+  "historyPreview": { "daily": [{ "date": "2026-09-28", "tokens": 280000, "cost": 5.60 }] },
+  "staleAfterMs": 300000
+}

@@ -3,6 +3,16 @@
 Android releases use the desktop protocol version plus an Android revision.
 Unreleased work stays under **Next release** until its signed APK is published.
 
+## v0.63.1 r1 — 2026-09-28
+
+- Verify the desktop v0.63.1 Hub contract with sanitized fixtures for all five
+  read endpoints, a complete stream event, and a freshness update.
+- Preserve Cursor's canonical `cursor-auto` model across totals, sessions, and
+  history, plus the reasoning-inclusive ZCode and OpenCode counters reported by
+  the desktop. No Android-side usage collection or widget layout change.
+- Keep daily output and cache totals when a matching sparse history preview
+  follows the full Hub history response; changed days cannot reuse stale totals.
+
 ## v0.63.0 r1 — 2026-09-27
 
 - Verify the desktop v0.63.0 Hub read contract with sanitized examples for all

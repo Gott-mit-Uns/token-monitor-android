@@ -48,7 +48,7 @@ pairing and preferences. Never use the preview flag for a release.
 
 ## Fixture Hub
 
-The local fixture serves sanitized v0.63.0 responses on port 17321 with the
+The local fixture serves sanitized v0.63.1 responses on port 17321 with the
 secret `fixture-secret`:
 
 ```powershell
@@ -86,10 +86,11 @@ in a fixture or screenshot.
 JVM tests cover protocol parsing, private-address rules, endpoint failover,
 stream recovery, ordered cache writes, history aggregation, presentation rules,
 and preferences. Versioned Hub fixtures live under
-`app/src/test/resources/protocol/`. The v0.63.0 set covers all five read
-endpoints, full stream frames, a freshness-only frame, separate Pi and Oh My Pi
-clients, TypeSafe balance and plan, Devin's plan, and a Cursor title. Earlier fixture sets remain
-for compatibility regression tests.
+`app/src/test/resources/protocol/`. The v0.63.1 set covers all five read
+endpoints, a complete stream frame, and a freshness-only frame. It exercises
+Cursor's canonical Auto model and the reasoning-inclusive ZCode and OpenCode
+output counters. Earlier fixture sets, including the v0.63.0 Cursor title case,
+remain for compatibility regression tests.
 
 Instrumentation tests use the preview package to exercise navigation, dialogs,
 widgets, storage, and lifecycle behavior. Run them on an API 36 emulator before

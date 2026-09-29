@@ -1,0 +1,4 @@
+event: freshness
+data: {"stats":{"limits":{"updatedAt":"2026-09-28T12:02:00.000Z"},"devices":[{"deviceId":"sample-desktop","updatedAt":"2026-09-28T12:02:00.000Z","receivedAt":"2026-09-28T12:02:01.000Z","ageMs":1000,"stale":false}]}}
+
+: fixture end

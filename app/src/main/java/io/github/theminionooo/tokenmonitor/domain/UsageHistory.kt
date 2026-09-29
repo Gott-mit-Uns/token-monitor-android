@@ -10,7 +10,16 @@ fun mergeUsageHistory(saved: List<HistoryPoint>, incoming: List<HistoryPoint>): 
     incoming.forEach { next ->
         val old = points[next.label]
         points[next.label] = if (old != null && old.tokens == next.tokens && old.costUsd == next.costUsd) {
-            next.copy(perClient = next.perClient.ifEmpty { old.perClient }, perModel = next.perModel.ifEmpty { old.perModel })
+            val keepComponents = old.tokenComponentsAvailable && !next.tokenComponentsAvailable
+            next.copy(
+                cacheReadTokens = if (keepComponents) old.cacheReadTokens else next.cacheReadTokens,
+                cacheWriteTokens = if (keepComponents) old.cacheWriteTokens else next.cacheWriteTokens,
+                outputTokens = if (keepComponents) old.outputTokens else next.outputTokens,
+                unclassifiedTokens = if (keepComponents) old.unclassifiedTokens else next.unclassifiedTokens,
+                tokenComponentsAvailable = old.tokenComponentsAvailable || next.tokenComponentsAvailable,
+                perClient = next.perClient.ifEmpty { old.perClient },
+                perModel = next.perModel.ifEmpty { old.perModel },
+            )
         } else next
     }
     return points.values.sortedBy { it.label }

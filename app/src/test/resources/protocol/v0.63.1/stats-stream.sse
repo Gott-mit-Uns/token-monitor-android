@@ -1,0 +1,4 @@
+event: stats
+data: {"stats":{"updatedAt":"2026-09-28T12:01:00.000Z","periods":{"today":{"totalTokens":281000,"clients":{"codex":120000,"cursor":40000,"opencode":70000,"zcode":51000},"models":{"gpt-6-sol":120000,"cursor-auto":40000,"qwen3-coder":121000},"sessions":{"cursor:sample-conversation":{"sessionId":"sample-conversation","client":"cursor","title":"Example conversation","totalTokens":40000,"models":{"cursor-auto":40000}}}}},"limits":{"updatedAt":"2026-09-28T12:01:00.000Z","providers":[]}}}
+
+: fixture end

@@ -44,10 +44,20 @@ class UsageHistoryTest {
     }
 
     @Test fun `sparse preview keeps matching attribution but never stale attribution`() {
-        val saved = HistoryPoint("2026-09-06", 42, 1.0, perModel = mapOf("gpt-5" to HistoryAttribution(tokens = 42)))
-        val sparse = saved.copy(perModel = emptyMap())
-        assertEquals(saved.perModel, mergeUsageHistory(listOf(saved), listOf(sparse)).single().perModel)
-        assertTrue(mergeUsageHistory(listOf(saved), listOf(sparse.copy(tokens = 55))).single().perModel.isEmpty())
+        val saved = HistoryPoint("2026-09-06", 42, 1.0, outputTokens = 12,
+            unclassifiedTokens = 30, tokenComponentsAvailable = true,
+            perModel = mapOf("gpt-5" to HistoryAttribution(tokens = 42)))
+        val sparse = HistoryPoint("2026-09-06", 42, 1.0)
+        val matching = mergeUsageHistory(listOf(saved), listOf(sparse)).single()
+        assertEquals(saved.perModel, matching.perModel)
+        assertEquals(12L, matching.outputTokens)
+        assertEquals(30L, matching.unclassifiedTokens)
+        assertTrue(matching.tokenComponentsAvailable)
+
+        val changed = mergeUsageHistory(listOf(saved), listOf(sparse.copy(tokens = 55))).single()
+        assertTrue(changed.perModel.isEmpty())
+        assertEquals(0L, changed.outputTokens)
+        assertFalse(changed.tokenComponentsAvailable)
     }
 
     @Test fun `device rolling totals do not count an old today twice`() {

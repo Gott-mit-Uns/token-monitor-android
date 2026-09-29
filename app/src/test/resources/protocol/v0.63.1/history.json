@@ -1,0 +1,25 @@
+{
+  "daily": [
+    { "date": "2026-09-27", "tokens": 195000, "cost": 4.20 },
+    {
+      "date": "2026-09-28",
+      "tokens": 280000,
+      "cost": 5.60,
+      "outputTokens": 55000,
+      "unclassifiedTokens": 225000,
+      "tokenComponentsAvailable": true,
+      "perClient": {
+        "codex": { "tokens": 120000, "cost": 2.40, "outputTokens": 15000, "unclassifiedTokens": 105000 },
+        "cursor": { "tokens": 40000, "cost": 0.80, "outputTokens": 8000, "unclassifiedTokens": 32000 },
+        "opencode": { "tokens": 70000, "cost": 1.40, "outputTokens": 18000, "unclassifiedTokens": 52000 },
+        "zcode": { "tokens": 50000, "cost": 1.00, "outputTokens": 14000, "unclassifiedTokens": 36000 }
+      },
+      "perModel": {
+        "gpt-6-sol": { "tokens": 120000, "cost": 2.40, "outputTokens": 15000, "unclassifiedTokens": 105000 },
+        "cursor-auto": { "tokens": 40000, "cost": 0.80, "outputTokens": 8000, "unclassifiedTokens": 32000 },
+        "qwen3-coder": { "tokens": 120000, "cost": 2.40, "outputTokens": 32000, "unclassifiedTokens": 88000 }
+      }
+    }
+  ],
+  "monthly": [{ "month": "2026-09", "tokens": 1200000, "cost": 24.00 }]
+}

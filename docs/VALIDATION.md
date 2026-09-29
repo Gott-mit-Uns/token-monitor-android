@@ -1,5 +1,41 @@
 # Validation
 
+## v0.63.1 r1 release — 2026-09-28
+
+Desktop v0.63.1 is pinned to the released tag commit
+`e38f60a94ce6310341f8ad2de6888f1ec51dd755`. The v0.63.0-to-v0.63.1
+review found no changes to `docs/API.md`, the five Hub read routes, bearer
+authentication, or the stream-v2 envelope. Desktop normalization now reports
+one `cursor-auto` model across usage and history and includes disjoint reasoning
+tokens in ZCode/OpenCode output totals. Android preserves the reported values;
+it does not collect or add tokens. The new synthetic fixture covers all five
+read endpoints, a complete stream event, and a freshness event. Earlier fixtures
+remain in the regression suite. Review of that fixture exposed a sparse-preview
+merge that dropped matching daily token-component totals; the merge now retains
+them only while the day's token and cost totals match. The Pages widget geometry
+and type sizes are unchanged. The independent diff review also found an
+internally inconsistent synthetic output breakdown and release-note wording;
+both were corrected. The final regression pass found no remaining material
+issues.
+
+All 94 JVM tests passed, including the new model/counter regression. Android
+lint, debug assembly, and the R8 release build passed. All 31 instrumentation
+tests passed on the API 36 Pixel 10 Pro XL emulator (`emulator-5554`). The
+fixture JSON parsed and local documentation links resolved. The scheduled
+local upstream check identifies v0.63.1 as the latest released version; nine newer
+`main` commits remain unreleased and are not part of this baseline.
+
+The signed APK reports package `io.github.theminionooo.tokenmonitor`,
+version code `631001`, and the existing release certificate SHA-256
+`eed5a820371ac158c038e5a55243b2e4e7f10ffdf764963b2808d152d3821c2c`.
+Its file SHA-256 is
+`1a517ad54d9dc58f180f5126f3cf661764ee66bed2b12c4978a349b8d436264b`.
+The APK, checksum, and matching update manifest are published under
+[`android-v0.63.1-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.63.1-r1).
+The owner requested publication to perform the in-app upgrade remotely, so the
+physical-phone in-place upgrade, retained pairing and widget registration, and
+battery behavior remain unverified at publication.
+
 ## v0.63.0 r1 release
 
 Desktop v0.63.0 is pinned to tag commit

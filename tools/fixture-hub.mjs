@@ -7,11 +7,11 @@ import { createShowcaseResponses } from "./showcase-data.mjs";
 const protocolRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "app", "src", "test", "resources", "protocol");
 const fixture = async (version, name) => readFile(join(protocolRoot, version, name), "utf8");
 let responses = {
-    "/api/health": await fixture("v0.63.0", "health.json"),
-    "/api/stats": await fixture("v0.63.0", "stats.json"),
-    "/api/devices": await fixture("v0.63.0", "devices.json"),
-    "/api/history": await fixture("v0.63.0", "history.json"),
-    "/api/subscriptions": await fixture("v0.63.0", "subscriptions.json"),
+    "/api/health": await fixture("v0.63.1", "health.json"),
+    "/api/stats": await fixture("v0.63.1", "stats.json"),
+    "/api/devices": await fixture("v0.63.1", "devices.json"),
+    "/api/history": await fixture("v0.63.1", "history.json"),
+    "/api/subscriptions": await fixture("v0.63.1", "subscriptions.json"),
 };
 
 const showcaseMode = process.env.TOKEN_MONITOR_SHOWCASE === "1";
@@ -47,7 +47,7 @@ const server = http.createServer((request, response) => {
             "Content-Type": "text/event-stream",
         });
         const streamEvent = JSON.stringify({
-            at: "2026-09-04T15:35:16.000Z",
+            at: "2026-09-28T12:00:00.000Z",
             stats: JSON.parse(responses["/api/stats"]),
         });
         response.write(`event: snapshot\ndata: ${streamEvent}\n\n`);

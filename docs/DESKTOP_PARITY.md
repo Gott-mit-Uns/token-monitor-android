@@ -1,6 +1,6 @@
-# Desktop parity for v0.63.0
+# Desktop parity for v0.63.1
 
-The Android candidate is verified against desktop Token Monitor v0.63.0. It mirrors
+The Android release is fixture-verified against desktop Token Monitor v0.63.1. It mirrors
 the desktop information that the Hub can safely provide while keeping the phone
 read-only and lightweight.
 
@@ -39,7 +39,7 @@ controls are window-specific rather than Hub dashboard features.
 ## Intentional boundaries
 
 The following remain on desktop because they collect data, control a desktop
-window, or require information the v0.63.0 Hub does not transmit:
+window, or require information the v0.63.1 Hub does not transmit:
 
 - tool discovery, account sign-in, collection cadence, diagnostics, export, and
   subscription editing;
@@ -68,6 +68,12 @@ existing label. Titles may contain private text, so they are not used in widgets
 or public examples. The v0.63.0 glass styles, background-image control, and
 credential setup are desktop-only; collector fixes change the numbers supplied
 by the Hub without adding phone-side collection.
+
+v0.63.1 consolidates Cursor Auto under `cursor-auto` in usage and history and
+includes reasoning tokens in the ZCode and OpenCode totals it reports. Android
+displays those source values as received, without a second normalization or
+token addition. Background scan, client-mode publish, and Electron renderer
+performance changes remain desktop responsibilities.
 
 The Android app does not replace these with remote commands. It reads only the
 documented Hub endpoints listed in [`SECURITY.md`](SECURITY.md).

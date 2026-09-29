@@ -1,0 +1,16 @@
+{
+  "devices": [{
+    "deviceId": "sample-desktop",
+    "hostname": "Example Desktop",
+    "platform": "win32",
+    "osName": "Windows",
+    "osVersion": "11",
+    "updatedAt": "2026-09-28T11:59:59.000Z",
+    "receivedAt": "2026-09-28T12:00:00.000Z",
+    "ageMs": 1000,
+    "stale": false,
+    "historyAvailable": true,
+    "trackedClients": ["codex", "cursor", "opencode", "zcode"],
+    "periods": { "today": { "totalTokens": 280000, "clients": { "codex": 120000, "cursor": 40000, "opencode": 70000, "zcode": 50000 } } }
+  }]
+}
