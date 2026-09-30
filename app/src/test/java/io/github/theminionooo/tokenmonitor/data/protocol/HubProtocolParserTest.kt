@@ -228,7 +228,6 @@ class HubProtocolParserTest {
             capturedAt = 1_800_000_000_000,
         )
 
-        assertEquals("v0.63.1", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
         assertTrue(snapshot.health.ok)
         assertEquals(280_000, snapshot.today.totalTokens)
         assertEquals(40_000, snapshot.today.clientModels.getValue("cursor").getValue("cursor-auto"))
@@ -282,6 +281,48 @@ class HubProtocolParserTest {
     @Test
     fun `malformed stream event is ignored`() {
         assertEquals(null, HubProtocolParser.decodeStatsStreamEvent("not json"))
+    }
+
+    @Test
+    fun `v0 64 preserves Muse Grok StepFun and normalized limit data`() {
+        val snapshot = HubProtocolParser.decodeSnapshot(
+            resource("health.json", "v0.64.0"), resource("stats.json", "v0.64.0"),
+            resource("devices.json", "v0.64.0"), resource("history.json", "v0.64.0"),
+            resource("subscriptions.json", "v0.64.0"), 1_800_000_000_000,
+        )
+        assertEquals("v0.64.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals(150_000, snapshot.today.totalTokens)
+        assertEquals(9_000, snapshot.today.clientOutputs.getValue("muse"))
+        assertEquals(snapshot.today.totalTokens, snapshot.today.clientOutputs.values.sum() + snapshot.today.clientUnclassifiedTokens.values.sum())
+        val grok = snapshot.today.sessions.first { it.client == "grok" }
+        assertEquals("fix a mixedCase bug", grok.title)
+        assertEquals("Example Project", grok.projectLabel)
+        assertFalse(grok.archived)
+        assertTrue(snapshot.today.sessions.first { it.client == "muse" }.archived)
+        val providers = snapshot.stats.limits.providers
+        assertEquals(listOf("Coding Plan", "Token Plan"), providers.filter { it.provider == "stepfun" }.map { it.plan })
+        assertEquals(75.0, providers.first().windows.first().remainingPercent!!, 0.001)
+        assertEquals("", providers[1].windows.single().resetsAt)
+        assertEquals(listOf("Pro", "Pro More", "Pro Max"), providers.filter { it.provider == "codex" }.map { it.plan })
+        assertEquals(7.0, providers.last().windows.single().remaining!!, 0.001)
+        assertEquals(9_000, snapshot.history.daily.single().perClient.getValue("muse").outputTokens)
+        assertEquals(listOf("codex", "muse", "grok"), snapshot.stats.devices.single().trackedClients)
+        assertEquals("Pro More", snapshot.subscriptions.entries.single().planName)
+
+        val stream = resource("stats-stream.sse", "v0.64.0").lineSequence()
+            .first { it.startsWith("data:") }.removePrefix("data:").trimStart()
+        assertEquals(grok, HubProtocolParser.decodeStatsStreamEvent(stream)!!.periods.getValue("today").sessions.first())
+        val freshness = resource("stats-freshness.sse", "v0.64.0").lineSequence()
+            .first { it.startsWith("data:") }.removePrefix("data:").trimStart()
+        val refreshed = HubProtocolParser.decodeStats(HubStreamProtocol.mergeFreshness(resource("stats.json", "v0.64.0"), freshness))
+        assertEquals("2026-09-30T12:02:00.000Z", refreshed.updatedAt)
+        assertEquals(grok, refreshed.periods.getValue("today").sessions.first())
+    }
+
+    @Test fun `archive flags are optional aliases and plan labels win over account labels`() {
+        val stats = HubProtocolParser.decodeStats("""{"periods":{"today":{"sessions":{"a":{"archived":true},"b":{"deleted":true},"c":{}}}},"limits":{"providers":[{"provider":"stepfun","planLabel":"Explicit","accountLabel":"Fallback"},{"provider":"claude","accountLabel":"Private identity"}]}}""")
+        assertEquals(listOf(true, true, false), stats.periods.getValue("today").sessions.map { it.archived })
+        assertEquals(listOf("Explicit", ""), stats.limits.providers.map { it.plan })
     }
 
     private fun resource(name: String, version: String = "v0.54.0"): String = checkNotNull(

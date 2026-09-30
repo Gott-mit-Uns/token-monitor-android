@@ -70,6 +70,7 @@ data class SessionUsage(
     val contextTokens: Long = 0,
     val contextWindow: Long = 0,
     val turnEnded: Boolean? = null,
+    val archived: Boolean = false,
 )
 
 data class DeviceUsage(

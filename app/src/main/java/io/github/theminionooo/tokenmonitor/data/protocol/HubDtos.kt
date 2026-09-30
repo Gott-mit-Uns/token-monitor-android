@@ -1,7 +1,7 @@
 package io.github.theminionooo.tokenmonitor.data.protocol
 
 /**
- * Wire DTOs for the v0.61.0 Hub protocol. They deliberately have defaults because
+ * Wire DTOs for the v0.64.0 Hub protocol. They deliberately have defaults because
  * the Hub may add fields or an older Hub may omit optional fields.
  */
 internal data class HubHealthDto(
@@ -63,6 +63,7 @@ internal data class HubSessionDto(
     val contextTokens: Long = 0,
     val contextWindow: Long = 0,
     val turnEnded: Boolean? = null,
+    val archived: Boolean = false,
 )
 
 internal data class HubDeviceDto(

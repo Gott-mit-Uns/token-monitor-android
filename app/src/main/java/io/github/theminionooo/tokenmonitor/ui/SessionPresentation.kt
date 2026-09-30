@@ -30,6 +30,7 @@ internal fun sessionRowLabels(session: SessionUsage): SessionRowLabels {
 private const val SESSION_RUNNING_WINDOW_MS = 10 * 60_000L
 
 internal fun sessionActivityState(session: SessionUsage, now: Long): SessionActivityState {
+    if (session.archived) return SessionActivityState.Idle
     val lastUsed = runCatching { Instant.parse(session.lastUsedAt).toEpochMilli() }.getOrNull()
         ?: return SessionActivityState.Idle
     if (now - lastUsed > SESSION_RUNNING_WINDOW_MS) return SessionActivityState.Idle

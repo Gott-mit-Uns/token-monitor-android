@@ -35,7 +35,7 @@ internal data class DisplayOptions(
 ) {
     companion object {
         val defaultViews = listOf("Home", "Tools", "Status", "Devices", "Models", "Projects", "Sessions", "Limits", "Trends")
-        val defaultHomeModules = listOf("Limits", "Tools", "Devices", "Models", "Activity")
+        val defaultHomeModules = listOf("Limits", "Tools", "Models", "Sessions", "Devices", "Activity")
     }
 }
 

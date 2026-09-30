@@ -1,0 +1,508 @@
+{
+  "updatedAt": "2026-09-30T12:00:00.000Z",
+  "periods": {
+    "today": {
+      "totalTokens": 150000,
+      "costUsd": 3,
+      "outputTokens": 25000,
+      "unclassifiedTokens": 125000,
+      "clients": {
+        "codex": 70000,
+        "muse": 50000,
+        "grok": 30000
+      },
+      "clientCosts": {
+        "codex": 1.4,
+        "muse": 1,
+        "grok": 0.6
+      },
+      "models": {
+        "gpt-6-sol": 70000,
+        "Muse": 50000,
+        "grok-code-fast-1": 30000
+      },
+      "modelCosts": {
+        "gpt-6-sol": 1.4,
+        "Muse": 1,
+        "grok-code-fast-1": 0.6
+      },
+      "clientModels": {
+        "codex": {
+          "gpt-6-sol": 70000
+        },
+        "muse": {
+          "Muse": 50000
+        },
+        "grok": {
+          "grok-code-fast-1": 30000
+        }
+      },
+      "clientOutputs": {
+        "codex": 10000,
+        "muse": 9000,
+        "grok": 6000
+      },
+      "clientUnclassifiedTokens": {
+        "codex": 60000,
+        "muse": 41000,
+        "grok": 24000
+      },
+      "modelOutputs": {
+        "gpt-6-sol": 10000,
+        "Muse": 9000,
+        "grok-code-fast-1": 6000
+      },
+      "modelUnclassifiedTokens": {
+        "gpt-6-sol": 60000,
+        "Muse": 41000,
+        "grok-code-fast-1": 24000
+      },
+      "sessions": {
+        "grok:sample-build": {
+          "sessionId": "sample-build",
+          "client": "grok",
+          "title": "fix a mixedCase bug",
+          "projectLabel": "Example Project",
+          "totalTokens": 30000,
+          "costUsd": 0.6,
+          "models": {
+            "grok-code-fast-1": 30000
+          },
+          "startedAt": "2026-09-30T11:00:00.000Z",
+          "lastUsedAt": "2026-09-30T11:59:00.000Z",
+          "turnEnded": false,
+          "contextTokens": 25000,
+          "contextWindow": 100000
+        },
+        "muse:sample-muse": {
+          "sessionId": "sample-muse",
+          "client": "muse",
+          "title": "Example Muse session",
+          "totalTokens": 50000,
+          "costUsd": 1,
+          "models": {
+            "Muse": 50000
+          },
+          "lastUsedAt": "2026-09-30T11:58:00.000Z",
+          "sourceDeleted": true
+        }
+      }
+    },
+    "month": {
+      "totalTokens": 150000,
+      "costUsd": 3,
+      "outputTokens": 25000,
+      "unclassifiedTokens": 125000,
+      "clients": {
+        "codex": 70000,
+        "muse": 50000,
+        "grok": 30000
+      },
+      "clientCosts": {
+        "codex": 1.4,
+        "muse": 1,
+        "grok": 0.6
+      },
+      "models": {
+        "gpt-6-sol": 70000,
+        "Muse": 50000,
+        "grok-code-fast-1": 30000
+      },
+      "modelCosts": {
+        "gpt-6-sol": 1.4,
+        "Muse": 1,
+        "grok-code-fast-1": 0.6
+      },
+      "clientModels": {
+        "codex": {
+          "gpt-6-sol": 70000
+        },
+        "muse": {
+          "Muse": 50000
+        },
+        "grok": {
+          "grok-code-fast-1": 30000
+        }
+      },
+      "clientOutputs": {
+        "codex": 10000,
+        "muse": 9000,
+        "grok": 6000
+      },
+      "clientUnclassifiedTokens": {
+        "codex": 60000,
+        "muse": 41000,
+        "grok": 24000
+      },
+      "modelOutputs": {
+        "gpt-6-sol": 10000,
+        "Muse": 9000,
+        "grok-code-fast-1": 6000
+      },
+      "modelUnclassifiedTokens": {
+        "gpt-6-sol": 60000,
+        "Muse": 41000,
+        "grok-code-fast-1": 24000
+      },
+      "sessions": {
+        "grok:sample-build": {
+          "sessionId": "sample-build",
+          "client": "grok",
+          "title": "fix a mixedCase bug",
+          "projectLabel": "Example Project",
+          "totalTokens": 30000,
+          "costUsd": 0.6,
+          "models": {
+            "grok-code-fast-1": 30000
+          },
+          "startedAt": "2026-09-30T11:00:00.000Z",
+          "lastUsedAt": "2026-09-30T11:59:00.000Z",
+          "turnEnded": false,
+          "contextTokens": 25000,
+          "contextWindow": 100000
+        },
+        "muse:sample-muse": {
+          "sessionId": "sample-muse",
+          "client": "muse",
+          "title": "Example Muse session",
+          "totalTokens": 50000,
+          "costUsd": 1,
+          "models": {
+            "Muse": 50000
+          },
+          "lastUsedAt": "2026-09-30T11:58:00.000Z",
+          "sourceDeleted": true
+        }
+      }
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "sample-desktop",
+      "hostname": "Example Desktop",
+      "platform": "win32",
+      "osName": "Windows",
+      "osVersion": "11",
+      "updatedAt": "2026-09-30T11:59:59.000Z",
+      "receivedAt": "2026-09-30T12:00:00.000Z",
+      "ageMs": 1000,
+      "stale": false,
+      "historyAvailable": true,
+      "trackedClients": [
+        "codex",
+        "muse",
+        "grok"
+      ],
+      "periods": {
+        "today": {
+          "totalTokens": 150000,
+          "costUsd": 3,
+          "outputTokens": 25000,
+          "unclassifiedTokens": 125000,
+          "clients": {
+            "codex": 70000,
+            "muse": 50000,
+            "grok": 30000
+          },
+          "clientCosts": {
+            "codex": 1.4,
+            "muse": 1,
+            "grok": 0.6
+          },
+          "models": {
+            "gpt-6-sol": 70000,
+            "Muse": 50000,
+            "grok-code-fast-1": 30000
+          },
+          "modelCosts": {
+            "gpt-6-sol": 1.4,
+            "Muse": 1,
+            "grok-code-fast-1": 0.6
+          },
+          "clientModels": {
+            "codex": {
+              "gpt-6-sol": 70000
+            },
+            "muse": {
+              "Muse": 50000
+            },
+            "grok": {
+              "grok-code-fast-1": 30000
+            }
+          },
+          "clientOutputs": {
+            "codex": 10000,
+            "muse": 9000,
+            "grok": 6000
+          },
+          "clientUnclassifiedTokens": {
+            "codex": 60000,
+            "muse": 41000,
+            "grok": 24000
+          },
+          "modelOutputs": {
+            "gpt-6-sol": 10000,
+            "Muse": 9000,
+            "grok-code-fast-1": 6000
+          },
+          "modelUnclassifiedTokens": {
+            "gpt-6-sol": 60000,
+            "Muse": 41000,
+            "grok-code-fast-1": 24000
+          },
+          "sessions": {
+            "grok:sample-build": {
+              "sessionId": "sample-build",
+              "client": "grok",
+              "title": "fix a mixedCase bug",
+              "projectLabel": "Example Project",
+              "totalTokens": 30000,
+              "costUsd": 0.6,
+              "models": {
+                "grok-code-fast-1": 30000
+              },
+              "startedAt": "2026-09-30T11:00:00.000Z",
+              "lastUsedAt": "2026-09-30T11:59:00.000Z",
+              "turnEnded": false,
+              "contextTokens": 25000,
+              "contextWindow": 100000
+            },
+            "muse:sample-muse": {
+              "sessionId": "sample-muse",
+              "client": "muse",
+              "title": "Example Muse session",
+              "totalTokens": 50000,
+              "costUsd": 1,
+              "models": {
+                "Muse": 50000
+              },
+              "lastUsedAt": "2026-09-30T11:58:00.000Z",
+              "sourceDeleted": true
+            }
+          }
+        },
+        "month": {
+          "totalTokens": 150000,
+          "costUsd": 3,
+          "outputTokens": 25000,
+          "unclassifiedTokens": 125000,
+          "clients": {
+            "codex": 70000,
+            "muse": 50000,
+            "grok": 30000
+          },
+          "clientCosts": {
+            "codex": 1.4,
+            "muse": 1,
+            "grok": 0.6
+          },
+          "models": {
+            "gpt-6-sol": 70000,
+            "Muse": 50000,
+            "grok-code-fast-1": 30000
+          },
+          "modelCosts": {
+            "gpt-6-sol": 1.4,
+            "Muse": 1,
+            "grok-code-fast-1": 0.6
+          },
+          "clientModels": {
+            "codex": {
+              "gpt-6-sol": 70000
+            },
+            "muse": {
+              "Muse": 50000
+            },
+            "grok": {
+              "grok-code-fast-1": 30000
+            }
+          },
+          "clientOutputs": {
+            "codex": 10000,
+            "muse": 9000,
+            "grok": 6000
+          },
+          "clientUnclassifiedTokens": {
+            "codex": 60000,
+            "muse": 41000,
+            "grok": 24000
+          },
+          "modelOutputs": {
+            "gpt-6-sol": 10000,
+            "Muse": 9000,
+            "grok-code-fast-1": 6000
+          },
+          "modelUnclassifiedTokens": {
+            "gpt-6-sol": 60000,
+            "Muse": 41000,
+            "grok-code-fast-1": 24000
+          },
+          "sessions": {
+            "grok:sample-build": {
+              "sessionId": "sample-build",
+              "client": "grok",
+              "title": "fix a mixedCase bug",
+              "projectLabel": "Example Project",
+              "totalTokens": 30000,
+              "costUsd": 0.6,
+              "models": {
+                "grok-code-fast-1": 30000
+              },
+              "startedAt": "2026-09-30T11:00:00.000Z",
+              "lastUsedAt": "2026-09-30T11:59:00.000Z",
+              "turnEnded": false,
+              "contextTokens": 25000,
+              "contextWindow": 100000
+            },
+            "muse:sample-muse": {
+              "sessionId": "sample-muse",
+              "client": "muse",
+              "title": "Example Muse session",
+              "totalTokens": 50000,
+              "costUsd": 1,
+              "models": {
+                "Muse": 50000
+              },
+              "lastUsedAt": "2026-09-30T11:58:00.000Z",
+              "sourceDeleted": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "limits": {
+    "updatedAt": "2026-09-30T12:00:00.000Z",
+    "providers": [
+      {
+        "provider": "stepfun",
+        "accountLabel": "Coding Plan",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "5-hour",
+            "usedPercent": 25,
+            "resetsAt": "2026-09-30T15:00:00.000Z",
+            "windowMinutes": 300,
+            "remainingPercent": 75,
+            "showMeter": true
+          },
+          {
+            "kind": "weekly",
+            "label": "Weekly",
+            "usedPercent": 10,
+            "resetsAt": "2026-10-05T12:00:00.000Z",
+            "windowMinutes": 10080,
+            "remainingPercent": 90,
+            "showMeter": true
+          }
+        ]
+      },
+      {
+        "provider": "stepfun",
+        "accountLabel": "Token Plan",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "billing",
+            "label": "Credit",
+            "usedPercent": 12.5,
+            "remainingPercent": 87.5,
+            "showMeter": true
+          }
+        ]
+      },
+      {
+        "provider": "codex",
+        "planLabel": "Pro",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "weekly",
+            "label": "Weekly",
+            "usedPercent": 5,
+            "remainingPercent": 95,
+            "showMeter": true
+          }
+        ]
+      },
+      {
+        "provider": "codex",
+        "planLabel": "Pro More",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "weekly",
+            "label": "Weekly",
+            "usedPercent": 5,
+            "remainingPercent": 95,
+            "showMeter": true
+          }
+        ]
+      },
+      {
+        "provider": "codex",
+        "planLabel": "Pro Max",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "weekly",
+            "label": "Weekly",
+            "usedPercent": 5,
+            "remainingPercent": 95,
+            "showMeter": true
+          }
+        ]
+      },
+      {
+        "provider": "openrouter",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "billing",
+            "label": "Key limit",
+            "remaining": 7,
+            "usedPercent": 30,
+            "currency": "USD",
+            "resetsAt": "2026-10-01T00:00:00.000Z",
+            "remainingPercent": 70,
+            "showMeter": true
+          }
+        ]
+      }
+    ]
+  },
+  "historyPreview": {
+    "daily": [
+      {
+        "date": "2026-09-30",
+        "tokens": 150000,
+        "cost": 3,
+        "outputTokens": 25000,
+        "unclassifiedTokens": 125000,
+        "perClient": {
+          "codex": {
+            "tokens": 70000,
+            "cost": 1.4,
+            "outputTokens": 10000,
+            "unclassifiedTokens": 60000
+          },
+          "muse": {
+            "tokens": 50000,
+            "cost": 1,
+            "outputTokens": 9000,
+            "unclassifiedTokens": 41000
+          },
+          "grok": {
+            "tokens": 30000,
+            "cost": 0.6,
+            "outputTokens": 6000,
+            "unclassifiedTokens": 24000
+          }
+        }
+      }
+    ]
+  },
+  "staleAfterMs": 300000
+}

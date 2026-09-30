@@ -41,6 +41,7 @@ internal fun vendorOf(name: String): String? {
     val key = name.trim().lowercase(Locale.US)
     if (key.isEmpty()) return null
     if (key == "cursor") return "cursor"
+    if (key == "muse" || key == "muse code") return "meta"
     if (key == "openrouter" || key.startsWith("openrouter/")) return "openrouter"
     if (key == "zed" || key.startsWith("zed-")) return "zed"
     if (key == "opencode") return "opencode"
@@ -53,7 +54,7 @@ internal fun originalToolColor(name: String, fallback: Color): Color = when (ven
     "gemini" -> Color(0xFF4285F4)
     "xai" -> fallback
     "deepseek" -> Color(0xFF4D6BFE)
-    "meta" -> Color(0xFF1D65C1)
+    "meta" -> if (name.trim().lowercase(Locale.US) in setOf("muse", "muse code")) Color(0xFF0866FF) else Color(0xFF1D65C1)
     "mistral" -> Color(0xFFFA520F)
     "qwen" -> Color(0xFF615CED)
     "kimi", "zai", "opencode" -> fallback

@@ -1,5 +1,50 @@
 # Validation
 
+## v0.64.0 r1 release — 2026-09-30
+
+The released desktop tag is pinned to
+`9ad1ca2f6ec27e497eb38fffe7d9533aec0d3c38`. Review of the v0.63.1-to-v0.64.0
+diff found no change to the five Hub read routes, Bearer authentication, or
+stream-v2 contract. New synthetic fixtures cover Muse output, Grok title/project
+metadata, StepFun Coding/Token Plan windows, optional archive flags, Codex plan
+labels, and OpenRouter's normalized key allowance. Earlier fixtures remain.
+Home's recent-session selection is tested for canonical identity, ordering,
+five-row cap plus running overflow, background review exclusion, invalid dates,
+and archived-session activity/context suppression.
+
+All 99 JVM tests passed. Android lint reported no errors; preview debug assembly
+and the signed R8 release build passed. All 34 instrumentation tests passed on
+the API 36 Pixel 10 Pro XL emulator (`emulator-5554`), including Home session
+titles/context/navigation, cross-tool session IDs, and saved Home-layout retention. The preview app
+paired with the loopback synthetic Hub through the emulator's host route.
+Native captures of Home and Sessions were visually checked: StepFun plan labels,
+Muse marks, unmodified mixed-case titles, and Home-to-Sessions navigation were
+present. Captures stay private. This is emulator evidence, not One UI or phone
+verification. The Pages widget coordinates/type sizes and marketing gallery
+are unchanged.
+
+The independent read-only review covered the exact diff, callers, fixtures,
+preferences, privacy wording and release metadata. A stale fixture description
+in the development guide was corrected. The final navigation review also found
+that the Sessions list keyed rows by ID alone. Rows and expansion state now use
+client plus ID; a device regression covers two tools sharing an ID. The final
+regression pass found no
+remaining material findings. Local documentation links and fixture JSON parsed.
+GitHub build and emulator checks must pass on the release's exact main commit
+before publication.
+
+The APK is `token-monitor-android-v0.64.0-r1.apk`, 2,417,304 bytes, package
+`io.github.theminionooo.tokenmonitor`, version code `640001`.
+Its certificate SHA-256 remains
+`eed5a820371ac158c038e5a55243b2e4e7f10ffdf764963b2808d152d3821c2c`;
+its file SHA-256 is
+`734f5670672558d10f775b008b4f69b57a03fb5a928b196cfcfcb468a3c36389`.
+The release carries the APK, checksum and matching
+`token-monitor-android-update.json` manifest for in-app updates.
+Physical-phone in-place upgrade, saved pairing/widget retention and battery
+behavior remain unverified. The existing release certificate and higher version
+code preserve the upgrade identity; they are not a claim of physical-phone testing.
+
 ## v0.63.1 r1 release — 2026-09-28
 
 Desktop v0.63.1 is pinned to the released tag commit

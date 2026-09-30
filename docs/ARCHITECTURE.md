@@ -166,6 +166,13 @@ and settings. Shared presentation rules live alongside them in focused files:
   labels; `VendorPresentation.kt` maps tool and model names to marks and colors;
   `SessionPresentation.kt` owns the Running, Finished, and Idle window plus
   context-window calculations. Those rules are unit-tested without Compose.
+- **Home sessions.**
+  `HomeSessions.kt` derives the five most recent sessions plus running overflow
+  from month/today, deduplicated by client and ID. It uses the shared activity,
+  context and slow clock helpers rather than new timers or requests. Archived,
+  deleted and source-deleted wire flags map to one idle domain state. Existing
+  stored Home module choices are retained when new defaults are added.
+
 - **Settings.** `ConnectionSettings.kt` sections collapse to a header with a summary,
   like the desktop settings list. A fresh install shows `WelcomeSetup` instead
   of Settings until a Hub is saved.

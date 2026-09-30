@@ -43,6 +43,11 @@ class VendorMappingTest {
 
     @Test
     fun labelsFollowTheDesktop() {
+        assertEquals("Muse Code", "muse".displayName())
+        assertEquals("meta", vendorOf("muse"))
+        assertEquals("meta", vendorOf("Muse Code"))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_logo_meta, upstreamToolAsset("muse"))
+        assertEquals(androidx.compose.ui.graphics.Color(0xFF0866FF), originalToolColor("muse", androidx.compose.ui.graphics.Color.White))
         assertEquals("Claude Code", "claude".displayName())
         assertEquals("OpenCode", "opencode".displayName())
         assertEquals("LM Studio", "lmstudio".displayName())

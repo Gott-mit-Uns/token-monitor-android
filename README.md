@@ -17,7 +17,7 @@ Tokens, account limits, models and trends from the desktop Token Monitor Hub, pl
 <p align="center">
   <a href="https://github.com/The-Minion-oOo/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
   <img alt="Android 8 or newer" src="https://img.shields.io/badge/Android-8%2B-6fa79b?style=flat-square&logo=android&logoColor=10221c">
-  <img alt="Desktop baseline v0.63.1" src="https://img.shields.io/badge/Desktop-v0.63.1-73bdf5?style=flat-square">
+  <img alt="Desktop baseline v0.64.0" src="https://img.shields.io/badge/Desktop-v0.64.0-73bdf5?style=flat-square">
   <img alt="Kotlin and Compose" src="https://img.shields.io/badge/Kotlin-Compose-ff9c72?style=flat-square&logo=kotlin&logoColor=white">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-b39cff?style=flat-square"></a>
 </p>
@@ -96,13 +96,15 @@ is no public server, vendor relay, or separate Token Monitor account.
 - Day, week, month, rolling 7, 30 and 90 days, one year, all history and total.
 - Account limits with the desktop's reset countdowns.
 - Tools, devices, models, projects, sessions, subscriptions, service status, activity and trends, each with an `updated 5m ago` freshness.
-- Session activity, reported conversation titles, and context-window use when the desktop provides them, without reading prompt or response bodies.
+- Recent and running sessions on Home, reported conversation titles, and context-window use when the desktop provides them, without reading prompt or response bodies.
 - Trends by tool or model, shown as bars or a K-line chart.
 - Cache hit, cache miss, output and unclassified token details where the Hub provides them.
 - The desktop's Default, Obsidian and Porcelain themes, theme codes pasted as-is, an option to follow the phone's light and dark setting, three text sizes, motion controls, and reorderable views and Home modules.
 - A Back button that goes Home instead of quitting on you, and a light haptic tick on every tab.
 
-The Hub does not carry prompt or response bodies. It can carry a conversation title, which may contain sensitive text; the phone shows it only in Sessions, never on a widget.
+The Hub does not carry prompt or response bodies. It can carry a conversation title, which may contain sensitive text; the phone shows it in Home and Sessions, never on a widget.
+
+Home shows the five most recent sessions plus any other running sessions. On an existing installation, enable **Sessions** under **Settings → Main dashboard → Home modules**; saved layouts are not reset.
 
 ## Private and light
 
@@ -117,13 +119,15 @@ The Hub does not carry prompt or response bodies. It can carry a conversation ti
 
 ## Get connected
 
-You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android v0.63.1 r1 is fixture-verified against desktop v0.63.1. A physical-phone upgrade has not yet been checked for this release.
+You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android v0.64.0 r1 is fixture-verified against desktop v0.64.0. A physical-phone upgrade has not yet been checked for this release.
 
-1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.63.1 r1 APK.
+1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.64.0 r1 APK.
 2. Put [Tailscale](https://tailscale.com/) on the desktop and the phone, signed into the same tailnet.
 3. In desktop Token Monitor, open **Settings → Multi-device Sync → Host Hub** and copy the address and shared secret.
 4. In the app, type the address that starts with `100.`, paste the secret, tap **Connect**. Just the numbers are enough.
 5. At home, tap **Find** and the app fills in the desktop's Wi-Fi address as a fallback. From then on the phone uses whichever route answers.
+
+Desktop v0.64's optional iCloud Drive sync does not replace the Hub connection for Android.
 
 [Pairing and troubleshooting](docs/PAIRING.md) · [Installing and updating](docs/INSTALL.md).
 
@@ -131,11 +135,11 @@ You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosti
 
 | | |
 | --- | --- |
-| Current public release | [`v0.63.1-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.63.1-r1) |
+| Current public release | [`v0.64.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.64.0-r1) |
 | Latest phone-verified build | signed `v0.62.0-r1` over v0.61.0 r1; saved connection and placed Pages widget registration preserved |
-| v0.63.1 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
-| Desktop baseline | Token Monitor `v0.63.1` |
-| Upstream commit | [`e38f60a`](https://github.com/Javis603/token-monitor/commit/e38f60a94ce6310341f8ad2de6888f1ec51dd755) |
+| v0.64.0 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
+| Desktop baseline | Token Monitor `v0.64.0` |
+| Upstream commit | [`9ad1ca2`](https://github.com/Javis603/token-monitor/commit/9ad1ca2f6ec27e497eb38fffe7d9533aec0d3c38) |
 
 The visible version matches the desktop release the phone understands. Android-only
 builds bump the release revision and internal version code while the compatibility

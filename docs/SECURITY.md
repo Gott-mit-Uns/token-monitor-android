@@ -73,7 +73,7 @@ project labels, session identifiers, and connection credentials are omitted.
 
 ## Data visible on the phone
 
-Hub responses can include device names, model/tool attribution, project folder labels, session identifiers and titles, account email/plan metadata, costs, and normalized limits. Conversation titles can reveal sensitive text and appear in Sessions when the Hub provides them; they are not displayed on the home-screen widgets. Account emails are hidden by default and can be shown only through an explicit display setting. The Hub does not send absolute project paths or prompt/response transcript bodies.
+Hub responses can include device names, model/tool attribution, project folder labels, session identifiers and titles, account email/plan metadata, costs, and normalized limits. Conversation titles can reveal sensitive text and appear in Home and Sessions when the Hub provides them; they are not displayed on the home-screen widgets. Account emails are hidden by default and can be shown only through an explicit display setting. The Hub does not send absolute project paths or prompt/response transcript bodies.
 
 ## Reporting a problem
 

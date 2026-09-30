@@ -2,7 +2,7 @@
 
 ## Version rule
 
-The current Android release displays `v0.63.1` because it is fixture-verified against desktop Token Monitor `v0.63.1`. The Gradle properties and `upstream.json` identify tag `v0.63.1` and peeled commit `e38f60a94ce6310341f8ad2de6888f1ec51dd755`. The signed release is [`android-v0.63.1-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.63.1-r1); physical-phone upgrade checks remain pending.
+The current Android release displays `v0.64.0` because it is fixture-verified against desktop Token Monitor `v0.64.0`. The Gradle properties and `upstream.json` identify tag `v0.64.0` and peeled commit `9ad1ca2f6ec27e497eb38fffe7d9533aec0d3c38`. The signed release is [`android-v0.64.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.64.0-r1); physical-phone upgrade checks remain pending.
 
 An Android-only fix increments `versionCode` and the GitHub release revision,
 for example `android-vX.Y.Z-rN`, without changing the visible compatibility

@@ -28,6 +28,60 @@ import java.time.LocalDate
 class DashboardInteractionTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun sessionsFromDifferentToolsMayShareAnId() {
+        val first = SessionUsage("same-id", "Example Codex session", "codex", "", 42, 0.0, emptyList(), 0, "", "")
+        val second = first.copy(client = "muse", title = "Example Muse session")
+        compose.setContent {
+            MaterialTheme { androidx.compose.foundation.lazy.LazyColumn {
+                sessionItems(listOf(first, second), DashboardPeriod.Today)
+            } }
+        }
+        compose.onNodeWithText("Example Codex session").assertIsDisplayed()
+        compose.onNodeWithText("Example Muse session").assertIsDisplayed()
+        compose.onNodeWithText("Example Codex session").performClick()
+        compose.onAllNodesWithContentDescription("Collapse session details").assertCountEquals(1)
+        compose.onAllNodesWithContentDescription("Expand session details").assertCountEquals(1)
+    }
+
+    @Test fun newHomeModuleDefaultsDoNotResetSavedLayouts() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        check(context.packageName.endsWith(".preview"))
+        val prefs = context.getSharedPreferences("display_preferences", android.content.Context.MODE_PRIVATE)
+        val key = "visible_home_modules"
+        val original = prefs.getString(key, null)
+        try {
+            prefs.edit().remove(key).commit()
+            assertTrue("Sessions" in io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences(context).options.value.visibleHomeModules)
+            prefs.edit().putString(key, "Devices,Tools,Limits").commit()
+            val store = io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences(context)
+            assertEquals(listOf("Devices", "Tools", "Limits"), store.options.value.visibleHomeModules)
+            store.setHomeModuleVisible("Sessions", true)
+            assertEquals(listOf("Devices", "Tools", "Limits", "Sessions"), store.options.value.visibleHomeModules)
+            assertEquals(store.options.value.visibleHomeModules, io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences(context).options.value.visibleHomeModules)
+        } finally {
+            prefs.edit().putString(key, original).commit()
+        }
+    }
+
+    @Test fun homeSessionsPreserveTitlesContextAndOpenSessions() {
+        val now = java.time.Instant.parse("2026-09-30T12:00:00Z").toEpochMilli()
+        val session = SessionUsage("sample", "fix a mixedCase bug", "muse", "Example", 42, 0.0, emptyList(), 0,
+            "2026-09-30T11:55:00Z", "2026-09-30T11:59:00Z", contextTokens = 25, contextWindow = 100, turnEnded = false)
+        val snapshot = HubSnapshot(stats = HubStats(periods = mapOf("month" to UsagePeriod(sessions = listOf(session)))))
+        var chosen: DashboardDestination? = null
+        compose.setContent {
+            MaterialTheme { CompositionLocalProvider(LocalNow provides now) {
+                HomeSessionsModule(snapshot) { chosen = it }
+            } }
+        }
+        compose.onNodeWithText("fix a mixedCase bug").assertIsDisplayed()
+        compose.onNodeWithText("1 running").assertIsDisplayed()
+        compose.onNodeWithText("Context 75% left").assertIsDisplayed()
+        compose.onNodeWithText("Muse Code · Running · 1m ago · Example").assertIsDisplayed()
+        compose.onNodeWithText("SESSIONS").performClick()
+        compose.runOnIdle { assertEquals(DashboardDestination.Sessions, chosen) }
+    }
+
     @Test fun toolsOpenOnlyTheirOwnModelsWithMotion() = checkToolNavigation(true)
 
     @Test fun toolsOpenOnlyTheirOwnModelsWithoutMotion() = checkToolNavigation(false)

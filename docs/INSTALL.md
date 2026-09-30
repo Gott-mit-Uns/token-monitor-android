@@ -3,16 +3,16 @@
 ## Requirements
 
 - Android 8.0 or newer.
-- Token Monitor desktop with Hub hosting enabled and a shared secret. Android v0.63.1 r1 is fixture-verified through desktop v0.63.1; its physical-phone upgrade is not yet verified.
+- Token Monitor desktop with Hub hosting enabled and a shared secret. Android v0.64.0 r1 is fixture-verified through desktop v0.64.0; its physical-phone upgrade is not yet verified.
 - A private route to the desktop: Tailscale is recommended; home Wi-Fi is optional.
 
 ## Install
 
-Download the signed v0.63.1 r1 APK from the public
-[release](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.63.1-r1),
+Download the signed v0.64.0 r1 APK from the public
+[release](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.64.0-r1),
 or use **Settings → App updates** in v0.62.0 r1 or newer. It uses the same package
 and release certificate as earlier releases, with a higher version code. A
-physical-phone in-place upgrade to v0.63.1 r1 has not yet been verified; see
+physical-phone in-place upgrade to v0.64.0 r1 has not yet been verified; see
 [Validation](VALIDATION.md). The older v0.61.0 r1 app has no in-app updater,
 so install a newer release manually once.
 
@@ -41,7 +41,7 @@ There is no Play Store or F-Droid listing.
 Each signed release will include an APK and a `.sha256` file. Compare the hash:
 
 ```powershell
-Get-FileHash .\token-monitor-android-v0.63.1-r1.apk -Algorithm SHA256
+Get-FileHash .\token-monitor-android-v0.64.0-r1.apk -Algorithm SHA256
 ```
 
 A matching checksum detects download corruption; download both files from the

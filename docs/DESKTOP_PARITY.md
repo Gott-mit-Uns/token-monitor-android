@@ -1,6 +1,6 @@
-# Desktop parity for v0.63.1
+# Desktop parity for v0.64.0
 
-The Android release is fixture-verified against desktop Token Monitor v0.63.1. It mirrors
+The Android release is fixture-verified against desktop Token Monitor v0.64.0. It mirrors
 the desktop information that the Hub can safely provide while keeping the phone
 read-only and lightweight.
 
@@ -9,6 +9,7 @@ read-only and lightweight.
 | Desktop surface | Android coverage |
 | --- | --- |
 | Home totals and period selection | Day, month, week, 7 days, 30 days, and total, with a configurable default |
+| Home Sessions | Five newest sessions plus all running sessions, raw reported titles, recent context, and a link to Sessions; independent of the totals period |
 | Limits | Provider windows, remaining or used bars, reset time, plan/source metadata, and hidden-by-default account email |
 | Tools | Token and cost totals, proportional bars, cache hit, cache miss, output, and unclassified details |
 | Status | Provider status, message, update time, and provider status-page link |
@@ -39,7 +40,7 @@ controls are window-specific rather than Hub dashboard features.
 ## Intentional boundaries
 
 The following remain on desktop because they collect data, control a desktop
-window, or require information the v0.63.1 Hub does not transmit:
+window, or require information the v0.64.0 Hub does not transmit:
 
 - tool discovery, account sign-in, collection cadence, diagnostics, export, and
   subscription editing;
@@ -63,7 +64,7 @@ balance plus Devin's reported plan. Detailed TypeSafe token summaries and
 Claude reset-grant explanations remain desktop-only for now.
 
 v0.63.0 can attach locally resolved conversation titles to Cursor sessions.
-Android displays a reported title in the Sessions list and otherwise keeps its
+Android displays a reported title in Home and the Sessions list and otherwise keeps its
 existing label. Titles may contain private text, so they are not used in widgets
 or public examples. The v0.63.0 glass styles, background-image control, and
 credential setup are desktop-only; collector fixes change the numbers supplied
@@ -74,6 +75,18 @@ includes reasoning tokens in the ZCode and OpenCode totals it reports. Android
 displays those source values as received, without a second normalization or
 token addition. Background scan, client-mode publish, and Electron renderer
 performance changes remain desktop responsibilities.
+
+v0.64.0 adds Muse Code's label and Meta mark, StepFun Coding and Token Plan
+windows, richer Grok Build session titles, and Codex Pro/Pro More/Pro Max plan
+labels. Android reads the normalized Hub data, including OpenRouter's resetting
+key allowance; provider sign-in and quota calculation remain on desktop. Home
+Sessions uses month and today, excludes background reviews, deduplicates by client
+and session ID, and never marks archived/deleted sessions as running. New installs
+show it by default; saved Home layouts keep their existing module choices.
+
+Optional macOS iCloud Drive sync, Edge Dock fullscreen/quota pins, Claude Web
+organization selection, and collection/watch fixes remain desktop features.
+Android still requires a hosted Hub over its private network.
 
 The Android app does not replace these with remote commands. It reads only the
 documented Hub endpoints listed in [`SECURITY.md`](SECURITY.md).

@@ -168,7 +168,7 @@ internal fun LazyListScope.sessionItems(sessions: List<SessionUsage>, period: Da
     if (sessions.isEmpty()) item { MutedCopy(if (period in DashboardPeriod.rangeChoices) "The Hub reports sessions for Day, Month, and Total only." else "No session detail is available for ${period.label.lowercase(Locale.US)}.", modifier = Modifier.padding(vertical = 12.dp)) }
     else {
         val maximum = sessions.maxOfOrNull { it.totalTokens }?.coerceAtLeast(1L) ?: 1L
-        items(sessions.sortedByDescending { it.totalTokens }, key = { it.id }) { session ->
+        items(sessions.sortedByDescending { it.totalTokens }, key = { "${it.client}:${it.id}" }) { session ->
             val labels = sessionRowLabels(session)
             SessionUsageRow(session, labels.title, labels.meta, session.totalTokens.toFloat() / maximum)
         }
@@ -177,7 +177,7 @@ internal fun LazyListScope.sessionItems(sessions: List<SessionUsage>, period: Da
 
 @Composable
 internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String, ratio: Float) {
-    var expanded by rememberSaveable(session.id) { mutableStateOf(false) }
+    var expanded by rememberSaveable(session.client, session.id) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
     val now = LocalNow.current
     val activity = sessionActivityState(session, now)

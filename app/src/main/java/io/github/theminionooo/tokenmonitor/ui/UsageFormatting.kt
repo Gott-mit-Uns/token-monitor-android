@@ -127,7 +127,7 @@ private val toolLabels = mapOf(
     "workbuddy" to "WorkBuddy", "proma" to "Proma", "qodercn" to "Qoder CN", "reasonix" to "Reasonix", "dsh" to "DeepSeek Harness",
     "cherrystudio" to "Cherry Studio", "lmstudio" to "LM Studio", "unsloth" to "Unsloth", "devin" to "Devin", "openrouter" to "OpenRouter",
     "deepseek" to "DeepSeek", "ollama" to "Ollama", "thirdparty" to "Third-party",
-    "factory" to "Factory", "nvidia" to "NVIDIA", "stepfun" to "StepFun",
+    "factory" to "Factory", "nvidia" to "NVIDIA", "stepfun" to "StepFun", "muse" to "Muse Code",
 )
 
 /**

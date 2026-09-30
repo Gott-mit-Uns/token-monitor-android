@@ -102,7 +102,7 @@ import kotlin.math.max
 import kotlin.math.roundToLong
 
 /*
- * The Home view: desktop-style modules for limits, tools, devices, models, and activity.
+ * The Home view: desktop-style usage, limits, sessions, devices and activity modules.
  */
 internal fun LazyListScope.homeItems(
     snapshot: HubSnapshot,
@@ -119,6 +119,7 @@ internal fun LazyListScope.homeItems(
             "Tools" -> item { DesktopModule("TOOLS", DashboardDestination.Tools, onChoose) { HomeBreakdown(usage.clients, usage.clientCosts, displayOptions.rankingMetric) } }
             "Devices" -> item { DesktopModule("DEVICES", DashboardDestination.Devices, onChoose) { HomeDevices(snapshot.stats.devices, period = period, aggregateUsage = usage) } }
             "Models" -> item { DesktopModule("MODELS", DashboardDestination.Models, onChoose) { HomeBreakdown(usage.models, usage.modelCosts, displayOptions.rankingMetric, modelRows = true) } }
+            "Sessions" -> item { HomeSessionsModule(snapshot, onChoose) }
             "Activity" -> item {
                 DesktopModule(
                     title = "ACTIVITY",
@@ -266,6 +267,7 @@ internal fun HomeListRow(
     color: Color = Blue,
     upstreamName: String? = null,
     modelRow: Boolean = false,
+    literalName: Boolean = false,
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         when {
@@ -275,7 +277,7 @@ internal fun HomeListRow(
         }
         Spacer(Modifier.width(8.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(if (literalName) name else name.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (secondary.isNotBlank()) Text(secondary, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         Text(primary, color = Ink, style = MaterialTheme.typography.bodySmall, maxLines = 1)

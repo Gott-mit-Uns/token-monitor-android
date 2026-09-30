@@ -3,6 +3,20 @@
 Android releases use the desktop protocol version plus an Android revision.
 Unreleased work stays under **Next release** until its signed APK is published.
 
+## v0.64.0 r1 — 2026-09-30
+
+- Match the released desktop v0.64.0 Hub with new synthetic endpoint and stream
+  fixtures, retaining earlier compatibility tests.
+- Add Muse Code's label and mark and read StepFun's optional plan name alongside
+  its Coding and Token Plan windows.
+- Add recent/running sessions to Home, with reported titles and recent context.
+  New installs show Sessions by default; existing saved Home layouts stay intact.
+- Keep archived/deleted sessions idle. Preserve Grok Build titles, Codex plan
+  labels, and OpenRouter's normalized resetting allowance.
+- Keep session rows distinct when different tools report the same session ID.
+- Leave the Pages widget geometry, signing identity, private read-only Hub access,
+  and bounded Live behavior unchanged.
+
 ## v0.63.1 r1 — 2026-09-28
 
 - Verify the desktop v0.63.1 Hub contract with sanitized fixtures for all five

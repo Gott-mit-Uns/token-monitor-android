@@ -4,7 +4,7 @@ This Android app treats the desktop Hub as an external, read-only protocol.
 
 ## Verified baseline
 
-The verified baseline is upstream Token Monitor **v0.63.1**, released 2026-09-28. The
+The verified baseline is upstream Token Monitor **v0.64.0**, released 2026-09-30. The
 release and source were checked directly from the `Javis603/token-monitor`
 tag before this implementation. The older local desktop checkout was not
 changed and is not the protocol authority.
@@ -51,9 +51,9 @@ replaces the snapshot with the current read endpoints.
 
 ## Fixtures
 
-Sanitized v0.63.1 examples for all five read endpoints and the live stream live
-in `app/src/test/resources/protocol/v0.63.1/`; the retained v0.54.0, v0.55.0,
-v0.56.0, v0.60.0, v0.61.0, v0.62.0, and v0.63.0 fixtures prove backward compatibility. They contain no user secrets,
+Sanitized v0.64.0 examples for all five read endpoints and the live stream live
+in `app/src/test/resources/protocol/v0.64.0/`; the retained v0.54.0, v0.55.0,
+v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, and v0.63.1 fixtures prove backward compatibility. They contain no user secrets,
 machine paths, account identifiers, or real usage. Parser tests cover every
 read surface, the SSE envelope, omitted optional fields, and a future unknown
 field. The compatibility parser maps only the fields the dashboard needs and
@@ -96,7 +96,7 @@ v0.63.0 retains those endpoints, header authentication, and stream-v2 envelope.
 The release changes mostly desktop presentation, collection, and limits-account
 setup. Cursor may now send a locally resolved conversation `title` on a session;
 Android reads that optional field and keeps its client/model fallback when absent.
-The title is metadata visible in Sessions, not a prompt or response body. The
+The title is metadata visible in Home and Sessions, not a prompt or response body. The
 new Antigravity and Qoder CN source checks affect desktop collection, not phone
 access to the Hub. The v0.63.0 fixture is synthetic and follows the released
 wire contract; it is not an unredacted Hub capture.
@@ -109,6 +109,22 @@ Android preserves those server-reported IDs and counters without recomputing
 them. The v0.63.1 fixture is synthetic and covers that data shape, not a real
 Hub capture. Collection-worker and Electron renderer performance changes stay
 on the desktop.
+
+v0.64.0 keeps the five read routes, Bearer authentication, and stream-v2
+contract unchanged. Muse Code uses client ID `muse`; its reported output already
+includes disjoint reasoning tokens. Grok Build supplies optional title/project
+metadata through the existing session shape. StepFun's optional plan name is in
+`accountLabel`, used only for StepFun and TypeSafe when `plan`/`planLabel` are
+absent. Coding Plan reports five-hour and weekly windows; Token Plan reports a
+credit percentage whose reset may be absent. Codex's normalized plan labels and
+OpenRouter's normalized resetting key allowance pass through unchanged.
+
+Optional session `archived`, `deleted`, and `sourceDeleted` flags map to one
+archived state so a recently closed session cannot show Running or context use.
+Omitted flags remain false. Home derives its recent list from month/today and
+does not invent sessions for rolling history ranges. The v0.64.0 fixture is
+synthetic, covers every read endpoint and both stream event forms, and contains
+no transcript or real account data.
 
 When the desktop protocol changes, add a new versioned fixture directory and
 tests before changing the Android mapping.
