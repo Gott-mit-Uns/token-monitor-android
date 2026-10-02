@@ -172,6 +172,9 @@ and settings. Shared presentation rules live alongside them in focused files:
   context and slow clock helpers rather than new timers or requests. Archived,
   deleted and source-deleted wire flags map to one idle domain state. Existing
   stored Home module choices are retained when new defaults are added.
+  Session speed/cache-hit readings and optional cache estimates share the same
+  presentation helpers with Sessions. A local title toggle affects both views
+  without changing cached wire data. No new background work is added.
 
 - **Settings.** `ConnectionSettings.kt` sections collapse to a header with a summary,
   like the desktop settings list. A fresh install shows `WelcomeSetup` instead

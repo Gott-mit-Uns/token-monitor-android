@@ -28,6 +28,53 @@ import java.time.LocalDate
 class DashboardInteractionTest {
     @get:Rule val compose = createComposeRule()
 
+    private fun metricSession() = SessionUsage("metrics", "Private planning title", "codex", "Example", 100, 1.0,
+        listOf("gpt-6-sol"), 1, "", "2026-10-02T11:59:00Z",
+        inputTokens = 20, outputTokens = 100, cacheReadTokens = 60, cacheWriteTokens = 20,
+        timedOutputTokens = 80, timedDurationMs = 1000, promptCache = PromptCache("2026-10-02T11:59:00Z", 300))
+
+    @Test fun homeSessionsCanHideTitlesAndShowEstimatedCacheAndSpeed() {
+        val now = java.time.Instant.parse("2026-10-02T12:00:00Z").toEpochMilli()
+        val snapshot = HubSnapshot(stats = HubStats(periods = mapOf("month" to UsagePeriod(sessions = listOf(metricSession())))))
+        var showTitles by mutableStateOf(true)
+        compose.setContent { MaterialTheme { CompositionLocalProvider(LocalNow provides now, LocalSessionTitles provides showTitles) {
+            HomeSessionsModule(snapshot) {}
+        } } }
+        compose.onNodeWithText("Private planning title").assertIsDisplayed()
+        compose.onNodeWithText("Cache hit 60% · 80 tok/s · Cache estimate ~4 min left").assertIsDisplayed()
+        compose.runOnIdle { showTitles = false }
+        compose.onNodeWithText("Private planning title").assertDoesNotExist()
+        compose.onNodeWithText("Codex · gpt-6-sol").assertIsDisplayed()
+    }
+
+    @Test fun sessionsUseTheSamePrivacyChoiceAndMetrics() {
+        val now = java.time.Instant.parse("2026-10-02T12:00:00Z").toEpochMilli()
+        compose.setContent { MaterialTheme { CompositionLocalProvider(LocalNow provides now, LocalSessionTitles provides false) {
+            androidx.compose.foundation.lazy.LazyColumn { sessionItems(listOf(metricSession()), DashboardPeriod.Today) }
+        } } }
+        compose.onNodeWithText("Private planning title").assertDoesNotExist()
+        compose.onNodeWithText("Codex · gpt-6-sol").assertIsDisplayed()
+        compose.onNodeWithText("Cache hit 60% · 80 tok/s · Cache estimate ~4 min left").assertIsDisplayed()
+    }
+
+    @Test fun sessionTitlePreferenceDefaultsVisibleAndSurvivesReload() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        check(context.packageName.endsWith(".preview"))
+        val prefs = context.getSharedPreferences("display_preferences", android.content.Context.MODE_PRIVATE)
+        val key = "show_session_titles"
+        val existed = prefs.contains(key)
+        val original = prefs.getBoolean(key, true)
+        try {
+            prefs.edit().remove(key).commit()
+            val store = io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences(context)
+            assertTrue(store.options.value.showSessionTitles)
+            store.setShowSessionTitles(false)
+            assertFalse(io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences(context).options.value.showSessionTitles)
+        } finally {
+            if (existed) prefs.edit().putBoolean(key, original).commit() else prefs.edit().remove(key).commit()
+        }
+    }
+
     @Test fun sessionsFromDifferentToolsMayShareAnId() {
         val first = SessionUsage("same-id", "Example Codex session", "codex", "", 42, 0.0, emptyList(), 0, "", "")
         val second = first.copy(client = "muse", title = "Example Muse session")

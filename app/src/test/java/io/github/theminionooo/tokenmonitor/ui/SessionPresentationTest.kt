@@ -1,12 +1,18 @@
 package io.github.theminionooo.tokenmonitor.ui
 
 import io.github.theminionooo.tokenmonitor.domain.SessionUsage
+import io.github.theminionooo.tokenmonitor.domain.PromptCache
 import java.time.Instant
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
 class SessionPresentationTest {
+    @Test fun `fx retains its lowercase name and upstream vendor mark`() {
+        assertEquals("fx", "fx".displayName())
+        assertEquals("fx", vendorOf("fx"))
+        org.junit.Assert.assertNotNull(upstreamToolAsset("fx"))
+    }
     private val now = Instant.parse("2026-09-21T12:00:00Z").toEpochMilli()
 
     @Test fun `recent unfinished and finished turns stay distinct`() {
@@ -32,6 +38,41 @@ class SessionPresentationTest {
         val titled = sessionRowLabels(untitled.copy(title = "Example planning conversation"))
         assertEquals("Example planning conversation", titled.title)
         assertEquals("Codex · ${oldLabels.meta}", titled.meta)
+    }
+
+    @Test fun `hidden titles use the untitled label without mutating the source`() {
+        val titled = session("2026-09-21T11:59:30Z").copy(title = "Private conversation")
+        assertEquals("Codex · gpt-6-astra", sessionRowLabels(titled, false).title)
+        assertEquals("Private conversation", titled.title)
+    }
+
+    @Test fun `speed is capped at output and unknown without positive timed values`() {
+        val base = session("").copy(outputTokens = 100, timedOutputTokens = 200, timedDurationMs = 2000)
+        assertEquals(50.0, sessionTokenRate(base)!!, 0.001)
+        assertNull(sessionTokenRate(base.copy(timedDurationMs = 0)))
+        assertNull(sessionTokenRate(base.copy(timedOutputTokens = 0)))
+        assertNull(sessionTokenRate(base.copy(outputTokens = -1)))
+        assertEquals(1000.0, sessionTokenRate(base.copy(outputTokens = Long.MAX_VALUE, timedOutputTokens = Long.MAX_VALUE, timedDurationMs = Long.MAX_VALUE))!!, 0.001)
+    }
+
+    @Test fun `cache hit is distinct from missing cache telemetry and does not overflow`() {
+        val base = session("").copy(inputTokens = 20, cacheReadTokens = 60, cacheWriteTokens = 20)
+        assertEquals(60.0, sessionCacheHitPercent(base)!!, 0.001)
+        assertEquals(0.0, sessionCacheHitPercent(base.copy(cacheReadTokens = 0))!!, 0.001)
+        assertNull(sessionCacheHitPercent(base.copy(cacheReadTokens = 0, cacheWriteTokens = 0)))
+        assertEquals(50.0, sessionCacheHitPercent(base.copy(inputTokens = Long.MAX_VALUE, cacheReadTokens = Long.MAX_VALUE, cacheWriteTokens = 0))!!, 0.001)
+    }
+
+    @Test fun `cache estimates expire and suppress archived future invalid or unsupported rows`() {
+        val base = session("").copy(promptCache = PromptCache("2026-09-21T11:59:00Z", 300))
+        assertEquals(4, sessionPromptCacheMinutes(base, now))
+        assertEquals(1, sessionPromptCacheMinutes(base, now + 239_999))
+        assertNull(sessionPromptCacheMinutes(base, now + 240_000))
+        assertNull(sessionPromptCacheMinutes(base.copy(archived = true), now))
+        assertNull(sessionPromptCacheMinutes(base.copy(client = "fx"), now))
+        assertNull(sessionPromptCacheMinutes(base.copy(promptCache = PromptCache("2026-09-21T12:00:01Z", 300)), now))
+        assertNull(sessionPromptCacheMinutes(base.copy(promptCache = PromptCache("bad", 300)), now))
+        assertNull(sessionPromptCacheMinutes(base.copy(promptCache = PromptCache("2026-09-21T11:59:00Z", 600)), now))
     }
 
     private fun session(lastUsedAt: String, turnEnded: Boolean? = null) = SessionUsage(

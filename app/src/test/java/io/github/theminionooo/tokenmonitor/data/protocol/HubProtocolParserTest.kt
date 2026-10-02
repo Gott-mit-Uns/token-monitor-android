@@ -8,6 +8,45 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HubProtocolParserTest {
+    @Test fun `v0 65 fixture maps optional session counters across snapshot devices and stream`() {
+        val snapshot = HubProtocolParser.decodeSnapshot(
+            resource("health.json", "v0.65.0"), resource("stats.json", "v0.65.0"),
+            resource("devices.json", "v0.65.0"), resource("history.json", "v0.65.0"),
+            resource("subscriptions.json", "v0.65.0"), 0,
+        )
+        assertEquals("v0.65.0", snapshot.health.hubBuild)
+        assertEquals("v0.65.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals(50_000, snapshot.today.clients.getValue("fx"))
+        fun checkSessions(sessions: List<io.github.theminionooo.tokenmonitor.domain.SessionUsage>) {
+            val session = sessions.first { it.id == "sample-speed" }
+            assertEquals(5000, session.inputTokens)
+            assertEquals(10_000, session.outputTokens)
+            assertEquals(50_000, session.cacheReadTokens)
+            assertEquals(5000, session.cacheWriteTokens)
+            assertEquals(8000, session.timedOutputTokens)
+            assertEquals(100_000, session.timedDurationMs)
+            assertEquals(300, session.promptCache!!.ttlSeconds)
+        }
+        checkSessions(snapshot.today.sessions)
+        checkSessions(snapshot.stats.devices.single().periods.getValue("today").sessions)
+        val stream = resource("stats-stream.sse", "v0.65.0").lineSequence()
+            .filter { it.startsWith("data:") }.joinToString("\n") { it.removePrefix("data:").trim() }
+        checkSessions(checkNotNull(HubProtocolParser.decodeStatsStreamEvent(stream)).periods.getValue("today").sessions)
+    }
+
+    @Test fun `invalid counters and cache estimates retain safe legacy behavior`() {
+        fun session(fields: String) = HubProtocolParser.decodeStats(
+            """{"periods":{"today":{"sessions":{"test":{"outputTokens":10,$fields}}}}}""",
+        ).periods.getValue("today").sessions.single()
+        assertEquals(10, session("\"timedOutputTokens\":20,\"timedDurationMs\":1").timedOutputTokens)
+        assertEquals(0, session("\"timedOutputTokens\":20,\"timedDurationMs\":-1").timedOutputTokens)
+        assertEquals(0, session("\"inputTokens\":-1").inputTokens)
+        assertNull(session("\"promptCache\":null").promptCache)
+        assertNull(session("\"promptCache\":{\"observedAt\":\"bad\",\"ttlSeconds\":300}").promptCache)
+        assertNull(session("\"promptCache\":{\"observedAt\":\"2026-10-02T12:00:00Z\",\"ttlSeconds\":600}").promptCache)
+        assertNull(session("\"title\":\"Legacy\"").promptCache)
+    }
+
     @Test
     fun `v0 54 fixture maps every dashboard surface`() {
         val snapshot = HubProtocolParser.decodeSnapshot(
@@ -290,7 +329,7 @@ class HubProtocolParserTest {
             resource("devices.json", "v0.64.0"), resource("history.json", "v0.64.0"),
             resource("subscriptions.json", "v0.64.0"), 1_800_000_000_000,
         )
-        assertEquals("v0.64.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals("v0.64.0", snapshot.health.hubBuild)
         assertEquals(150_000, snapshot.today.totalTokens)
         assertEquals(9_000, snapshot.today.clientOutputs.getValue("muse"))
         assertEquals(snapshot.today.totalTokens, snapshot.today.clientOutputs.values.sum() + snapshot.today.clientUnclassifiedTokens.values.sum())

@@ -28,6 +28,7 @@ internal data class DisplayOptions(
     val rankingMetric: RankingMetric = RankingMetric.Tokens,
     val showLimitSource: Boolean = false,
     val showAccountEmails: Boolean = false,
+    val showSessionTitles: Boolean = true,
     val limitBarMetric: LimitBarMetric = LimitBarMetric.Remaining,
     val defaultPeriod: String = "Today",
     val visibleViews: List<String> = defaultViews,
@@ -56,6 +57,7 @@ internal class DisplayPreferences(context: Context) {
     fun setRankingMetric(metric: RankingMetric) = update { copy(rankingMetric = metric) }
     fun setShowLimitSource(enabled: Boolean) = update { copy(showLimitSource = enabled) }
     fun setShowAccountEmails(enabled: Boolean) = update { copy(showAccountEmails = enabled) }
+    fun setShowSessionTitles(enabled: Boolean) = update { copy(showSessionTitles = enabled) }
     fun setLimitBarMetric(metric: LimitBarMetric) = update { copy(limitBarMetric = metric) }
     fun setDefaultPeriod(period: String) = update { copy(defaultPeriod = period) }
 
@@ -85,6 +87,7 @@ internal class DisplayPreferences(context: Context) {
             putString(rankingMetricKey, next.rankingMetric.name)
             putBoolean(showLimitSourceKey, next.showLimitSource)
             putBoolean(showAccountEmailsKey, next.showAccountEmails)
+            putBoolean(showSessionTitlesKey, next.showSessionTitles)
             putString(limitBarMetricKey, next.limitBarMetric.name)
             putString(defaultPeriodKey, next.defaultPeriod)
             putString(visibleViewsKey, next.visibleViews.joinToString(","))
@@ -105,6 +108,7 @@ internal class DisplayPreferences(context: Context) {
         rankingMetric = preferences.getString(rankingMetricKey, null).enumOrDefault(RankingMetric.Tokens),
         showLimitSource = preferences.getBoolean(showLimitSourceKey, false),
         showAccountEmails = preferences.getBoolean(showAccountEmailsKey, false),
+        showSessionTitles = preferences.getBoolean(showSessionTitlesKey, true),
         limitBarMetric = preferences.getString(limitBarMetricKey, null).enumOrDefault(LimitBarMetric.Remaining),
         defaultPeriod = preferences.getString(defaultPeriodKey, "Today") ?: "Today",
         visibleViews = preferences.getString(visibleViewsKey, null).orderedValues(DisplayOptions.defaultViews),
@@ -124,6 +128,7 @@ internal class DisplayPreferences(context: Context) {
         const val rankingMetricKey = "ranking_metric"
         const val showLimitSourceKey = "show_limit_source"
         const val showAccountEmailsKey = "show_account_emails"
+        const val showSessionTitlesKey = "show_session_titles"
         const val limitBarMetricKey = "limit_bar_metric"
         const val defaultPeriodKey = "default_period"
         const val visibleViewsKey = "visible_views"

@@ -71,7 +71,17 @@ data class SessionUsage(
     val contextWindow: Long = 0,
     val turnEnded: Boolean? = null,
     val archived: Boolean = false,
+    val inputTokens: Long = 0,
+    val outputTokens: Long = 0,
+    val cacheReadTokens: Long = 0,
+    val cacheWriteTokens: Long = 0,
+    val timedOutputTokens: Long = 0,
+    val timedDurationMs: Long = 0,
+    val promptCache: PromptCache? = null,
 )
+
+/** A provider-specific estimate, not a guaranteed server-side expiry. */
+data class PromptCache(val observedAt: String, val ttlSeconds: Long)
 
 data class DeviceUsage(
     val id: String,

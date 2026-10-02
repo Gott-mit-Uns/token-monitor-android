@@ -1,0 +1,259 @@
+{
+  "devices": [
+    {
+      "deviceId": "sample-desktop",
+      "hostname": "Example Desktop",
+      "platform": "win32",
+      "osName": "Windows",
+      "osVersion": "11",
+      "updatedAt": "2026-10-02T11:59:59.000Z",
+      "receivedAt": "2026-10-02T12:00:00.000Z",
+      "ageMs": 1000,
+      "stale": false,
+      "historyAvailable": true,
+      "trackedClients": [
+        "codex",
+        "fx",
+        "grok"
+      ],
+      "periods": {
+        "today": {
+          "totalTokens": 150000,
+          "costUsd": 3,
+          "outputTokens": 25000,
+          "unclassifiedTokens": 125000,
+          "clients": {
+            "codex": 70000,
+            "fx": 50000,
+            "grok": 30000
+          },
+          "clientCosts": {
+            "codex": 1.4,
+            "fx": 1,
+            "grok": 0.6
+          },
+          "models": {
+            "gpt-6-sol": 70000,
+            "gpt-6-sol-fx": 50000,
+            "grok-code-fast-1": 30000
+          },
+          "modelCosts": {
+            "gpt-6-sol": 1.4,
+            "gpt-6-sol-fx": 1,
+            "grok-code-fast-1": 0.6
+          },
+          "clientModels": {
+            "codex": {
+              "gpt-6-sol": 70000
+            },
+            "fx": {
+              "gpt-6-sol-fx": 50000
+            },
+            "grok": {
+              "grok-code-fast-1": 30000
+            }
+          },
+          "clientOutputs": {
+            "codex": 10000,
+            "fx": 9000,
+            "grok": 6000
+          },
+          "clientUnclassifiedTokens": {
+            "codex": 60000,
+            "fx": 41000,
+            "grok": 24000
+          },
+          "modelOutputs": {
+            "gpt-6-sol": 10000,
+            "gpt-6-sol-fx": 9000,
+            "grok-code-fast-1": 6000
+          },
+          "modelUnclassifiedTokens": {
+            "gpt-6-sol": 60000,
+            "gpt-6-sol-fx": 41000,
+            "grok-code-fast-1": 24000
+          },
+          "sessions": {
+            "grok:sample-build": {
+              "sessionId": "sample-build",
+              "client": "grok",
+              "title": "fix a mixedCase bug",
+              "projectLabel": "Example Project",
+              "totalTokens": 30000,
+              "costUsd": 0.6,
+              "models": {
+                "grok-code-fast-1": 30000
+              },
+              "startedAt": "2026-10-02T11:00:00.000Z",
+              "lastUsedAt": "2026-10-02T11:59:00.000Z",
+              "turnEnded": false,
+              "contextTokens": 25000,
+              "contextWindow": 100000
+            },
+            "fx:sample-fx": {
+              "sessionId": "sample-fx",
+              "client": "fx",
+              "title": "Example fx session",
+              "totalTokens": 50000,
+              "costUsd": 1,
+              "models": {
+                "gpt-6-sol-fx": 50000
+              },
+              "lastUsedAt": "2026-10-02T11:58:00.000Z",
+              "sourceDeleted": true
+            },
+            "codex:sample-speed": {
+              "sessionId": "sample-speed",
+              "client": "codex",
+              "title": "Example cache session",
+              "projectLabel": "Example Project",
+              "totalTokens": 70000,
+              "costUsd": 1.4,
+              "models": {
+                "gpt-6-sol": 70000
+              },
+              "inputTokens": 5000,
+              "cacheReadTokens": 50000,
+              "cacheWriteTokens": 5000,
+              "outputTokens": 10000,
+              "timedOutputTokens": 8000,
+              "timedDurationMs": 100000,
+              "startedAt": "2026-10-02T11:00:00Z",
+              "lastUsedAt": "2026-10-02T11:59:00Z",
+              "turnEnded": false,
+              "promptCache": {
+                "observedAt": "2026-10-02T11:59:00Z",
+                "ttlSeconds": 300
+              }
+            }
+          },
+          "modelThroughput": {
+            "gpt-6-sol": {
+              "timedTokens": 56000,
+              "timedOutputTokens": 8000,
+              "timedDurationMs": 100000
+            }
+          }
+        },
+        "month": {
+          "totalTokens": 150000,
+          "costUsd": 3,
+          "outputTokens": 25000,
+          "unclassifiedTokens": 125000,
+          "clients": {
+            "codex": 70000,
+            "fx": 50000,
+            "grok": 30000
+          },
+          "clientCosts": {
+            "codex": 1.4,
+            "fx": 1,
+            "grok": 0.6
+          },
+          "models": {
+            "gpt-6-sol": 70000,
+            "gpt-6-sol-fx": 50000,
+            "grok-code-fast-1": 30000
+          },
+          "modelCosts": {
+            "gpt-6-sol": 1.4,
+            "gpt-6-sol-fx": 1,
+            "grok-code-fast-1": 0.6
+          },
+          "clientModels": {
+            "codex": {
+              "gpt-6-sol": 70000
+            },
+            "fx": {
+              "gpt-6-sol-fx": 50000
+            },
+            "grok": {
+              "grok-code-fast-1": 30000
+            }
+          },
+          "clientOutputs": {
+            "codex": 10000,
+            "fx": 9000,
+            "grok": 6000
+          },
+          "clientUnclassifiedTokens": {
+            "codex": 60000,
+            "fx": 41000,
+            "grok": 24000
+          },
+          "modelOutputs": {
+            "gpt-6-sol": 10000,
+            "gpt-6-sol-fx": 9000,
+            "grok-code-fast-1": 6000
+          },
+          "modelUnclassifiedTokens": {
+            "gpt-6-sol": 60000,
+            "gpt-6-sol-fx": 41000,
+            "grok-code-fast-1": 24000
+          },
+          "sessions": {
+            "grok:sample-build": {
+              "sessionId": "sample-build",
+              "client": "grok",
+              "title": "fix a mixedCase bug",
+              "projectLabel": "Example Project",
+              "totalTokens": 30000,
+              "costUsd": 0.6,
+              "models": {
+                "grok-code-fast-1": 30000
+              },
+              "startedAt": "2026-10-02T11:00:00.000Z",
+              "lastUsedAt": "2026-10-02T11:59:00.000Z",
+              "turnEnded": false,
+              "contextTokens": 25000,
+              "contextWindow": 100000
+            },
+            "fx:sample-fx": {
+              "sessionId": "sample-fx",
+              "client": "fx",
+              "title": "Example fx session",
+              "totalTokens": 50000,
+              "costUsd": 1,
+              "models": {
+                "gpt-6-sol-fx": 50000
+              },
+              "lastUsedAt": "2026-10-02T11:58:00.000Z",
+              "sourceDeleted": true
+            },
+            "codex:sample-speed": {
+              "sessionId": "sample-speed",
+              "client": "codex",
+              "title": "Example cache session",
+              "projectLabel": "Example Project",
+              "totalTokens": 70000,
+              "costUsd": 1.4,
+              "models": {
+                "gpt-6-sol": 70000
+              },
+              "inputTokens": 5000,
+              "cacheReadTokens": 50000,
+              "cacheWriteTokens": 5000,
+              "outputTokens": 10000,
+              "timedOutputTokens": 8000,
+              "timedDurationMs": 100000,
+              "startedAt": "2026-10-02T11:00:00Z",
+              "lastUsedAt": "2026-10-02T11:59:00Z",
+              "turnEnded": false,
+              "promptCache": {
+                "observedAt": "2026-10-02T11:59:00Z",
+                "ttlSeconds": 300
+              }
+            }
+          },
+          "modelThroughput": {
+            "gpt-6-sol": {
+              "timedTokens": 56000,
+              "timedOutputTokens": 8000,
+              "timedDurationMs": 100000
+            }
+          }
+        }
+      }
+    }
+  ]
+}

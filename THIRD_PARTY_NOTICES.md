@@ -5,6 +5,8 @@
 Tool-logo vector paths are imported from [Token Monitor v0.61.0](https://github.com/Javis603/token-monitor/tree/v0.61.0/assets/icons).
 The original source is identified in the drawable comments. The Token Monitor
 app mark and project relationship are credited to that upstream project.
+The fx mark is adapted from [Token Monitor v0.65.0](https://github.com/Javis603/token-monitor/blob/v0.65.0/assets/icons/fx.svg),
+which traces the official vercel-labs fx icon.
 
 Upstream's MIT notice is reproduced below. Service names and logos remain the
 marks of their respective owners; their display identifies data sources and

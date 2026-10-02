@@ -3,6 +3,18 @@
 Android releases use the desktop protocol version plus an Android revision.
 Unreleased work stays under **Next release** until its signed APK is published.
 
+## v0.65.0 r1 — 2026-10-02
+
+- Follow desktop v0.65.0 with versioned fixtures for every Hub read endpoint and
+  complete/freshness stream events; retain earlier protocol regressions.
+- Add fx's lowercase label and upstream mark.
+- Show session-average generation speed, cache-hit percentage and optional
+  prompt-cache estimates in Home and Sessions when reported.
+- Add a local **Show session titles** setting. Hiding titles changes display
+  only; the snapshot cache may still contain them.
+- Keep the Pages widget layout, private read-only connection, release signing
+  identity and bounded Live behavior unchanged.
+
 ## v0.64.0 r1 — 2026-09-30
 
 - Match the released desktop v0.64.0 Hub with new synthetic endpoint and stream

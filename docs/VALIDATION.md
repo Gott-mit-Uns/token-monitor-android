@@ -1,5 +1,43 @@
 # Validation
 
+## v0.65.0 r1 release — 2026-10-02
+
+Desktop v0.65.0 is pinned to released tag commit
+`db325fdf46ea7f7328feeb47a4f2005fe339909f`. Review of the v0.64.0-to-v0.65.0
+diff confirmed unchanged Hub read routes, Bearer authentication and stream-v2
+delivery. New synthetic endpoint and stream fixtures cover fx usage, optional
+session output/duration counters, cache components and prompt-cache estimates;
+all earlier fixtures remain. Per-model live throughput and desktop provider-row
+visibility settings are deliberately not displayed or controlled by Android.
+
+All 106 JVM tests and 37 instrumentation tests passed. Android lint reported no
+errors; preview debug assembly and the signed R8 release build passed. The API 36
+Pixel 10 Pro XL emulator verified title hiding on Home and Sessions, metrics,
+preference reload and the existing navigation, widget and lifecycle regressions.
+The preview app paired with the synthetic fixture Hub; native Home and Sessions
+captures were inspected for fx's mark and session metrics. The expired synthetic
+cache estimate was correctly absent; fixed-clock interaction tests verify its
+visible label and unit tests cover expiry and invalid/future observations.
+Captures remain private. Widget coordinates, type sizes, gallery and hero are
+unchanged. No network ownership, polling or background-work changes were made.
+
+The independent read-only review covered the exact diff, parser/domain mapping,
+callers, privacy settings, numerical/date edge cases, fixtures and documentation.
+The final documentation pass corrected an outdated install guide and the
+title-setting path in the release notes. No material code findings remained.
+Local documentation links resolve; Git diff whitespace checks passed.
+GitHub build and interaction checks must pass on the exact release main commit.
+
+APK: `token-monitor-android-v0.65.0-r1.apk`, 2,418,300 bytes,
+package `io.github.theminionooo.tokenmonitor`, version code `650001`.
+File SHA-256:
+`fdb6d301af07397b5a8381831f963daef065db2b7d3dd40c714a3ced5f1c74c7`.
+Certificate SHA-256:
+`eed5a820371ac158c038e5a55243b2e4e7f10ffdf764963b2808d152d3821c2c`.
+The APK, checksum and matching update manifest use the existing upgrade identity.
+Physical-phone upgrade, pairing/widget retention, Tailscale/Wi-Fi transitions
+and battery behavior remain unverified for this release.
+
 ## v0.64.0 r1 release — 2026-09-30
 
 The released desktop tag is pinned to

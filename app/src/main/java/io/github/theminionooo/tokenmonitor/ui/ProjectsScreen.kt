@@ -169,7 +169,7 @@ internal fun LazyListScope.sessionItems(sessions: List<SessionUsage>, period: Da
     else {
         val maximum = sessions.maxOfOrNull { it.totalTokens }?.coerceAtLeast(1L) ?: 1L
         items(sessions.sortedByDescending { it.totalTokens }, key = { "${it.client}:${it.id}" }) { session ->
-            val labels = sessionRowLabels(session)
+            val labels = sessionRowLabels(session, LocalSessionTitles.current)
             SessionUsageRow(session, labels.title, labels.meta, session.totalTokens.toFloat() / maximum)
         }
     }
@@ -225,6 +225,9 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
             )
         }
         UsageBar(ratio, accentFor(session.client))
+        sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
+            Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 20.dp))
+        }
         context?.let { reading ->
             val contextColor = when {
                 reading.percentLeft <= 10 -> Danger

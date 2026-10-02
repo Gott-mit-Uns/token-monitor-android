@@ -4,7 +4,7 @@ This Android app treats the desktop Hub as an external, read-only protocol.
 
 ## Verified baseline
 
-The verified baseline is upstream Token Monitor **v0.64.0**, released 2026-09-30. The
+The verified baseline is upstream Token Monitor **v0.65.0**, released 2026-10-02. The
 release and source were checked directly from the `Javis603/token-monitor`
 tag before this implementation. The older local desktop checkout was not
 changed and is not the protocol authority.
@@ -51,9 +51,9 @@ replaces the snapshot with the current read endpoints.
 
 ## Fixtures
 
-Sanitized v0.64.0 examples for all five read endpoints and the live stream live
-in `app/src/test/resources/protocol/v0.64.0/`; the retained v0.54.0, v0.55.0,
-v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, and v0.63.1 fixtures prove backward compatibility. They contain no user secrets,
+Sanitized v0.65.0 examples for all five read endpoints and the live stream live
+in `app/src/test/resources/protocol/v0.65.0/`; the retained v0.54.0, v0.55.0,
+v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, v0.63.1, and v0.64.0 fixtures prove backward compatibility. They contain no user secrets,
 machine paths, account identifiers, or real usage. Parser tests cover every
 read surface, the SSE envelope, omitted optional fields, and a future unknown
 field. The compatibility parser maps only the fields the dashboard needs and
@@ -64,7 +64,8 @@ component provenance inside `perClient` and `perModel`.
 v0.55.0 adds `capabilities.throughput` and the optional period fields
 `timedTokens`, `timedOutputTokens`, and `timedDurationMs`. Android maps and tests
 those values, treats absent or explicitly unavailable throughput as unknown,
-and does not currently claim a visible token rate.
+and does not display a live period or per-model rate. v0.65.0 adds a separate
+session-average generation speed when that session reports timed output.
 
 v0.56.0 adds optional `windows[].boundaryKind` lifecycle wording and
 `periods.*.sessions[].sessionKind` metadata. Android preserves both, renders
@@ -128,3 +129,24 @@ no transcript or real account data.
 
 When the desktop protocol changes, add a new versioned fixture directory and
 tests before changing the Android mapping.
+
+## v0.65.0 session metrics
+
+The read routes, Bearer authentication and stream-v2 envelope are unchanged.
+Sessions may provide nonnegative `inputTokens`, `outputTokens`,
+`cacheReadTokens`, `cacheWriteTokens`, `timedOutputTokens` and
+`timedDurationMs`. Android caps timed output at reported output and treats
+missing/zero duration as unknown, not zero speed. The displayed tok/s is the
+session average, not a live or per-model sampling rate. Cache hit is the share
+of input served from cache: reads / (input + reads + writes). No cache traffic
+means no reading; cache writes without reads can legitimately show 0%.
+
+Optional `promptCache` contains `observedAt` and a `ttlSeconds` of 300, 1800,
+or 3600. Missing, null or invalid estimates are ignored. Codex and Claude rows
+show a rounded-up minute estimate only until expiry; archived and future-dated
+observations are suppressed. This is not a guarantee of provider-side retention.
+The existing slow UI clock updates the label without another timer or request.
+
+The optional period `modelThroughput` map is tolerated and retained in the raw
+cached snapshot, but Android does not display per-model throughput. Desktop
+provider usage-row visibility is a desktop setting, not a new Hub write API.

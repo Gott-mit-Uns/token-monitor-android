@@ -1,0 +1,15 @@
+{
+  "updatedAt": "2026-10-02T12:00:00.000Z",
+  "subscriptions": [
+    {
+      "id": "sample-codex",
+      "provider": "codex",
+      "planName": "Pro More",
+      "amountMinor": 10000,
+      "currency": "USD",
+      "startDate": "2026-09-01",
+      "interval": "month",
+      "autoRenew": true
+    }
+  ]
+}

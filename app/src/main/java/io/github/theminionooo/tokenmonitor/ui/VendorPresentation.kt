@@ -41,6 +41,7 @@ internal fun vendorOf(name: String): String? {
     val key = name.trim().lowercase(Locale.US)
     if (key.isEmpty()) return null
     if (key == "cursor") return "cursor"
+    if (key == "fx") return "fx"
     if (key == "muse" || key == "muse code") return "meta"
     if (key == "openrouter" || key.startsWith("openrouter/")) return "openrouter"
     if (key == "zed" || key.startsWith("zed-")) return "zed"
@@ -96,6 +97,7 @@ internal fun upstreamToolAsset(name: String): Int? = when (vendorOf(name)) {
     "opencode" -> R.drawable.upstream_logo_opencode
     "openrouter" -> R.drawable.upstream_logo_openrouter
     "zed" -> R.drawable.upstream_logo_zed
+    "fx" -> R.drawable.upstream_logo_fx
     else -> null
 }
 

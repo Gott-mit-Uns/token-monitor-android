@@ -12,6 +12,8 @@ import io.github.theminionooo.tokenmonitor.domain.HistoryPoint
 import io.github.theminionooo.tokenmonitor.domain.LimitAccount
 import io.github.theminionooo.tokenmonitor.domain.LimitWindow
 import io.github.theminionooo.tokenmonitor.domain.ProjectUsage
+import io.github.theminionooo.tokenmonitor.domain.PromptCache
+import java.time.Instant
 import io.github.theminionooo.tokenmonitor.domain.SessionUsage
 import io.github.theminionooo.tokenmonitor.domain.Subscription
 import io.github.theminionooo.tokenmonitor.domain.UsagePeriod
@@ -31,7 +33,7 @@ import kotlinx.serialization.json.longOrNull
  * Android client renders and intentionally ignores unknown fields.
  */
 object HubProtocolParser {
-    const val SUPPORTED_UPSTREAM_VERSION = "v0.64.0"
+    const val SUPPORTED_UPSTREAM_VERSION = "v0.65.0"
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -205,6 +207,18 @@ object HubProtocolParser {
         contextWindow = long("contextWindow") ?: 0,
         turnEnded = boolean("turnEnded"),
         archived = boolean("archived") == true || boolean("deleted") == true || boolean("sourceDeleted") == true,
+        inputTokens = long("inputTokens") ?: 0,
+        outputTokens = long("outputTokens") ?: 0,
+        cacheReadTokens = long("cacheReadTokens") ?: 0,
+        cacheWriteTokens = long("cacheWriteTokens") ?: 0,
+        timedOutputTokens = long("timedOutputTokens") ?: 0,
+        timedDurationMs = long("timedDurationMs") ?: 0,
+        promptCache = objectField("promptCache")?.let { cache ->
+            val observedAt = cache.string("observedAt")
+            val ttl = cache.long("ttlSeconds")
+            if (ttl in setOf(300L, 1800L, 3600L) && runCatching { Instant.parse(observedAt) }.isSuccess)
+                HubPromptCacheDto(observedAt, requireNotNull(ttl)) else null
+        },
     )
 
     private fun JsonObject.toDeviceDto() = HubDeviceDto(
@@ -374,6 +388,13 @@ object HubProtocolParser {
         contextWindow = contextWindow.coerceAtLeast(0),
         turnEnded = turnEnded,
         archived = archived,
+        inputTokens = inputTokens.coerceAtLeast(0),
+        outputTokens = outputTokens.coerceAtLeast(0),
+        cacheReadTokens = cacheReadTokens.coerceAtLeast(0),
+        cacheWriteTokens = cacheWriteTokens.coerceAtLeast(0),
+        timedOutputTokens = if (timedDurationMs > 0) timedOutputTokens.coerceIn(0, outputTokens.coerceAtLeast(0)) else 0,
+        timedDurationMs = timedDurationMs.coerceAtLeast(0),
+        promptCache = promptCache?.let { PromptCache(it.observedAt, it.ttlSeconds) },
     )
 
     private fun HubDeviceDto.toDomain() = DeviceUsage(

@@ -1,6 +1,6 @@
-# Desktop parity for v0.64.0
+# Desktop parity for v0.65.0
 
-The Android release is fixture-verified against desktop Token Monitor v0.64.0. It mirrors
+The Android release is fixture-verified against desktop Token Monitor v0.65.0. It mirrors
 the desktop information that the Hub can safely provide while keeping the phone
 read-only and lightweight.
 
@@ -40,7 +40,7 @@ controls are window-specific rather than Hub dashboard features.
 ## Intentional boundaries
 
 The following remain on desktop because they collect data, control a desktop
-window, or require information the v0.64.0 Hub does not transmit:
+window, or require information the v0.65.0 Hub does not transmit:
 
 - tool discovery, account sign-in, collection cadence, diagnostics, export, and
   subscription editing;
@@ -49,8 +49,8 @@ window, or require information the v0.64.0 Hub does not transmit:
 - prompt and response transcript bodies, absolute project paths, local
   credential state, and collector logs;
 - exact renderer-only attribution that is not present in the Hub response.
-- live token-rate presentation. The v0.55.0 throughput capability and timed
-  counters are parsed compatibly, but Android does not display a rate yet.
+- live period/per-model token-rate presentation. Period throughput counters are
+  parsed compatibly; the session-average speed added in v0.65.0 is separate.
 - the Edge Dock, floating AI bubble, macOS haptics, and their desktop-window
   behavior. Sessions remain a normal mobile dashboard destination.
 
@@ -83,6 +83,13 @@ key allowance; provider sign-in and quota calculation remain on desktop. Home
 Sessions uses month and today, excludes background reviews, deduplicates by client
 and session ID, and never marks archived/deleted sessions as running. New installs
 show it by default; saved Home layouts keep their existing module choices.
+
+v0.65.0 adds fx's label and mark, session-average generation speed, cache-hit
+percentage and optional prompt-cache estimates to Home and Sessions. Settings
+can hide reported session titles locally without removing them from the snapshot
+cache. Countdown labels are estimates, not guaranteed provider retention.
+Desktop hover scrolling, Edge Dock quota animations, per-provider hidden usage
+items, and collector changes remain desktop responsibilities.
 
 Optional macOS iCloud Drive sync, Edge Dock fullscreen/quota pins, Claude Web
 organization selection, and collection/watch fixes remain desktop features.

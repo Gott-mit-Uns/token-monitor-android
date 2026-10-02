@@ -139,6 +139,7 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
     fun setRankingMetric(metric: RankingMetric) = displayPreferences.setRankingMetric(metric)
     fun setShowLimitSource(enabled: Boolean) = displayPreferences.setShowLimitSource(enabled)
     fun setShowAccountEmails(enabled: Boolean) = displayPreferences.setShowAccountEmails(enabled)
+    fun setShowSessionTitles(enabled: Boolean) = displayPreferences.setShowSessionTitles(enabled)
     fun setLimitBarMetric(metric: LimitBarMetric) = displayPreferences.setLimitBarMetric(metric)
     fun setDefaultPeriod(period: String) = displayPreferences.setDefaultPeriod(period)
     fun setViewVisible(view: String, visible: Boolean) = displayPreferences.setViewVisible(view, visible)

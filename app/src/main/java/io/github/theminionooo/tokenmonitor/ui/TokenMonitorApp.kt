@@ -148,6 +148,7 @@ internal fun TokenMonitorApp(viewModel: DashboardViewModel) {
             LocalToolIcons provides displayOptions.showToolIcons,
             LocalInteractionMotion provides interactionMotionEnabled(displayOptions.reduceMotion, systemAnimationsEnabled),
             LocalNow provides rememberNow(),
+            LocalSessionTitles provides displayOptions.showSessionTitles,
         ) {
             Box(
                 modifier = Modifier
@@ -182,6 +183,7 @@ internal fun TokenMonitorApp(viewModel: DashboardViewModel) {
                     onRankingMetricChange = viewModel::setRankingMetric,
                     onShowLimitSourceChange = viewModel::setShowLimitSource,
                     onShowAccountEmailsChange = viewModel::setShowAccountEmails,
+                    onShowSessionTitlesChange = viewModel::setShowSessionTitles,
                     onLimitBarMetricChange = viewModel::setLimitBarMetric,
                     onDefaultPeriodChange = viewModel::setDefaultPeriod,
                     onViewVisibleChange = viewModel::setViewVisible,
@@ -231,6 +233,7 @@ internal fun DashboardScaffold(
     onOpenReleasePage: () -> Unit,
     discovery: HubDiscoveryState,
     onFindHomeHub: () -> Unit,
+    onShowSessionTitlesChange: (Boolean) -> Unit = {},
 ) {
     var periodName by rememberSaveable { mutableStateOf(displayOptions.defaultPeriod) }
     var homeReturnVisible by rememberSaveable { mutableStateOf(false) }
@@ -299,6 +302,7 @@ internal fun DashboardScaffold(
                 onRankingMetricChange = onRankingMetricChange,
                 onShowLimitSourceChange = onShowLimitSourceChange,
                 onShowAccountEmailsChange = onShowAccountEmailsChange,
+                onShowSessionTitlesChange = onShowSessionTitlesChange,
                 onLimitBarMetricChange = onLimitBarMetricChange,
                 onDefaultPeriodChange = onDefaultPeriodChange,
                 onViewVisibleChange = onViewVisibleChange,

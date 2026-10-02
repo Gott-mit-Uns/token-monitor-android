@@ -99,6 +99,7 @@ internal fun ConnectionScreen(
     onOpenReleasePage: () -> Unit,
     discovery: HubDiscoveryState,
     onFindHomeHub: () -> Unit,
+    onShowSessionTitlesChange: (Boolean) -> Unit = {},
 ) {
     val hasConnection = state.hasConnection
     var hubUrl by rememberSaveable(state.connectionUrl) { mutableStateOf(state.connectionUrl.orEmpty()) }
@@ -244,6 +245,7 @@ internal fun ConnectionScreen(
                 )
                 SettingsToggle("Show limit source", "Display which Hub device supplied each provider limit.", displayOptions.showLimitSource, onShowLimitSourceChange)
                 SettingsToggle("Show account emails", "Useful only when provider names are not enough to distinguish accounts.", displayOptions.showAccountEmails, onShowAccountEmailsChange)
+                SettingsToggle("Show session titles", "Hide reported titles in Home and Sessions. This display choice does not remove titles from the local snapshot cache.", displayOptions.showSessionTitles, onShowSessionTitlesChange)
                 Text("Limit bars show", color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = listOf("REMAINING" to LimitBarMetric.Remaining.name, "USED" to LimitBarMetric.Used.name),

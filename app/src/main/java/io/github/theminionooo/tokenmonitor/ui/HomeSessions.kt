@@ -41,7 +41,7 @@ internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDesti
                     val age = session.lastUsedAt.ifBlank { session.startedAt }.relativeAge(now)
                     Column {
                         HomeListRow(
-                            name = sessionRowLabels(session).title,
+                            name = sessionRowLabels(session, LocalSessionTitles.current).title,
                             primary = formatCompactTokens(session.totalTokens),
                             secondary = listOf(session.client.displayName(), state.name, age, session.projectLabel)
                                 .filter { it.isNotBlank() }.joinToString(" · "),
@@ -54,6 +54,9 @@ internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDesti
                         )
                         sessionContextForRow(session, now)?.let { context ->
                             Text("Context ${context.percentLeft}% left", color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))
+                        }
+                        sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
+                            Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))
                         }
                     }
                 }
