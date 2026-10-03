@@ -31,7 +31,7 @@ internal object EndpointFailover {
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: HubApiException) {
-                if (error.statusCode == 401) throw error
+                if (error.statusCode in setOf(401, 403)) throw error
                 if (firstFailure == null) firstFailure = error
             } catch (error: Exception) {
                 if (firstFailure == null) firstFailure = error

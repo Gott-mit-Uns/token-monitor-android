@@ -49,7 +49,14 @@ internal sealed interface UpdateCheck {
 }
 
 internal object ReleaseUpdates {
+    // This variant has a separate package/signing key; upstream APKs cannot update it.
+    internal const val automaticUpdatesEnabled = false
+
+    internal fun requireAutomaticUpdates() {
+        check(automaticUpdatesEnabled) { "Automatic upstream updates are disabled in the Cloudflare edition." }
+    }
     suspend fun check(installedName: String, installedCode: Int): UpdateCheck = withContext(Dispatchers.IO) {
+        requireAutomaticUpdates()
         val release = Json.parseToJsonElement(
             readText("https://api.github.com/repos/$repository/releases/latest", 512 * 1024),
         ).jsonObject
@@ -64,6 +71,7 @@ internal object ReleaseUpdates {
     }
 
     suspend fun download(context: Context, release: AppRelease): File = withContext(Dispatchers.IO) {
+        requireAutomaticUpdates()
         val directory = File(context.cacheDir, "updates").apply { mkdirs() }
         val ready = File(directory, "token-monitor-update.apk")
         if (ready.isFile && ready.length() == release.sizeBytes && digest(ready) == release.sha256) {
@@ -109,6 +117,7 @@ internal object ReleaseUpdates {
     }
 
     fun install(context: Context, file: File, release: AppRelease): Boolean {
+        requireAutomaticUpdates()
         if (!context.packageManager.canRequestPackageInstalls()) {
             context.startActivity(
                 Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:${context.packageName}")),

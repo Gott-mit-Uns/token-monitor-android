@@ -64,14 +64,15 @@ internal class SnapshotCache(context: Context) {
     private fun readFile(): WireHubSnapshot? {
         if (!file.baseFile.exists()) return null
         return DataInputStream(GZIPInputStream(BufferedInputStream(file.openRead()))).use { data ->
+            val budget = ReadBudget()
             if (data.readInt() != formatVersion) return null
             val capturedAt = data.readLong()
             WireHubSnapshot(
-                health = data.readPart() ?: return null,
-                stats = data.readPart() ?: return null,
-                devices = data.readPart(),
-                history = data.readPart(),
-                subscriptions = data.readPart(),
+                health = data.readPart(budget) ?: return null,
+                stats = data.readPart(budget) ?: return null,
+                devices = data.readPart(budget),
+                history = data.readPart(budget),
+                subscriptions = data.readPart(budget),
                 capturedAt = capturedAt,
             )
         }
@@ -106,21 +107,26 @@ internal class SnapshotCache(context: Context) {
             return
         }
         val bytes = value.toByteArray(StandardCharsets.UTF_8)
+        require(bytes.size <= maxPartBytes) { "Snapshot part exceeds cache limit" }
         writeInt(bytes.size)
         write(bytes)
     }
 
-    private fun DataInputStream.readPart(): String? {
+    private fun DataInputStream.readPart(budget: ReadBudget): String? {
         val length = readInt()
-        if (length < 0) return null
-        if (length > maxUncompressedBytes) throw IllegalStateException("Cached snapshot part is too large.")
+        if (length == -1) return null
+        if (length < -1) throw IllegalStateException("Invalid cached snapshot part length.")
+        if (length > maxPartBytes || length > budget.remaining) throw IllegalStateException("Cached snapshot part is too large.")
+        budget.remaining -= length
         val bytes = ByteArray(length)
         readFully(bytes)
         return String(bytes, StandardCharsets.UTF_8)
     }
 
-    private fun WireHubSnapshot.approximateBytes(): Int =
-        health.length + stats.length + (devices?.length ?: 0) + (history?.length ?: 0) + (subscriptions?.length ?: 0)
+    private fun WireHubSnapshot.approximateBytes(): Long =
+        listOfNotNull(health, stats, devices, history, subscriptions).sumOf { it.toByteArray(StandardCharsets.UTF_8).size.toLong() }
+
+    private class ReadBudget(var remaining: Int = maxUncompressedBytes)
 
     private companion object {
         // Repository and widget use separate instances of AtomicFile in one process.
@@ -128,7 +134,8 @@ internal class SnapshotCache(context: Context) {
         const val fileName = "last-snapshot.bin"
         const val formatVersion = 2
         // Generous: a year of per-model daily history is well under this, and it gzips to a tenth.
-        const val maxUncompressedBytes = 16 * 1024 * 1024
+        const val maxUncompressedBytes = 96 * 1024 * 1024
+        const val maxPartBytes = 32 * 1024 * 1024
         const val legacyPreferencesName = "snapshot_cache"
         const val legacySnapshotKey = "last_success_v1"
     }

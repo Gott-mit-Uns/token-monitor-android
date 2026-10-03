@@ -15,6 +15,6 @@ class BackoffPolicyTest {
 
         assertTrue(first in 800L..1_200L)
         assertTrue(later in 12_800L..19_200L)
-        assertTrue(capped in 24_000L..30_000L)
+        assertTrue(capped in 48_000L..60_000L)
     }
 }

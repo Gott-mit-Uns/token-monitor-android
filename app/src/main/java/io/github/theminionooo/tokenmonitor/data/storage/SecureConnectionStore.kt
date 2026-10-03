@@ -4,7 +4,6 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
-import androidx.core.content.edit
 import io.github.theminionooo.tokenmonitor.domain.HubConnection
 import java.nio.charset.StandardCharsets
 import java.security.KeyStore
@@ -20,23 +19,23 @@ import javax.crypto.spec.GCMParameterSpec
 internal class SecureConnectionStore(context: Context) {
     private val preferences = context.getSharedPreferences("secure_connection", Context.MODE_PRIVATE)
 
-    fun read(): HubConnection? = runCatching {
+    fun read(): HubConnection? = synchronized(storeLock) { runCatching {
         val encodedIv = preferences.getString(ivKey, null) ?: return null
         val encodedCiphertext = preferences.getString(ciphertextKey, null) ?: return null
         val cleartext = decrypt(encodedIv, encodedCiphertext)
         decode(cleartext)
-    }.getOrNull()
+    }.getOrNull() }
 
-    fun save(connection: HubConnection) {
+    fun save(connection: HubConnection): Unit = synchronized(storeLock) {
         val encrypted = encrypt(encode(connection))
-        preferences.edit(commit = true) {
-            putString(ivKey, encrypted.iv)
-            putString(ciphertextKey, encrypted.ciphertext)
-        }
+        check(preferences.edit()
+            .putString(ivKey, encrypted.iv)
+            .putString(ciphertextKey, encrypted.ciphertext)
+            .commit()) { "Could not securely save the Hub connection." }
     }
 
-    fun clear() {
-        preferences.edit(commit = true) { clear() }
+    fun clear(): Unit = synchronized(storeLock) {
+        check(preferences.edit().clear().commit()) { "Could not remove the saved Hub connection." }
     }
 
     private fun encrypt(value: String): EncryptedValue {
@@ -109,6 +108,9 @@ internal class SecureConnectionStore(context: Context) {
     private data class EncryptedValue(val iv: String, val ciphertext: String)
 
     private companion object {
+        // Repository/widget repositories may own separate stores in the same process.
+        // Serialize key creation and complete IV/ciphertext reads/writes across them.
+        val storeLock = Any()
         const val keyStoreName = "AndroidKeyStore"
         const val keyAlias = "token_monitor_hub_connection_v1"
         const val transformation = "AES/GCM/NoPadding"

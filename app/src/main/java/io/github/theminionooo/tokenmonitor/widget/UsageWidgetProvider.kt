@@ -436,7 +436,18 @@ class UsageWidgetProvider : AppWidgetProvider() {
                     views.setTextViewText(R.id.widget_chart_total, "${formatCompactTokens(weekPoints.sumOf { it.tokens })} · ${formatMoney(weekPoints.sumOf { it.costUsd })}")
                     views.setTextColor(R.id.widget_chart_total, muted)
                     val barsDp = if (layout == WidgetLayout.Large) largeChartBarsDp(heightDp, blocks) else overviewChartBarsDp(heightDp, rows)
-                    views.setImageViewBitmap(R.id.widget_chart_bars, trend(week, byDay, palette, contentWidth, (barsDp * density).roundToInt(), density))
+                    // Measure the configured layout: each XML dimension rounds independently,
+                    // and quota rows can leave less space than the old fixed-dp estimate.
+                    val chartSize = if (layout == WidgetLayout.Large) {
+                        val measured = views.apply(context, android.widget.FrameLayout(context))
+                        val widthPx = (size.width * density).toInt()
+                        val heightPx = (heightDp * density).toInt()
+                        measured.measure(View.MeasureSpec.makeMeasureSpec(widthPx, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(heightPx, View.MeasureSpec.EXACTLY))
+                        measured.layout(0, 0, widthPx, heightPx)
+                        val chart = measured.findViewById<View>(R.id.widget_chart_bars)
+                        chart.width to chart.height
+                    } else contentWidth to (barsDp * density).roundToInt()
+                    views.setImageViewBitmap(R.id.widget_chart_bars, trend(week, byDay, palette, chartSize.first, chartSize.second, density))
                     val dayIds = listOf(R.id.widget_day_0, R.id.widget_day_1, R.id.widget_day_2, R.id.widget_day_3, R.id.widget_day_4, R.id.widget_day_5, R.id.widget_day_6)
                     dayIds.forEachIndexed { index, id ->
                         views.setTextViewText(id, week[index].format(DateTimeFormatter.ofPattern("EEE", Locale.getDefault())).uppercase(Locale.getDefault()))

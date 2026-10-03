@@ -11,6 +11,11 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class ReleaseUpdatesTest {
+    @org.junit.Test fun cloudflareEditionCannotUseUpstreamInstaller() {
+        org.junit.Assert.assertFalse(ReleaseUpdates.automaticUpdatesEnabled)
+        org.junit.Assert.assertThrows(IllegalStateException::class.java) { ReleaseUpdates.requireAutomaticUpdates() }
+    }
+
     @Test fun comparesDesktopVersionsAndAndroidRevisions() {
         assertEquals(1, ReleaseUpdates.compareTags("android-v0.61.0-r1", "android-v0.60.0-r7"))
         assertEquals(1, ReleaseUpdates.compareTags("android-v0.62.0-r1", "android-v0.61.0-r2"))

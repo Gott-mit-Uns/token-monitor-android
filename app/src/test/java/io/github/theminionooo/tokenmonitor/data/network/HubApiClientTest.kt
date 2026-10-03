@@ -6,11 +6,80 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.fail
 import org.junit.Test
+import kotlinx.coroutines.runBlocking
 import java.net.InetSocketAddress
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
 class HubApiClientTest {
+    @Test fun `HTML challenge never opens an apparently connected stream`() = runBlocking {
+        val opened = AtomicInteger()
+        val receivedVersion = AtomicReference<String?>()
+        val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
+            createContext("/api/stats/stream") { exchange ->
+                receivedVersion.set(exchange.requestHeaders.getFirst("x-token-monitor-stream"))
+                exchange.responseHeaders.add("Content-Type", "text/html; charset=utf-8")
+                val body = "<html>Sign in</html>".toByteArray()
+                exchange.sendResponseHeaders(200, body.size.toLong())
+                exchange.responseBody.use { it.write(body) }
+            }
+            start()
+        }
+        try {
+            HubApiClient().use { api ->
+                try {
+                    api.streamStats(HubConnection("http://127.0.0.1:${server.address.port}", "fixture", true),
+                        onOpen = { opened.incrementAndGet() }, onEvent = { fail("No HTML event may be delivered") })
+                    fail("Expected an invalid stream content type to be rejected")
+                } catch (error: HubApiException) { assertEquals(200, error.statusCode) }
+            }
+            assertEquals(0, opened.get())
+            assertEquals("2", receivedVersion.get())
+        } finally { server.stop(0) }
+    }
+
+    @Test fun `unchanged versions reuse large details but changed versions reload only their endpoint`() {
+        val stats = AtomicReference("""{"periods":{},"historyRevision":"h1","deviceHistoryRevision":"d1","subscriptionsUpdatedAt":"s1"}""")
+        val counts = listOf("/api/devices", "/api/history", "/api/subscriptions").associateWith { AtomicInteger() }
+        val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
+            createContext("/api/health") { exchange ->
+                val body = """{"ok":true,"role":"hub"}""".toByteArray()
+                exchange.sendResponseHeaders(200, body.size.toLong())
+                exchange.responseBody.use { it.write(body) }
+            }
+            createContext("/api/stats") { exchange ->
+                val body = stats.get().toByteArray()
+                exchange.sendResponseHeaders(200, body.size.toLong())
+                exchange.responseBody.use { it.write(body) }
+            }
+            counts.forEach { (path, count) -> createContext(path) { exchange ->
+                count.incrementAndGet()
+                // Real multi-device histories can comfortably exceed the upstream 2 MiB limit.
+                val body = (if (path == "/api/history") " " .repeat(3 * 1024 * 1024) + "{}" else "{}").toByteArray()
+                exchange.sendResponseHeaders(200, body.size.toLong())
+                exchange.responseBody.use { it.write(body) }
+            } }
+            start()
+        }
+        try {
+            val connection = HubConnection("http://127.0.0.1:${server.address.port}", "fixture", true)
+            HubApiClient().use { api ->
+                val first = api.loadSnapshot(connection)
+                val second = api.loadSnapshot(connection, first)
+                assertEquals(first.history, second.history)
+                counts.values.forEach { assertEquals(1, it.get()) }
+                stats.set(stats.get().replace("h1", "h2"))
+                api.loadSnapshot(connection, second)
+                assertEquals(2, counts.getValue("/api/history").get())
+                assertEquals(1, counts.getValue("/api/devices").get())
+                assertEquals(1, counts.getValue("/api/subscriptions").get())
+                // Explicit/manual refresh deliberately bypasses the previous snapshot.
+                api.loadSnapshot(connection)
+                assertEquals(3, counts.getValue("/api/history").get())
+            }
+        } finally { server.stop(0) }
+    }
+
     @Test
     fun `stats refresh reads only the changing aggregate`() {
         val authorization = AtomicReference<String?>()
@@ -20,7 +89,7 @@ class HubApiClientTest {
             createContext("/api/stats") { exchange ->
                 authorization.set(exchange.requestHeaders.getFirst("Authorization"))
                 statsReads.incrementAndGet()
-                val body = """{"updatedAt":"now"}""".toByteArray()
+                val body = """{"periods":{},"updatedAt":"now"}""".toByteArray()
                 exchange.sendResponseHeaders(200, body.size.toLong())
                 exchange.responseBody.use { it.write(body) }
             }
@@ -36,7 +105,7 @@ class HubApiClientTest {
         try {
             val connection = HubConnection("http://127.0.0.1:${server.address.port}", "private-secret", true)
             HubApiClient().use { client ->
-                assertEquals("""{"updatedAt":"now"}""", client.getStats(connection))
+                assertEquals("""{"periods":{},"updatedAt":"now"}""", client.getStats(connection))
             }
             assertEquals("Bearer private-secret", authorization.get())
             assertEquals(1, statsReads.get())

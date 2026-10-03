@@ -20,9 +20,10 @@ val previewInstall = providers.gradleProperty("tokenMonitorPreview").orNull == "
 android {
     namespace = "io.github.theminionooo.tokenmonitor"
     compileSdk = 37
+    buildToolsVersion = "37.0.0"
 
     defaultConfig {
-        applicationId = "io.github.theminionooo.tokenmonitor"
+        applicationId = "io.github.theminionooo.tokenmonitor.cloudflare"
         minSdk = 26
         targetSdk = 37
         versionCode = appVersionCode

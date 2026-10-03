@@ -55,6 +55,19 @@ class EndpointFailoverTest {
     }
 
     @Test
+    fun `forbidden hub credentials do not trigger endpoint cycling`() {
+        val attempts = mutableListOf<String>()
+        try {
+            EndpointFailover.run(listOf(tailscale, home)) { candidate ->
+                attempts += candidate
+                throw HubApiException(403, "forbidden")
+            }
+            fail("expected forbidden response")
+        } catch (error: HubApiException) { assertEquals(403, error.statusCode) }
+        assertEquals(listOf(tailscale), attempts)
+    }
+
+    @Test
     fun `the first failure is reported when every address fails`() {
         val first = IOException("first")
         try {

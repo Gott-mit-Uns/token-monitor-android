@@ -10,7 +10,17 @@ import kotlinx.serialization.json.jsonPrimitive
 internal object HubStreamProtocol {
     private val json = Json { ignoreUnknownKeys = true; isLenient = true; explicitNulls = false }
 
-    fun normalizeComplete(raw: String): String = statsObject(raw).toString()
+    fun normalizeComplete(raw: String): String {
+        val stats = statsObject(raw)
+        if (stats.objectField("periods") == null) {
+            throw HubProtocolException("The Hub returned an incomplete statistics response.")
+        }
+        return stats.toString()
+    }
+
+    fun isFreshness(raw: String, eventName: String?): Boolean = eventName == "freshness" || runCatching {
+        (json.parseToJsonElement(raw) as? JsonObject)?.get("type")?.jsonPrimitive?.contentOrNull == "freshness"
+    }.getOrDefault(false)
 
     /**
      * Stream v2 freshness frames contain only transport timestamps and stale state.
@@ -24,17 +34,15 @@ internal object HubStreamProtocol {
         listOf("updatedAt", "staleAfterMs").forEach { key -> freshness[key]?.let { merged[key] = it } }
 
         freshness.objectField("limits")?.let { incoming ->
-            merged["limits"] = JsonObject(current.objectField("limits").orEmpty() + incoming)
+            merged["limits"] = JsonObject(current.objectField("limits").orEmpty() + incoming.filterKeys { it == "updatedAt" })
         }
         freshness["devices"]?.let { element ->
             val incoming = (element as? JsonArray).orEmpty().mapNotNull { it as? JsonObject }
-            val byId = incoming.associateBy(::deviceId)
+            val byId = incoming.filter { deviceId(it).isNotBlank() }.associateBy(::deviceId)
             val existing = current.array("devices").mapNotNull { it as? JsonObject }
             val combined = existing.map { device ->
-                byId[deviceId(device)]?.let { JsonObject(device + it) } ?: device
+                byId[deviceId(device).takeIf { it.isNotBlank() }]?.let { JsonObject(device + it.filterKeys { field -> field in setOf("updatedAt", "receivedAt", "ageMs", "stale", "syncUploadIntervalMs") }) } ?: device
             }.toMutableList()
-            val known = existing.map(::deviceId).toSet()
-            combined += incoming.filter { deviceId(it) !in known }
             merged["devices"] = JsonArray(combined)
         }
         return JsonObject(merged).toString()

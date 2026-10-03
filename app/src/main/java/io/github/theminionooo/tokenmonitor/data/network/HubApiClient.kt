@@ -2,6 +2,7 @@ package io.github.theminionooo.tokenmonitor.data.network
 
 import io.github.theminionooo.tokenmonitor.BuildConfig
 import io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser
+import io.github.theminionooo.tokenmonitor.data.protocol.HubStreamProtocol
 import io.github.theminionooo.tokenmonitor.domain.HubConnection
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
@@ -34,6 +35,9 @@ internal class HubApiException(
 ) : Exception(presentation)
 
 /** A deliberately small GET-only client for the Token Monitor Hub. */
+internal fun isEventStream(contentType: String?): Boolean =
+    contentType?.substringBefore(";")?.trim()?.equals("text/event-stream", ignoreCase = true) == true
+
 internal class HubApiClient : Closeable {
     private val requests = mutableSetOf<HttpURLConnection>()
     private var closed = false
@@ -50,7 +54,7 @@ internal class HubApiClient : Closeable {
         synchronized(requests) { requests.remove(http) }
         http.disconnect()
     }
-    fun loadSnapshot(connection: HubConnection): WireHubSnapshot {
+    fun loadSnapshot(connection: HubConnection, previous: WireHubSnapshot? = null): WireHubSnapshot {
         val health = get(connection, "/api/health", authenticated = false)
         val identity = runCatching { HubProtocolParser.decodeHealth(health) }.getOrNull()
         if (identity?.ok != true || identity.role != "hub") {
@@ -59,10 +63,10 @@ internal class HubApiClient : Closeable {
         val stats = get(connection, "/api/stats")
         return WireHubSnapshot(
             health = health,
-            stats = stats,
-            devices = getOptional(connection, "/api/devices"),
-            history = getOptional(connection, "/api/history"),
-            subscriptions = getOptional(connection, "/api/subscriptions"),
+            stats = HubDetailRevisions.markLoaded(HubStreamProtocol.normalizeComplete(stats)),
+            devices = if (HubDetailRevisions.canReuse(previous, stats, "deviceHistoryRevision", previous?.devices)) previous?.devices else getOptional(connection, "/api/devices"),
+            history = if (HubDetailRevisions.canReuse(previous, stats, "historyRevision", previous?.history)) previous?.history else getOptional(connection, "/api/history"),
+            subscriptions = if (HubDetailRevisions.canReuse(previous, stats, "subscriptionsUpdatedAt", previous?.subscriptions)) previous?.subscriptions else getOptional(connection, "/api/subscriptions"),
             capturedAt = System.currentTimeMillis(),
         )
     }
@@ -70,7 +74,11 @@ internal class HubApiClient : Closeable {
     fun getSubscriptions(connection: HubConnection): String = get(connection, "/api/subscriptions")
 
     /** Reads the changing aggregate only; detailed history remains in the initial snapshot. */
-    fun getStats(connection: HubConnection): String = get(connection, "/api/stats")
+    fun getStats(connection: HubConnection): String = get(connection, "/api/stats").also { raw ->
+        if (runCatching { HubStreamProtocol.normalizeComplete(raw); HubProtocolParser.decodeStats(raw) }.isFailure) {
+            throw HubApiException(200, "The Hub did not return valid statistics. Showing the last successful snapshot.")
+        }
+    }
 
     /** A quick unauthenticated identity check used while looking for a Hub on the home network. */
     fun probeHub(baseUrl: String, timeoutMs: Int): Boolean = runCatching {
@@ -105,6 +113,9 @@ internal class HubApiClient : Closeable {
         )
         try {
             if (http.responseCode !in 200..299) throw responseException(http)
+            if (!isEventStream(http.contentType)) {
+                throw HubApiException(200, "The Hub did not return an event stream. Using periodic updates instead.")
+            }
             val session = SseSession(http)
             onOpen(session)
             http.inputStream.bufferedReader(StandardCharsets.UTF_8).use { reader ->
@@ -141,7 +152,7 @@ internal class HubApiClient : Closeable {
         val http = (URL(connection.baseUrl + path).openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"
             connectTimeout = 10_000
-            readTimeout = 35_000
+            readTimeout = if (accept == "text/event-stream") 75_000 else 35_000
             instanceFollowRedirects = false
             useCaches = false
             setRequestProperty("Accept", accept)
@@ -160,7 +171,7 @@ internal class HubApiClient : Closeable {
     }
 
     private fun responseException(http: HttpURLConnection): HubApiException = when (http.responseCode) {
-        401 -> HubApiException(401, "The Hub rejected the secret. Check the connection settings.")
+        401, 403 -> HubApiException(http.responseCode, "The Hub rejected the secret. Check the connection settings.")
         404 -> HubApiException(404, "This Hub endpoint is not available. Update the desktop Token Monitor Hub.")
         else -> HubApiException(http.responseCode, "The Hub returned HTTP ${http.responseCode}. Try again when it is online.")
     }
@@ -179,8 +190,8 @@ internal class HubApiClient : Closeable {
             } else if (line.startsWith("event:")) {
                 eventType = line.removePrefix("event:").trim().ifBlank { "message" }
             } else if (line.startsWith("data:")) {
-                val payload = line.removePrefix("data:").trimStart()
-                if (data.length + payload.length > maxSseEventChars) {
+                val payload = line.removePrefix("data:").removePrefix(" ")
+                if (data.length + payload.length + (if (data.isEmpty()) 0 else 1) > maxSseEventChars) {
                     throw HubApiException(200, "The Hub stream event is too large for this phone dashboard.")
                 }
                 if (data.isNotEmpty()) data.append('\n')
@@ -231,8 +242,8 @@ internal class HubApiClient : Closeable {
     }
 
     private companion object {
-        const val maxResponseBytes = 2 * 1024 * 1024
-        const val maxSseLineChars = 512 * 1024
-        const val maxSseEventChars = 512 * 1024
+        const val maxResponseBytes = 32 * 1024 * 1024
+        const val maxSseLineChars = 8 * 1024 * 1024
+        const val maxSseEventChars = 8 * 1024 * 1024
     }
 }

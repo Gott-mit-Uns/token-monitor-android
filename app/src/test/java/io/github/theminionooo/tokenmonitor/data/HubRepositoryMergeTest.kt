@@ -15,7 +15,7 @@ class HubRepositoryMergeTest {
 
     @Test
     fun `widget polling cannot run faster than the documented cadence`() {
-        assertEquals(30_000L, WIDGET_POLL_INTERVAL_MS)
+        assertEquals(60_000L, WIDGET_POLL_INTERVAL_MS)
     }
 
     @Test

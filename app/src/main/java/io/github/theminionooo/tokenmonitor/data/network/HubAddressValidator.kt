@@ -4,9 +4,8 @@ import io.github.theminionooo.tokenmonitor.domain.HubConnection
 import java.net.URI
 
 /**
- * Limits the dashboard to private transport. A Hub secret must never be sent to
- * an arbitrary public endpoint. Tailscale is allowed by default; RFC1918 Wi-Fi
- * hosts and mDNS names require the explicit local-network switch.
+ * Public Hubs require explicit HTTPS URLs. Bare addresses keep the desktop HTTP
+ * convention; Tailscale is allowed by default and LAN hosts require opt-in.
  */
 object HubAddressValidator {
     private const val defaultPort = 17321
@@ -15,15 +14,18 @@ object HubAddressValidator {
         rawUrl: String,
         secret: String,
         allowLocalNetwork: Boolean,
+        allowPublicHttps: Boolean = true,
     ): HubAddressValidation {
         if (secret.isBlank()) return HubAddressValidation.Rejected("Enter the Hub secret before connecting.")
+        if (secret.any { it.isISOControl() }) return HubAddressValidation.Rejected("The Hub secret must not contain control characters or line breaks.")
+        if (rawUrl.trim().any { it.isWhitespace() || it.isISOControl() }) return HubAddressValidation.Rejected("The Hub address must not contain spaces or control characters.")
         val uri = try {
             URI(normalize(rawUrl))
         } catch (_: Exception) {
-            return HubAddressValidation.Rejected("Enter the address, such as 100.101.102.103.")
+            return HubAddressValidation.Rejected("Enter a complete HTTPS Hub address or a private desktop address.")
         }
         if (uri.host.isNullOrBlank() && uri.scheme == null) {
-            return HubAddressValidation.Rejected("Enter the address, such as 100.101.102.103.")
+            return HubAddressValidation.Rejected("Enter a complete HTTPS Hub address or a private desktop address.")
         }
         val scheme = uri.scheme?.lowercase()
         if (scheme !in setOf("http", "https")) {
@@ -42,12 +44,12 @@ object HubAddressValidator {
         val host = uri.host.lowercase().removePrefix("[").removeSuffix("]")
         val tailscale = host.endsWith(".ts.net") || isTailscaleAddress(host)
         val local = isPrivateIpv4(host) || host.endsWith(".local")
-        if (!tailscale && !(allowLocalNetwork && local)) {
+        if (!tailscale && !(allowLocalNetwork && local) && !(allowPublicHttps && scheme == "https" && !local)) {
             return HubAddressValidation.Rejected(
-                "For safety, use a Tailscale address. Enable Local Wi-Fi fallback only for a private LAN Hub.",
+                "Public Hubs require a complete https:// address. Enable private Wi-Fi only for a LAN Hub.",
             )
         }
-        val port = if (uri.port == -1) defaultPort else uri.port
+        val port = if (uri.port == -1) { if (scheme == "https") 443 else defaultPort } else uri.port
         val displayHost = if (host.contains(':')) "[$host]" else host
         return HubAddressValidation.Allowed(
             HubConnection(
@@ -61,10 +63,10 @@ object HubAddressValidator {
     /**
      * People type what the desktop shows them, and often less: `100.101.102.103`,
      * `100.101.102.103:17321`, or a MagicDNS name. Add the scheme and drop stray
-     * spaces and trailing slashes so those all work; the port defaults later.
+     * outer spaces so those all work; internal spaces and API paths are rejected.
      */
     internal fun normalize(rawUrl: String): String {
-        val compact = rawUrl.filterNot { it.isWhitespace() }.trimEnd('/')
+        val compact = rawUrl.trim()
         if (compact.isEmpty()) return compact
         return if ("://" in compact) compact else "http://$compact"
     }
@@ -76,10 +78,13 @@ object HubAddressValidator {
     fun routeLabel(url: String?, fallbackUrl: String? = null): String {
         if (url == null) return "Hub"
         if (fallbackUrl != null && url == fallbackUrl) return "Home Wi-Fi"
-        val host = runCatching { java.net.URI(normalize(url)).host }.getOrNull().orEmpty().trim('[', ']').lowercase()
+        val uri = runCatching { URI(normalize(url)) }.getOrNull()
+        val host = uri?.host.orEmpty().trim('[', ']').lowercase()
         return when {
             host.endsWith(".ts.net") || isTailscaleAddress(host) -> "Tailscale"
-            isPrivateIpv4(host) -> "Private network"
+            isPrivateIpv4(host) || host.endsWith(".local") -> "Private network"
+            uri?.scheme.equals("https", ignoreCase = true) && host.endsWith(".workers.dev") -> "Cloudflare Hub"
+            uri?.scheme.equals("https", ignoreCase = true) -> "HTTPS Hub"
             else -> "Hub"
         }
     }
@@ -88,14 +93,20 @@ object HubAddressValidator {
         if (host.startsWith("fd7a:115c:a1e0:", ignoreCase = true)) return true
         val octets = host.split('.')
         if (octets.size != 4) return false
-        val values = octets.map { it.toIntOrNull() ?: return false }
+        val values = octets.map { octet ->
+            if (octet.isEmpty() || !octet.all { it in '0'..'9' }) return false
+            octet.toIntOrNull()?.takeIf { it in 0..255 } ?: return false
+        }
         return values[0] == 100 && values[1] in 64..127
     }
 
     private fun isPrivateIpv4(host: String): Boolean {
         val octets = host.split('.')
         if (octets.size != 4) return false
-        val values = octets.map { it.toIntOrNull() ?: return false }
+        val values = octets.map { octet ->
+            if (octet.isEmpty() || !octet.all { it in '0'..'9' }) return false
+            octet.toIntOrNull()?.takeIf { it in 0..255 } ?: return false
+        }
         return when {
             values[0] == 10 -> true
             values[0] == 172 && values[1] in 16..31 -> true

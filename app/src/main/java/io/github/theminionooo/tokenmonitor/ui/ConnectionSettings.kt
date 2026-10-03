@@ -140,7 +140,7 @@ internal fun ConnectionScreen(
                 else -> state.connectionUrl.orEmpty().removePrefix("http://").removePrefix("https://").substringBefore(':')
             }
             SettingsGroup("Connection", summary = listOfNotNull(route, "home fallback".takeIf { state.fallbackUrl != null && route != "Home Wi-Fi" }).joinToString(" · ")) {
-                Text("This phone only reads your private desktop Hub. It cannot control the desktop or access its files.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text("This phone only reads your Token Monitor Hub. HTTPS Cloudflare Hubs and private desktop Hubs are supported.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 Text("The saved Hub is shown below. Enter the secret again only to change the connection.", color = Accent, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 fields("CHECK AND SAVE CONNECTION")
                 OutlinedButton(onClick = onDisconnect, modifier = Modifier.fillMaxWidth()) { Text("DISCONNECT THIS PHONE") }
@@ -274,7 +274,7 @@ internal fun ConnectionScreen(
                 val widgetContext = androidx.compose.ui.platform.LocalContext.current
                 val widgets = android.appwidget.AppWidgetManager.getInstance(widgetContext)
                 Text("A widget in your app theme with the full token count, tool marks, quota windows, and a seven-day chart as you make it taller. Reduce Motion also applies to the widget.", color = Muted, style = MaterialTheme.typography.bodySmall)
-                Text("Tap Refresh for one update, or Live for 30-second Hub updates for up to an hour while the app is closed. Tap Live again or Stop in the notification to finish. Android may delay updates while the phone sleeps. Figures and the last update time are visible on your home screen.", color = Muted, style = MaterialTheme.typography.bodySmall)
+                Text("Tap Refresh for one update, or Live for 60-second Hub updates for up to an hour while the app is closed. Tap Live again or Stop in the notification to finish. Android may delay updates while the phone sleeps. Figures and the last update time are visible on your home screen.", color = Muted, style = MaterialTheme.typography.bodySmall)
                 if (widgets.isRequestPinAppWidgetSupported) {
                     Button(onClick = {
                         widgets.requestPinAppWidget(android.content.ComponentName(widgetContext, io.github.theminionooo.tokenmonitor.widget.UsageWidgetProvider::class.java), null, null)
@@ -291,7 +291,7 @@ internal fun ConnectionScreen(
             SettingsGroup("App updates", summary = "${BuildConfig.VERSION_NAME} r${BuildConfig.VERSION_CODE % 1000}") {
                 AppUpdatesPanel(onOpenReleasePage)
             }
-            Text("The dashboard streams immediately while visible. Widget Live uses a lighter 30-second refresh and stops after one hour.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+            Text("The dashboard streams immediately while visible. Widget Live uses a lighter 60-second refresh and stops after one hour.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
         }
     }
 }
@@ -317,9 +317,9 @@ private fun ColumnScope.ConnectionFields(
         value = hubUrl,
         onValueChange = onHubUrlChange,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text("Tailscale address") },
-        placeholder = { Text("100.x.x.x") },
-        supportingText = { Text("Just the numbers. It always starts with 100. and is shown in the Tailscale app or the desktop's Multi-device Sync list.") },
+        label = { Text("Hub address") },
+        placeholder = { Text("https://your-hub.example.com") },
+        supportingText = { Text("Cloudflare: paste the complete HTTPS base address, without /api/stats. HTTPS defaults to port 443. Bare Tailscale or LAN addresses use HTTP port 17321.") },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
     )
@@ -329,7 +329,7 @@ private fun ColumnScope.ConnectionFields(
         modifier = Modifier.fillMaxWidth(),
         label = { Text("Home Wi-Fi address (optional)") },
         placeholder = { Text("192.168.x.x") },
-        supportingText = { Text(discovery.message ?: "Used when Tailscale does not answer, such as at home with Tailscale off. Tap Find while on your home Wi-Fi to fill it in.") },
+        supportingText = { Text(discovery.message ?: "Private desktop Hub only. Use this only if it shares the same data and secret as the primary Hub; otherwise leave it blank.") },
         trailingIcon = {
             if (discovery.searching) {
                 CircularProgressIndicator(modifier = Modifier.padding(end = 12.dp).size(18.dp), strokeWidth = 2.dp, color = Accent)
@@ -344,7 +344,7 @@ private fun ColumnScope.ConnectionFields(
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text("Allow a private Wi-Fi Hub", color = Ink, style = MaterialTheme.typography.bodyMedium)
-            Text("Public addresses are always rejected. Enable this only for a 10.x, 172.16–31.x, 192.168.x, or .local Hub.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
+            Text("Enable only for a 10.x, 172.16–31.x, 192.168.x, or .local Hub. Public HTTPS Hubs do not require this switch.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
         }
         Spacer(Modifier.width(12.dp))
         Switch(checked = allowLocalNetwork, onCheckedChange = onAllowLocalNetworkChange)
@@ -368,14 +368,14 @@ private fun WelcomeSetup(modifier: Modifier, fields: @Composable ColumnScope.(St
             Text("Token Monitor", color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             Text("Your desktop dashboard, live on your phone.", color = Muted, style = MaterialTheme.typography.bodyMedium, lineHeight = 18.sp)
         }
-        Text("PAIR WITH YOUR DESKTOP", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 6.dp))
-        WelcomeStep(1, "Install Tailscale on the desktop and this phone", "Sign both into the same tailnet. Personal use is free.")
-        WelcomeStep(2, "Host the Hub on the desktop", "Token Monitor → Settings → Multi-device Sync → Host Hub.")
-        WelcomeStep(3, "Type the address that starts with 100.", "Just the numbers from the desktop's list. Tap Find for the home address, paste the secret, and connect.")
+        Text("CONNECT YOUR HUB", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 6.dp))
+        WelcomeStep(1, "Choose your existing Hub", "Use your Cloudflare HTTPS Hub, or a desktop Hub over Tailscale or home Wi-Fi.")
+        WelcomeStep(2, "Enter its base address", "Cloudflare uses https://your-hub.example.com. For a desktop Hub, use its private address and port.")
+        WelcomeStep(3, "Enter the shared Hub secret", "Use the Token Monitor Hub secret, not a Cloudflare account API token. Check and save to connect.")
         Surface(color = Recessed.copy(alpha = 0.76f), border = BorderStroke(1.dp, Line), shape = MaterialTheme.shapes.medium, modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { fields("CONNECT") }
         }
-        Text("Usage stays between this phone and your private Hub. App update checks contact GitHub.", color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 15.sp)
+        Text("Usage is read from the Hub you configure. Credentials are encrypted with Android Keystore. This independent Cloudflare edition uses manually installed updates.", color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 15.sp)
         SettingsGroup("App updates", summary = "${BuildConfig.VERSION_NAME} r${BuildConfig.VERSION_CODE % 1000}") {
             AppUpdatesPanel(onOpenReleasePage)
         }

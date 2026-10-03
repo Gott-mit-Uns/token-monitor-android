@@ -54,13 +54,41 @@ class HubAddressValidatorTest {
     }
 
     @Test
-    fun `public and api path targets are rejected`() {
+    fun `public http and api path targets are rejected`() {
         assertTrue(
-            HubAddressValidator.validate("https://example.com", "redacted", false) is HubAddressValidation.Rejected,
+            HubAddressValidator.validate("http://example.com", "redacted", false) is HubAddressValidation.Rejected,
         )
         assertTrue(
             HubAddressValidator.validate("http://100.64.1.2:17321/api/stats", "redacted", false) is HubAddressValidation.Rejected,
         )
+    }
+
+    @Test
+    fun `public https defaults to 443 and preserves explicit ports`() {
+        val cloud = HubAddressValidator.validate(" https://usage.workers.dev/ ", "synthetic", false)
+        assertEquals("https://usage.workers.dev:443", (cloud as HubAddressValidation.Allowed).connection.baseUrl)
+        val custom = HubAddressValidator.validate("https://hub.example.com:8443", "synthetic", false)
+        assertEquals("https://hub.example.com:8443", (custom as HubAddressValidation.Allowed).connection.baseUrl)
+        assertTrue(HubAddressValidator.validate("hub.example.com", "synthetic", false) is HubAddressValidation.Rejected)
+        assertEquals("Cloudflare Hub", HubAddressValidator.routeLabel("https://usage.workers.dev:443"))
+        assertEquals("HTTPS Hub", HubAddressValidator.routeLabel("https://hub.example.com:443"))
+    }
+
+    @Test
+    fun `fallback remains private even with https`() {
+        assertTrue(HubAddressValidator.validate("https://hub.example.com", "synthetic", true, allowPublicHttps = false) is HubAddressValidation.Rejected)
+        assertTrue(HubAddressValidator.validate("https://192.168.1.20", "synthetic", true, allowPublicHttps = false) is HubAddressValidation.Allowed)
+        assertTrue(HubAddressValidator.validate("https://192.168.1.20", "synthetic", false) is HubAddressValidation.Rejected)
+    }
+
+    @Test
+    fun `unsafe URL and secret contents are rejected rather than repaired`() {
+        listOf("https://exa mple.com", "https://hub.example.com/api/stats", "https://hub.example.com//",
+            "https://user:password@hub.example.com", "https://hub.example.com?secret=x", "https://hub.example.com#fragment",
+            "http://100.64.999.1", "http://192.168.1.999", "http://10.-1.2.3", "https://hub.example.com:0").forEach {
+            assertTrue(it, HubAddressValidator.validate(it, "synthetic", true) is HubAddressValidation.Rejected)
+        }
+        assertTrue(HubAddressValidator.validate("https://hub.example.com", "synthetic\nheader", false) is HubAddressValidation.Rejected)
     }
 
     @Test

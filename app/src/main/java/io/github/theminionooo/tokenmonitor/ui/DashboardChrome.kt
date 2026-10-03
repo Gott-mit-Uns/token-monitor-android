@@ -126,7 +126,7 @@ internal fun DesktopHeader(
                 }
             }
             val status = when {
-                settingsOpen -> "Private Hub connection"
+                settingsOpen -> "Hub connection"
                 state.snapshot?.stale == true -> "Saved snapshot · ${formatCapturedAt(state.snapshot.capturedAt)}"
                 // Name the route that is answering, so Tailscale gets a label the way home Wi-Fi does.
                 state.streamActive -> HubAddressValidator.routeLabel(state.activeUrl ?: state.connectionUrl, state.fallbackUrl)

@@ -1,5 +1,6 @@
 package io.github.theminionooo.tokenmonitor
 
+import kotlin.math.roundToInt
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -110,8 +111,8 @@ class WidgetControlsTest {
         assertEquals(2, info.targetCellWidth)
         assertEquals(2, info.targetCellHeight)
         val density = context.resources.displayMetrics.density
-        assertEquals((110 * density).toInt(), info.minResizeWidth)
-        assertEquals((110 * density).toInt(), info.minResizeHeight)
+        assertEquals((110 * density).roundToInt(), info.minResizeWidth)
+        assertEquals((110 * density).roundToInt(), info.minResizeHeight)
         assertEquals(R.layout.usage_widget_compact, info.initialLayout)
         assertEquals(R.layout.usage_widget_preview, info.previewLayout)
         instrumentation.runOnMainSync {

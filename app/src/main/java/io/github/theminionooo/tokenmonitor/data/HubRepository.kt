@@ -5,6 +5,7 @@ import io.github.theminionooo.tokenmonitor.data.network.BackoffPolicy
 import io.github.theminionooo.tokenmonitor.data.network.EndpointFailover
 import io.github.theminionooo.tokenmonitor.data.network.HubAddressValidation
 import io.github.theminionooo.tokenmonitor.data.network.HubAddressValidator
+import io.github.theminionooo.tokenmonitor.data.network.HubDetailRevisions
 import io.github.theminionooo.tokenmonitor.data.network.HubApiClient
 import io.github.theminionooo.tokenmonitor.data.network.HubApiException
 import io.github.theminionooo.tokenmonitor.data.network.WireHubSnapshot
@@ -67,7 +68,7 @@ internal fun retainDeviceHistory(streamed: HubStats, previous: List<DeviceUsage>
 
 internal enum class HubWorkMode { Idle, WidgetPolling, DashboardStreaming }
 
-internal const val WIDGET_POLL_INTERVAL_MS = 30_000L
+internal const val WIDGET_POLL_INTERVAL_MS = 60_000L
 
 internal fun selectHubWorkMode(dashboardVisible: Boolean, widgetActive: Boolean): HubWorkMode = when {
     dashboardVisible -> HubWorkMode.DashboardStreaming
@@ -84,7 +85,7 @@ internal class HubRepository(context: Context) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val diskScope = CoroutineScope(SupervisorJob() + Dispatchers.IO.limitedParallelism(1))
     private val diskQueue = SerialDiskQueue(diskScope)
-    private val network = HubNetworkObserver(appContext) { scope.launch { if (workAllowed) refreshNow() } }
+    private val network = HubNetworkObserver(appContext) { scope.launch { if (workAllowed) refreshNow(manual = false) } }
     private var connection: HubConnection? = connectionStore.read()
     private var activeUrl: String? = connection?.baseUrl
     private var lastWireSnapshot: WireHubSnapshot? = cache.read()
@@ -95,6 +96,10 @@ internal class HubRepository(context: Context) {
     private var foregroundJob: Job? = null
     private var activeWorkMode = HubWorkMode.Idle
     private var subscriptionJob: Job? = null
+    private var detailJob: Job? = null
+    private var lastDetailAttemptAt = 0L
+    private var forceDetails = false
+    private var authenticationRejected = false
     private var activeApi: HubApiClient? = null
     private var dashboardVisible = false
     private var widgetActive = false
@@ -122,15 +127,18 @@ internal class HubRepository(context: Context) {
             return
         }
         network.start()
-        if (foregroundJob?.isActive != true || activeWorkMode != desired) {
+        if (!authenticationRejected && (foregroundJob?.isActive != true || activeWorkMode != desired)) {
             stopForegroundWork()
             startForegroundWork(desired)
         }
     }
 
-    fun refreshNow() {
+    fun refreshNow(manual: Boolean = true) {
         val desired = desiredWorkMode
         if (connection == null || desired == HubWorkMode.Idle) return
+        if (!manual && authenticationRejected) return
+        if (manual) authenticationRejected = false
+        forceDetails = manual
         stopForegroundWork()
         startForegroundWork(desired)
     }
@@ -141,7 +149,7 @@ internal class HubRepository(context: Context) {
             is HubAddressValidation.Rejected -> return result.reason
         }
         val fallback = if (rawFallbackUrl.isBlank()) null else {
-            when (val result = HubAddressValidator.validate(rawFallbackUrl, secret, true)) {
+            when (val result = HubAddressValidator.validate(rawFallbackUrl, secret, true, allowPublicHttps = false)) {
                 is HubAddressValidation.Allowed -> result.connection.baseUrl
                 is HubAddressValidation.Rejected -> return "Home Wi-Fi address: ${result.reason}"
             }
@@ -159,23 +167,24 @@ internal class HubRepository(context: Context) {
             val snapshot = withContext(Dispatchers.IO) { parse(wire) }
             if (generation != token) return "Connection check cancelled. Try again."
             connectionStore.save(candidate)
+            authenticationRejected = false
             connection = candidate
             activeUrl = url
             applySuccess(wire, snapshot)
             null
         } catch (cancelled: CancellationException) { throw cancelled }
         catch (error: HubApiException) { error.presentation }
-        catch (_: Exception) { "The Hub could not be verified. Check the private address and try again." }
-        finally { api.close(); if (activeApi === api) activeApi = null }
+        catch (_: Exception) { "The Hub could not be verified. Check the HTTPS or private Hub address and try again." }
+        finally { api.close(); if (activeApi === api) activeApi = null; reconcileWork() }
     }
 
     fun disconnect() {
+        connectionStore.clear()
         stopForegroundWork()
         connection = null
         activeUrl = null
         lastWireSnapshot = null
         pendingCacheWrite = null
-        connectionStore.clear()
         diskQueue.enqueue { cache.clear(); WidgetUpdateCoordinator.refresh(appContext) }
         _state.value = HubRepositoryState()
     }
@@ -200,39 +209,60 @@ internal class HubRepository(context: Context) {
         val saved = connection ?: return
         if (mode == HubWorkMode.Idle || mode != desiredWorkMode || foregroundJob?.isActive == true) return
         val token = generation
+        val refreshDetails = forceDetails
+        forceDetails = false
         val api = HubApiClient().also { activeApi = it }
         activeWorkMode = mode
         foregroundJob = scope.launch {
             var attempt = 0
+            var initialized = false
+            var lastStatsPollAt = 0L
             try {
                 while (desiredWorkMode == mode && generation == token) {
                     try {
                         _state.update { it.copy(refreshing = true, message = null) }
-                        val (url, wire) = withContext(Dispatchers.IO) {
-                            EndpointFailover.run(EndpointFailover.candidates(saved, activeUrl)) { api.loadSnapshot(saved.copy(baseUrl = it)) }
+                        val url = if (!initialized) {
+                            val previous = if (refreshDetails) null else lastWireSnapshot
+                            val (route, wire) = withContext(Dispatchers.IO) {
+                                EndpointFailover.run(EndpointFailover.candidates(saved, activeUrl)) { api.loadSnapshot(saved.copy(baseUrl = it), previous) }
+                            }
+                            ensureActive()
+                            if (generation != token) break
+                            val snapshot = withContext(Dispatchers.IO) { parse(wire) }
+                            if (generation != token) break
+                            activeUrl = route
+                            applySuccess(wire, snapshot)
+                            initialized = true
+                            lastStatsPollAt = android.os.SystemClock.elapsedRealtime()
+                            route
+                        } else {
+                            val route = activeUrl ?: saved.baseUrl
+                            if (android.os.SystemClock.elapsedRealtime() - lastStatsPollAt >= WIDGET_POLL_INTERVAL_MS) {
+                                lastStatsPollAt = android.os.SystemClock.elapsedRealtime()
+                                val raw = withContext(Dispatchers.IO) { api.getStats(saved.copy(baseUrl = route)) }
+                                applyStatsUpdate(raw, token)
+                                refreshSubscriptions(saved, api, token)
+                                refreshHistory(saved, api, token)
+                            }
+                            route
                         }
-                        ensureActive()
-                        if (generation != token) break
-                        val snapshot = withContext(Dispatchers.IO) { parse(wire) }
-                        if (generation != token) break
-                        activeUrl = url
-                        applySuccess(wire, snapshot)
                         when (mode) {
                             HubWorkMode.DashboardStreaming -> withContext(Dispatchers.IO) {
                                 api.streamStats(saved.copy(baseUrl = url),
                                     onOpen = { withContext(Dispatchers.Main.immediate) {
-                                        if (generation == token) _state.update { it.copy(streamActive = true, widgetLiveActive = false) }
+                                        if (generation == token) _state.update { it.copy(streamActive = true, widgetLiveActive = false, refreshing = false) }
                                     } },
                                     onEvent = { event -> withContext(Dispatchers.Main.immediate) {
                                         if (generation == token) {
                                             if (applyStatsUpdate(event.data, token, streamEventType = event.type)) attempt = 0
                                             refreshSubscriptions(saved, api, token)
+                                            refreshHistory(saved, api, token)
                                         }
                                     } },
                                 )
                             }
                             HubWorkMode.WidgetPolling -> {
-                                _state.update { it.copy(streamActive = false, widgetLiveActive = true) }
+                                _state.update { it.copy(streamActive = false, widgetLiveActive = true, refreshing = false) }
                                 while (desiredWorkMode == mode && generation == token) {
                                     delay(WIDGET_POLL_INTERVAL_MS)
                                     val raw = withContext(Dispatchers.IO) {
@@ -242,6 +272,7 @@ internal class HubRepository(context: Context) {
                                     if (generation != token || desiredWorkMode != mode) break
                                     if (applyStatsUpdate(raw, token)) attempt = 0
                                     refreshSubscriptions(saved, api, token)
+                                    refreshHistory(saved, api, token)
                                 }
                             }
                             HubWorkMode.Idle -> Unit
@@ -250,10 +281,10 @@ internal class HubRepository(context: Context) {
                     } catch (cancelled: CancellationException) { throw cancelled }
                     catch (error: Exception) {
                         if (generation != token) break
-                        val rejected = error is HubApiException && error.statusCode == 401
+                        val rejected = error is HubApiException && error.statusCode in setOf(401, 403)
                         _state.update { it.copy(refreshing = false, streamActive = false, widgetLiveActive = false,
                             message = if (error is HubApiException) error.presentation else "Hub unavailable. Showing the last successful snapshot; retrying...") }
-                        if (rejected) break
+                        if (rejected) { authenticationRejected = true; break }
                         activeUrl = EndpointFailover.candidates(saved, activeUrl).getOrNull(1) ?: activeUrl
                     }
                     delay(backoff.delayForAttempt(attempt++))
@@ -275,6 +306,8 @@ internal class HubRepository(context: Context) {
         foregroundJob?.cancel()
         foregroundJob = null
         activeWorkMode = HubWorkMode.Idle
+        detailJob?.cancel()
+        detailJob = null
         subscriptionJob?.cancel()
         subscriptionJob = null
         _state.update { it.copy(refreshing = false, streamActive = false, widgetLiveActive = false) }
@@ -312,22 +345,59 @@ internal class HubRepository(context: Context) {
                 return@withContext null
             }
             val normalized = runCatching {
-                if (streamEventType == "freshness") HubStreamProtocol.mergeFreshness(wire.stats, raw)
+                if (HubStreamProtocol.isFreshness(raw, streamEventType)) HubStreamProtocol.mergeFreshness(wire.stats, raw)
                 else HubStreamProtocol.normalizeComplete(raw)
             }.getOrNull() ?: return@withContext null
             val stats = runCatching { HubProtocolParser.decodeStats(normalized) }.getOrNull() ?: return@withContext null
-            val updatedWire = wire.copy(stats = normalized, capturedAt = System.currentTimeMillis())
+            val updatedWire = wire.copy(stats = HubDetailRevisions.retainMarkers(wire.stats, normalized), capturedAt = System.currentTimeMillis())
             val decoded = parse(updatedWire)
             updatedWire to decoded.copy(stats = retainDeviceHistory(stats, previous.stats.devices))
         } ?: return false
         if (generation != token) return false
-        // A subscription request may complete while this event is being parsed.
+        if (lastWireSnapshot !== wire) return applyStatsUpdate(raw, token, streamEventType)
+        // Preserve detail revisions and subscriptions refreshed before this event.
         val updatedWire = parsed.first.copy(subscriptions = lastWireSnapshot?.subscriptions)
         val next = parsed.second.copy(subscriptions = _state.value.snapshot?.subscriptions ?: parsed.second.subscriptions)
         lastWireSnapshot = updatedWire
-        _state.update { it.copy(snapshot = next, message = null) }
+        _state.update { it.copy(snapshot = next, refreshing = false, message = null) }
         persist(updatedWire, false)
         return true
+    }
+
+    private fun handleDetailFailure(error: Exception) {
+        if (error is HubApiException && error.statusCode in setOf(401, 403)) {
+            authenticationRejected = true
+            stopForegroundWork()
+            _state.update { it.copy(message = error.presentation) }
+        }
+        // Other failures retain the last good details and are throttled to a minute.
+    }
+
+    private fun refreshHistory(saved: HubConnection, api: HubApiClient, token: Long) {
+        val wire = lastWireSnapshot ?: return
+        if (!HubDetailRevisions.historyChanged(wire, wire.stats) || detailJob?.isActive == true) return
+        val now = System.currentTimeMillis()
+        if (now - lastDetailAttemptAt < 60_000L) return
+        lastDetailAttemptAt = now
+        val route = activeUrl ?: saved.baseUrl
+        detailJob = scope.launch {
+            try {
+                val loaded = withContext(Dispatchers.IO) { api.loadSnapshot(saved.copy(baseUrl = route), wire) }
+                ensureActive()
+                if (generation != token) return@launch
+                val current = lastWireSnapshot ?: return@launch
+                // Do not replace a newer streamed total with the HTTP snapshot captured earlier.
+                val mergedStats = HubDetailRevisions.retainHistoryMarkers(loaded.stats, current.stats)
+                val merged = current.copy(devices = loaded.devices, history = loaded.history, stats = mergedStats)
+                val snapshot = withContext(Dispatchers.IO) { parse(merged) }
+                if (generation != token) return@launch
+                if (lastWireSnapshot !== current) return@launch
+                lastWireSnapshot = merged
+                _state.update { it.copy(snapshot = snapshot) }
+                persist(merged, true)
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { handleDetailFailure(error) }
+        }
     }
 
     private fun refreshSubscriptions(saved: HubConnection, api: HubApiClient, token: Long) {
@@ -347,9 +417,9 @@ internal class HubRepository(context: Context) {
                 val current = _state.value.snapshot ?: return@launch
                 val subscriptions = HubProtocolParser.decodeSubscriptions(raw)
                 _state.update { it.copy(snapshot = current.copy(subscriptions = subscriptions)) }
-                lastWireSnapshot?.copy(subscriptions = raw)?.let { lastWireSnapshot = it; persist(it, true) }
+                lastWireSnapshot?.let { it.copy(subscriptions = raw, stats = HubDetailRevisions.markVersion(it.stats, "subscriptionsUpdatedAt", subscriptions.updatedAt)) }?.let { lastWireSnapshot = it; persist(it, true) }
             } catch (cancelled: CancellationException) { throw cancelled }
-            catch (_: Exception) { /* Keep the last good list; retry the same version after a minute. */ }
+            catch (error: Exception) { handleDetailFailure(error) }
         }
     }
 

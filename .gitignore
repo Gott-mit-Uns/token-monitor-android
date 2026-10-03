@@ -17,3 +17,8 @@ secrets.properties
 
 node_modules/
 /local-private/
+
+# Personal signing material and local delivery
+*.jks
+*.keystore
+dist/

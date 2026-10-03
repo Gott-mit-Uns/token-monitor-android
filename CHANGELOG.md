@@ -1,3 +1,12 @@
+## v0.65.0-cf.1 — Cloudflare compatibility
+
+- Public HTTPS Hub addresses with port 443; preserved private-network connections.
+- SSE-first foreground updates, 60-second fallback/retry ceiling and 60-second optional widget Live refresh.
+- Authentication retry pause, revision-aware detail cache, strict payload checks and bounded larger histories.
+- Keystore commit/concurrency hardening; backup exclusion preserved.
+- Independent package and signed build; upstream automatic APK updates disabled.
+- Large-widget charts use measured pixel dimensions.
+
 # Changelog
 
 Android releases use the desktop protocol version plus an Android revision.
