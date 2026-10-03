@@ -2,7 +2,7 @@
 >
 > 此分支基于 The-Minion-oOo 的 MIT 项目，保留原界面与小组件，增加公网 HTTPS Cloudflare Hub 接入并优化缓存、重连及凭据安全。独立应用 ID，可与原版并存；原作者的自动 APK 更新在此分支已关闭。
 >
-> [Cloudflare 配置](CLOUDFLARE.md) · [审核与修改](docs/audit.md) · [验证记录](docs/validation.md)
+> [Cloudflare 配置](CLOUDFLARE.md) · [审核与修改](docs/audit.md) · [验证记录](docs/validation-cloudflare.md)
 >
 > 下方为上游原始项目介绍，私有网络限制和原版发布渠道不适用于本分支。
 
