@@ -1,5 +1,8 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.localizedText
+import io.github.theminionooo.tokenmonitor.localization.LanguagePreferences
+import io.github.theminionooo.tokenmonitor.localization.localizedContext
 import java.text.NumberFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -13,7 +16,8 @@ private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Loca
 private val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, h:mm a")
 private val clockFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val shortDateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("M/d")
-internal val dayFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, MMM d", Locale.US)
+internal fun uiLocale(): Locale = LanguagePreferences.context()?.let { localizedContext(it).resources.configuration.locales[0] } ?: Locale.getDefault()
+internal val dayFormat: DateTimeFormatter get() = DateTimeFormatter.ofPattern("EEE, MMM d", uiLocale())
 
 internal fun formatTokens(tokens: Long): String = wholeNumberFormat.format(tokens)
 
@@ -44,12 +48,12 @@ internal fun formatDuration(milliseconds: Long): String {
     val days = totalMinutes / 1_440
     val hours = (totalMinutes % 1_440) / 60
     val minutes = totalMinutes % 60
-    return when {
+    return localizedText(when {
         days > 0 -> "${days}d ${hours}h"
         hours > 0 -> "${hours}h ${minutes}m"
         minutes > 0 -> "${minutes}m"
         else -> "<1m"
-    }
+    })
 }
 
 /** The desktop `formatActiveDuration`: total hours and minutes, such as `542h 28m`. */
@@ -57,14 +61,14 @@ internal fun formatActiveDuration(milliseconds: Long): String {
     val totalMinutes = Math.round(milliseconds.coerceAtLeast(0L) / 60_000.0)
     val hours = totalMinutes / 60
     val minutes = totalMinutes % 60
-    return if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
+    return localizedText(if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m")
 }
 
 /** The desktop `formatReset`: a countdown such as `Reset 1h 59m`, `Reset now` once due, or nothing without a timestamp. */
 internal fun formatReset(resetsAt: String, now: Long): String {
     val target = runCatching { Instant.parse(resetsAt).toEpochMilli() }.getOrNull() ?: return ""
     val remaining = target - now
-    return if (remaining <= 0) "Reset now" else "Reset ${formatDuration(remaining)}"
+    return localizedText(if (remaining <= 0) "Reset now" else "Reset ${formatDuration(remaining)}")
 }
 
 /** v0.56 keeps one timestamp but tells readers whether it resets, expires, or does both. */
@@ -72,22 +76,22 @@ internal fun formatBoundary(resetsAt: String, boundaryKind: String, now: Long): 
     val target = runCatching { Instant.parse(resetsAt).toEpochMilli() }.getOrNull() ?: return ""
     val remaining = target - now
     val suffix = if (remaining <= 0) "now" else formatDuration(remaining)
-    return when (boundaryKind.lowercase()) {
+    return localizedText(when (boundaryKind.lowercase()) {
         "expiry" -> "Expires $suffix"
         "mixed" -> "Changes${if (remaining <= 0) "" else " in"} $suffix"
         else -> "Reset $suffix"
-    }
+    })
 }
 
 /** Desktop-style age such as `38s ago`, `5m ago`, `2h 10m ago`, or `3d 4h ago`. */
 internal fun formatRelativeAge(timestamp: Long, now: Long): String {
     if (timestamp <= 0) return ""
     val age = (now - timestamp).coerceAtLeast(0L)
-    return when {
+    return localizedText(when {
         age < 5_000 -> "just now"
         age < 60_000 -> "${age / 1_000}s ago"
         else -> "${formatDuration(age)} ago"
-    }
+    })
 }
 
 internal fun String.relativeAge(now: Long): String =
@@ -96,17 +100,17 @@ internal fun String.relativeAge(now: Long): String =
 internal fun formatPercent(value: Double): String = "${value.toInt()}%"
 
 internal fun formatHubBuild(value: String): String {
-    if (value.isBlank()) return "Not reported"
+    if (value.isBlank()) return localizedText("Not reported")
     val normalized = value.removePrefix("sha256:")
     return if (normalized.length > 14) "${normalized.take(14)}…" else normalized
 }
 
-internal fun formatCapturedAt(timestamp: Long): String = if (timestamp <= 0) "an unknown time" else runCatching {
-    Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).format(dateTimeFormat)
-}.getOrDefault("recently")
+internal fun formatCapturedAt(timestamp: Long): String = if (timestamp <= 0) localizedText("an unknown time") else runCatching {
+    Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(if (uiLocale().language == "zh") "M月d日 HH:mm" else "MMM d, h:mm a", uiLocale()))
+}.getOrDefault(localizedText("recently"))
 
 internal fun String.shortTime(): String = runCatching {
-    Instant.parse(this).atZone(ZoneId.systemDefault()).format(dateTimeFormat)
+    Instant.parse(this).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(if (uiLocale().language == "zh") "M月d日 HH:mm" else "MMM d, h:mm a", uiLocale()))
 }.getOrDefault("")
 
 internal fun String.shortClockTime(): String = runCatching {
@@ -143,11 +147,11 @@ internal fun String.displayName(): String {
 
 /** The desktop's period words for a limit window kind, used when two windows share a name. */
 internal fun windowPeriodLabel(kind: String): String = when (kind.trim().lowercase(Locale.US)) {
-    "session" -> "5-hour"
-    "daily" -> "Daily"
-    "weekly" -> "Weekly"
-    "monthly" -> "Monthly"
-    "billing" -> "Billing"
+    "session" -> localizedText("5-hour")
+    "daily" -> localizedText("Daily")
+    "weekly" -> localizedText("Weekly")
+    "monthly" -> localizedText("Monthly")
+    "billing" -> localizedText("Billing")
     else -> kind.providerName()
 }
 
@@ -159,7 +163,12 @@ internal fun windowPeriodLabel(kind: String): String = when (kind.trim().lowerca
 internal fun windowTitle(window: io.github.theminionooo.tokenmonitor.domain.LimitWindow, siblings: List<io.github.theminionooo.tokenmonitor.domain.LimitWindow>): String {
     val base = window.label.ifBlank { window.kind.ifBlank { "Limit" } }.displayName()
     val shared = siblings.count { it !== window && it.label.ifBlank { it.kind.ifBlank { "Limit" } }.displayName() == base } > 0
-    return if (shared && window.kind.isNotBlank()) "$base · ${windowPeriodLabel(window.kind)}" else base
+    val title = if (uiLocale().language != "zh") base else when (base.lowercase(Locale.ROOT)) {
+        "session", "daily", "weekly", "monthly", "billing" -> windowPeriodLabel(base)
+        "balance", "limit" -> localizedText(base)
+        else -> base
+    }
+    return if (shared && window.kind.isNotBlank()) "$title · ${windowPeriodLabel(window.kind)}" else title
 }
 
 /** Plain title case for provider and platform names, where the desktop shows `Claude` rather than `Claude Code`. */

@@ -19,6 +19,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 
 internal enum class DashboardDestination(val title: String) {
@@ -52,10 +55,27 @@ internal data class HubDiscoveryState(
 
 internal class DashboardViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = HubRepositoryPool.acquire(application)
+    private val deviceAliasStore = io.github.theminionooo.tokenmonitor.data.storage.DeviceAliasStore(application)
+    val deviceAliases = deviceAliasStore.aliases
+    val originalDeviceNames: Map<String, String>
+        get() = repository.state.value.snapshot?.stats?.devices?.associate { it.id to it.hostname }.orEmpty()
+    fun saveDeviceAlias(id: String, input: String): String? {
+        val hubUrl = repository.state.value.connectionUrl ?: return "Connect to a Hub first."
+        return deviceAliasStore.save(hubUrl, id, input)
+    }
+
     private val displayPreferences = DisplayPreferences(application)
     private val serviceStatusClient = ServiceStatusClient()
 
-    val hubState: StateFlow<HubRepositoryState> = repository.state
+    val hubState: StateFlow<HubRepositoryState> = combine(repository.state, deviceAliases) { state, _ ->
+        val url = state.connectionUrl
+        val snapshot = state.snapshot
+        if (url != null && snapshot != null) state.copy(snapshot = deviceAliasStore.displaySnapshot(url, snapshot)) else state
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, repository.state.value.let { state ->
+        val url = state.connectionUrl
+        val snapshot = state.snapshot
+        if (url != null && snapshot != null) state.copy(snapshot = deviceAliasStore.displaySnapshot(url, snapshot)) else state
+    })
     private val _destination = MutableStateFlow(
         if (repository.state.value.hasConnection) DashboardDestination.Home else DashboardDestination.Settings,
     )
@@ -192,6 +212,7 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
         discoveryJob?.cancel()
         serviceStatusJob?.cancel()
         repository.setDashboardVisible(false)
+        deviceAliasStore.close()
         HubRepositoryPool.release(repository)
     }
 

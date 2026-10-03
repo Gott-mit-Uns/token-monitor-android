@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.app.Activity
 import android.provider.Settings
 import androidx.compose.runtime.SideEffect
@@ -167,6 +169,6 @@ internal fun MenuRow(label: String, selected: Boolean, iconRes: Int? = null, onC
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         iconRes?.let { Icon(painterResource(it), contentDescription = null, tint = if (selected) Accent else Muted, modifier = Modifier.size(15.dp)) }
-        Text(label, color = if (selected) Accent else Muted, style = MaterialTheme.typography.labelMedium, maxLines = 1)
+        Text(tr(label), color = if (selected) Accent else Muted, style = MaterialTheme.typography.labelMedium, maxLines = 1)
     }
 }

@@ -107,6 +107,20 @@ internal fun android.content.Context.findActivity(): Activity? = when (this) {
 
 @Composable
 internal fun TokenMonitorApp(viewModel: DashboardViewModel) {
+    val systemContext = LocalContext.current
+    io.github.theminionooo.tokenmonitor.localization.LanguagePreferences.initialize(systemContext)
+    val language by io.github.theminionooo.tokenmonitor.localization.LanguagePreferences.mode.collectAsState()
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val translatedContext = remember(systemContext, language, configuration) {
+        io.github.theminionooo.tokenmonitor.localization.localizedContext(systemContext)
+    }
+    CompositionLocalProvider(LocalContext provides translatedContext) {
+        TokenMonitorLocalizedApp(viewModel)
+    }
+}
+
+@Composable
+private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
     val repositoryState by viewModel.hubState.collectAsState()
     val destination by viewModel.destination.collectAsState()
     val form by viewModel.connectionForm.collectAsState()
@@ -195,6 +209,8 @@ internal fun TokenMonitorApp(viewModel: DashboardViewModel) {
                     onOpenReleasePage = { runCatching { uriHandler.openUri(androidReleasesUrl) } },
                     discovery = discovery,
                     onFindHomeHub = viewModel::findHomeHub,
+                    originalDeviceNames = viewModel.originalDeviceNames,
+                    onRenameDevice = viewModel::saveDeviceAlias,
                 )
             }
         }
@@ -234,6 +250,8 @@ internal fun DashboardScaffold(
     discovery: HubDiscoveryState,
     onFindHomeHub: () -> Unit,
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
+    originalDeviceNames: Map<String, String> = emptyMap(),
+    onRenameDevice: ((String, String) -> String?)? = null,
 ) {
     var periodName by rememberSaveable { mutableStateOf(displayOptions.defaultPeriod) }
     var homeReturnVisible by rememberSaveable { mutableStateOf(false) }
@@ -332,10 +350,12 @@ internal fun DashboardScaffold(
                 serviceStatus = serviceStatus,
                 displayOptions = displayOptions,
                 onOpenServicePage = onOpenServicePage,
+                originalDeviceNames = originalDeviceNames,
+                onRenameDevice = onRenameDevice,
             )
         }
         }
     }
 }
 
-internal const val androidReleasesUrl = "https://github.com/The-Minion-oOo/token-monitor-android/releases"
+internal const val androidReleasesUrl = "https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases"

@@ -1,5 +1,6 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import io.github.theminionooo.tokenmonitor.domain.SessionUsage
 import java.time.Instant
 import kotlin.math.roundToInt
@@ -21,12 +22,12 @@ internal fun sessionRowLabels(session: SessionUsage, showTitles: Boolean = true)
     val reportedTitle = session.title.takeIf { showTitles }.orEmpty()
     val title = reportedTitle.ifBlank {
         listOf(client, session.modelNames.firstOrNull()).filter { !it.isNullOrBlank() }.joinToString(" · ")
-    }.ifBlank { "Session" }
+    }.ifBlank { localizedText("Session") }
     val meta = listOf(
         client.takeIf { reportedTitle.isNotBlank() }.orEmpty(),
         session.lastUsedAt.shortClockTime(),
         session.projectLabel,
-        session.messageCount.takeIf { it > 0 }?.let { "$it messages" }.orEmpty(),
+        session.messageCount.takeIf { it > 0 }?.let { localizedText("$it messages") }.orEmpty(),
     ).filter { it.isNotBlank() }.joinToString(" · ").ifBlank { session.id }
     return SessionRowLabels(title, meta)
 }
@@ -60,10 +61,10 @@ internal fun sessionPromptCacheMinutes(session: SessionUsage, now: Long): Int? {
 internal fun sessionMetricLabels(session: SessionUsage, now: Long): String = buildList {
     sessionCacheHitPercent(session)?.let { percent ->
         val value = if (percent > 0 && percent < 1) "<1" else percent.roundToInt().toString()
-        add("Cache hit $value%")
+        add(localizedText("Cache hit $value%"))
     }
-    sessionTokenRate(session)?.roundToInt()?.takeIf { it > 0 }?.let { add("$it tok/s") }
-    sessionPromptCacheMinutes(session, now)?.let { add("Cache estimate ~$it min left") }
+    sessionTokenRate(session)?.roundToInt()?.takeIf { it > 0 }?.let { add(localizedText("$it tok/s")) }
+    sessionPromptCacheMinutes(session, now)?.let { add(localizedText("Cache estimate ~$it min left")) }
 }.joinToString(" · ")
 
 private const val SESSION_RUNNING_WINDOW_MS = 10 * 60_000L

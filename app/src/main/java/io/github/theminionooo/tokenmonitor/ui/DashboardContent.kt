@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -119,6 +121,8 @@ internal fun DashboardContent(
     modelFilter: String? = null,
     onClearModelFilter: () -> Unit = {},
     onOpenToolModels: (String) -> Unit = {},
+    originalDeviceNames: Map<String, String> = emptyMap(),
+    onRenameDevice: ((String, String) -> String?)? = null,
 ) {
     val snapshot = state.snapshot
     if (snapshot == null) {
@@ -164,11 +168,11 @@ internal fun DashboardContent(
         if (destination == DashboardDestination.Models && filteredTool != null) item {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text("${filteredTool.displayName()} · Models", color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-                    TextButton(onClick = onClearModelFilter) { Text("ALL MODELS") }
+                    Text(tr("${filteredTool.displayName()} · Models"), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                    TextButton(onClick = onClearModelFilter) { Text(tr("ALL MODELS")) }
                 }
-                Text("Usage through this tool in the selected period", color = Muted, style = MaterialTheme.typography.labelSmall)
-                TextButton(onClick = { onChoose(DashboardDestination.Tools) }) { Text("← Back to Tools") }
+                Text(tr("Usage through this tool in the selected period"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                TextButton(onClick = { onChoose(DashboardDestination.Tools) }) { Text(tr("← Back to Tools")) }
             }
         }
         if (state.message != null && !state.streamActive) item { StatusMessage(state.message, state.snapshot.stale) }
@@ -189,7 +193,7 @@ internal fun DashboardContent(
                 rankingMetric = displayOptions.rankingMetric,
             )
             DashboardDestination.Status -> statusItems(snapshot, state, serviceStatus, onOpenServicePage)
-            DashboardDestination.Devices -> deviceItems(snapshot.stats.devices, period)
+            DashboardDestination.Devices -> deviceItems(snapshot.stats.devices, period, originalDeviceNames, onRenameDevice)
             DashboardDestination.Models -> breakdownItems(
                 tokens = modelUsage.models,
                 costs = modelUsage.modelCosts,
@@ -216,7 +220,7 @@ internal fun TotalPanel(usage: UsagePeriod, compact: Boolean) {
     val tokens = rememberRollingValue(usage.totalTokens.toDouble()).roundToLong()
     val cost = rememberRollingValue(usage.costUsd)
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-        Text("TOTAL TOKENS", color = Muted, style = MaterialTheme.typography.labelMedium)
+        Text(tr("TOTAL TOKENS"), color = Muted, style = MaterialTheme.typography.labelMedium)
         Text(
             if (compact) formatCompactTokens(tokens) else formatTokens(tokens),
             color = Ink,
@@ -241,6 +245,6 @@ internal fun BackToHomeRow(onClick: () -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Icon(painterResource(R.drawable.action_arrow_left), contentDescription = null, tint = Muted, modifier = Modifier.size(14.dp))
-        Text("Back to Home", color = Muted, style = MaterialTheme.typography.labelMedium)
+        Text(tr("Back to Home"), color = Muted, style = MaterialTheme.typography.labelMedium)
     }
 }

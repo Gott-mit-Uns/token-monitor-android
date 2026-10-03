@@ -1,5 +1,6 @@
 package io.github.theminionooo.tokenmonitor.widget
 
+import io.github.theminionooo.tokenmonitor.localization.localizedContext
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -259,17 +260,17 @@ class UsageWidgetProvider : AppWidgetProvider() {
             if (frame.changed) views.setDisplayedChild(R.id.widget_counter, frame.child)
 
             val date = snapshotDate(snapshot)
-            val shortDate = date?.format(DateTimeFormatter.ofPattern("MMM d", Locale.getDefault()))?.uppercase(Locale.getDefault()) ?: "TODAY"
-            val longDate = date?.format(DateTimeFormatter.ofPattern("EEE, MMM d", Locale.getDefault()))?.uppercase(Locale.getDefault()) ?: "TODAY"
-            if (narrow) views.setTextViewText(R.id.widget_date, shortDate)
+            val shortDate = date?.format(DateTimeFormatter.ofPattern("MMM d", localizedContext(context).resources.configuration.locales[0]))?.uppercase(Locale.getDefault()) ?: "TODAY"
+            val longDate = date?.format(DateTimeFormatter.ofPattern("EEE, MMM d", localizedContext(context).resources.configuration.locales[0]))?.uppercase(Locale.getDefault()) ?: "TODAY"
+            if (narrow) views.setTextViewText(R.id.widget_date, widgetText(context, shortDate))
             val history = usageHistory(snapshot)
             val today = history.firstOrNull { it.label.take(10) == date?.toString() }
             val cost = formatMoney(snapshot.today.costUsd)
-            views.setTextViewText(R.id.widget_cost, when {
+            views.setTextViewText(R.id.widget_cost, widgetText(context, when {
                 narrow -> if (today != null && today.messages > 0) "$cost · ${formatCompactTokens(today.messages)} msgs" else "$cost est. cost"
                 layout == WidgetLayout.Wide -> "$cost · $longDate · $savedAt"
                 else -> "$cost estimated cost · $longDate"
-            })
+            }))
 
             // Stats beside the figure
             if (!narrow) {
@@ -284,8 +285,8 @@ class UsageWidgetProvider : AppWidgetProvider() {
                     val stat = stats.getOrNull(index)?.takeIf { index < slots }
                     views.setViewVisibility(block, if (stat == null) View.GONE else View.VISIBLE)
                     if (stat != null) {
-                        views.setTextViewText(valueId, stat.first)
-                        views.setTextViewText(labelId, stat.second)
+                        views.setTextViewText(valueId, widgetText(context, stat.first))
+                        views.setTextViewText(labelId, widgetText(context, stat.second))
                         views.setTextColor(valueId, ink)
                         views.setTextColor(labelId, muted)
                     }
@@ -299,14 +300,14 @@ class UsageWidgetProvider : AppWidgetProvider() {
                 session.refreshing -> "UPDATING"
                 else -> "SAVED"
             }
-            views.setTextViewText(R.id.widget_status, when {
+            views.setTextViewText(R.id.widget_status, widgetText(context, when {
                 // Narrow headers have no room for a label beside the toggle; the glowing knob says Live.
                 narrow -> if (status == "SAVED" || status == "LIVE") "" else "…"
                 // Narrow brand headers have no room for the time beside the toggle.
                 status == "SAVED" -> if (size.width < 300) "SAVED" else "SAVED · $savedAt"
                 else -> status
-            })
-            views.setContentDescription(R.id.widget_status, status.lowercase(Locale.getDefault()).replaceFirstChar { it.titlecase(Locale.getDefault()) })
+            }))
+            views.setContentDescription(R.id.widget_status, widgetText(context, status.lowercase(Locale.getDefault()).replaceFirstChar { it.titlecase(Locale.getDefault()) }))
             views.setTextColor(R.id.widget_status, if (enabled && session.connected) accent else muted)
             val updated = "Updated ${stamp.format(Instant.ofEpochMilli(snapshot.capturedAt))}"
             val detail = updated + when {
@@ -314,15 +315,15 @@ class UsageWidgetProvider : AppWidgetProvider() {
                 session.note != null -> " · ${session.note}"
                 else -> ""
             }
-            views.setContentDescription(R.id.widget_header, "Token Monitor. $count tokens. $detail. Open dashboard")
-            views.setContentDescription(R.id.widget_live, if (enabled) "Turn widget Live off" else "Turn widget Live on for one hour")
+            views.setContentDescription(R.id.widget_header, widgetText(context, "Token Monitor. $count tokens. $detail. Open dashboard"))
+            views.setContentDescription(R.id.widget_live, widgetText(context, if (enabled) "Turn widget Live off" else "Turn widget Live on for one hour"))
             views.setImageViewResource(R.id.widget_refresh_image, R.drawable.ic_widget_refresh)
             views.setInt(R.id.widget_refresh_image, "setImageAlpha", if (session.refreshing) 130 else 255)
-            views.setContentDescription(R.id.widget_refresh, if (session.refreshing) "Refreshing widget" else "Refresh widget now")
+            views.setContentDescription(R.id.widget_refresh, widgetText(context, if (session.refreshing) "Refreshing widget" else "Refresh widget now"))
             if (narrow) {
                 val footer = layout == WidgetLayout.Portrait || heightDp >= 150
                 views.setViewVisibility(R.id.widget_footer, if (footer) View.VISIBLE else View.GONE)
-                views.setTextViewText(R.id.widget_time, if (enabled) "Until ${clock.format(Instant.ofEpochMilli(session.expiresAt))}" else "Updated $savedAt")
+                views.setTextViewText(R.id.widget_time, widgetText(context, if (enabled) "Until ${clock.format(Instant.ofEpochMilli(session.expiresAt))}" else "Updated $savedAt"))
             }
 
             // Tool split
@@ -346,7 +347,7 @@ class UsageWidgetProvider : AppWidgetProvider() {
                     views.setViewVisibility(R.id.widget_tools_legend, if (layout == WidgetLayout.Overview && heightDp < OVERVIEW_LEGEND_DP) View.GONE else View.VISIBLE)
                     views.setTextViewTextSize(R.id.widget_tools_legend, android.util.TypedValue.COMPLEX_UNIT_SP, if (narrow) 10f else 11f)
                     views.setTextColor(R.id.widget_tools_legend, ink)
-                    views.setContentDescription(R.id.widget_tools, "Today by tool: " + colored.joinToString(", ") { "${it.first.displayName()} ${(it.second * 100).roundToInt()} percent" })
+                    views.setContentDescription(R.id.widget_tools, widgetText(context, "Today by tool: " + colored.joinToString(", ") { "${it.first.displayName()} ${(it.second * 100).roundToInt()} percent" }))
                 }
             }
 
@@ -382,15 +383,15 @@ class UsageWidgetProvider : AppWidgetProvider() {
                         val remaining = remainingPercent(window) ?: 0.0
                         val tone = tone(palette, remaining)
                         val title = windowTitle(window, account.windows)
-                        views.setTextViewText(cell[1], title)
+                        views.setTextViewText(cell[1], widgetText(context, title))
                         views.setTextColor(cell[1], muted)
-                        views.setTextViewText(cell[2], "${remaining.toInt()}% left")
+                        views.setTextViewText(cell[2], widgetText(context, "${remaining.toInt()}% left"))
                         views.setTextColor(cell[2], if (tone == palette.success) ink else tone.toArgb())
                         views.setImageViewBitmap(cell[3], quotaBar(palette, tone.toArgb(), remaining, if (windows.size == 1) contentWidth else cellWidth, (4 * density).roundToInt().coerceAtLeast(2)))
                         val reset = formatBoundary(window.resetsAt, window.boundaryKind, now)
-                        views.setTextViewText(cell[4], reset)
+                        views.setTextViewText(cell[4], widgetText(context, reset))
                         views.setTextColor(cell[4], muted)
-                        views.setContentDescription(cell[0], "$label, $title, ${remaining.toInt()} percent remaining, $reset")
+                        views.setContentDescription(cell[0], widgetText(context, "$label, $title, ${remaining.toInt()} percent remaining, $reset"))
                     }
                 }
             } else if (layout != WidgetLayout.Wide) {
@@ -414,9 +415,9 @@ class UsageWidgetProvider : AppWidgetProvider() {
                     val tone = tone(palette, remaining)
                     views.setTextViewText(row[2], if (narrow) provider else "$provider · $window")
                     views.setTextColor(row[2], ink)
-                    views.setTextViewText(row[3], if (narrow) "${remaining.toInt()}%" else "${remaining.toInt()}% left")
+                    views.setTextViewText(row[3], widgetText(context, if (narrow) "${remaining.toInt()}%" else "${remaining.toInt()}% left"))
                     views.setTextColor(row[3], if (tone == palette.success) ink else tone.toArgb())
-                    views.setContentDescription(row[0], "$provider, $window, ${remaining.toInt()} percent remaining")
+                    views.setContentDescription(row[0], widgetText(context, "$provider, $window, ${remaining.toInt()} percent remaining"))
                     views.setImageViewBitmap(row[4], quotaBar(palette, tone.toArgb(), remaining, contentWidth, (4 * density).roundToInt().coerceAtLeast(2)))
                     mark(views, row[1], item.provider, palette)
                 }
@@ -431,7 +432,7 @@ class UsageWidgetProvider : AppWidgetProvider() {
                     val week = (6 downTo 0).map { end.minusDays(it.toLong()) }
                     val byDay = history.associateBy { it.label.take(10) }
                     val weekPoints = week.mapNotNull { byDay[it.toString()] }
-                    views.setTextViewText(R.id.widget_chart_title, "7 DAYS")
+                    views.setTextViewText(R.id.widget_chart_title, widgetText(context, "7 DAYS"))
                     views.setTextColor(R.id.widget_chart_title, ink)
                     views.setTextViewText(R.id.widget_chart_total, "${formatCompactTokens(weekPoints.sumOf { it.tokens })} · ${formatMoney(weekPoints.sumOf { it.costUsd })}")
                     views.setTextColor(R.id.widget_chart_total, muted)
@@ -450,10 +451,10 @@ class UsageWidgetProvider : AppWidgetProvider() {
                     views.setImageViewBitmap(R.id.widget_chart_bars, trend(week, byDay, palette, chartSize.first, chartSize.second, density))
                     val dayIds = listOf(R.id.widget_day_0, R.id.widget_day_1, R.id.widget_day_2, R.id.widget_day_3, R.id.widget_day_4, R.id.widget_day_5, R.id.widget_day_6)
                     dayIds.forEachIndexed { index, id ->
-                        views.setTextViewText(id, week[index].format(DateTimeFormatter.ofPattern("EEE", Locale.getDefault())).uppercase(Locale.getDefault()))
+                        views.setTextViewText(id, week[index].format(DateTimeFormatter.ofPattern("EEE", localizedContext(context).resources.configuration.locales[0])).uppercase(Locale.getDefault()))
                         views.setTextColor(id, if (index == 6) ink else muted)
                     }
-                    views.setContentDescription(R.id.widget_chart, "Seven calendar days of tokens; a dash means no recorded data")
+                    views.setContentDescription(R.id.widget_chart, widgetText(context, "Seven calendar days of tokens; a dash means no recorded data"))
                 }
             }
 
@@ -463,6 +464,8 @@ class UsageWidgetProvider : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.widget_header, open)
             views.setOnClickPendingIntent(R.id.widget_refresh, action(1, Intent(context, WidgetControlActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION).setAction(WidgetLiveService.ACTION_REFRESH)))
             views.setOnClickPendingIntent(R.id.widget_live, action(2, Intent(context, WidgetControlActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION).setAction(WidgetLiveService.ACTION_LIVE)))
+            views.setTextViewText(R.id.widget_no_limits, widgetText(context, "No quota windows reported"))
+            if (layout == WidgetLayout.Large) views.setTextViewText(R.id.widget_limits_title, widgetText(context, "LIMITS"))
             applyTheme(views, palette, layout, enabled, empty = false)
             return views
         }
@@ -494,16 +497,16 @@ class UsageWidgetProvider : AppWidgetProvider() {
             val density = context.resources.displayMetrics.density
             val padding = (layout.padding * density).toInt()
             views.setViewPadding(R.id.widget_root, padding, (4 * density).toInt(), padding, padding)
-            views.setTextViewText(R.id.widget_title, if (narrow) "USAGE" else "TOKEN MONITOR")
-            views.setTextViewText(R.id.widget_status, if (narrow) "" else if (enabled) "WAITING" else "NO DATA")
-            views.setContentDescription(R.id.widget_status, if (enabled) "Connecting to Hub" else "No saved data")
+            views.setTextViewText(R.id.widget_title, widgetText(context, if (narrow) "USAGE" else "TOKEN MONITOR"))
+            views.setTextViewText(R.id.widget_status, widgetText(context, if (narrow) "" else if (enabled) "WAITING" else "NO DATA"))
+            views.setContentDescription(R.id.widget_status, widgetText(context, if (enabled) "Connecting to Hub" else "No saved data"))
             val waiting = enabled || session.refreshing
-            views.setTextViewText(R.id.widget_empty_title, if (waiting) { if (small) "Connecting" else "Waiting for usage" } else if (small) "No data yet" else "No saved usage")
+            views.setTextViewText(R.id.widget_empty_title, widgetText(context, if (waiting) { if (small) "Connecting" else "Waiting for usage" } else if (small) "No data yet" else "No saved usage"))
             views.setViewVisibility(R.id.widget_empty_detail, if (small) View.GONE else View.VISIBLE)
-            views.setTextViewText(R.id.widget_empty_detail, if (enabled) "Live is connecting to your Hub." else if (narrow) "Check your Hub in the app." else "Open the app to connect or check your Hub.")
-            views.setTextViewText(R.id.widget_refresh, if (narrow || small) "OPEN" else "OPEN APP")
-            views.setContentDescription(R.id.widget_refresh, "Open app")
-            views.setContentDescription(R.id.widget_live, "Turn widget Live off")
+            views.setTextViewText(R.id.widget_empty_detail, widgetText(context, if (enabled) "Live is connecting to your Hub." else if (narrow) "Check your Hub in the app." else "Open the app to connect or check your Hub."))
+            views.setTextViewText(R.id.widget_refresh, widgetText(context, if (narrow || small) "OPEN" else "OPEN APP"))
+            views.setContentDescription(R.id.widget_refresh, widgetText(context, "Open app"))
+            views.setContentDescription(R.id.widget_live, widgetText(context, "Turn widget Live off"))
             val open = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             views.setOnClickPendingIntent(R.id.widget_header, open)

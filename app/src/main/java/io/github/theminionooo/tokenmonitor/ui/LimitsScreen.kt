@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -105,16 +107,17 @@ import kotlin.math.roundToLong
  * Limits and Subscriptions lists.
  */
 internal fun LazyListScope.limitItems(snapshot: HubSnapshot, displayOptions: DisplayOptions) {
+    val deviceNames = snapshot.stats.devices.associate { it.id to it.hostname }
     item { LimitAttentionPanel(snapshot) }
     if (snapshot.stats.limits.providers.isEmpty()) item { MutedCopy("No account limits are available from this Hub yet.", modifier = Modifier.padding(vertical = 12.dp)) }
     else {
         val providers = prioritizeAvailableLimits(snapshot.stats.limits.providers)
         items(providers, key = { "${it.provider}:${it.accountName}:${it.accountEmail}" }) { account ->
-            LimitAccountRow(account, displayOptions)
+            LimitAccountRow(account, displayOptions, deviceNames)
         }
     }
     if (snapshot.subscriptions.entries.isNotEmpty()) {
-        item { Text("SUBSCRIPTIONS", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
+        item { Text(tr("SUBSCRIPTIONS"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
         items(snapshot.subscriptions.entries, key = { it.id }) { subscription -> SubscriptionRow(subscription) }
     }
 }
@@ -136,22 +139,22 @@ internal fun prioritizeAvailableLimits(providers: List<LimitAccount>): List<Limi
     .map { it.value }
 
 @Composable
-internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptions) {
+internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptions, deviceNames: Map<String, String> = emptyMap()) {
     Column(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             UpstreamToolMark(account.provider, Blue, size = 10.dp)
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(account.provider.ifBlank { "Provider" }.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 val email = account.accountEmail.takeIf { displayOptions.showAccountEmails }.orEmpty()
-                val source = account.sourceDeviceId.takeIf { displayOptions.showLimitSource && it.isNotBlank() }?.let { "Source ${it.displayName()}" }
-                val updated = account.updatedAt.relativeAge(LocalNow.current).takeIf { it.isNotBlank() }?.let { "Updated $it" }
+                val source = account.sourceDeviceId.takeIf { displayOptions.showLimitSource && it.isNotBlank() }?.let { tr("Source ${deviceNames[it] ?: it.displayName()}") }
+                val updated = account.updatedAt.relativeAge(LocalNow.current).takeIf { it.isNotBlank() }?.let { tr("Updated $it") }
                 val meta = listOf(account.accountName, account.plan, email, source, updated).filterNotNull().filter { it.isNotBlank() }.joinToString(" · ")
                 if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             if (account.windows.isEmpty()) {
                 Spacer(Modifier.width(10.dp))
-                Text(limitStatusLabel(account.status), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                Text(tr(limitStatusLabel(account.status)), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
             }
         }
         if (account.windows.isNotEmpty()) {
@@ -170,7 +173,7 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
                                 })
                                     ?: window.remaining?.let { formatWindowAmount(it, window.currency) }
                                     ?: "Available"
-                                Text(display, color = Ink, style = MaterialTheme.typography.labelSmall)
+                                Text(tr(display), color = Ink, style = MaterialTheme.typography.labelSmall)
                             }
                             val meterPercent = if (displayOptions.limitBarMetric == LimitBarMetric.Remaining) remaining else usedPercent
                             val meter = (meterPercent ?: 0.0).coerceIn(0.0, 100.0).toFloat() / 100f
@@ -192,7 +195,7 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
 internal fun SubscriptionRow(subscription: Subscription) {
     DesktopDetailRow(
         label = subscription.provider.providerLabel(),
-        subtitle = subscription.planName.ifBlank { "Subscription" },
+        subtitle = subscription.planName.ifBlank { tr("Subscription") },
         value = formatSubscriptionAmount(subscription.amountMinor, subscription.currency),
         detail = subscription.interval.displayName(),
         color = Purple,

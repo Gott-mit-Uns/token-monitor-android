@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -146,13 +148,13 @@ internal fun DesktopModule(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClickLabel = "Open ${destination.title}") { onChoose(destination) }
+            .clickable(onClickLabel = localizedText("Open ${destination.title}")) { onChoose(destination) }
             .padding(bottom = 12.dp),
         verticalArrangement = Arrangement.spacedBy(7.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(title, color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-            meta?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
+            Text(tr(title), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+            meta?.let { Text(tr(it), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
             Spacer(Modifier.width(7.dp))
             Icon(painterResource(destination.iconRes()), contentDescription = null, tint = Muted, modifier = Modifier.size(13.dp))
         }
@@ -177,7 +179,7 @@ internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOpt
                 UpstreamToolMark(account.provider, Blue, size = 6.dp)
                 Spacer(Modifier.width(8.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(account.provider.ifBlank { "Provider" }.providerLabel(), color = Ink, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     val email = account.accountEmail.takeIf { displayOptions.showAccountEmails }.orEmpty()
                     val meta = listOf(account.accountName, account.plan, email).filter { it.isNotBlank() }.joinToString(" · ")
                     if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -202,7 +204,7 @@ internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOpt
                                     StatusDot(tone, size = 5.dp)
                                     Spacer(Modifier.width(4.dp))
                                 }
-                                Text(amount, color = if (tone != Success) tone else Ink, style = MaterialTheme.typography.labelSmall)
+                                Text(tr(amount), color = if (tone != Success) tone else Ink, style = MaterialTheme.typography.labelSmall)
                             }
                             formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
                         }
@@ -292,8 +294,8 @@ internal fun HomeActivity(activity: ActivityHeatmap, history: List<HistoryPoint>
         ActivityHeatmapGrid(activity, history)
         val recent = history.takeLast(45)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("TREND", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-            Text("Peak ${formatCompactTokens(history.maxOfOrNull { it.tokens } ?: 0L)}", color = Muted, style = MaterialTheme.typography.labelSmall)
+            Text(tr("TREND"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+            Text(tr("Peak ${formatCompactTokens(history.maxOfOrNull { it.tokens } ?: 0L)}"), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         TrendChart(recent.map { it.tokens }, height = 70.dp)
         if (recent.isNotEmpty()) {

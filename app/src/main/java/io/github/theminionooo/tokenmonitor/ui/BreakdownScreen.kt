@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -151,7 +153,7 @@ internal fun DesktopUsageRow(
     var expanded by rememberSaveable(name) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
     val rowModifier = if (onToolSelected != null) {
-        Modifier.fillMaxWidth().clickable(onClickLabel = "Models used through $name") { onToolSelected(name) }.padding(vertical = 2.dp)
+        Modifier.fillMaxWidth().clickable(onClickLabel = localizedText("Models used through $name")) { onToolSelected(name) }.padding(vertical = 2.dp)
     } else if (hasBreakdown) {
         Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 2.dp)
     } else {
@@ -166,7 +168,7 @@ internal fun DesktopUsageRow(
             Spacer(Modifier.width(10.dp))
             Column(horizontalAlignment = Alignment.End) {
                 Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                if (detail.isNotBlank()) Text(detail, color = Muted, style = MaterialTheme.typography.labelSmall)
+                if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
         }
         UsageBar(ratio, accentFor(name))
@@ -210,7 +212,7 @@ internal fun TokenComponentBreakdown(
     Column(modifier = Modifier.padding(start = 20.dp, end = 2.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
         rows.forEach { (label, value, percent) ->
             Row {
-                Text(label, color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                 percent?.let { Text(formatPercent(it), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(end = 12.dp)) }
                 Text(formatTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
             }

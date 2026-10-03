@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_e83249bd3ba7" formatted="false">主页</string>
+    <string name="ui_0284c6ac58cb" formatted="false">工具</string>
+    <string name="ui_5ba2688dffd7" formatted="false">模型</string>
+    <string name="ui_728190e74db3" formatted="false">设备</string>
+    <string name="ui_b37b5674e3d0" formatted="false">项目</string>
+    <string name="ui_781791f54cc0" formatted="false">会话</string>
+    <string name="ui_9523ccbcc4c5" formatted="false">额度</string>
+    <string name="ui_f433de78feab" formatted="false">趋势</string>
+    <string name="ui_48a3661d8464" formatted="false">状态</string>
+    <string name="ui_3cc1d5a427a4" formatted="false">设置</string>
+    <string name="ui_a2620cbc10f5" formatted="false">今日</string>
+    <string name="ui_2dd2bed72567" formatted="false">今日</string>
+    <string name="ui_021710fa7866" formatted="false">本月</string>
+    <string name="ui_5a537e209151" formatted="false">总计</string>
+    <string name="ui_c0ee32d825d6" formatted="false">本周</string>
+    <string name="ui_dae1e5f83a74" formatted="false">本周</string>
+    <string name="ui_0bd41b476166" formatted="false">本月</string>
+    <string name="ui_7252f9e8d5bd" formatted="false">近 7 天</string>
+    <string name="ui_6a725a2b98e1" formatted="false">近 30 天</string>
+    <string name="ui_0a8dd6adce7a" formatted="false">7 天</string>
+    <string name="ui_7d4278a87590" formatted="false">30 天</string>
+    <string name="ui_170621ac0842" formatted="false">90 天</string>
+    <string name="ui_afe36da67645" formatted="false">1 年</string>
+    <string name="ui_d87c448044de" formatted="false">全部</string>
+    <string name="ui_2b63a9f923a1" formatted="false">全部用量</string>
+    <string name="ui_e11523c5ff23" formatted="false">语言</string>
+    <string name="ui_0dbaa1fce242" formatted="false">跟随系统</string>
+    <string name="ui_36a0d9fbd092" formatted="false">简体中文</string>
+    <string name="ui_1b669334dae8" formatted="false">English</string>
+    <string name="ui_814605c64a5c" formatted="false">连接</string>
+    <string name="ui_17d3aee24c19" formatted="false">家庭 Wi-Fi</string>
+    <string name="ui_ba90df5372a1" formatted="false">家庭备用连接</string>
+    <string name="ui_f893ea0e3c0c" formatted="false">检查并保存连接</string>
+    <string name="ui_d5c99c52d020" formatted="false">断开此手机</string>
+    <string name="ui_abf63a5a0753" formatted="false">连接电脑端</string>
+    <string name="ui_e5516ba492f0" formatted="false">3 个步骤</string>
+    <string name="ui_85a7b4e8d512" formatted="false">外观</string>
+    <string name="ui_a37043098817" formatted="false">界面主题</string>
+    <string name="ui_7505d64a54e0" formatted="false">默认</string>
+    <string name="ui_94517207d686" formatted="false">黑曜石</string>
+    <string name="ui_a0ffe732ea1c" formatted="false">瓷白</string>
+    <string name="ui_f7b69b7c1dff" formatted="false">主题代码</string>
+    <string name="ui_e88fbb5bf63f" formatted="false">这不是有效的 TM1 主题代码。</string>
+    <string name="ui_e8a2309148c9" formatted="false">粘贴电脑端外观设置中的代码，使用相同配色。</string>
+    <string name="ui_69f45da1683c" formatted="false">应用</string>
+    <string name="ui_4525db4a29e8" formatted="false">跟随手机深浅主题</string>
+    <string name="ui_1c20cf1d0a88" formatted="false">跟随手机</string>
+    <string name="ui_bf8c91a9d5f9" formatted="false">实时指示灯</string>
+    <string name="ui_35bd11a81363" formatted="false">实时连接时在 Σ 旁显示指示灯。</string>
+    <string name="ui_59963d94cfaa" formatted="false">工具图标</string>
+    <string name="ui_572547c085b3" formatted="false">在工具和模型旁显示供应商图标。</string>
+    <string name="ui_9ae0d24bc2af" formatted="false">彩色工具图标</string>
+    <string name="ui_773fd1972ce8" formatted="false">使用供应商原始配色。</string>
+    <string name="ui_e7ffaedcf4cd" formatted="false">简写 Token 总量</string>
+    <string name="ui_f3672df0ea8c" formatted="false">在顶部显示简写总量，例如 214.9M。</string>
+    <string name="ui_1119b42f81f7" formatted="false">文字大小</string>
+    <string name="ui_4f44e2cffa8f" formatted="false">紧凑</string>
+    <string name="ui_2b867d9270e0" formatted="false">舒适</string>
+    <string name="ui_5296d5cced2a" formatted="false">大号</string>
+    <string name="ui_81b56b1c62bb" formatted="false">紧凑保持电脑端小组件的字号；舒适和大号会放大文字，方便阅读。</string>
+    <string name="ui_6b44cd1f85be" formatted="false">减少动画</string>
+    <string name="ui_317f1e761f2f" formatted="false">跟随系统</string>
+    <string name="ui_db3d405b1067" formatted="false">开启</string>
+    <string name="ui_da7a68734367" formatted="false">关闭</string>
+    <string name="ui_a92daaa954ee" formatted="false">跟随系统采用 Android 设置；开启会减少动画，关闭保留交互动画。</string>
+    <string name="ui_ca21d9bd8373" formatted="false">主界面</string>
+    <string name="ui_227a3ca00535" formatted="false">默认统计周期</string>
+    <string name="ui_81f331871472" formatted="false">页面</string>
+    <string name="ui_e2d08459faf5" formatted="false">主页模块</string>
+    <string name="ui_4bc2ab234d33" formatted="false">统计显示</string>
+    <string name="ui_eaa35cb863f7" formatted="false">模型与工具排序</string>
+    <string name="ui_3391436a4e72" formatted="false">Token</string>
+    <string name="ui_885dc4a9b362" formatted="false">费用</string>
+    <string name="ui_2b83391b81f4" formatted="false">显示额度来源</string>
+    <string name="ui_f0b876d989d6" formatted="false">显示提供供应商额度的 Hub 设备。</string>
+    <string name="ui_f719f49b6df2" formatted="false">显示账户邮箱</string>
+    <string name="ui_47510716c745" formatted="false">用于区分同一供应商的多个账户。</string>
+    <string name="ui_aca1e2c1a73e" formatted="false">显示会话标题</string>
+    <string name="ui_e81daa6a4f48" formatted="false">控制主页和会话页标题显示。隐藏不会删除本地快照中的标题。</string>
+    <string name="ui_b572d06086fe" formatted="false">额度条显示</string>
+    <string name="ui_398658a601d9" formatted="false">剩余</string>
+    <string name="ui_192a56759d36" formatted="false">已用</string>
+    <string name="ui_2c189c3d81cb" formatted="false">实时连接</string>
+    <string name="ui_3e20a037533f" formatted="false">小组件实时更新</string>
+    <string name="ui_e94025be336b" formatted="false">快照</string>
+    <string name="ui_a34add9c2858" formatted="false">Hub 状态</string>
+    <string name="ui_fc166eb81361" formatted="false">连接方式</string>
+    <string name="ui_3a06c1584e8e" formatted="false">Hub 构建版本</string>
+    <string name="ui_f2e18ffc17e2" formatted="false">运行环境</string>
+    <string name="ui_4b71ecf8c893" formatted="false">未上报</string>
+    <string name="ui_489ad9525abc" formatted="false">采集角色</string>
+    <string name="ui_eb7bf9cc53c8" formatted="false">最近读取</string>
+    <string name="ui_50d8b4a941c2" formatted="false">未知</string>
+    <string name="ui_9991907ae002" formatted="false">手机数据</string>
+    <string name="ui_c1fe37dce01e" formatted="false">已保存快照</string>
+    <string name="ui_405ab5d2b930" formatted="false">当前</string>
+    <string name="ui_96e01ce53b98" formatted="false">桌面小组件</string>
+    <string name="ui_97c3ff340ea3" formatted="false">实时控制 · 可调整大小</string>
+    <string name="ui_3538e067b3a1" formatted="false">小组件沿用应用主题，显示完整 Token 数、工具图标和额度窗口；放大后显示近 7 天趋势。减少动画设置也适用于小组件。</string>
+    <string name="ui_33f2009999b3" formatted="false">点刷新立即更新；点实时可在应用关闭后每 60 秒读取 Hub，最多持续一小时。再次点实时或通知中的停止结束。手机休眠时 Android 可能延迟更新。</string>
+    <string name="ui_2dd2304b135c" formatted="false">添加小组件</string>
+    <string name="ui_a45dec2e4aa8" formatted="false">长按桌面，选择小组件，再选择 Token Monitor。</string>
+    <string name="ui_4547bd227f90" formatted="false">兼容性</string>
+    <string name="ui_f997b36b1b15" formatted="false">安卓客户端</string>
+    <string name="ui_da5aa24b34d5" formatted="false">电脑端基准版本</string>
+    <string name="ui_c8e0daf9debd" formatted="false">升级基准版本前会通过对应版本的协议样例验证。</string>
+    <string name="ui_93f285223942" formatted="false">应用更新</string>
+    <string name="ui_475b43e19d3b" formatted="false">应用前台通过实时连接接收更新。小组件实时模式每 60 秒刷新，一小时后停止。</string>
+    <string name="ui_fe21a32fbf54" formatted="false">Hub 地址</string>
+    <string name="ui_222cbc2f0c92" formatted="false">Cloudflare 请填写完整 HTTPS 根地址，不加 /api/stats。HTTPS 默认端口 443；裸 Tailscale 或局域网地址使用 HTTP 端口 17321。</string>
+    <string name="ui_9d32b680780a" formatted="false">家庭 Wi-Fi 地址（可选）</string>
+    <string name="ui_3703287c6c15" formatted="false">仅用于私网电脑 Hub。只有它与主 Hub 使用相同数据和密钥时才填写，否则留空。</string>
+    <string name="ui_ded8dae5786f" formatted="false">查找</string>
+    <string name="ui_c9ed699f13e9" formatted="false">Hub 密钥</string>
+    <string name="ui_3986698135c7" formatted="false">通过 Android Keystore 加密保存，保存后不再显示。</string>
+    <string name="ui_5fc913876cc5" formatted="false">允许私网 Wi-Fi Hub</string>
+    <string name="ui_662c8c79872a" formatted="false">仅 10.x、172.16–31.x、192.168.x 或 .local Hub 需要开启。公网 HTTPS Hub 无需开启。</string>
+    <string name="ui_e2ffb6aa78b5" formatted="false">正在检查 Hub…</string>
+    <string name="ui_d4911489c222" formatted="false">在手机上实时查看电脑端统计。</string>
+    <string name="ui_00d3c7ab5e0e" formatted="false">连接你的 Hub</string>
+    <string name="ui_cc2a08ca0550" formatted="false">选择现有 Hub</string>
+    <string name="ui_7a1672916de4" formatted="false">使用现有 Cloudflare HTTPS Hub，或通过 Tailscale／家庭 Wi-Fi 连接电脑 Hub。</string>
+    <string name="ui_8778f2819b3c" formatted="false">填写 Hub 根地址</string>
+    <string name="ui_9b424030a94b" formatted="false">Cloudflare 填写完整 HTTPS 地址；电脑 Hub 使用私网地址和端口。</string>
+    <string name="ui_48612ee2988e" formatted="false">填写共享 Hub 密钥</string>
+    <string name="ui_4905ecd1397f" formatted="false">填写 Token Monitor Hub 密钥，不是 Cloudflare 账户 API Token。检查并保存后连接。</string>
+    <string name="ui_f11a107f3832" formatted="false">连接</string>
+    <string name="ui_d40ebebf5bad" formatted="false">从你配置的 Hub 读取用量。凭据通过 Android Keystore 加密。此独立 Cloudflare 版通过手动安装更新。</string>
+    <string name="ui_ef542ec29ddb" formatted="false">手机只读访问 Token Monitor Hub，支持 HTTPS Cloudflare Hub 和私网电脑 Hub。</string>
+    <string name="ui_ed40bdf3fce2" formatted="false">下方显示已保存的 Hub。修改连接时需要重新输入密钥。</string>
+    <string name="ui_6bb963c298a3" formatted="false">1. 在电脑和手机安装 Tailscale，并加入同一网络。</string>
+    <string name="ui_6961a573f74f" formatted="false">2. 在电脑端打开设置 → 多设备同步，选择托管 Hub。</string>
+    <string name="ui_de9d4a2bd490" formatted="false">3. 填写电脑端的 100. 开头地址和共享密钥，地址可以只填数字。</string>
+    <string name="ui_6656018ac96d" formatted="false">始终显示</string>
+    <string name="ui_85841abddb12" formatted="false">已安装</string>
+    <string name="ui_194562b97b02" formatted="false">版本类型</string>
+    <string name="ui_40d57ec40577" formatted="false">Cloudflare 兼容版</string>
+    <string name="ui_e69243169611" formatted="false">此独立版本使用不同包名和签名，已停用上游自动更新检查和 APK 安装。请安装本兼容版的后续更新；上游 APK 无法覆盖它。</string>
+    <string name="ui_26b56c1bdfb0" formatted="false">刷新</string>
+    <string name="ui_6e9c6c40ef0a" formatted="false">正在刷新</string>
+    <string name="ui_566922711684" formatted="false">Hub 连接</string>
+    <string name="ui_ba99bb93eac1" formatted="false">选择页面</string>
+    <string name="ui_22b9d367d228" formatted="false">返回主页</string>
+    <string name="ui_1a65187c1435" formatted="false">打开连接设置</string>
+    <string name="ui_9855d66264dd" formatted="false">连接 Hub 后查看设备活动。</string>
+    <string name="ui_37b0b298d34e" formatted="false">Token 总量</string>
+    <string name="ui_b62e84ef991c" formatted="false">总费用</string>
+    <string name="ui_a95412829684" formatted="false">活跃天数</string>
+    <string name="ui_37e4cf575dec" formatted="false">连续活跃</string>
+    <string name="ui_58aeec48ee89" formatted="false">活跃时长</string>
+    <string name="ui_76273bde2ee8" formatted="false">峰值日期</string>
+    <string name="ui_0c9ab00119ad" formatted="false">主要模型</string>
+    <string name="ui_17f3467db103" formatted="false">消息</string>
+    <string name="ui_8c9a3662c1d6" formatted="false">Token 活动</string>
+    <string name="ui_de7f325675fa" formatted="false">每月历史</string>
+    <string name="ui_fed758b7a842" formatted="false">总览</string>
+    <string name="ui_df57214a3f23" formatted="false">按模型 · 可用历史</string>
+    <string name="ui_d6236d66cbb8" formatted="false">按工具 · 可用历史</string>
+    <string name="ui_9346e6873489" formatted="false">按工具</string>
+    <string name="ui_40b3e4787894" formatted="false">按模型</string>
+    <string name="ui_5a599b482fc1" formatted="false">柱状图</string>
+    <string name="ui_55a5b53ace4b" formatted="false">K 线</string>
+    <string name="ui_20cb6548b2cd" formatted="false">暂无每日历史数据。</string>
+    <string name="ui_532ff263f570" formatted="false">未上报额度窗口。</string>
+    <string name="ui_b4160c93ea40" formatted="false">已上报的额度没有偏低或即将重置的窗口。</string>
+    <string name="ui_109d75e96a89" formatted="false">额度由供应商上报；用量费用为估算，订阅为已记录的付款。</string>
+    <string name="ui_f54cea9c34fc" formatted="false">额度概览</string>
+    <string name="ui_782f8d94f45c" formatted="false">暂无账户额度。</string>
+    <string name="ui_90c5d1358d12" formatted="false">供应商</string>
+    <string name="ui_9970e38fb5b8" formatted="false">未上报额度窗口。</string>
+    <string name="ui_08d5a41b5b7f" formatted="false">此周期暂无活动。</string>
+    <string name="ui_d27ac317998e" formatted="false">暂无设备上报。</string>
+    <string name="ui_a4e976a3d3fc" formatted="false">数据过期</string>
+    <string name="ui_53e7f55a8d1b" formatted="false">已同步</string>
+    <string name="ui_48075864b259" formatted="false">趋势</string>
+    <string name="ui_b21966e3375a" formatted="false">Hub 未上报近期会话。</string>
+    <string name="ui_5ae59fb6202a" formatted="false">输入（缓存命中）</string>
+    <string name="ui_93ee0e5ec73e" formatted="false">输入（未命中缓存）</string>
+    <string name="ui_1029d6764481" formatted="false">输出</string>
+    <string name="ui_34f307fe88d3" formatted="false">未分类</string>
+    <string name="ui_a183f379b56e" formatted="false">Hub 仅提供今日、本月和累计项目统计。</string>
+    <string name="ui_adea0a239e3a" formatted="false">项目总量</string>
+    <string name="ui_d3867c9fd275" formatted="false">Hub 仅提供今日、本月和累计会话统计。</string>
+    <string name="ui_3c49d9cc3c0c" formatted="false">运行中</string>
+    <string name="ui_f957097d7a22" formatted="false">已结束</string>
+    <string name="ui_0832cf38702e" formatted="false">收起会话详情</string>
+    <string name="ui_97e3a2bd2855" formatted="false">展开会话详情</string>
+    <string name="ui_98f54143ab4e" formatted="false">项目</string>
+    <string name="ui_da7153ee73f1" formatted="false">开始时间</string>
+    <string name="ui_fcbdc4c271c8" formatted="false">会话</string>
+    <string name="ui_267de1f808a2" formatted="false">正在检查 Claude、OpenAI、Cursor 和 DeepSeek…</string>
+    <string name="ui_7a65affc3de3" formatted="false">正常</string>
+    <string name="ui_6dc244693635" formatted="false">降级</string>
+    <string name="ui_fa74c4abe6b7" formatted="false">中断</string>
+    <string name="ui_567b6277bc84" formatted="false">暂无持续故障。</string>
+    <string name="ui_b48685e3efdb" formatted="false">此 Hub 暂无账户额度。</string>
+    <string name="ui_9bbb0db0d9f4" formatted="false">订阅</string>
+    <string name="ui_9ad3d4009682" formatted="false">未登录</string>
+    <string name="ui_6ce9faa8a460" formatted="false">请重新登录</string>
+    <string name="ui_07596f183f5e" formatted="false">已停用</string>
+    <string name="ui_82fd15b8052f" formatted="false">暂无同步数据</string>
+    <string name="ui_1eb7d5c2200d" formatted="false">受限</string>
+    <string name="ui_1d5ee313d50a" formatted="false">不可用</string>
+    <string name="ui_bf8d1489e7d5" formatted="false">未上报额度</string>
+    <string name="ui_5f2391220833" formatted="false">不可用</string>
+    <string name="ui_7b231a50a498" formatted="false">可用</string>
+    <string name="ui_dc917a775356" formatted="false">订阅</string>
+    <string name="ui_06e7a6229940" formatted="false">周期对比</string>
+    <string name="ui_b3187554708b" formatted="false">模型变化采用已上报的归属数据，不估算缺失的分类。</string>
+    <string name="ui_0614aad07beb" formatted="false">探索用量</string>
+    <string name="ui_825a1224c0b2" formatted="false">点击工具或模型查看每日用量。</string>
+    <string name="ui_5b0cac7364e4" formatted="false">查找工具或模型</string>
+    <string name="ui_5d875efb1bcb" formatted="false">可用历史中没有匹配的分类。</string>
+    <string name="ui_3ee79499a845" formatted="false">此日期未提供观测数据。</string>
+    <string name="ui_c3b31971ad84" formatted="false">Hub 没有此日的分类明细。</string>
+    <string name="ui_5f0df686bfb9" formatted="false">会话和项目支持 Hub 的今日、本月和累计周期。</string>
+    <string name="ui_1b54373af2bb" formatted="false">每日用量按日期倒序显示，费用为电脑 Hub 的估算。</string>
+    <string name="ui_da38860cb875" formatted="false">关闭</string>
+    <string name="ui_957ce7cc917e" formatted="false">搜索工具、模型或项目</string>
+    <string name="ui_c9d163f8d33b" formatted="false">全部模型</string>
+    <string name="ui_9f998fbfb5f2" formatted="false">所选周期内通过此工具产生的用量。</string>
+    <string name="ui_6398a16d8178" formatted="false">← 返回工具</string>
+    <string name="ui_f02b083758c4" formatted="false">此周期暂无工具活动。</string>
+    <string name="ui_c6ffaea84550" formatted="false">此周期未提供工具与模型的对应明细。</string>
+    <string name="ui_7d452f90f9f1" formatted="false">此周期暂无模型活动。</string>
+    <string name="ui_3394262f6c32" formatted="false">活动热力图。打开每日详情或使用下方日期导航。</string>
+    <string name="ui_af9bb0c4e962" formatted="false">打开最近记录日期</string>
+    <string name="ui_c5e6b67922a3" formatted="false">暂无用量记录。</string>
+    <string name="ui_355f28f2c0c3" formatted="false">前一天</string>
+    <string name="ui_e9711657b066" formatted="false">详情</string>
+    <string name="ui_c3c59829ba11" formatted="false">后一天</string>
+    <string name="ui_78b63506fb42" formatted="false">立即重置</string>
+    <string name="ui_c9bc849a968f" formatted="false">现在</string>
+    <string name="ui_a7f8e7cc0d43" formatted="false">刚刚</string>
+    <string name="ui_e5d8e78c9348" formatted="false">未知时间</string>
+    <string name="ui_fd92cc8545a9" formatted="false">最近</string>
+    <string name="ui_bc42882d967c" formatted="false">5 小时</string>
+    <string name="ui_2fe14b9b993e" formatted="false">每日</string>
+    <string name="ui_c803e4261886" formatted="false">每周</string>
+    <string name="ui_745d1918a44b" formatted="false">每月</string>
+    <string name="ui_acd14c7a6c04" formatted="false">账单</string>
+    <string name="ui_e4d68c5a97e4" formatted="false">额度</string>
+    <string name="ui_b27deb66bcd0" formatted="false">第三方</string>
+    <string name="ui_9cc167f8df85" formatted="false">第三方 API</string>
+    <string name="ui_15f90b181664" formatted="false">Tailscale</string>
+    <string name="ui_c3e43e15c2b0" formatted="false">私网</string>
+    <string name="ui_6ac3cf070e92" formatted="false">HTTPS Hub</string>
+    <string name="ui_b1e471b0d308" formatted="false">Cloudflare Hub</string>
+    <string name="ui_6a6a39ac493f" formatted="false">连接前请填写 Hub 密钥。</string>
+    <string name="ui_842ff3b32076" formatted="false">Hub 密钥不能包含控制字符或换行。</string>
+    <string name="ui_b3e43b7e2ea7" formatted="false">Hub 地址不能包含空格或控制字符。</string>
+    <string name="ui_0bb59edad8e4" formatted="false">请输入完整 HTTPS Hub 地址或私网电脑地址。</string>
+    <string name="ui_bd34ae633d40" formatted="false">仅支持 HTTP 和 HTTPS Hub 地址。</string>
+    <string name="ui_c176208b7680" formatted="false">只填写 Hub 主机及可选端口，不包含凭据或路径。</string>
+    <string name="ui_0f1c2e5ccaae" formatted="false">请使用 Hub 根地址，不包含 API 路径。</string>
+    <string name="ui_5c4a5aaf3f15" formatted="false">请输入有效的 Hub 端口。</string>
+    <string name="ui_4771c8471509" formatted="false">公网 Hub 必须使用完整 https:// 地址；仅局域网 Hub 需要开启私网 Wi-Fi。</string>
+    <string name="ui_98aadb37083e" formatted="false">实时</string>
+    <string name="ui_d1ffda5dc990" formatted="false">离线</string>
+    <string name="ui_c75c31dffb08" formatted="false">已保存</string>
+    <string name="ui_6cb858eeb95b" formatted="false">正在更新</string>
+    <string name="ui_4d968a30a022" formatted="false">暂无数据</string>
+    <string name="ui_ca20728d35f0" formatted="false">账号</string>
+    <string name="ui_10db2797df2c" formatted="false">账号</string>
+    <string name="ui_8dfa30e02450" formatted="false">当前余额</string>
+    <string name="ui_b121c3558238" formatted="false">设备名称</string>
+    <string name="ui_d54f14127298" formatted="false">设备别名</string>
+    <string name="ui_c62fcd7c434b" formatted="false">设备改名</string>
+    <string name="ui_13a4a11319d3" formatted="false">保存</string>
+    <string name="ui_4fd0653c4f2a" formatted="false">取消</string>
+    <string name="ui_08ed90a4660b" formatted="false">恢复原名</string>
+    <string name="ui_7dfa9f2f7b2b" formatted="false">Hub 原名</string>
+    <string name="ui_fe25deae7c1b" formatted="false">此手机上的名称</string>
+    <string name="ui_6d230c03e544" formatted="false">本地名称</string>
+    <string name="ui_e4a3590a3f83" formatted="false">原名</string>
+    <string name="ui_7a02c2d23dbe" formatted="false">移除别名</string>
+    <string name="ui_36a1a83c01e5" formatted="false">此 Hub 暂无设备上报。</string>
+    <string name="ui_d753002d5011" formatted="false">此设备主要模型</string>
+    <string name="ui_825f208629e0" formatted="false">历史可用</string>
+    <string name="ui_ca2389cc0ef8" formatted="false">实时上报</string>
+    <string name="ui_324f668fd2a0" formatted="false">仅保存在此手机，最多 32 个字符</string>
+    <string name="ui_a2119851b299" formatted="false">安卓本地名称</string>
+    <string name="ui_49c9b2ba3127" formatted="false">请先连接 Hub</string>
+    <string name="ui_307915d70042" formatted="false">连接检查已取消，请重试。</string>
+    <string name="ui_323c0b0ae60e" formatted="false">连接检查已暂停，请重试。</string>
+    <string name="ui_62bd5c856c60" formatted="false">已安全连接 Hub。</string>
+    <string name="ui_8630ae57d0e5" formatted="false">已从此手机移除保存的 Hub 连接。</string>
+    <string name="ui_bd8ad6ed86a0" formatted="false">实时更新已暂停，正在重试…</string>
+    <string name="ui_37ab578b9e1d" formatted="false">Hub 暂不可用，显示最近有效快照，正在重试…</string>
+    <string name="ui_f9a8829f88e1" formatted="false">该地址不是 Token Monitor Hub。</string>
+    <string name="ui_7126ec5be83c" formatted="false">Hub 未返回有效统计，显示最近有效快照。</string>
+    <string name="ui_c451f1c2dea1" formatted="false">Hub 未返回实时流，已改用定时读取。</string>
+    <string name="ui_2eb73a3630f9" formatted="false">Hub 拒绝了密钥，请检查连接设置。</string>
+    <string name="ui_1f3b9cdd209d" formatted="false">此 Hub 不支持该接口，请核对 Hub 版本。</string>
+    <string name="ui_b20942b85704" formatted="false">Hub 实时事件超过此客户端的大小限制。</string>
+    <string name="ui_1d379e51fa82" formatted="false">Hub 实时行超过此客户端的大小限制。</string>
+    <string name="ui_abba2b9bcadb" formatted="false">Hub 响应超过此客户端的大小限制。</string>
+    <string name="ui_683563945ee4" formatted="false">无法安全保存 Hub 连接。</string>
+    <string name="ui_13fc449d0eef" formatted="false">无法移除保存的 Hub 连接。</string>
+    <string name="ui_345a3c68463d" formatted="false">此 Wi-Fi 下没有 Hub 响应。请确认电脑端正在运行并已托管 Hub，然后重试。</string>
+    <string name="ui_bf57b8759d1f" formatted="false">Hub 暂无数据。</string>
+    <string name="ui_1adbcc344b31" formatted="false">空闲</string>
+    <string name="ui_6b720ea3ddd6" formatted="false">设备名称不能包含换行或控制字符。</string>
+    <string name="ui_c264359dbf16" formatted="false">设备名称最多 32 个字符。</string>
+    <string name="ui_4c60bb7ad58e" formatted="false">无法保存设备名称，请重试。</string>
+    <string name="ui_6b202d5adea7" formatted="false">请先连接 Hub。</string>
+    <string name="ui_a31a0ff3e522" formatted="false">更新时间未知</string>
+    <string name="ui_1f8a649f17d9" formatted="false">已缓存额度，请刷新确认</string>
+    <string name="ui_0a7d9eb756bc" formatted="false">等待额度更新</string>
+    <string name="ui_18e916c53e35" formatted="false">无法验证 Hub，请检查 HTTPS 或私网地址后重试。</string>
+    <string name="ui_6dfea94b67dc" formatted="false">无法保存语言，请重试。</string>
+    <string name="ui_tpl_context_left">上下文剩余 %1$s%%</string>
+    <string name="ui_tpl_context_used">上下文已用 %1$s%%</string>
+    <string name="ui_tpl_remaining_percent">剩余 %1$s%%</string>
+    <string name="ui_tpl_used_percent">已用 %1$s%%</string>
+    <string name="ui_tpl_running_count">%1$s 个运行中</string>
+    <string name="ui_tpl_session_count">%1$s 个会话</string>
+    <string name="ui_tpl_message_count">%1$s 条消息</string>
+    <string name="ui_tpl_active_days">活跃 %1$s 天</string>
+    <string name="ui_tpl_day_cost">%1$s 天 · %2$s</string>
+    <string name="ui_tpl_cache_hit">缓存命中 %1$s%%</string>
+    <string name="ui_tpl_speed">%1$s Token/秒</string>
+    <string name="ui_tpl_cache_estimate">预计缓存剩余约 %1$s 分钟</string>
+    <string name="ui_tpl_model_through">通过 %1$s 使用的模型</string>
+    <string name="ui_tpl_tool_models">%1$s · 模型</string>
+    <string name="ui_tpl_updated">更新于 %1$s</string>
+    <string name="ui_tpl_source">来源 %1$s</string>
+    <string name="ui_tpl_peak">峰值 %1$s</string>
+    <string name="ui_tpl_reset">重置 %1$s</string>
+    <string name="ui_tpl_expires">到期 %1$s</string>
+    <string name="ui_tpl_changes">变更 %1$s</string>
+    <string name="ui_tpl_age">%1$s前</string>
+    <string name="ui_tpl_duration_dh">%1$s 天 %2$s 小时</string>
+    <string name="ui_tpl_duration_hm">%1$s 小时 %2$s 分钟</string>
+    <string name="ui_tpl_duration_m">%1$s 分钟</string>
+    <string name="ui_tpl_duration_s">%1$s 秒</string>
+    <string name="ui_tpl_duration_short">不足 1 分钟</string>
+    <string name="ui_tpl_open">打开%1$s</string>
+    <string name="ui_tpl_collapse">收起%1$s</string>
+    <string name="ui_tpl_expand">展开%1$s</string>
+    <string name="ui_tpl_move_up">上移%1$s</string>
+    <string name="ui_tpl_move_down">下移%1$s</string>
+    <string name="ui_tpl_explore">探索 %1$s</string>
+    <string name="ui_tpl_snapshot_age">已保存快照 · %1$s</string>
+    <string name="ui_tpl_affected">%1$s 项受影响</string>
+    <string name="ui_tpl_incidents">%1$s 项事件</string>
+    <string name="ui_tpl_maintenance">%1$s 项维护</string>
+    <string name="ui_tpl_projects_missing">%1$s暂无项目归属数据。</string>
+    <string name="ui_tpl_sessions_missing">%1$s暂无会话详情。</string>
+    <string name="ui_tpl_qr">电脑端 v%1$s 不提供配对二维码。</string>
+    <string name="ui_tpl_prompt_local">提示词和回复正文保留在电脑端，v%1$s Hub 不同步正文。</string>
+    <string name="ui_tpl_compare_days">最近 %1$s 个完整日与之前 %2$s 天对比</string>
+    <string name="ui_tpl_compare_cost">估算费用：%1$s 对比 %2$s</string>
+    <string name="ui_tpl_more_matches">还有 %1$s 项匹配，请细化搜索。</string>
+    <string name="ui_tpl_incomplete">历史不完整：分别记录 %1$s/%2$s 和 %3$s/%4$s 天。缺失日期不按零计算，无法计算变化百分比。</string>
+    <string name="ui_tpl_usage_estimate">%1$s Token · 估算 %2$s</string>
+    <string name="ui_tpl_usage_cost">%1$s Token · %2$s</string>
+    <string name="ui_tpl_recorded_days">%2$s 个记录日，共 %1$s Token</string>
+    <string name="ui_tpl_compare_tokens">%1$s 对比 %2$s Token</string>
+    <string name="ui_tpl_token_count">%1$s Token</string>
+    <string name="ui_tpl_view_summary">%1$s/%2$s 个页面 · %3$s</string>
+    <string name="ui_tpl_awaiting_quota">%1$s；等待额度更新</string>
+    <string name="ui_tpl_hub_original">Hub 原名：%1$s</string>
+    <string name="ui_tpl_uploads">每 %1$s 上报</string>
+    <string name="ui_tpl_synced_age">已同步 · %1$s</string>
+    <string name="ui_tpl_device_status">%1$s · %2$s</string>
+    <string name="ui_tpl_device_history">%1$s · 历史可用</string>
+    <string name="ui_tpl_found">已找到电脑 Hub：%1$s。</string>
+    <string name="ui_tpl_http_error">Hub 返回 HTTP %1$s，请在服务恢复后重试。</string>
+    <string name="ui_tpl_fallback_error">家庭 Wi-Fi 地址：%1$s</string>
+    <string name="ui_tpl_appearance_summary">%1$s · %2$s</string>
+    <string name="ui_tpl_usage_summary">%1$s · %2$s</string>
+    <string name="ui_tpl_follow_theme">手机浅色模式使用瓷白，深色模式使用%1$s。小组件在下次更新时切换。</string>
+</resources>

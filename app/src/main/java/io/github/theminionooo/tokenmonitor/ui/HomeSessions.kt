@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -43,7 +45,7 @@ internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDesti
                         HomeListRow(
                             name = sessionRowLabels(session, LocalSessionTitles.current).title,
                             primary = formatCompactTokens(session.totalTokens),
-                            secondary = listOf(session.client.displayName(), state.name, age, session.projectLabel)
+                            secondary = listOf(session.client.displayName(), localizedText(state.name), age, session.projectLabel)
                                 .filter { it.isNotBlank() }.joinToString(" · "),
                             color = when (state) {
                                 SessionActivityState.Running -> Success
@@ -53,7 +55,7 @@ internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDesti
                             literalName = true,
                         )
                         sessionContextForRow(session, now)?.let { context ->
-                            Text("Context ${context.percentLeft}% left", color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))
+                            Text(tr("Context ${context.percentLeft}% left"), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))
                         }
                         sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
                             Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))

@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -92,8 +94,7 @@ internal fun <T> TactileSegmentedControl(
                             }
                             .alpha(if (pressed && !active) 0.6f else 1f),
                     ) {
-                        Text(
-                            label,
+                        Text(tr(label),
                             color = if (active) Accent else Muted,
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = if (active) FontWeight.SemiBold else FontWeight.Medium,

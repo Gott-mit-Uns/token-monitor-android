@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -107,7 +109,7 @@ import kotlin.math.roundToLong
 @Composable
 internal fun DetailLine(label: String, value: String) {
     Row(modifier = Modifier.padding(start = 20.dp)) {
-        Text(label, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.width(64.dp))
+        Text(tr(label), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.width(64.dp))
         Text(
             value,
             color = Ink.copy(alpha = 0.9f),
@@ -146,7 +148,7 @@ internal fun DesktopDetailRow(
             Spacer(Modifier.width(10.dp))
             Column(horizontalAlignment = Alignment.End) {
                 Text(value, color = Ink, style = MaterialTheme.typography.bodySmall)
-                if (detail.isNotBlank()) Text(detail, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
             }
         }
         if (extra.isNotBlank()) Text(extra, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 20.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)

@@ -1,5 +1,8 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -39,6 +42,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -140,23 +144,27 @@ internal fun ConnectionScreen(
                 else -> state.connectionUrl.orEmpty().removePrefix("http://").removePrefix("https://").substringBefore(':')
             }
             SettingsGroup("Connection", summary = listOfNotNull(route, "home fallback".takeIf { state.fallbackUrl != null && route != "Home Wi-Fi" }).joinToString(" · ")) {
-                Text("This phone only reads your Token Monitor Hub. HTTPS Cloudflare Hubs and private desktop Hubs are supported.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
-                Text("The saved Hub is shown below. Enter the secret again only to change the connection.", color = Accent, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text(tr("This phone only reads your Token Monitor Hub. HTTPS Cloudflare Hubs and private desktop Hubs are supported."), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text(tr("The saved Hub is shown below. Enter the secret again only to change the connection."), color = Accent, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 fields("CHECK AND SAVE CONNECTION")
-                OutlinedButton(onClick = onDisconnect, modifier = Modifier.fillMaxWidth()) { Text("DISCONNECT THIS PHONE") }
+                OutlinedButton(onClick = onDisconnect, modifier = Modifier.fillMaxWidth()) { Text(tr("DISCONNECT THIS PHONE")) }
             }
             SettingsGroup("Pair with desktop", summary = "3 steps") {
-                Text("1. Install Tailscale on the desktop and phone, then use the same tailnet.", color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
-                Text("2. In the desktop app, open Settings → Multi-device Sync and choose Host Hub.", color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
-                Text("3. Type the address that starts with 100. and the shared secret from the desktop app into the fields above. Just the numbers are enough.", color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
-                Text("The v${BuildConfig.UPSTREAM_VERSION} desktop app does not generate a pairing QR code.", color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 16.sp)
+                Text(tr("1. Install Tailscale on the desktop and phone, then use the same tailnet."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text(tr("2. In the desktop app, open Settings → Multi-device Sync and choose Host Hub."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text(tr("3. Type the address that starts with 100. and the shared secret from the desktop app into the fields above. Just the numbers are enough."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text(tr("The v${BuildConfig.UPSTREAM_VERSION} desktop app does not generate a pairing QR code."), color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 16.sp)
             }
             val currentTheme = displayOptions.themeCode?.let(InterfaceTheme::fromCode) ?: InterfaceTheme.Default
             val themeId = InterfaceTheme.idOf(currentTheme)
             var themeCodeInput by rememberSaveable(currentTheme.code) { mutableStateOf(currentTheme.code) }
             var themeCodeInvalid by remember { mutableStateOf(false) }
+            val languageMode by io.github.theminionooo.tokenmonitor.localization.LanguagePreferences.mode.collectAsState()
+            SettingsGroup("Language", summary = when (languageMode) { "zh-CN" -> "简体中文"; "en" -> "English"; else -> tr("Follow system") }) {
+                LanguagePicker()
+            }
             SettingsGroup("Appearance", summary = "${if (displayOptions.followSystemTheme) "Follows phone" else themeId.replaceFirstChar { it.titlecase(Locale.US) }} · ${displayOptions.textScale.name}") {
-                Text("Interface theme", color = Ink, style = MaterialTheme.typography.bodyMedium)
+                Text(tr("Interface theme"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = InterfaceTheme.presets.keys.map { it.uppercase(Locale.US) to it },
                     selected = themeId,
@@ -169,8 +177,8 @@ internal fun ConnectionScreen(
                         themeCodeInvalid = false
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Theme code") },
-                    supportingText = { Text(if (themeCodeInvalid) "That is not a TM1 theme code." else "Paste a code from the desktop's Appearance settings to use the same colors here.") },
+                    label = { Text(tr("Theme code")) },
+                    supportingText = { Text(tr(if (themeCodeInvalid) "That is not a TM1 theme code." else "Paste a code from the desktop's Appearance settings to use the same colors here.")) },
                     isError = themeCodeInvalid,
                     trailingIcon = {
                         TextButton(
@@ -180,7 +188,7 @@ internal fun ConnectionScreen(
                                 if (parsed != null) onThemeCodeChange(if (parsed == InterfaceTheme.Default) null else parsed.code)
                             },
                             modifier = Modifier.padding(end = 4.dp),
-                        ) { Text("APPLY", color = Accent, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold) }
+                        ) { Text(tr("APPLY"), color = Accent, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold) }
                     },
                     singleLine = true,
                 )
@@ -189,23 +197,23 @@ internal fun ConnectionScreen(
                 SettingsToggle("Tool icons", "Show provider marks beside tools and models instead of plain dots.", displayOptions.showToolIcons, onShowToolIconsChange)
                 SettingsToggle("Colorful tool marks", "Use original provider colors instead of monochrome marks.", displayOptions.colorfulToolMarks, onColorfulToolMarksChange)
                 SettingsToggle("Compact token total", "Use abbreviated totals such as 214.9M in the main header.", displayOptions.compactTokenTotal, onCompactTokenTotalChange)
-                Text("Text size", color = Ink, style = MaterialTheme.typography.bodyMedium)
+                Text(tr("Text size"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = TextScale.entries.map { it.name.uppercase(Locale.US) to it.name },
                     selected = displayOptions.textScale.name,
                     onSelect = { selected -> TextScale.entries.firstOrNull { it.name == selected }?.let(onTextScaleChange) },
                 )
-                Text("Compact matches the desktop widget exactly. Comfortable and Large enlarge every label for reading at arm's length.", color = Muted, style = MaterialTheme.typography.labelSmall)
-                Text("Reduce motion", color = Ink, style = MaterialTheme.typography.bodyMedium)
+                Text(tr("Compact matches the desktop widget exactly. Comfortable and Large enlarge every label for reading at arm's length."), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("Reduce motion"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = ReduceMotionMode.entries.map { it.name.uppercase() to it.name },
                     selected = displayOptions.reduceMotion.name,
                     onSelect = { selected -> ReduceMotionMode.entries.firstOrNull { it.name == selected }?.let(onReduceMotionChange) },
                 )
-                Text("System follows Android. On minimizes motion; Off keeps the app's interaction animations.", color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("System follows Android. On minimizes motion; Off keeps the app's interaction animations."), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
             SettingsGroup("Main dashboard", summary = "${displayOptions.visibleViews.size}/${DisplayOptions.defaultViews.size} views · ${DashboardPeriod.entries.firstOrNull { it.name == displayOptions.defaultPeriod }?.let(::periodRangeLabel) ?: "Day"}") {
-                Text("Default usage range", color = Ink, style = MaterialTheme.typography.bodyMedium)
+                Text(tr("Default usage range"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 DashboardPeriod.entries.chunked(3).forEach { row ->
                     ChoiceGroup(
                         options = row.map { periodRangeLabel(it).uppercase(Locale.US) to it.name },
@@ -214,7 +222,7 @@ internal fun ConnectionScreen(
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
-                Text("Views", color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
+                Text(tr("Views"), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
                 val orderedViews = displayOptions.visibleViews + DisplayOptions.defaultViews.filterNot { it in displayOptions.visibleViews }
                 orderedViews.forEach { view ->
                     SettingsOrderRow(
@@ -225,7 +233,7 @@ internal fun ConnectionScreen(
                         onMove = { onMoveView(view, it) },
                     )
                 }
-                Text("Home modules", color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
+                Text(tr("Home modules"), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 4.dp))
                 val orderedModules = displayOptions.visibleHomeModules + DisplayOptions.defaultHomeModules.filterNot { it in displayOptions.visibleHomeModules }
                 orderedModules.forEach { module ->
                     SettingsOrderRow(
@@ -237,7 +245,7 @@ internal fun ConnectionScreen(
                 }
             }
             SettingsGroup("Usage presentation", summary = "${displayOptions.rankingMetric.name} · ${displayOptions.limitBarMetric.name}") {
-                Text("Model and tool ranking", color = Ink, style = MaterialTheme.typography.bodyMedium)
+                Text(tr("Model and tool ranking"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = listOf("TOKENS" to RankingMetric.Tokens.name, "COST" to RankingMetric.Cost.name),
                     selected = displayOptions.rankingMetric.name,
@@ -246,7 +254,7 @@ internal fun ConnectionScreen(
                 SettingsToggle("Show limit source", "Display which Hub device supplied each provider limit.", displayOptions.showLimitSource, onShowLimitSourceChange)
                 SettingsToggle("Show account emails", "Useful only when provider names are not enough to distinguish accounts.", displayOptions.showAccountEmails, onShowAccountEmailsChange)
                 SettingsToggle("Show session titles", "Hide reported titles in Home and Sessions. This display choice does not remove titles from the local snapshot cache.", displayOptions.showSessionTitles, onShowSessionTitlesChange)
-                Text("Limit bars show", color = Ink, style = MaterialTheme.typography.bodyMedium)
+                Text(tr("Limit bars show"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = listOf("REMAINING" to LimitBarMetric.Remaining.name, "USED" to LimitBarMetric.Used.name),
                     selected = displayOptions.limitBarMetric.name,
@@ -260,38 +268,38 @@ internal fun ConnectionScreen(
                     else -> "Snapshot"
                 }
                 SettingsGroup("Hub status", summary = delivery) {
-                    StatusLine("Connection", delivery, if (state.streamActive || state.widgetLiveActive) Success else Muted)
+                    StatusLine("Connection", tr(delivery), if (state.streamActive || state.widgetLiveActive) Success else Muted)
                     StatusLine("Route", io.github.theminionooo.tokenmonitor.data.network.HubAddressValidator.routeLabel(state.activeUrl ?: state.connectionUrl, state.fallbackUrl))
                     StatusLine("Hub build", formatHubBuild(snapshot.health.hubBuild))
-                    StatusLine("Runtime", snapshot.health.runtime.ifBlank { "Not reported" })
-                    StatusLine("Collector role", snapshot.health.role.ifBlank { "Not reported" })
+                    StatusLine("Runtime", snapshot.health.runtime.ifBlank { tr("Not reported") })
+                    StatusLine("Collector role", snapshot.health.role.ifBlank { tr("Not reported") })
                     StatusLine("Devices", snapshot.health.deviceCount.toString())
-                    StatusLine("Last read", formatRelativeAge(snapshot.capturedAt, LocalNow.current).ifBlank { "Unknown" })
-                    StatusLine("Phone data", if (snapshot.fromCache || snapshot.stale) "Saved snapshot" else "Current")
+                    StatusLine("Last read", formatRelativeAge(snapshot.capturedAt, LocalNow.current).ifBlank { tr("Unknown") })
+                    StatusLine("Phone data", tr(if (snapshot.fromCache || snapshot.stale) "Saved snapshot" else "Current"))
                 }
             }
             SettingsGroup("Home-screen widget", summary = "Live controls · resizable") {
                 val widgetContext = androidx.compose.ui.platform.LocalContext.current
                 val widgets = android.appwidget.AppWidgetManager.getInstance(widgetContext)
-                Text("A widget in your app theme with the full token count, tool marks, quota windows, and a seven-day chart as you make it taller. Reduce Motion also applies to the widget.", color = Muted, style = MaterialTheme.typography.bodySmall)
-                Text("Tap Refresh for one update, or Live for 60-second Hub updates for up to an hour while the app is closed. Tap Live again or Stop in the notification to finish. Android may delay updates while the phone sleeps. Figures and the last update time are visible on your home screen.", color = Muted, style = MaterialTheme.typography.bodySmall)
+                Text(tr("A widget in your app theme with the full token count, tool marks, quota windows, and a seven-day chart as you make it taller. Reduce Motion also applies to the widget."), color = Muted, style = MaterialTheme.typography.bodySmall)
+                Text(tr("Tap Refresh for one update, or Live for 60-second Hub updates for up to an hour while the app is closed. Tap Live again or Stop in the notification to finish. Android may delay updates while the phone sleeps. Figures and the last update time are visible on your home screen."), color = Muted, style = MaterialTheme.typography.bodySmall)
                 if (widgets.isRequestPinAppWidgetSupported) {
                     Button(onClick = {
                         widgets.requestPinAppWidget(android.content.ComponentName(widgetContext, io.github.theminionooo.tokenmonitor.widget.UsageWidgetProvider::class.java), null, null)
-                    }) { Text("ADD WIDGET") }
+                    }) { Text(tr("ADD WIDGET")) }
                 } else {
-                    Text("Long-press your home screen, choose Widgets, then Token Monitor.", color = Ink, style = MaterialTheme.typography.bodySmall)
+                    Text(tr("Long-press your home screen, choose Widgets, then Token Monitor."), color = Ink, style = MaterialTheme.typography.bodySmall)
                 }
             }
             SettingsGroup("Compatibility", summary = "Desktop v${BuildConfig.UPSTREAM_VERSION}") {
                 StatusLine("Android app", BuildConfig.VERSION_NAME)
                 StatusLine("Desktop baseline", "Token Monitor v${BuildConfig.UPSTREAM_VERSION}")
-                Text("Protocol changes are reviewed against versioned fixtures before this baseline moves forward.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+                Text(tr("Protocol changes are reviewed against versioned fixtures before this baseline moves forward."), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
             }
             SettingsGroup("App updates", summary = "${BuildConfig.VERSION_NAME} r${BuildConfig.VERSION_CODE % 1000}") {
                 AppUpdatesPanel(onOpenReleasePage)
             }
-            Text("The dashboard streams immediately while visible. Widget Live uses a lighter 60-second refresh and stops after one hour.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
+            Text(tr("The dashboard streams immediately while visible. Widget Live uses a lighter 60-second refresh and stops after one hour."), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
         }
     }
 }
@@ -317,9 +325,9 @@ private fun ColumnScope.ConnectionFields(
         value = hubUrl,
         onValueChange = onHubUrlChange,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text("Hub address") },
-        placeholder = { Text("https://your-hub.example.com") },
-        supportingText = { Text("Cloudflare: paste the complete HTTPS base address, without /api/stats. HTTPS defaults to port 443. Bare Tailscale or LAN addresses use HTTP port 17321.") },
+        label = { Text(tr("Hub address")) },
+        placeholder = { Text(tr("https://your-hub.example.com")) },
+        supportingText = { Text(tr("Cloudflare: paste the complete HTTPS base address, without /api/stats. HTTPS defaults to port 443. Bare Tailscale or LAN addresses use HTTP port 17321.")) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
     )
@@ -327,29 +335,29 @@ private fun ColumnScope.ConnectionFields(
         value = fallbackUrl,
         onValueChange = onFallbackUrlChange,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text("Home Wi-Fi address (optional)") },
-        placeholder = { Text("192.168.x.x") },
-        supportingText = { Text(discovery.message ?: "Private desktop Hub only. Use this only if it shares the same data and secret as the primary Hub; otherwise leave it blank.") },
+        label = { Text(tr("Home Wi-Fi address (optional)")) },
+        placeholder = { Text(tr("192.168.x.x")) },
+        supportingText = { Text(tr(discovery.message ?: "Private desktop Hub only. Use this only if it shares the same data and secret as the primary Hub; otherwise leave it blank.")) },
         trailingIcon = {
             if (discovery.searching) {
                 CircularProgressIndicator(modifier = Modifier.padding(end = 12.dp).size(18.dp), strokeWidth = 2.dp, color = Accent)
             } else {
-                TextButton(onClick = onFindHomeHub, modifier = Modifier.padding(end = 4.dp)) { Text("FIND", color = Accent, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold) }
+                TextButton(onClick = onFindHomeHub, modifier = Modifier.padding(end = 4.dp)) { Text(tr("FIND"), color = Accent, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold) }
             }
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
     )
-    OutlinedTextField(value = secret, onValueChange = onSecretChange, modifier = Modifier.fillMaxWidth(), label = { Text("Hub secret") }, supportingText = { Text("Stored with an Android Keystore key and never shown after saving.") }, singleLine = true, visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password))
+    OutlinedTextField(value = secret, onValueChange = onSecretChange, modifier = Modifier.fillMaxWidth(), label = { Text(tr("Hub secret")) }, supportingText = { Text(tr("Stored with an Android Keystore key and never shown after saving.")) }, singleLine = true, visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password))
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text("Allow a private Wi-Fi Hub", color = Ink, style = MaterialTheme.typography.bodyMedium)
-            Text("Enable only for a 10.x, 172.16–31.x, 192.168.x, or .local Hub. Public HTTPS Hubs do not require this switch.", color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
+            Text(tr("Allow a private Wi-Fi Hub"), color = Ink, style = MaterialTheme.typography.bodyMedium)
+            Text(tr("Enable only for a 10.x, 172.16–31.x, 192.168.x, or .local Hub. Public HTTPS Hubs do not require this switch."), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
         }
         Spacer(Modifier.width(12.dp))
         Switch(checked = allowLocalNetwork, onCheckedChange = onAllowLocalNetworkChange)
     }
-    Button(onClick = onSave, modifier = Modifier.fillMaxWidth(), enabled = !saving) { Text(if (saving) "CHECKING HUB…" else saveLabel) }
+    Button(onClick = onSave, modifier = Modifier.fillMaxWidth(), enabled = !saving) { Text(tr(if (saving) "CHECKING HUB…" else saveLabel)) }
     result?.let { StatusMessage(it, stale = !it.startsWith("Connected") && !it.startsWith("The saved")) }
 }
 
@@ -361,25 +369,39 @@ private fun WelcomeSetup(modifier: Modifier, fields: @Composable ColumnScope.(St
     ) {
         Surface(color = Overlay, shape = RoundedCornerShape(18.dp), border = BorderStroke(1.dp, StrongLine), modifier = Modifier.size(64.dp)) {
             Box(contentAlignment = Alignment.Center) {
-                Text("Σ", color = Accent, style = MaterialTheme.typography.displayMedium, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                Text(tr("Σ"), color = Accent, style = MaterialTheme.typography.displayMedium, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
             }
         }
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Token Monitor", color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-            Text("Your desktop dashboard, live on your phone.", color = Muted, style = MaterialTheme.typography.bodyMedium, lineHeight = 18.sp)
+            Text(tr("Token Monitor"), color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text(tr("Your desktop dashboard, live on your phone."), color = Muted, style = MaterialTheme.typography.bodyMedium, lineHeight = 18.sp)
         }
-        Text("CONNECT YOUR HUB", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 6.dp))
+        LanguagePicker()
+        Text(tr("CONNECT YOUR HUB"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 6.dp))
         WelcomeStep(1, "Choose your existing Hub", "Use your Cloudflare HTTPS Hub, or a desktop Hub over Tailscale or home Wi-Fi.")
         WelcomeStep(2, "Enter its base address", "Cloudflare uses https://your-hub.example.com. For a desktop Hub, use its private address and port.")
         WelcomeStep(3, "Enter the shared Hub secret", "Use the Token Monitor Hub secret, not a Cloudflare account API token. Check and save to connect.")
         Surface(color = Recessed.copy(alpha = 0.76f), border = BorderStroke(1.dp, Line), shape = MaterialTheme.shapes.medium, modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { fields("CONNECT") }
         }
-        Text("Usage is read from the Hub you configure. Credentials are encrypted with Android Keystore. This independent Cloudflare edition uses manually installed updates.", color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 15.sp)
+        Text(tr("Usage is read from the Hub you configure. Credentials are encrypted with Android Keystore. This independent Cloudflare edition uses manually installed updates."), color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 15.sp)
         SettingsGroup("App updates", summary = "${BuildConfig.VERSION_NAME} r${BuildConfig.VERSION_CODE % 1000}") {
             AppUpdatesPanel(onOpenReleasePage)
         }
     }
+}
+
+@Composable
+private fun LanguagePicker() {
+    val context = LocalContext.current
+    val mode by io.github.theminionooo.tokenmonitor.localization.LanguagePreferences.mode.collectAsState()
+    var failed by remember { mutableStateOf(false) }
+    ChoiceGroup(
+        options = listOf("Follow system" to "system", "简体中文" to "zh-CN", "English" to "en"),
+        selected = mode,
+        onSelect = { failed = !io.github.theminionooo.tokenmonitor.localization.LanguagePreferences.set(context, it) },
+    )
+    if (failed) StatusMessage("Could not save language. Try again.", stale = true)
 }
 
 @Composable
@@ -389,8 +411,8 @@ private fun WelcomeStep(number: Int, title: String, detail: String) {
             Box(contentAlignment = Alignment.Center) { Text(number.toString(), color = Accent, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold) }
         }
         Column(verticalArrangement = Arrangement.spacedBy(3.dp), modifier = Modifier.weight(1f)) {
-            Text(title, color = Ink, style = MaterialTheme.typography.bodyMedium, lineHeight = 17.sp)
-            Text(detail, color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 16.sp)
+            Text(tr(title), color = Ink, style = MaterialTheme.typography.bodyMedium, lineHeight = 17.sp)
+            Text(tr(detail), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 16.sp)
         }
     }
 }
@@ -415,10 +437,10 @@ private fun SettingsGroup(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = if (collapsible) Modifier.fillMaxWidth().clickable(onClick = toggle).padding(vertical = 2.dp) else Modifier.fillMaxWidth(),
             ) {
-                Text(title.uppercase(Locale.US), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                Text(tr(title.uppercase(Locale.US)), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.width(10.dp))
                 if (summary != null && !expanded) {
-                    Text(summary, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.End, modifier = Modifier.weight(1f))
+                    Text(tr(summary), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.End, modifier = Modifier.weight(1f))
                 } else {
                     Spacer(Modifier.weight(1f))
                 }
@@ -426,7 +448,7 @@ private fun SettingsGroup(
                     Spacer(Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = if (expanded) "Collapse $title" else "Expand $title",
+                        contentDescription = localizedText(if (expanded) "Collapse $title" else "Expand $title"),
                         tint = Muted,
                         modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)),
                     )
@@ -447,8 +469,8 @@ private fun SettingsGroup(
 private fun SettingsToggle(label: String, description: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text(label, color = Ink, style = MaterialTheme.typography.bodyMedium)
-            Text(description, color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
+            Text(tr(label), color = Ink, style = MaterialTheme.typography.bodyMedium)
+            Text(tr(description), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
         }
         Spacer(Modifier.width(12.dp))
         Switch(checked = checked, onCheckedChange = onCheckedChange)
@@ -464,17 +486,17 @@ private fun SettingsOrderRow(
     onMove: (Int) -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxWidth().height(42.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(label, color = if (checked) Ink else Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+        Text(tr(label), color = if (checked) Ink else Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
         IconButton(onClick = { onMove(-1) }, enabled = checked, modifier = Modifier.size(30.dp)) {
-            Icon(Icons.Outlined.KeyboardArrowUp, contentDescription = "Move $label up", tint = if (checked) Muted else Muted.copy(alpha = 0.35f), modifier = Modifier.size(16.dp))
+            Icon(Icons.Outlined.KeyboardArrowUp, contentDescription = localizedText("Move $label up"), tint = if (checked) Muted else Muted.copy(alpha = 0.35f), modifier = Modifier.size(16.dp))
         }
         IconButton(onClick = { onMove(1) }, enabled = checked, modifier = Modifier.size(30.dp)) {
-            Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = "Move $label down", tint = if (checked) Muted else Muted.copy(alpha = 0.35f), modifier = Modifier.size(16.dp))
+            Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = localizedText("Move $label down"), tint = if (checked) Muted else Muted.copy(alpha = 0.35f), modifier = Modifier.size(16.dp))
         }
         if (allowDisable) {
             Switch(checked = checked, onCheckedChange = onCheckedChange, modifier = Modifier.size(width = 50.dp, height = 32.dp))
         } else {
-            Text("ALWAYS", color = Muted, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center, modifier = Modifier.width(50.dp))
+            Text(tr("ALWAYS"), color = Muted, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center, modifier = Modifier.width(50.dp))
         }
     }
 }

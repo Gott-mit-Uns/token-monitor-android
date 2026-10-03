@@ -1,3 +1,10 @@
+## v0.65.0-cf.2 — Simplified Chinese and local device names
+
+- Added system / Simplified Chinese / English language selection, including first connection.
+- Translated app labels, known dynamic messages, date/countdown formatting, widgets and Live notifications using desktop v0.65.0 terminology.
+- Added persistent Android-only device aliases, scoped by normalized Hub and stable device ID; restore original names without changing Hub data.
+- Preserved package, signing, encrypted connection, cached data, display preferences and networking behavior.
+
 ## v0.65.0-cf.1 — Cloudflare compatibility
 
 - Public HTTPS Hub addresses with port 443; preserved private-network connections.

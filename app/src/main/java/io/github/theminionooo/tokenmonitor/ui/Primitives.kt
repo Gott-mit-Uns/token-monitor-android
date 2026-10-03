@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.app.Activity
 import android.provider.Settings
 import androidx.compose.runtime.SideEffect
@@ -105,7 +107,7 @@ import kotlinx.coroutines.delay
 @Composable
 internal fun DesktopStatusBlock(title: String, content: @Composable ColumnScope.() -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        Text(title.uppercase(Locale.US), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+        Text(tr(title.uppercase(Locale.US)), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
         content()
         HorizontalDivider(color = Line)
     }
@@ -114,19 +116,19 @@ internal fun DesktopStatusBlock(title: String, content: @Composable ColumnScope.
 @Composable
 internal fun StatusLine(label: String, value: String, color: Color = Ink) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(label, color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(0.45f), maxLines = 1)
+        Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(0.45f), maxLines = 1)
         Text(value, color = color, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(0.55f), maxLines = 2, overflow = TextOverflow.Ellipsis)
     }
 }
 
 @Composable
 internal fun StatusMessage(message: String, stale: Boolean) {
-    Text(message, color = if (stale) Orange else Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(vertical = 3.dp))
+    Text(tr(message), color = if (stale) Orange else Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(vertical = 3.dp))
 }
 
 @Composable
 internal fun MutedCopy(text: String, modifier: Modifier = Modifier) {
-    Text(text, color = Muted, style = MaterialTheme.typography.bodySmall, modifier = modifier, maxLines = 2, overflow = TextOverflow.Ellipsis)
+    Text(tr(text), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = modifier, maxLines = 2, overflow = TextOverflow.Ellipsis)
 }
 
 @Composable
@@ -167,10 +169,10 @@ internal fun TrendChart(values: List<Long>, height: androidx.compose.ui.unit.Dp)
 @Composable
 internal fun EmptyDashboard(modifier: Modifier, message: String?, onOpenSettings: () -> Unit) {
     Column(modifier = modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start) {
-        Text("Token Monitor", color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-        Text("Connect a private Hub to see desktop activity here.", color = Muted, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 7.dp))
+        Text(tr("Token Monitor"), color = Ink, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+        Text(tr("Connect a private Hub to see desktop activity here."), color = Muted, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 7.dp))
         Spacer(Modifier.height(16.dp))
-        Button(onClick = onOpenSettings) { Text("OPEN CONNECTION SETTINGS") }
+        Button(onClick = onOpenSettings) { Text(tr("OPEN CONNECTION SETTINGS")) }
         message?.let { StatusMessage(it, stale = true) }
     }
 }

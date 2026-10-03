@@ -1,5 +1,6 @@
 package io.github.theminionooo.tokenmonitor.widget
 
+import io.github.theminionooo.tokenmonitor.localization.localizedContext
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -78,10 +79,10 @@ internal object WidgetDeckRenderer {
             setImageViewBitmap(R.id.swipe_page_bitmap, bitmap)
             setContentDescription(R.id.swipe_page_bitmap, description(context, page, data))
             setContentDescription(R.id.swipe_page_open, description(context, page, data))
-            setContentDescription(R.id.swipe_page_previous, "Previous Token Monitor page")
-            setContentDescription(R.id.swipe_page_next, "Next Token Monitor page")
-            setContentDescription(R.id.widget_refresh, if (data.status == "UPDATING") "Refreshing widget" else "Refresh widget now")
-            setContentDescription(R.id.widget_live, if (data.liveEnabled) "Turn widget Live off" else "Turn widget Live on for one hour")
+            setContentDescription(R.id.swipe_page_previous, widgetText(context, "Previous Token Monitor page"))
+            setContentDescription(R.id.swipe_page_next, widgetText(context, "Next Token Monitor page"))
+            setContentDescription(R.id.widget_refresh, widgetText(context, if (data.status == "UPDATING") "Refreshing widget" else "Refresh widget now"))
+            setContentDescription(R.id.widget_live, widgetText(context, if (data.liveEnabled) "Turn widget Live off" else "Turn widget Live on for one hour"))
         }
     }
 
@@ -99,7 +100,7 @@ internal object WidgetDeckRenderer {
         return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { bitmap ->
             val canvas = Canvas(bitmap)
             canvas.scale(width / WidgetDeckGrid.WIDTH, height / WidgetDeckGrid.HEIGHT)
-            DeckCanvas(context, canvas, palette).draw(page, data)
+            DeckCanvas(localizedContext(context), canvas, palette).draw(page, data)
         }
     }
 
@@ -154,7 +155,7 @@ private class DeckCanvas(
     fun draw(page: WidgetDeckPage, data: WidgetDeckData) {
         drawSurface()
         drawHeader(page, data)
-        if (!data.hasData) drawCentered(data.emptyMessage) else when (page) {
+        if (!data.hasData) drawCentered(widgetText(context, data.emptyMessage)) else when (page) {
             WidgetDeckPage.Overview -> drawOverview(data)
             WidgetDeckPage.Limits -> drawLimits(data)
             WidgetDeckPage.Breakdown -> drawBreakdown(data)
@@ -196,11 +197,11 @@ private class DeckCanvas(
     private fun drawHeader(page: WidgetDeckPage, data: WidgetDeckData) {
         val h = WidgetDeckGrid.Header
         drawDrawable(R.drawable.token_monitor_icon, h.ICON_X, h.ICON_Y, h.ICON_SIZE, h.ICON_SIZE)
-        text("Token Monitor", h.TEXT_X, h.BRAND_BASELINE, brand, ink, maxWidth = h.REFRESH_X - h.TEXT_X - 8f)
+        text(widgetText(context, "Token Monitor"), h.TEXT_X, h.BRAND_BASELINE, brand, ink, maxWidth = h.REFRESH_X - h.TEXT_X - 8f)
         text(context.getString(page.subtitle), h.TEXT_X, h.PAGE_BASELINE, pageType, muted, maxWidth = h.REFRESH_X - h.TEXT_X - 8f)
         drawDrawable(R.drawable.ic_widget_refresh, h.REFRESH_X, h.REFRESH_Y, h.REFRESH_SIZE, h.REFRESH_SIZE, ink)
         val live = data.liveEnabled && data.status == "LIVE"
-        text(data.status, h.STATUS_RIGHT, h.STATUS_BASELINE, status, if (live) accent else muted, Paint.Align.RIGHT, h.STATUS_RIGHT - h.REFRESH_X - h.REFRESH_SIZE - 6f)
+        text(widgetText(context, data.status), h.STATUS_RIGHT, h.STATUS_BASELINE, status, if (live) accent else muted, Paint.Align.RIGHT, h.STATUS_RIGHT - h.REFRESH_X - h.REFRESH_SIZE - 6f)
         val toggle = RectF(h.TOGGLE_LEFT, h.TOGGLE_TOP, h.TOGGLE_LEFT + h.TOGGLE_WIDTH, h.TOGGLE_TOP + h.TOGGLE_HEIGHT)
         val trackRadius = h.TOGGLE_HEIGHT / 2f
         val track = if (data.liveEnabled) palette.accent.copy(alpha = 0.18f).compositeOver(palette.shell) else palette.overlay.compositeOver(palette.shell)
@@ -241,15 +242,15 @@ private class DeckCanvas(
     private fun drawOverview(data: WidgetDeckData) {
         val g = WidgetDeckGrid.Overview
         val snapshot = requireNotNull(data.snapshot)
-        text("Total tokens", left, g.SECTION_BASELINE, section, label)
+        text(widgetText(context, "Total tokens"), left, g.SECTION_BASELINE, section, label)
         fitText(formatTokens(snapshot.today.totalTokens), left, g.TOTAL_BASELINE, display, Type.DISPLAY_MIN, ink, g.TOTAL_RIGHT - left)
-        text("${formatMoney(snapshot.today.costUsd)} estimated cost", left, g.COST_BASELINE, body, muted, maxWidth = g.TOTAL_RIGHT - left)
+        text(widgetText(context, "${formatMoney(snapshot.today.costUsd)} estimated cost"), left, g.COST_BASELINE, body, muted, maxWidth = g.TOTAL_RIGHT - left)
         vline(g.DIVIDER_X, g.DIVIDER_TOP, g.DIVIDER_BOTTOM, line)
         val statsWidth = right - g.STATS_X
         data.stats.take(3).forEachIndexed { index, (value, name) ->
             val top = g.STATS_TOP + index * g.STATS_PITCH
-            text(value, g.STATS_X, top + g.STAT_VALUE_OFFSET, stat, ink, maxWidth = statsWidth)
-            text(name, g.STATS_X, top + g.STAT_CAPTION_OFFSET, caption, muted, maxWidth = statsWidth)
+            text(widgetText(context, value), g.STATS_X, top + g.STAT_VALUE_OFFSET, stat, ink, maxWidth = statsWidth)
+            text(widgetText(context, name), g.STATS_X, top + g.STAT_CAPTION_OFFSET, caption, muted, maxWidth = statsWidth)
         }
         val tools = data.tools.take(3).mapIndexed { index, row -> row to vendorColor(row.name, index) }
         drawSegmentedBar(RectF(left, g.BAR_TOP, right, g.BAR_BOTTOM), tools.map { it.first.share to it.second })
@@ -257,17 +258,17 @@ private class DeckCanvas(
         tools.forEachIndexed { index, (row, color) ->
             val x = left + index * slot
             circle(x + g.LEGEND_DOT_INSET, g.LEGEND_DOT_Y, g.LEGEND_DOT_RADIUS, color)
-            text("${row.name.displayName()} ${sharePercent(row.share)}", x + g.LEGEND_TEXT_INSET, g.LEGEND_BASELINE, legend, ink, maxWidth = slot - g.LEGEND_TEXT_INSET - 6f)
+            text(widgetText(context, "${row.name.displayName()} ${sharePercent(row.share)}"), x + g.LEGEND_TEXT_INSET, g.LEGEND_BASELINE, legend, ink, maxWidth = slot - g.LEGEND_TEXT_INSET - 6f)
         }
         hline(left, right, g.RULE_Y, line)
         val weekTokens = data.week.sumOf { it.tokens }
         val weekCost = data.week.sumOf { it.costUsd }
-        text("This week", left, g.WEEK_BASELINE, caption, muted)
+        text(widgetText(context, "This week"), left, g.WEEK_BASELINE, caption, muted)
         if (weekTokens > 0) {
             val advance = text(formatCompactTokens(weekTokens), g.WEEK_VALUE_X, g.WEEK_BASELINE, stat, ink)
-            text("· ${formatMoney(weekCost)}", g.WEEK_VALUE_X + advance + 8f, g.WEEK_BASELINE, body, muted, maxWidth = right - g.WEEK_VALUE_X - advance - 8f)
+            text(widgetText(context, "· ${formatMoney(weekCost)}"), g.WEEK_VALUE_X + advance + 8f, g.WEEK_BASELINE, body, muted, maxWidth = right - g.WEEK_VALUE_X - advance - 8f)
         } else {
-            text("No history yet", g.WEEK_VALUE_X, g.WEEK_BASELINE, body, muted)
+            text(widgetText(context, "No history yet"), g.WEEK_VALUE_X, g.WEEK_BASELINE, body, muted)
         }
     }
 
@@ -292,10 +293,10 @@ private class DeckCanvas(
                 val titleType = DeckType(monoBold, g.TITLE_SIZE, tracking = 0.04f, uppercase = true)
                 val fullTitle = "${group.provider.providerLabel()} · ${window.title}"
                 text(if (measure(fullTitle, titleType) <= cellWidth) fullTitle else window.title, cellLeft, top + g.TITLE_OFFSET, titleType, label, maxWidth = cellWidth)
-                val percent = text("${window.remainingPercent.roundToInt()}%", cellLeft, top + g.VALUE_OFFSET, figure, if (window.remainingPercent > 35) ink else tone)
-                text("left", cellLeft + percent + 6f, top + g.VALUE_OFFSET, DeckType(mono, g.LEFT_LABEL_SIZE), ink, maxWidth = cellWidth - percent - 6f)
+                val percent = text(widgetText(context, "${window.remainingPercent.roundToInt()}%"), cellLeft, top + g.VALUE_OFFSET, figure, if (window.remainingPercent > 35) ink else tone)
+                text(widgetText(context, "left"), cellLeft + percent + 6f, top + g.VALUE_OFFSET, DeckType(mono, g.LEFT_LABEL_SIZE), ink, maxWidth = cellWidth - percent - 6f)
                 drawBar(RectF(cellLeft, top + g.BAR_TOP_OFFSET, cellRight, top + g.BAR_BOTTOM_OFFSET), window.remainingPercent / 100.0, tone)
-                text(window.reset.ifBlank { "Reset not reported" }, cellLeft, top + g.RESET_OFFSET, secondary, muted, maxWidth = cellWidth)
+                text(widgetText(context, window.reset.ifBlank { "Reset not reported" }), cellLeft, top + g.RESET_OFFSET, secondary, muted, maxWidth = cellWidth)
             }
         }
     }
@@ -305,12 +306,12 @@ private class DeckCanvas(
     private fun drawBreakdown(data: WidgetDeckData) {
         val g = WidgetDeckGrid.Breakdown
         if (data.tools.isEmpty() && data.models.isEmpty()) {
-            drawCentered("No tool or model breakdown reported")
+            drawCentered(widgetText(context, "No tool or model breakdown reported"))
             return
         }
         vline(g.DIVIDER_X, g.DIVIDER_TOP, g.DIVIDER_BOTTOM, line)
-        text("Tools", left, g.SECTION_BASELINE, section, label)
-        text("Models", g.MODELS_X, g.SECTION_BASELINE, section, label)
+        text(widgetText(context, "Tools"), left, g.SECTION_BASELINE, section, label)
+        text(widgetText(context, "Models"), g.MODELS_X, g.SECTION_BASELINE, section, label)
         if (data.tools.size <= 1 && data.models.size <= 1) {
             data.tools.firstOrNull()?.let { row ->
                 val color = vendorColor(row.name, 0)
@@ -318,10 +319,10 @@ private class DeckCanvas(
                 text(row.name.displayName(), g.SPARSE_TOOL_NAME_X, g.SPARSE_IDENTITY_BASELINE, bodyStrong, ink, maxWidth = g.TOOL_RIGHT - g.SPARSE_TOOL_NAME_X)
                 fitText(compactFigure(row.tokens), left, g.SPARSE_VALUE_BASELINE, figure, Type.STAT, ink, 72f)
                 text(sharePercent(row.share), g.TOOL_RIGHT, g.SPARSE_VALUE_BASELINE, figure, ink, Paint.Align.RIGHT, 68f)
-                text("Tokens", left, g.SPARSE_CAPTION_BASELINE, caption, muted)
-                text("Share", g.TOOL_RIGHT, g.SPARSE_CAPTION_BASELINE, caption, muted, Paint.Align.RIGHT)
+                text(widgetText(context, "Tokens"), left, g.SPARSE_CAPTION_BASELINE, caption, muted)
+                text(widgetText(context, "Share"), g.TOOL_RIGHT, g.SPARSE_CAPTION_BASELINE, caption, muted, Paint.Align.RIGHT)
                 drawBar(RectF(left, g.SPARSE_BAR_TOP, g.TOOL_RIGHT, g.SPARSE_BAR_BOTTOM), row.share, color)
-                if (row.costUsd > 0) text("${formatMoney(row.costUsd)} estimated cost", left, g.SPARSE_COST_BASELINE, secondary, muted)
+                if (row.costUsd > 0) text(widgetText(context, "${formatMoney(row.costUsd)} estimated cost"), left, g.SPARSE_COST_BASELINE, secondary, muted)
             }
             data.models.firstOrNull()?.let { row ->
                 val color = vendorColor(row.name, 0)
@@ -329,8 +330,8 @@ private class DeckCanvas(
                 text(row.name, g.SPARSE_MODEL_NAME_X, g.SPARSE_IDENTITY_BASELINE, bodyStrong, ink, maxWidth = right - g.SPARSE_MODEL_NAME_X)
                 fitText(compactFigure(row.tokens), g.MODELS_X, g.SPARSE_VALUE_BASELINE, figure, Type.STAT, ink, 72f)
                 text(sharePercent(row.share), right, g.SPARSE_VALUE_BASELINE, figure, ink, Paint.Align.RIGHT, 68f)
-                text("Tokens", g.MODELS_X, g.SPARSE_CAPTION_BASELINE, caption, muted)
-                text("Share", right, g.SPARSE_CAPTION_BASELINE, caption, muted, Paint.Align.RIGHT)
+                text(widgetText(context, "Tokens"), g.MODELS_X, g.SPARSE_CAPTION_BASELINE, caption, muted)
+                text(widgetText(context, "Share"), right, g.SPARSE_CAPTION_BASELINE, caption, muted, Paint.Align.RIGHT)
                 drawBar(RectF(g.MODELS_X, g.SPARSE_BAR_TOP, right, g.SPARSE_BAR_BOTTOM), row.share, color)
             }
             return
@@ -359,7 +360,7 @@ private class DeckCanvas(
     private fun drawActivity(data: WidgetDeckData) {
         val g = WidgetDeckGrid.Activity
         if (data.history.isEmpty()) {
-            drawCentered("No activity history reported")
+            drawCentered(widgetText(context, "No activity history reported"))
             return
         }
         vline(g.DIVIDER_X, g.DIVIDER_TOP, g.DIVIDER_BOTTOM, line)
@@ -367,26 +368,26 @@ private class DeckCanvas(
         val weekTokens = data.week.sumOf { it.tokens }
         val weekCost = data.week.sumOf { it.costUsd }
         val peak = data.week.maxOfOrNull { it.tokens } ?: 0L
-        text("7 days", left, g.SECTION_BASELINE, section, label)
+        text(widgetText(context, "7 days"), left, g.SECTION_BASELINE, section, label)
         val advance = text(compactFigure(weekTokens), left, g.SUMMARY_BASELINE, stat, ink)
-        val peakWidth = measure("Peak ${compactFigure(peak)}", caption)
-        text("tokens · ${formatMoney(weekCost)}", left + advance + 6f, g.SUMMARY_BASELINE, secondary, muted, maxWidth = g.LEFT_RIGHT_EDGE - peakWidth - 10f - left - advance - 6f)
-        text("Peak ${compactFigure(peak)}", g.LEFT_RIGHT_EDGE, g.SUMMARY_BASELINE, caption, muted, Paint.Align.RIGHT)
+        val peakWidth = measure(widgetText(context, "Peak ${compactFigure(peak)}"), caption)
+        text(widgetText(context, "tokens · ${formatMoney(weekCost)}"), left + advance + 6f, g.SUMMARY_BASELINE, secondary, muted, maxWidth = g.LEFT_RIGHT_EDGE - peakWidth - 10f - left - advance - 6f)
+        text(widgetText(context, "Peak ${compactFigure(peak)}"), g.LEFT_RIGHT_EDGE, g.SUMMARY_BASELINE, caption, muted, Paint.Align.RIGHT)
         drawWeekChart(data.history, data.date)
 
-        text("Activity", g.RIGHT_X, g.SECTION_BASELINE, section, label)
+        text(widgetText(context, "Activity"), g.RIGHT_X, g.SECTION_BASELINE, section, label)
         drawHeatmap(data.history, data.date)
         hline(g.RIGHT_X, right, g.RULE_Y, line)
         vline(g.STAT_DIVIDER_X, g.STAT_DIVIDER_TOP, g.STAT_DIVIDER_BOTTOM, line)
         text(data.activeDays.toString(), g.RIGHT_X, g.STAT_VALUE_BASELINE, stat, ink)
-        fitCaption("Active days", "Days", g.RIGHT_X, g.STAT_DIVIDER_X - g.RIGHT_X - 6f)
+        fitCaption(widgetText(context, "Active days"), widgetText(context, "Days"), g.RIGHT_X, g.STAT_DIVIDER_X - g.RIGHT_X - 6f)
         if (data.messagesToday > 0) {
             text(compactFigure(data.messagesToday), g.STAT_RIGHT_X, g.STAT_VALUE_BASELINE, stat, ink)
-            fitCaption("Messages today", "Messages", g.STAT_RIGHT_X, right - g.STAT_RIGHT_X)
+            fitCaption(widgetText(context, "Messages today"), widgetText(context, "Messages"), g.STAT_RIGHT_X, right - g.STAT_RIGHT_X)
         } else {
             // The Hub reports no message count for today; a zero here would be a false figure.
             text(formatMoney(data.snapshot?.today?.costUsd ?: 0.0), g.STAT_RIGHT_X, g.STAT_VALUE_BASELINE, stat, ink)
-            fitCaption("Cost today", "Cost", g.STAT_RIGHT_X, right - g.STAT_RIGHT_X)
+            fitCaption(widgetText(context, "Cost today"), widgetText(context, "Cost"), g.STAT_RIGHT_X, right - g.STAT_RIGHT_X)
         }
     }
 
@@ -408,7 +409,7 @@ private class DeckCanvas(
             canvas.drawLine(g.PLOT_LEFT, y, g.LEFT_RIGHT_EDGE, y, gridPaint)
             text(axisLabel(top * fraction), left, y + 2.5f, axis, muted, maxWidth = g.PLOT_LEFT - left - 2f)
         }
-        text("0", left, g.PLOT_BOTTOM + 2.5f, axis, muted)
+        text(widgetText(context, "0"), left, g.PLOT_BOTTOM + 2.5f, axis, muted)
         hline(g.PLOT_LEFT, g.LEFT_RIGHT_EDGE, g.PLOT_BOTTOM, strongLine)
         val column = (g.LEFT_RIGHT_EDGE - g.PLOT_LEFT) / 7f
         val barWidth = column * g.BAR_FRACTION
@@ -434,7 +435,7 @@ private class DeckCanvas(
                     }
                 }
             }
-            text(days[index].dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US), x + barWidth / 2f, g.DAY_LABEL_BASELINE, caption, muted, Paint.Align.CENTER)
+            text(days[index].dayOfWeek.getDisplayName(TextStyle.SHORT, localizedContext(context).resources.configuration.locales[0]), x + barWidth / 2f, g.DAY_LABEL_BASELINE, caption, muted, Paint.Align.CENTER)
         }
     }
 
@@ -471,7 +472,7 @@ private class DeckCanvas(
         var lastLabelRight = Float.NEGATIVE_INFINITY
         months.forEach { (column, monthDate) ->
             val x = g.RIGHT_X + column * (cell + g.HEAT_GAP)
-            val name = monthDate.month.getDisplayName(TextStyle.SHORT, Locale.US)
+            val name = monthDate.month.getDisplayName(TextStyle.SHORT, localizedContext(context).resources.configuration.locales[0])
             val labelWidth = measure(name, caption)
             if (x >= lastLabelRight + 4f && x + labelWidth <= right + 1f) {
                 text(name, x, g.MONTH_BASELINE, caption, muted)

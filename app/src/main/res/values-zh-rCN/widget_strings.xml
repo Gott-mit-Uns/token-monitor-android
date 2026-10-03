@@ -1,0 +1,23 @@
+<resources>
+    <string name="widget_brand">TOKEN MONITOR</string>
+    <string name="widget_placeholder">—</string>
+    <string name="widget_today">今日</string>
+    <string name="widget_refresh_description">刷新小组件</string>
+    <string name="widget_live_short">实时</string>
+    <string name="widget_live_description">开启小组件实时更新一小时</string>
+    <string name="widget_limits">额度</string>
+    <string name="widget_no_limits">未同步额度窗口</string>
+    <string name="widget_description">调整小组件大小查看额度与近七天趋势，可直接刷新或开启实时更新。</string>
+    <string name="widget_sample_tokens">3,474,544</string>
+    <string name="widget_sample_date">9月8日 周二</string>
+    <string name="widget_sample_cost">$1.67 · 1.8K 条消息</string>
+    <string name="widget_week">近 7 天</string>
+    <string name="widget_open_app">打开应用</string>
+    <string name="widget_deck_label">Token Monitor · 分页</string>
+    <string name="widget_deck_description">点击左右边缘切换总览、额度、明细和活动，所有页面使用同一份缓存。</string>
+    <string name="widget_deck_empty">打开 Token Monitor 连接或刷新 Hub。</string>
+    <string name="widget_deck_overview">总览 · 1/4</string>
+    <string name="widget_deck_limits">额度 · 2/4</string>
+    <string name="widget_deck_breakdown">明细 · 3/4</string>
+    <string name="widget_deck_activity">活动 · 4/4</string>
+</resources>

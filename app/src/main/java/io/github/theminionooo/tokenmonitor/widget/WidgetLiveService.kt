@@ -101,7 +101,7 @@ class WidgetLiveService : Service() {
         val until = if (alreadyLive) WidgetRuntime.session.expiresAt else if (live) System.currentTimeMillis() + SESSION_MS else 0L
         WidgetRuntime.session = WidgetRuntime.session.copy(enabled = live, refreshing = true, expiresAt = until, note = null)
         val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(NotificationChannel(CHANNEL, "Widget live updates", NotificationManager.IMPORTANCE_LOW))
+        manager.createNotificationChannel(NotificationChannel(CHANNEL, widgetText(this, "Widget live updates"), NotificationManager.IMPORTANCE_LOW))
         try {
             val content = widgetNotificationContent(WidgetRuntime.session, live)
             shownNotification = content
@@ -166,13 +166,13 @@ class WidgetLiveService : Service() {
         val open = PendingIntent.getActivity(this, 22, Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val builder = Notification.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_widget_notification)
-            .setContentTitle(content.title)
-            .setContentText(content.headline)
-            .setStyle(Notification.BigTextStyle().bigText(content.detail))
+            .setContentTitle(widgetText(this, content.title))
+            .setContentText(widgetText(this, content.headline))
+            .setStyle(Notification.BigTextStyle().bigText(widgetText(this, content.detail)))
             .setContentIntent(open)
             .setOngoing(true).setOnlyAlertOnce(true)
-            .addAction(Notification.Action.Builder(null, "Stop", stop).build())
-        content.subtext?.let(builder::setSubText)
+            .addAction(Notification.Action.Builder(null, widgetText(this, "Stop"), stop).build())
+        content.subtext?.let { builder.setSubText(widgetText(this, it)) }
         // Promotion (lock screen, status bar chip) arrived in the Android 16 minor release, so check the full version.
         if (Build.VERSION.SDK_INT >= 36) snapshot?.let { builder.setShortCriticalText(formatCompactTokens(it.today.totalTokens)) }
         if (Build.VERSION.SDK_INT >= 36 && Build.VERSION.SDK_INT_FULL >= Build.VERSION_CODES_FULL.BAKLAVA_1) builder.setRequestPromotedOngoing(true)

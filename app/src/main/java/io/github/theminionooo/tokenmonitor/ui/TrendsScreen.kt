@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -53,7 +55,7 @@ internal fun LazyListScope.trendItems(snapshot: HubSnapshot) {
     item { UsageComparisonPanel(homeActivityPoints(snapshot)) }
     item { UsageExplorer(homeActivityPoints(snapshot)) }
     if (snapshot.history.monthly.isNotEmpty()) {
-        item { Text("MONTHLY HISTORY", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
+        item { Text(tr("MONTHLY HISTORY"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
         items(snapshot.history.monthly.takeLast(12).reversed(), key = { it.label }) { point ->
             DesktopDetailRow(point.label, "", formatTokens(point.tokens), formatMoney(point.costUsd), Blue)
         }
@@ -116,7 +118,7 @@ private fun UsageOverview(snapshot: HubSnapshot) {
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("TOKEN ACTIVITY", color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+            Text(tr("TOKEN ACTIVITY"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             ChoiceGroup(
                 options = listOf("TOKENS" to ActivityMetric.Tokens.name, "COST" to ActivityMetric.Cost.name),
                 selected = activityMetricName,
@@ -135,7 +137,7 @@ private fun OverviewStat(label: String, value: String, modifier: Modifier = Modi
     Surface(color = Overlay, border = BorderStroke(1.dp, Line), shape = MaterialTheme.shapes.small, modifier = modifier) {
         Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 9.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(value, color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(label, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+            Text(tr(label), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
         }
     }
 }
@@ -144,7 +146,7 @@ private fun OverviewStat(label: String, value: String, modifier: Modifier = Modi
 private fun OverviewBreakdown(title: String, values: Map<String, Long>, totalTokens: Long, modelRows: Boolean = false) {
     if (values.isEmpty()) return
     Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
-        Text(title, color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+        Text(tr(title), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
         values.entries.sortedByDescending { it.value }.take(5).forEach { (name, tokens) ->
             Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(vertical = 4.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -153,7 +155,7 @@ private fun OverviewBreakdown(title: String, values: Map<String, Long>, totalTok
                     Spacer(Modifier.width(7.dp))
                     Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(formatCompactTokens(tokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                    Text(String.format(Locale.US, "  %.1f%%", tokens.toDouble() / totalTokens.coerceAtLeast(1L) * 100.0), color = Muted, style = MaterialTheme.typography.bodySmall)
+                    Text(tr(String.format(Locale.US, "  %.1f%%", tokens.toDouble() / totalTokens.coerceAtLeast(1L) * 100.0)), color = Muted, style = MaterialTheme.typography.bodySmall)
                 }
                 UsageBar(tokens.toFloat() / values.values.maxOrNull().orEmptyAtLeastOne(), accentFor(name))
             }
@@ -203,9 +205,9 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
         Row(verticalAlignment = Alignment.Bottom) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(formatCompactTokens(points.sumOf { it.tokens }), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text("${points.size} days · ${formatMoney(points.sumOf { it.costUsd })}", color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("${points.size} days · ${formatMoney(points.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
-            Text(if (group == TrendGroup.Tool) "BY TOOL" else "BY MODEL", color = Muted, style = MaterialTheme.typography.labelSmall)
+            Text(tr(if (group == TrendGroup.Tool) "BY TOOL" else "BY MODEL"), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         if (style == TrendStyle.Bars) {
             StackedTrendChart(points = points, group = group, series = series, height = 178.dp)
@@ -227,7 +229,7 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
                     Spacer(Modifier.width(7.dp))
                     Text(key.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(formatCompactTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
-                    Text(String.format(Locale.US, "  %.1f%%", value.toDouble() / total * 100.0), color = Muted, style = MaterialTheme.typography.bodySmall)
+                    Text(tr(String.format(Locale.US, "  %.1f%%", value.toDouble() / total * 100.0)), color = Muted, style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

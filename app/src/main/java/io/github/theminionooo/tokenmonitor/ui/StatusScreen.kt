@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -135,10 +137,10 @@ internal fun ServiceStatusRow(provider: ServiceProviderStatus, onOpenServicePage
         ServiceHealth.Unknown -> "Unknown"
     }
     val details = buildList {
-        if (provider.affectedComponents > 0) add("${provider.affectedComponents} affected")
-        if (provider.incidentCount > 0) add("${provider.incidentCount} incident${if (provider.incidentCount == 1) "" else "s"}")
-        if (provider.maintenanceCount > 0) add("${provider.maintenanceCount} maintenance")
-        if (isEmpty() && provider.health == ServiceHealth.Ok) add("No ongoing issues")
+        if (provider.affectedComponents > 0) add(localizedText("${provider.affectedComponents} affected"))
+        if (provider.incidentCount > 0) add(localizedText("${provider.incidentCount} incident${if (provider.incidentCount == 1) "" else "s"}"))
+        if (provider.maintenanceCount > 0) add(localizedText("${provider.maintenanceCount} maintenance"))
+        if (isEmpty() && provider.health == ServiceHealth.Ok) add(localizedText("No ongoing issues"))
         add(formatRelativeAge(provider.checkedAt, LocalNow.current))
     }.joinToString(" · ")
     Column(
@@ -150,7 +152,7 @@ internal fun ServiceStatusRow(provider: ServiceProviderStatus, onOpenServicePage
             Spacer(Modifier.width(7.dp))
             Text(provider.label, color = Ink, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             Surface(color = Color.Transparent, border = BorderStroke(1.dp, tone.copy(alpha = 0.4f)), shape = MaterialTheme.shapes.small) {
-                Text(label, color = tone, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp))
+                Text(tr(label), color = tone, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp))
             }
         }
         Text(provider.description, color = Ink.copy(alpha = 0.88f), style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)

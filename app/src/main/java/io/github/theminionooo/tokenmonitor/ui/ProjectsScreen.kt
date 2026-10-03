@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -202,8 +204,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                         StatusDot(activityColor, size = 6.dp)
                         Spacer(Modifier.width(5.dp))
                     }
-                    Text(
-                        listOf(activityLabel, meta).filter { it.isNotBlank() }.joinToString(" · "),
+                    Text(tr(listOf(tr(activityLabel), meta).filter { it.isNotBlank() }.joinToString(" · ")),
                         color = Muted,
                         style = MaterialTheme.typography.labelSmall,
                         maxLines = 1,
@@ -219,7 +220,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
             Spacer(Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                contentDescription = if (expanded) "Collapse session details" else "Expand session details",
+                contentDescription = localizedText(if (expanded) "Collapse session details" else "Expand session details"),
                 tint = Muted,
                 modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)),
             )
@@ -235,8 +236,8 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 else -> Muted
             }
             Row(modifier = Modifier.fillMaxWidth().padding(start = 20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Context ${reading.percentUsed}% used", color = Muted, style = MaterialTheme.typography.labelSmall)
-                Text("${reading.percentLeft}% left", color = contextColor, style = MaterialTheme.typography.labelSmall)
+                Text(tr("Context ${reading.percentUsed}% used"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("${reading.percentLeft}% left"), color = contextColor, style = MaterialTheme.typography.labelSmall)
             }
             UsageBar(reading.percentUsed / 100f, contextColor)
         }
@@ -250,8 +251,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 if (session.startedAt.isNotBlank()) DetailLine("Started", session.startedAt.shortTime())
                 if (session.modelNames.isNotEmpty()) DetailLine("Models", session.modelNames.joinToString { it.displayName() })
                 DetailLine("Session", session.id)
-                Text(
-                    "Prompt and reply text stays on the desktop and is not synchronized by the v${BuildConfig.UPSTREAM_VERSION} Hub.",
+                Text(tr("Prompt and reply text stays on the desktop and is not synchronized by the v${BuildConfig.UPSTREAM_VERSION} Hub."),
                     color = Muted,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.padding(start = 20.dp, top = 2.dp),

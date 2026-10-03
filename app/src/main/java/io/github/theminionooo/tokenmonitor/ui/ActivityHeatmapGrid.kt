@@ -1,5 +1,7 @@
 package io.github.theminionooo.tokenmonitor.ui
 
+import io.github.theminionooo.tokenmonitor.localization.tr
+import io.github.theminionooo.tokenmonitor.localization.localizedText
 import android.graphics.Paint
 import android.graphics.Typeface
 import androidx.compose.animation.AnimatedContent
@@ -139,7 +141,7 @@ internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<Histor
                     .width((activity.weeks * 12 - 3).coerceAtLeast(1).dp)
                     .height(97.dp)
                     .semantics {
-                        contentDescription = "Activity heatmap. Open daily details or use the day navigation below."
+                        contentDescription = localizedText("Activity heatmap. Open daily details or use the day navigation below.")
                         onClick("Open latest recorded day") {
                             detailDate = history.filter { it.label.take(10) <= today.toString() }.maxByOrNull { it.label }?.label?.take(10)
                             detailDate != null
@@ -180,7 +182,7 @@ internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<Histor
                 }
                 drawIntoCanvas { canvas ->
                     activity.monthLabels.forEach { label ->
-                        val month = label.date.month.getDisplayName(DateTextStyle.SHORT, Locale.US)
+                        val month = label.date.month.getDisplayName(DateTextStyle.SHORT, uiLocale())
                         canvas.nativeCanvas.drawText(month, label.column * pitch, gridHeight + 12.dp.toPx(), monthPaint)
                     }
                 }
@@ -197,7 +199,7 @@ internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<Histor
                     Column(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(picked.date.format(dayFormat), color = Muted, style = MaterialTheme.typography.labelSmall)
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(point?.let { "${formatCompactTokens(it.tokens)} tokens" } ?: "No recorded usage", color = Ink, style = MaterialTheme.typography.bodySmall)
+                            Text(tr(point?.let { "${formatCompactTokens(it.tokens)} tokens" } ?: "No recorded usage"), color = Ink, style = MaterialTheme.typography.bodySmall)
                             if (point != null) Text(formatMoney(point.costUsd), color = Ink, style = MaterialTheme.typography.bodySmall)
                         }
                     }
@@ -205,9 +207,9 @@ internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<Histor
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            TextButton(onClick = { selectedDate = previousDay?.date?.toString() }, enabled = previousDay != null, modifier = Modifier.weight(1f)) { Text("PREVIOUS", style = MaterialTheme.typography.labelMedium) }
-            TextButton(onClick = { detailDate = selected?.date?.toString() }, enabled = selected != null, modifier = Modifier.weight(1f)) { Text("DETAILS", style = MaterialTheme.typography.labelMedium) }
-            TextButton(onClick = { selectedDate = nextDay?.date?.toString() }, enabled = nextDay != null, modifier = Modifier.weight(1f)) { Text("NEXT DAY", style = MaterialTheme.typography.labelMedium) }
+            TextButton(onClick = { selectedDate = previousDay?.date?.toString() }, enabled = previousDay != null, modifier = Modifier.weight(1f)) { Text(tr("PREVIOUS"), style = MaterialTheme.typography.labelMedium) }
+            TextButton(onClick = { detailDate = selected?.date?.toString() }, enabled = selected != null, modifier = Modifier.weight(1f)) { Text(tr("DETAILS"), style = MaterialTheme.typography.labelMedium) }
+            TextButton(onClick = { selectedDate = nextDay?.date?.toString() }, enabled = nextDay != null, modifier = Modifier.weight(1f)) { Text(tr("NEXT DAY"), style = MaterialTheme.typography.labelMedium) }
         }
         detailDate?.let { DayUsageDialog(it, history) { detailDate = null } }
 

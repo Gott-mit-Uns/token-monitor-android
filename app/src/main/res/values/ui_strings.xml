@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_e83249bd3ba7" formatted="false">Home</string>
+    <string name="ui_0284c6ac58cb" formatted="false">Tools</string>
+    <string name="ui_5ba2688dffd7" formatted="false">Models</string>
+    <string name="ui_728190e74db3" formatted="false">Devices</string>
+    <string name="ui_b37b5674e3d0" formatted="false">Projects</string>
+    <string name="ui_781791f54cc0" formatted="false">Sessions</string>
+    <string name="ui_9523ccbcc4c5" formatted="false">Limits</string>
+    <string name="ui_f433de78feab" formatted="false">Trends</string>
+    <string name="ui_48a3661d8464" formatted="false">Status</string>
+    <string name="ui_3cc1d5a427a4" formatted="false">Settings</string>
+    <string name="ui_a2620cbc10f5" formatted="false">Day</string>
+    <string name="ui_2dd2bed72567" formatted="false">Today</string>
+    <string name="ui_021710fa7866" formatted="false">Month</string>
+    <string name="ui_5a537e209151" formatted="false">Total</string>
+    <string name="ui_c0ee32d825d6" formatted="false">Week</string>
+    <string name="ui_dae1e5f83a74" formatted="false">This week</string>
+    <string name="ui_0bd41b476166" formatted="false">This month</string>
+    <string name="ui_7252f9e8d5bd" formatted="false">Last 7 days</string>
+    <string name="ui_6a725a2b98e1" formatted="false">Last 30 days</string>
+    <string name="ui_0a8dd6adce7a" formatted="false">7 DAYS</string>
+    <string name="ui_7d4278a87590" formatted="false">30 DAYS</string>
+    <string name="ui_170621ac0842" formatted="false">90 DAYS</string>
+    <string name="ui_afe36da67645" formatted="false">1 YEAR</string>
+    <string name="ui_d87c448044de" formatted="false">All</string>
+    <string name="ui_2b63a9f923a1" formatted="false">All usage</string>
+    <string name="ui_e11523c5ff23" formatted="false">Language</string>
+    <string name="ui_0dbaa1fce242" formatted="false">Follow system</string>
+    <string name="ui_36a0d9fbd092" formatted="false">Simplified Chinese</string>
+    <string name="ui_1b669334dae8" formatted="false">English</string>
+    <string name="ui_814605c64a5c" formatted="false">Connection</string>
+    <string name="ui_17d3aee24c19" formatted="false">Home Wi-Fi</string>
+    <string name="ui_ba90df5372a1" formatted="false">home fallback</string>
+    <string name="ui_f893ea0e3c0c" formatted="false">CHECK AND SAVE CONNECTION</string>
+    <string name="ui_d5c99c52d020" formatted="false">DISCONNECT THIS PHONE</string>
+    <string name="ui_abf63a5a0753" formatted="false">Pair with desktop</string>
+    <string name="ui_e5516ba492f0" formatted="false">3 steps</string>
+    <string name="ui_85a7b4e8d512" formatted="false">Appearance</string>
+    <string name="ui_a37043098817" formatted="false">Interface theme</string>
+    <string name="ui_7505d64a54e0" formatted="false">Default</string>
+    <string name="ui_94517207d686" formatted="false">Obsidian</string>
+    <string name="ui_a0ffe732ea1c" formatted="false">Porcelain</string>
+    <string name="ui_f7b69b7c1dff" formatted="false">Theme code</string>
+    <string name="ui_e88fbb5bf63f" formatted="false">That is not a TM1 theme code.</string>
+    <string name="ui_e8a2309148c9" formatted="false">Paste a code from the desktop\'s Appearance settings to use the same colors here.</string>
+    <string name="ui_69f45da1683c" formatted="false">Apply</string>
+    <string name="ui_4525db4a29e8" formatted="false">Follow phone light and dark</string>
+    <string name="ui_1c20cf1d0a88" formatted="false">Follows phone</string>
+    <string name="ui_bf8c91a9d5f9" formatted="false">Live indicator</string>
+    <string name="ui_35bd11a81363" formatted="false">Show the small dot beside the Σ while the stream is live.</string>
+    <string name="ui_59963d94cfaa" formatted="false">Tool icons</string>
+    <string name="ui_572547c085b3" formatted="false">Show provider marks beside tools and models instead of plain dots.</string>
+    <string name="ui_9ae0d24bc2af" formatted="false">Colorful tool marks</string>
+    <string name="ui_773fd1972ce8" formatted="false">Use original provider colors instead of monochrome marks.</string>
+    <string name="ui_e7ffaedcf4cd" formatted="false">Compact token total</string>
+    <string name="ui_f3672df0ea8c" formatted="false">Use abbreviated totals such as 214.9M in the main header.</string>
+    <string name="ui_1119b42f81f7" formatted="false">Text size</string>
+    <string name="ui_4f44e2cffa8f" formatted="false">Compact</string>
+    <string name="ui_2b867d9270e0" formatted="false">Comfortable</string>
+    <string name="ui_5296d5cced2a" formatted="false">Large</string>
+    <string name="ui_81b56b1c62bb" formatted="false">Compact matches the desktop widget exactly. Comfortable and Large enlarge every label for reading at arm\'s length.</string>
+    <string name="ui_6b44cd1f85be" formatted="false">Reduce motion</string>
+    <string name="ui_317f1e761f2f" formatted="false">System</string>
+    <string name="ui_db3d405b1067" formatted="false">On</string>
+    <string name="ui_da7a68734367" formatted="false">Off</string>
+    <string name="ui_a92daaa954ee" formatted="false">System follows Android. On minimizes motion; Off keeps the app\'s interaction animations.</string>
+    <string name="ui_ca21d9bd8373" formatted="false">Main dashboard</string>
+    <string name="ui_227a3ca00535" formatted="false">Default usage range</string>
+    <string name="ui_81f331871472" formatted="false">Views</string>
+    <string name="ui_e2d08459faf5" formatted="false">Home modules</string>
+    <string name="ui_4bc2ab234d33" formatted="false">Usage presentation</string>
+    <string name="ui_eaa35cb863f7" formatted="false">Model and tool ranking</string>
+    <string name="ui_3391436a4e72" formatted="false">Tokens</string>
+    <string name="ui_885dc4a9b362" formatted="false">Cost</string>
+    <string name="ui_2b83391b81f4" formatted="false">Show limit source</string>
+    <string name="ui_f0b876d989d6" formatted="false">Display which Hub device supplied each provider limit.</string>
+    <string name="ui_f719f49b6df2" formatted="false">Show account emails</string>
+    <string name="ui_47510716c745" formatted="false">Useful only when provider names are not enough to distinguish accounts.</string>
+    <string name="ui_aca1e2c1a73e" formatted="false">Show session titles</string>
+    <string name="ui_e81daa6a4f48" formatted="false">Hide reported titles in Home and Sessions. This display choice does not remove titles from the local snapshot cache.</string>
+    <string name="ui_b572d06086fe" formatted="false">Limit bars show</string>
+    <string name="ui_398658a601d9" formatted="false">Remaining</string>
+    <string name="ui_192a56759d36" formatted="false">Used</string>
+    <string name="ui_2c189c3d81cb" formatted="false">Stream live</string>
+    <string name="ui_3e20a037533f" formatted="false">Widget live</string>
+    <string name="ui_e94025be336b" formatted="false">Snapshot</string>
+    <string name="ui_a34add9c2858" formatted="false">Hub status</string>
+    <string name="ui_fc166eb81361" formatted="false">Route</string>
+    <string name="ui_3a06c1584e8e" formatted="false">Hub build</string>
+    <string name="ui_f2e18ffc17e2" formatted="false">Runtime</string>
+    <string name="ui_4b71ecf8c893" formatted="false">Not reported</string>
+    <string name="ui_489ad9525abc" formatted="false">Collector role</string>
+    <string name="ui_eb7bf9cc53c8" formatted="false">Last read</string>
+    <string name="ui_50d8b4a941c2" formatted="false">Unknown</string>
+    <string name="ui_9991907ae002" formatted="false">Phone data</string>
+    <string name="ui_c1fe37dce01e" formatted="false">Saved snapshot</string>
+    <string name="ui_405ab5d2b930" formatted="false">Current</string>
+    <string name="ui_96e01ce53b98" formatted="false">Home-screen widget</string>
+    <string name="ui_97c3ff340ea3" formatted="false">Live controls · resizable</string>
+    <string name="ui_3538e067b3a1" formatted="false">A widget in your app theme with the full token count, tool marks, quota windows, and a seven-day chart as you make it taller. Reduce Motion also applies to the widget.</string>
+    <string name="ui_33f2009999b3" formatted="false">Tap Refresh for one update, or Live for 60-second Hub updates for up to an hour while the app is closed. Tap Live again or Stop in the notification to finish. Android may delay updates while the phone sleeps. Figures and the last update time are visible on your home screen.</string>
+    <string name="ui_2dd2304b135c" formatted="false">ADD WIDGET</string>
+    <string name="ui_a45dec2e4aa8" formatted="false">Long-press your home screen, choose Widgets, then Token Monitor.</string>
+    <string name="ui_4547bd227f90" formatted="false">Compatibility</string>
+    <string name="ui_f997b36b1b15" formatted="false">Android app</string>
+    <string name="ui_da5aa24b34d5" formatted="false">Desktop baseline</string>
+    <string name="ui_c8e0daf9debd" formatted="false">Protocol changes are reviewed against versioned fixtures before this baseline moves forward.</string>
+    <string name="ui_93f285223942" formatted="false">App updates</string>
+    <string name="ui_475b43e19d3b" formatted="false">The dashboard streams immediately while visible. Widget Live uses a lighter 60-second refresh and stops after one hour.</string>
+    <string name="ui_fe21a32fbf54" formatted="false">Hub address</string>
+    <string name="ui_222cbc2f0c92" formatted="false">Cloudflare: paste the complete HTTPS base address, without /api/stats. HTTPS defaults to port 443. Bare Tailscale or LAN addresses use HTTP port 17321.</string>
+    <string name="ui_9d32b680780a" formatted="false">Home Wi-Fi address (optional)</string>
+    <string name="ui_3703287c6c15" formatted="false">Private desktop Hub only. Use this only if it shares the same data and secret as the primary Hub; otherwise leave it blank.</string>
+    <string name="ui_ded8dae5786f" formatted="false">Find</string>
+    <string name="ui_c9ed699f13e9" formatted="false">Hub secret</string>
+    <string name="ui_3986698135c7" formatted="false">Stored with an Android Keystore key and never shown after saving.</string>
+    <string name="ui_5fc913876cc5" formatted="false">Allow a private Wi-Fi Hub</string>
+    <string name="ui_662c8c79872a" formatted="false">Enable only for a 10.x, 172.16–31.x, 192.168.x, or .local Hub. Public HTTPS Hubs do not require this switch.</string>
+    <string name="ui_e2ffb6aa78b5" formatted="false">CHECKING HUB…</string>
+    <string name="ui_d4911489c222" formatted="false">Your desktop dashboard, live on your phone.</string>
+    <string name="ui_00d3c7ab5e0e" formatted="false">CONNECT YOUR HUB</string>
+    <string name="ui_cc2a08ca0550" formatted="false">Choose your existing Hub</string>
+    <string name="ui_7a1672916de4" formatted="false">Use your Cloudflare HTTPS Hub, or a desktop Hub over Tailscale or home Wi-Fi.</string>
+    <string name="ui_8778f2819b3c" formatted="false">Enter its base address</string>
+    <string name="ui_9b424030a94b" formatted="false">Cloudflare uses https://your-hub.example.com. For a desktop Hub, use its private address and port.</string>
+    <string name="ui_48612ee2988e" formatted="false">Enter the shared Hub secret</string>
+    <string name="ui_4905ecd1397f" formatted="false">Use the Token Monitor Hub secret, not a Cloudflare account API token. Check and save to connect.</string>
+    <string name="ui_f11a107f3832" formatted="false">Connect</string>
+    <string name="ui_d40ebebf5bad" formatted="false">Usage is read from the Hub you configure. Credentials are encrypted with Android Keystore. This independent Cloudflare edition uses manually installed updates.</string>
+    <string name="ui_ef542ec29ddb" formatted="false">This phone only reads your Token Monitor Hub. HTTPS Cloudflare Hubs and private desktop Hubs are supported.</string>
+    <string name="ui_ed40bdf3fce2" formatted="false">The saved Hub is shown below. Enter the secret again only to change the connection.</string>
+    <string name="ui_6bb963c298a3" formatted="false">1. Install Tailscale on the desktop and phone, then use the same tailnet.</string>
+    <string name="ui_6961a573f74f" formatted="false">2. In the desktop app, open Settings → Multi-device Sync and choose Host Hub.</string>
+    <string name="ui_de9d4a2bd490" formatted="false">3. Type the address that starts with 100. and the shared secret from the desktop app into the fields above. Just the numbers are enough.</string>
+    <string name="ui_6656018ac96d" formatted="false">Always</string>
+    <string name="ui_85841abddb12" formatted="false">Installed</string>
+    <string name="ui_194562b97b02" formatted="false">Edition</string>
+    <string name="ui_40d57ec40577" formatted="false">Cloudflare compatible</string>
+    <string name="ui_e69243169611" formatted="false">This independent edition uses a separate package and signing key. Automatic upstream update checks and APK installation are disabled. Install future updates supplied for this edition; upstream APKs do not update it.</string>
+    <string name="ui_26b56c1bdfb0" formatted="false">Refresh</string>
+    <string name="ui_6e9c6c40ef0a" formatted="false">Refreshing</string>
+    <string name="ui_566922711684" formatted="false">Hub connection</string>
+    <string name="ui_ba99bb93eac1" formatted="false">Choose view</string>
+    <string name="ui_22b9d367d228" formatted="false">Back to Home</string>
+    <string name="ui_1a65187c1435" formatted="false">OPEN CONNECTION SETTINGS</string>
+    <string name="ui_9855d66264dd" formatted="false">Connect a private Hub to see desktop activity here.</string>
+    <string name="ui_37b0b298d34e" formatted="false">TOTAL TOKENS</string>
+    <string name="ui_b62e84ef991c" formatted="false">TOTAL COST</string>
+    <string name="ui_a95412829684" formatted="false">ACTIVE DAYS</string>
+    <string name="ui_37e4cf575dec" formatted="false">CURRENT STREAK</string>
+    <string name="ui_58aeec48ee89" formatted="false">ACTIVE TIME</string>
+    <string name="ui_76273bde2ee8" formatted="false">PEAK DAY</string>
+    <string name="ui_0c9ab00119ad" formatted="false">TOP MODEL</string>
+    <string name="ui_17f3467db103" formatted="false">Messages</string>
+    <string name="ui_8c9a3662c1d6" formatted="false">TOKEN ACTIVITY</string>
+    <string name="ui_de7f325675fa" formatted="false">Monthly history</string>
+    <string name="ui_fed758b7a842" formatted="false">Overview</string>
+    <string name="ui_df57214a3f23" formatted="false">BY MODEL · AVAILABLE HISTORY</string>
+    <string name="ui_d6236d66cbb8" formatted="false">BY TOOL · AVAILABLE HISTORY</string>
+    <string name="ui_9346e6873489" formatted="false">BY TOOL</string>
+    <string name="ui_40b3e4787894" formatted="false">BY MODEL</string>
+    <string name="ui_5a599b482fc1" formatted="false">Bars</string>
+    <string name="ui_55a5b53ace4b" formatted="false">K-LINE</string>
+    <string name="ui_20cb6548b2cd" formatted="false">No daily history is available yet.</string>
+    <string name="ui_532ff263f570" formatted="false">No quota windows were reported.</string>
+    <string name="ui_b4160c93ea40" formatted="false">No low quota or imminent reset in the reported windows.</string>
+    <string name="ui_109d75e96a89" formatted="false">Quota is provider-reported. Usage costs are estimates; subscriptions are recorded payments.</string>
+    <string name="ui_f54cea9c34fc" formatted="false">QUOTA AT A GLANCE</string>
+    <string name="ui_782f8d94f45c" formatted="false">No account limits available</string>
+    <string name="ui_90c5d1358d12" formatted="false">Provider</string>
+    <string name="ui_9970e38fb5b8" formatted="false">No quota windows reported</string>
+    <string name="ui_08d5a41b5b7f" formatted="false">No activity for this period</string>
+    <string name="ui_d27ac317998e" formatted="false">No devices have checked in</string>
+    <string name="ui_a4e976a3d3fc" formatted="false">Stale</string>
+    <string name="ui_53e7f55a8d1b" formatted="false">Synced</string>
+    <string name="ui_48075864b259" formatted="false">Trend</string>
+    <string name="ui_b21966e3375a" formatted="false">No recent sessions reported by the Hub</string>
+    <string name="ui_5ae59fb6202a" formatted="false">Input (Cache Hit)</string>
+    <string name="ui_93ee0e5ec73e" formatted="false">Input (Cache Miss)</string>
+    <string name="ui_1029d6764481" formatted="false">Output</string>
+    <string name="ui_34f307fe88d3" formatted="false">Unclassified</string>
+    <string name="ui_a183f379b56e" formatted="false">The Hub reports projects for Day, Month, and Total only.</string>
+    <string name="ui_adea0a239e3a" formatted="false">Project total</string>
+    <string name="ui_d3867c9fd275" formatted="false">The Hub reports sessions for Day, Month, and Total only.</string>
+    <string name="ui_3c49d9cc3c0c" formatted="false">Running</string>
+    <string name="ui_f957097d7a22" formatted="false">Finished</string>
+    <string name="ui_0832cf38702e" formatted="false">Collapse session details</string>
+    <string name="ui_97e3a2bd2855" formatted="false">Expand session details</string>
+    <string name="ui_98f54143ab4e" formatted="false">Project</string>
+    <string name="ui_da7153ee73f1" formatted="false">Started</string>
+    <string name="ui_fcbdc4c271c8" formatted="false">Session</string>
+    <string name="ui_267de1f808a2" formatted="false">Checking Claude, OpenAI, Cursor, and DeepSeek…</string>
+    <string name="ui_7a65affc3de3" formatted="false">Operational</string>
+    <string name="ui_6dc244693635" formatted="false">Degraded</string>
+    <string name="ui_fa74c4abe6b7" formatted="false">Outage</string>
+    <string name="ui_567b6277bc84" formatted="false">No ongoing issues</string>
+    <string name="ui_b48685e3efdb" formatted="false">No account limits are available from this Hub yet.</string>
+    <string name="ui_9bbb0db0d9f4" formatted="false">Subscriptions</string>
+    <string name="ui_9ad3d4009682" formatted="false">Not signed in</string>
+    <string name="ui_6ce9faa8a460" formatted="false">Sign in again</string>
+    <string name="ui_07596f183f5e" formatted="false">Disabled</string>
+    <string name="ui_82fd15b8052f" formatted="false">No synced data</string>
+    <string name="ui_1eb7d5c2200d" formatted="false">Limited</string>
+    <string name="ui_1d5ee313d50a" formatted="false">Unavailable</string>
+    <string name="ui_bf8d1489e7d5" formatted="false">No quota reported</string>
+    <string name="ui_5f2391220833" formatted="false">Not available</string>
+    <string name="ui_7b231a50a498" formatted="false">Available</string>
+    <string name="ui_dc917a775356" formatted="false">Subscription</string>
+    <string name="ui_06e7a6229940" formatted="false">PERIOD COMPARISON</string>
+    <string name="ui_b3187554708b" formatted="false">Model changes use reported attribution; missing breakdowns are not estimated.</string>
+    <string name="ui_0614aad07beb" formatted="false">EXPLORE USAGE</string>
+    <string name="ui_825a1224c0b2" formatted="false">Tap a tool or model to see its recorded daily usage.</string>
+    <string name="ui_5b0cac7364e4" formatted="false">Find a tool or model</string>
+    <string name="ui_5d875efb1bcb" formatted="false">No matching attribution in the available history.</string>
+    <string name="ui_3ee79499a845" formatted="false">No observation was supplied for this date.</string>
+    <string name="ui_c3b31971ad84" formatted="false">The Hub has no breakdown for this day.</string>
+    <string name="ui_5f0df686bfb9" formatted="false">Sessions and projects are available for the Hub\'s Day, Month, and Total periods.</string>
+    <string name="ui_1b54373af2bb" formatted="false">Daily usage, newest first. Costs are estimates from the desktop Hub.</string>
+    <string name="ui_da38860cb875" formatted="false">Close</string>
+    <string name="ui_957ce7cc917e" formatted="false">Search tool, model, or project</string>
+    <string name="ui_c9d163f8d33b" formatted="false">ALL MODELS</string>
+    <string name="ui_9f998fbfb5f2" formatted="false">Usage through this tool in the selected period</string>
+    <string name="ui_6398a16d8178" formatted="false">← Back to Tools</string>
+    <string name="ui_f02b083758c4" formatted="false">No tool activity is available for this period.</string>
+    <string name="ui_c6ffaea84550" formatted="false">No tool-to-model breakdown was supplied for this period.</string>
+    <string name="ui_7d452f90f9f1" formatted="false">No model activity is available for this period.</string>
+    <string name="ui_3394262f6c32" formatted="false">Activity heatmap. Open daily details or use the day navigation below.</string>
+    <string name="ui_af9bb0c4e962" formatted="false">Open latest recorded day</string>
+    <string name="ui_c5e6b67922a3" formatted="false">No recorded usage</string>
+    <string name="ui_355f28f2c0c3" formatted="false">Previous</string>
+    <string name="ui_e9711657b066" formatted="false">Details</string>
+    <string name="ui_c3c59829ba11" formatted="false">NEXT DAY</string>
+    <string name="ui_78b63506fb42" formatted="false">Reset now</string>
+    <string name="ui_c9bc849a968f" formatted="false">now</string>
+    <string name="ui_a7f8e7cc0d43" formatted="false">just now</string>
+    <string name="ui_e5d8e78c9348" formatted="false">an unknown time</string>
+    <string name="ui_fd92cc8545a9" formatted="false">recently</string>
+    <string name="ui_bc42882d967c" formatted="false">5-hour</string>
+    <string name="ui_2fe14b9b993e" formatted="false">Daily</string>
+    <string name="ui_c803e4261886" formatted="false">Weekly</string>
+    <string name="ui_745d1918a44b" formatted="false">Monthly</string>
+    <string name="ui_acd14c7a6c04" formatted="false">Billing</string>
+    <string name="ui_e4d68c5a97e4" formatted="false">Limit</string>
+    <string name="ui_b27deb66bcd0" formatted="false">Third-party</string>
+    <string name="ui_9cc167f8df85" formatted="false">Third-party APIs</string>
+    <string name="ui_15f90b181664" formatted="false">Tailscale</string>
+    <string name="ui_c3e43e15c2b0" formatted="false">Private network</string>
+    <string name="ui_6ac3cf070e92" formatted="false">HTTPS Hub</string>
+    <string name="ui_b1e471b0d308" formatted="false">Cloudflare Hub</string>
+    <string name="ui_6a6a39ac493f" formatted="false">Enter the Hub secret before connecting.</string>
+    <string name="ui_842ff3b32076" formatted="false">The Hub secret must not contain control characters or line breaks.</string>
+    <string name="ui_b3e43b7e2ea7" formatted="false">The Hub address must not contain spaces or control characters.</string>
+    <string name="ui_0bb59edad8e4" formatted="false">Enter a complete HTTPS Hub address or a private desktop address.</string>
+    <string name="ui_bd34ae633d40" formatted="false">Only http and https Hub URLs are supported.</string>
+    <string name="ui_c176208b7680" formatted="false">Use only a Hub host and optional port; do not include credentials or a path.</string>
+    <string name="ui_0f1c2e5ccaae" formatted="false">Use the Hub base address, without an API path.</string>
+    <string name="ui_5c4a5aaf3f15" formatted="false">Use a valid Hub port.</string>
+    <string name="ui_4771c8471509" formatted="false">Public Hubs require a complete https:// address. Enable private Wi-Fi only for a LAN Hub.</string>
+    <string name="ui_98aadb37083e" formatted="false">Live</string>
+    <string name="ui_d1ffda5dc990" formatted="false">Offline</string>
+    <string name="ui_c75c31dffb08" formatted="false">Saved</string>
+    <string name="ui_6cb858eeb95b" formatted="false">Updating</string>
+    <string name="ui_4d968a30a022" formatted="false">No data</string>
+    <string name="ui_ca20728d35f0" formatted="false">Account</string>
+    <string name="ui_10db2797df2c" formatted="false">Accounts</string>
+    <string name="ui_8dfa30e02450" formatted="false">Balance</string>
+    <string name="ui_b121c3558238" formatted="false">Device name</string>
+    <string name="ui_d54f14127298" formatted="false">Device alias</string>
+    <string name="ui_c62fcd7c434b" formatted="false">Rename device</string>
+    <string name="ui_13a4a11319d3" formatted="false">Save</string>
+    <string name="ui_4fd0653c4f2a" formatted="false">Cancel</string>
+    <string name="ui_08ed90a4660b" formatted="false">Restore original name</string>
+    <string name="ui_7dfa9f2f7b2b" formatted="false">Hub original name</string>
+    <string name="ui_fe25deae7c1b" formatted="false">Name on this phone</string>
+    <string name="ui_6d230c03e544" formatted="false">Local name</string>
+    <string name="ui_e4a3590a3f83" formatted="false">Original name</string>
+    <string name="ui_7a02c2d23dbe" formatted="false">Remove alias</string>
+    <string name="ui_36a1a83c01e5" formatted="false">No devices have checked in to this Hub.</string>
+    <string name="ui_d753002d5011" formatted="false">TOP MODELS ON THIS DEVICE</string>
+    <string name="ui_825f208629e0" formatted="false">History available</string>
+    <string name="ui_ca2389cc0ef8" formatted="false">Live uploads</string>
+    <string name="ui_324f668fd2a0" formatted="false">Only saved on this phone, up to 32 characters</string>
+    <string name="ui_a2119851b299" formatted="false">Name on this Android device</string>
+    <string name="ui_49c9b2ba3127" formatted="false">Please connect a Hub first</string>
+    <string name="ui_307915d70042" formatted="false">Connection check cancelled. Try again.</string>
+    <string name="ui_323c0b0ae60e" formatted="false">Connection check paused. Try again.</string>
+    <string name="ui_62bd5c856c60" formatted="false">Connected securely to the Hub.</string>
+    <string name="ui_8630ae57d0e5" formatted="false">The saved Hub connection was removed from this phone.</string>
+    <string name="ui_bd8ad6ed86a0" formatted="false">Live updates paused. Retrying...</string>
+    <string name="ui_37ab578b9e1d" formatted="false">Hub unavailable. Showing the last successful snapshot; retrying...</string>
+    <string name="ui_f9a8829f88e1" formatted="false">The address is not a Token Monitor Hub.</string>
+    <string name="ui_7126ec5be83c" formatted="false">The Hub did not return valid statistics. Showing the last successful snapshot.</string>
+    <string name="ui_c451f1c2dea1" formatted="false">The Hub did not return an event stream. Using periodic updates instead.</string>
+    <string name="ui_2eb73a3630f9" formatted="false">The Hub rejected the secret. Check the connection settings.</string>
+    <string name="ui_1f3b9cdd209d" formatted="false">This Hub endpoint is not available. Update the desktop Token Monitor Hub.</string>
+    <string name="ui_b20942b85704" formatted="false">The Hub stream event is too large for this phone dashboard.</string>
+    <string name="ui_1d379e51fa82" formatted="false">The Hub stream line is too large for this phone dashboard.</string>
+    <string name="ui_abba2b9bcadb" formatted="false">The Hub response is too large for this phone dashboard.</string>
+    <string name="ui_683563945ee4" formatted="false">Could not securely save the Hub connection.</string>
+    <string name="ui_13fc449d0eef" formatted="false">Could not remove the saved Hub connection.</string>
+    <string name="ui_345a3c68463d" formatted="false">No Hub answered on this Wi-Fi. Check that the desktop app is running with Host Hub on, then try again.</string>
+    <string name="ui_bf57b8759d1f" formatted="false">No data from the Hub yet.</string>
+    <string name="ui_1adbcc344b31" formatted="false">Idle</string>
+    <string name="ui_6b720ea3ddd6" formatted="false">Device names cannot contain line breaks or control characters.</string>
+    <string name="ui_c264359dbf16" formatted="false">Device names can contain at most 32 characters.</string>
+    <string name="ui_4c60bb7ad58e" formatted="false">Could not save the device name. Try again.</string>
+    <string name="ui_6b202d5adea7" formatted="false">Connect to a Hub first.</string>
+    <string name="ui_a31a0ff3e522" formatted="false">freshness unavailable</string>
+    <string name="ui_1f8a649f17d9" formatted="false">saved quota; refresh to confirm</string>
+    <string name="ui_0a7d9eb756bc" formatted="false">awaiting updated quota</string>
+    <string name="ui_18e916c53e35" formatted="false">The Hub could not be verified. Check the HTTPS or private Hub address and try again.</string>
+    <string name="ui_6dfea94b67dc" formatted="false">Could not save language. Try again.</string>
+    <string name="ui_tpl_context_left">Context %1$s%% left</string>
+    <string name="ui_tpl_context_used">Context %1$s%% used</string>
+    <string name="ui_tpl_remaining_percent">%1$s%% left</string>
+    <string name="ui_tpl_used_percent">%1$s%% used</string>
+    <string name="ui_tpl_running_count">%1$s running</string>
+    <string name="ui_tpl_session_count">%1$s sessions</string>
+    <string name="ui_tpl_message_count">%1$s messages</string>
+    <string name="ui_tpl_active_days">%1$s active days</string>
+    <string name="ui_tpl_day_cost">%1$s days · %2$s</string>
+    <string name="ui_tpl_cache_hit">Cache hit %1$s%</string>
+    <string name="ui_tpl_speed">%1$s tok/s</string>
+    <string name="ui_tpl_cache_estimate">Cache estimate ~%1$s min left</string>
+    <string name="ui_tpl_model_through">Models used through %1$s</string>
+    <string name="ui_tpl_tool_models">%1$s · Models</string>
+    <string name="ui_tpl_updated">Updated %1$s</string>
+    <string name="ui_tpl_source">Source %1$s</string>
+    <string name="ui_tpl_peak">Peak %1$s</string>
+    <string name="ui_tpl_reset">Reset %1$s</string>
+    <string name="ui_tpl_expires">Expires %1$s</string>
+    <string name="ui_tpl_changes">Changes in %1$s</string>
+    <string name="ui_tpl_age">%1$s ago</string>
+    <string name="ui_tpl_duration_dh">%1$sd %2$sh</string>
+    <string name="ui_tpl_duration_hm">%1$sh %2$sm</string>
+    <string name="ui_tpl_duration_m">%1$sm</string>
+    <string name="ui_tpl_duration_s">%1$ss</string>
+    <string name="ui_tpl_duration_short">&lt;1m</string>
+    <string name="ui_tpl_open">Open %1$s</string>
+    <string name="ui_tpl_collapse">Collapse %1$s</string>
+    <string name="ui_tpl_expand">Expand %1$s</string>
+    <string name="ui_tpl_move_up">Move %1$s up</string>
+    <string name="ui_tpl_move_down">Move %1$s down</string>
+    <string name="ui_tpl_explore">Explore %1$s</string>
+    <string name="ui_tpl_snapshot_age">Saved snapshot · %1$s</string>
+    <string name="ui_tpl_affected">%1$s affected</string>
+    <string name="ui_tpl_incidents">%1$s incidents</string>
+    <string name="ui_tpl_maintenance">%1$s maintenance</string>
+    <string name="ui_tpl_projects_missing">No project attribution is available for %1$s.</string>
+    <string name="ui_tpl_sessions_missing">No session detail is available for %1$s.</string>
+    <string name="ui_tpl_qr">The v%1$s desktop app does not generate a pairing QR code.</string>
+    <string name="ui_tpl_prompt_local">Prompt and reply text stays on the desktop and is not synchronized by the v%1$s Hub.</string>
+    <string name="ui_tpl_compare_days">Last %1$s completed days vs preceding %2$s</string>
+    <string name="ui_tpl_compare_cost">Estimated cost: %1$s vs %2$s</string>
+    <string name="ui_tpl_more_matches">%1$s more matches. Refine the search to find them.</string>
+    <string name="ui_tpl_incomplete">Incomplete history: %1$s/%2$s and %3$s/%4$s days recorded. Missing days are not treated as zero; percentage change is unavailable.</string>
+    <string name="ui_tpl_usage_estimate">%1$s tokens · %2$s estimated</string>
+    <string name="ui_tpl_usage_cost">%1$s tokens · %2$s</string>
+    <string name="ui_tpl_recorded_days">%1$s tokens across %2$s recorded days</string>
+    <string name="ui_tpl_compare_tokens">%1$s vs %2$s tokens</string>
+    <string name="ui_tpl_token_count">%1$s tokens</string>
+    <string name="ui_tpl_view_summary">%1$s/%2$s views · %3$s</string>
+    <string name="ui_tpl_awaiting_quota">%1$s; awaiting updated quota</string>
+    <string name="ui_tpl_hub_original">Hub original name: %1$s</string>
+    <string name="ui_tpl_uploads">Uploads every %1$s</string>
+    <string name="ui_tpl_synced_age">Synced %1$s</string>
+    <string name="ui_tpl_device_status">%1$s · %2$s</string>
+    <string name="ui_tpl_device_history">%1$s · History available</string>
+    <string name="ui_tpl_found">Found your desktop at %1$s.</string>
+    <string name="ui_tpl_http_error">The Hub returned HTTP %1$s. Try again when it is online.</string>
+    <string name="ui_tpl_fallback_error">Home Wi-Fi address: %1$s</string>
+    <string name="ui_tpl_appearance_summary">%1$s · %2$s</string>
+    <string name="ui_tpl_usage_summary">%1$s · %2$s</string>
+    <string name="ui_tpl_follow_theme">Porcelain while the phone is in light mode, %1$s at night. Widgets follow at their next update.</string>
+</resources>
