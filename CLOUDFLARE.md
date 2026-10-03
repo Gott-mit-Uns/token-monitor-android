@@ -40,6 +40,6 @@ Hub 连接记录使用 Android Keystore AES-256-GCM 加密，提交失败不会�
 - 完整历史、设备记录和订阅是否可用，取决于实际部署的 Hub 版本及返回数据。
 - HTTPS 入口若要求浏览器交互登录或返回 HTML 挑战页，不能当作 Token Monitor Hub API 使用。
 - 普通响应限制为 32 MiB，SSE 事件限制为 8 Mi 字符；压缩本地缓存按 UTF-8 字节限制总计 96 MiB、单部分 32 MiB。超过限制明确失败，不无限制分配内存。
-- 本文不宣称真实 Cloudflare Hub、用户手机或所有启动器已通过联调，也不宣称已发布到 GitHub。实际构建和测试结果以交付报告为准。
+- 本文不宣称真实 Cloudflare Hub、用户手机或所有启动器已通过联调。实际构建和测试结果以交付报告为准。
 
 上游来源：https://github.com/The-Minion-oOo/token-monitor-android 。保留上游 MIT 许可与作者声明。
