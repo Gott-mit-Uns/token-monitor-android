@@ -116,6 +116,13 @@ private fun vendorAsset(vendor: String?): Int? = when (vendor) {
     else -> null
 }
 
+internal fun monochromeBrandAsset(vendor: String?, lightTheme: Boolean): Int? = when (vendor) {
+    "openai" -> if (lightTheme) R.drawable.brand_openai_dark else R.drawable.brand_openai_light
+    "deepseek" -> if (lightTheme) R.drawable.brand_deepseek_dark else R.drawable.brand_deepseek_light
+    "hermes" -> if (lightTheme) R.drawable.brand_hermes_dark else R.drawable.brand_hermes_light
+    else -> null
+}
+
 @Composable
 internal fun StatusDot(color: Color, size: Dp) {
     Surface(color = color, shape = MaterialTheme.shapes.extraLarge, modifier = Modifier.size(size)) {}
@@ -123,7 +130,8 @@ internal fun StatusDot(color: Color, size: Dp) {
 
 @Composable
 internal fun UpstreamToolMark(name: String, color: Color, size: Dp) {
-    val sourceAsset = if (LocalToolIcons.current) upstreamToolAsset(name) ?: R.drawable.view_tool else null
+    val themeAsset = monochromeBrandAsset(toolVendorOf(name), LocalPalette.current.isLight)
+    val sourceAsset = if (LocalToolIcons.current) themeAsset ?: upstreamToolAsset(name) ?: R.drawable.view_tool else null
     val resolvedColor = if (LocalColorfulToolMarks.current) originalToolColor(name, color) else Ink
     if (sourceAsset == null) {
         StatusDot(resolvedColor, size)
@@ -131,7 +139,7 @@ internal fun UpstreamToolMark(name: String, color: Color, size: Dp) {
         Icon(
             painter = painterResource(sourceAsset),
             contentDescription = null,
-            tint = resolvedColor,
+            tint = if (themeAsset != null) Color.Unspecified else resolvedColor,
             modifier = Modifier.size(size),
         )
     }
@@ -139,7 +147,8 @@ internal fun UpstreamToolMark(name: String, color: Color, size: Dp) {
 
 @Composable
 internal fun ModelMark(name: String, color: Color, size: Dp) {
-    val sourceAsset = if (LocalToolIcons.current) upstreamModelAsset(name) ?: R.drawable.view_model else null
+    val themeAsset = monochromeBrandAsset(vendorOf(name), LocalPalette.current.isLight)
+    val sourceAsset = if (LocalToolIcons.current) themeAsset ?: upstreamModelAsset(name) ?: R.drawable.view_model else null
     val resolvedColor = if (LocalColorfulToolMarks.current) originalToolColor(name, color, model = true) else Ink
     if (sourceAsset == null) {
         StatusDot(resolvedColor, size)
@@ -147,7 +156,7 @@ internal fun ModelMark(name: String, color: Color, size: Dp) {
         Icon(
             painter = painterResource(sourceAsset),
             contentDescription = null,
-            tint = resolvedColor,
+            tint = if (themeAsset != null) Color.Unspecified else resolvedColor,
             modifier = Modifier.size(size),
         )
     }

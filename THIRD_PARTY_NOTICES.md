@@ -419,3 +419,23 @@ and no Apple trademark rights or endorsement are granted.
    limitations under the License.
 
 ```
+
+## cf.6 confirmed monochrome icons — 2026-10-04
+
+OpenAI: Homarr Labs Dashboard Icons `svg/openai.svg` and `svg/openai-light.svg` (Apache-2.0 repository license above; brand trademark terms remain applicable).
+DeepSeek: selfh.st `svg/deepseek-dark.svg` and `svg/deepseek-light.svg`.
+Hermes Agent: selfh.st `svg/hermes-agent-dark.svg` and `svg/hermes-agent-light.svg`.
+UGREEN NAS: selfh.st `svg/ugreen-nas-dark.svg`; white variant retained from cf.4.
+Source roots: https://github.com/homarr-labs/dashboard-icons and https://github.com/selfhst/icons . selfh.st resources are CC BY 4.0, attribution and license linked above.
+
+SVG path geometry preserved; fills normalized to confirmed black/white. The OpenAI white SVG contains an invalid nine-digit path fill; normalized to its root white fill. These are local Android vector conversions.
+
+| Resource | Source SVG SHA-256 |
+| --- | --- |
+| brand_deepseek_dark | 70be459e307f5b55f22bf03c249838d78e16e917b63240ccbed0e0b1065668bf |
+| brand_deepseek_light | bd90dfef73c922d632334438f8020ef43eb39f4240b65bc55d28ac50415fac0e |
+| brand_hermes_dark | 6fb2bad073b382c5e8023564608908dece63079314835777d4d278b7fbb936ef |
+| brand_hermes_light | c703a243737d7a69c2f950fd76864efa1b89282996444abbb01b323e9a952ae1 |
+| brand_openai_dark | 8a6030406f34ee761c3d60dd95cc49af8c3ca1c9f45b61a3d8648d60c91cba62 |
+| brand_openai_light | 5c94498ddd61f3cde18aee94d2d1a8a593329253bed24c3e84ec419890553f09 |
+| device_ugreen_dark | 8a733f2e38bc374cb76953a310c9e675b2f28825b6361dbf0c1f214e309931de |

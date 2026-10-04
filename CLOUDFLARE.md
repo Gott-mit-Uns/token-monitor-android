@@ -1,6 +1,6 @@
 # Cloudflare Hub 兼容版
 
-本项目基于 The-Minion-oOo/token-monitor-android，保留原有界面、统计视图和小组件，以独立应用提供 Cloudflare HTTPS Hub 连接。版本为 `v0.65.0-cf.5`；不会修改或部署 Worker，不改变电脑、NAS 的上报配置。
+本项目基于 The-Minion-oOo/token-monitor-android，保留原有界面、统计视图和小组件，以独立应用提供 Cloudflare HTTPS Hub 连接。版本为 `v0.65.0-cf.6`；不会修改或部署 Worker，不改变电脑、NAS 的上报配置。
 
 ## 手机连接
 
@@ -61,3 +61,7 @@ Hub 连接记录使用 Android Keystore AES-256-GCM 加密，提交失败不会�
 设置 → 外观：文字大小下方可独立选择图标大小（紧凑 16dp／舒适 20dp／大号 24dp），默认舒适。简写 Token 总量下方的主页单位默认开启：开启使用万／亿，关闭使用 K／M／B。顶部总量仅在开启简写时缩写；二级列表、详情与图表 Token 数值始终使用千位分隔的完整整数。
 
 Linux 平台默认使用绿联 NAS 标识，Windows 和 Mac 按平台识别，与本地别名无关。六份指定素材打包在 APK 内，按实际主题明暗选择原色资源，不请求 CDN。图标设置不影响导航、状态圆点或小组件。
+
+## cf.6 已确认黑白素材
+
+OpenAI／Codex、DeepSeek、Hermes Agent 与绿联 NAS 按实际主题选择原始黑白素材：浅色背景用黑色，深色背景用白色。这三个 AI 品牌不再应用强调色；品牌色设置继续作用于其他品牌。保留独立图标尺寸、图标开关及 cf.5 二级列表布局。

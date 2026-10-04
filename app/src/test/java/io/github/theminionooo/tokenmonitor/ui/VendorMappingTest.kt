@@ -5,6 +5,17 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class VendorMappingTest {
+    @Test fun confirmedMonochromeBrandsFollowActualTheme() {
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.brand_openai_dark, monochromeBrandAsset("openai", true))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.brand_openai_light, monochromeBrandAsset("openai", false))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.brand_deepseek_dark, monochromeBrandAsset("deepseek", true))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.brand_deepseek_light, monochromeBrandAsset("deepseek", false))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.brand_hermes_dark, monochromeBrandAsset("hermes", true))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.brand_hermes_light, monochromeBrandAsset("hermes", false))
+        assertNull(monochromeBrandAsset("claude", true))
+        assertNull(monochromeBrandAsset(vendorOf("hermes-3-llama"), false))
+    }
+
     @Test
     fun modelsMapToTheVendorBehindThem() {
         assertEquals("openai", vendorOf("gpt-5.6-sol"))
