@@ -148,7 +148,7 @@ internal fun ServiceStatusRow(provider: ServiceProviderStatus, onOpenServicePage
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            UpstreamToolMark(provider.id, tone, size = 14.dp)
+            UpstreamToolMark(provider.id, tone, size = LocalContentIconSize.current)
             Spacer(Modifier.width(7.dp))
             Text(provider.label, color = Ink, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             Surface(color = Color.Transparent, border = BorderStroke(1.dp, tone.copy(alpha = 0.4f)), shape = MaterialTheme.shapes.small) {

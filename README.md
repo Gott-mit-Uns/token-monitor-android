@@ -1,10 +1,10 @@
-> **Cloudflare 兼容分支：Token Monitor Minion CF · v0.65.0-cf.3**
+> **Cloudflare 兼容分支：Token Monitor Minion CF · v0.65.0-cf.4**
 >
 > 发布仓库：[Gott-mit-Uns/token-monitor-android-minion-cloudflare](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare)。[下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases/latest)。
 >
 > 此分支基于 The-Minion-oOo 的 MIT 项目，保留原界面与小组件，增加公网 HTTPS Cloudflare Hub 接入并优化缓存、重连及凭据安全。独立应用 ID，可与原版并存；原作者的自动 APK 更新在此分支已关闭。
 >
-> 简体中文、安卓本地设备改名，以及 cf.3 的统一主页图标、DeepSeek Harness／Hermes 官方标识、会话模型图标与全部设备展示。沿用现有签名支持覆盖安装。
+> 简体中文、安卓本地设备改名，以及独立图标大小、主页万／亿单位、二级页面完整 Token 数字与主题适配的绿联 NAS／Windows／Mac 图标。沿用现有签名支持覆盖安装。
 >
 > [Cloudflare 配置](CLOUDFLARE.md) · [审核与修改](docs/audit.md) · [验证记录](docs/validation-cloudflare.md)
 >

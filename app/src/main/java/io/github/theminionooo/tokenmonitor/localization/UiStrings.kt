@@ -7,6 +7,11 @@ import io.github.theminionooo.tokenmonitor.R
 import java.util.Locale
 
 private val labels = mapOf(
+    "icon size" to R.string.ui_cf4_a86cafc756,
+    "home units" to R.string.ui_cf4_473d53e5a8,
+    "on uses 万/亿; off uses k/m/b. applies only to home token values." to R.string.ui_cf4_28123b8b80,
+    "changes content icons independently of text size. navigation and widgets keep their sizes." to R.string.ui_cf4_324e02b3f6,
+    "abbreviate the home total using the selected home units." to R.string.ui_cf4_f4e818d28b,
     "home" to R.string.ui_e83249bd3ba7,
     "tools" to R.string.ui_0284c6ac58cb,
     "models" to R.string.ui_5ba2688dffd7,

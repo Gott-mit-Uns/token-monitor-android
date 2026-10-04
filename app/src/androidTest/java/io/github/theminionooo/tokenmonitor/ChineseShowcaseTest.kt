@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.theminionooo.tokenmonitor.data.HubRepositoryState
 import io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser
+import io.github.theminionooo.tokenmonitor.data.storage.IconScale
+import io.github.theminionooo.tokenmonitor.data.storage.TextScale
 import io.github.theminionooo.tokenmonitor.data.storage.DisplayOptions
 import io.github.theminionooo.tokenmonitor.ui.*
 import io.github.theminionooo.tokenmonitor.widget.*
@@ -44,6 +46,7 @@ class ChineseShowcaseTest {
     private fun save(name: String, bitmap: Bitmap) {
         context.openFileOutput("chinese-$name.png", 0).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
+    @Test fun appearanceGallery() = dashboardGallery(DashboardDestination.Settings, appearance = true)
     @Test fun homeGallery() = dashboardGallery(DashboardDestination.Home)
     @Test fun modelsGallery() = dashboardGallery(DashboardDestination.Models)
     @Test fun devicesGallery() = dashboardGallery(DashboardDestination.Devices)
@@ -53,13 +56,14 @@ class ChineseShowcaseTest {
     @Test fun connectionGallery() = dashboardGallery(DashboardDestination.Settings, connected = false)
     @Test fun filteredModelsGallery() = dashboardGallery(DashboardDestination.Tools)
 
-    private fun dashboardGallery(initial: DashboardDestination, connected: Boolean = true) {
+    private fun dashboardGallery(initial: DashboardDestination, connected: Boolean = true, appearance: Boolean = false) {
         check(context.packageName.endsWith(".preview"))
         val raw = snapshot()
         val originalNames = raw.stats.devices.associate { it.id to it.hostname }
         val shown = if (initial == DashboardDestination.Devices) raw.copy(stats = raw.stats.copy(devices = raw.stats.devices.mapIndexed { index, device -> if (index == 0) device.copy(hostname = "家中 NAS") else device })) else raw
         val state = HubRepositoryState(hasConnection = connected, snapshot = shown.takeIf { connected }, streamActive = connected)
         var destination by mutableStateOf(initial)
+        var options by mutableStateOf(DisplayOptions(colorfulToolMarks = true))
         val palette = Palette.from(InterfaceTheme.Default)
         var captureWindow: android.view.Window? = null
         compose.setContent {
@@ -69,10 +73,12 @@ class ChineseShowcaseTest {
             MaterialTheme(colorScheme = tokenMonitorColors(palette), typography = tokenMonitorTypography(1)) {
                 CompositionLocalProvider(LocalContext provides localizedContext(context), LocalPalette provides palette, LocalInteractionMotion provides false, LocalNow provides captured, LocalColorfulToolMarks provides true) {
                     Box(Modifier.size(393.dp, 820.dp).background(Brush.linearGradient(colorStops = arrayOf(0f to palette.gradientTop, 0.38f to palette.shell, 1f to palette.gradientBottom))).testTag("showcase")) {
-                        DashboardScaffold(state = state, destination = destination, form = ConnectionFormState(), displayOptions = DisplayOptions(colorfulToolMarks = true), serviceStatus = ServiceStatusState(),
+                        DashboardScaffold(state = state, destination = destination, form = ConnectionFormState(), displayOptions = options, serviceStatus = ServiceStatusState(),
                     onChoose = { destination = it }, onRefresh = {}, onSaveConnection = { _, _, _, _ -> },
                     originalDeviceNames = originalNames, onRenameDevice = { _, _ -> null },
-                    onColorfulToolMarksChange = {}, onCompactTokenTotalChange = {}, onReduceMotionChange = {}, onTextScaleChange = {},
+                    onColorfulToolMarksChange = {}, onCompactTokenTotalChange = {}, onReduceMotionChange = {}, onTextScaleChange = { options = options.copy(textScale = it) },
+                    onIconScaleChange = { options = options.copy(iconScale = it) },
+                    onHomeChineseUnitsChange = { options = options.copy(homeChineseUnits = it) },
                     onThemeCodeChange = {}, onFollowSystemThemeChange = {}, onShowLiveIndicatorChange = {}, onShowToolIconsChange = {}, onRankingMetricChange = {},
                     onShowLimitSourceChange = {}, onShowAccountEmailsChange = {}, onLimitBarMetricChange = {}, onDefaultPeriodChange = {},
                     onViewVisibleChange = { _, _ -> }, onHomeModuleVisibleChange = { _, _ -> }, onMoveView = { _, _ -> }, onMoveHomeModule = { _, _ -> },
@@ -108,7 +114,17 @@ class ChineseShowcaseTest {
             save(name, bitmap)
             bitmap.recycle()
         }
-        if (initial == DashboardDestination.Tools) {
+        if (appearance) {
+            compose.onNodeWithText("外观").performClick()
+            compose.onNodeWithTag("setting-Home units").performScrollTo().assertIsOn()
+            capture("appearance-units")
+            compose.onNodeWithTag("setting-Home units").performClick().assertIsOff()
+            compose.runOnIdle { check(!options.homeChineseUnits) }
+            compose.onNode(hasText("大号") and hasAnyAncestor(hasTestTag("icon-size-choice"))).performScrollTo().performClick()
+            compose.runOnIdle { check(options.iconScale == IconScale.Large && options.textScale == TextScale.Comfortable) }
+            compose.onNodeWithTag("icon-size-choice").performScrollTo()
+            capture("appearance-icons")
+        } else if (initial == DashboardDestination.Tools) {
             compose.onNodeWithText("Codex").performClick()
             compose.onNodeWithText("Codex · 模型").assertIsDisplayed()
             capture("filtered-models")

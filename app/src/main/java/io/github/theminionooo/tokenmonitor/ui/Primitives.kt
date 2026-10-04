@@ -117,7 +117,7 @@ internal fun DesktopStatusBlock(title: String, content: @Composable ColumnScope.
 internal fun StatusLine(label: String, value: String, color: Color = Ink) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(0.45f), maxLines = 1)
-        Text(value, color = color, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(0.55f), maxLines = 2, overflow = TextOverflow.Ellipsis)
+        Text(value, color = color, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(0.55f))
     }
 }
 

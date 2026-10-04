@@ -112,7 +112,7 @@ import kotlin.math.roundToLong
  * it again clears it. Horizontal scrolling of the grid is untouched.
  */
 @Composable
-internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<HistoryPoint>) {
+internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<HistoryPoint>, home: Boolean = false) {
     val scroll = rememberScrollState()
     val density = LocalDensity.current
     val palette = LocalPalette.current
@@ -199,7 +199,7 @@ internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<Histor
                     Column(Modifier.fillMaxWidth().padding(vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(picked.date.format(dayFormat), color = Muted, style = MaterialTheme.typography.labelSmall)
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(tr(point?.let { "${formatCompactTokens(it.tokens)} tokens" } ?: "No recorded usage"), color = Ink, style = MaterialTheme.typography.bodySmall)
+                            Text(tr(point?.let { "${if (home) formatHomeTokens(it.tokens, LocalHomeChineseUnits.current) else formatTokens(it.tokens)} tokens" } ?: "No recorded usage"), color = Ink, style = MaterialTheme.typography.bodySmall)
                             if (point != null) Text(formatMoney(point.costUsd), color = Ink, style = MaterialTheme.typography.bodySmall)
                         }
                     }

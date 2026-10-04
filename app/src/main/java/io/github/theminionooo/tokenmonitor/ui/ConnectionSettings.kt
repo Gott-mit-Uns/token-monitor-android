@@ -55,6 +55,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -70,6 +71,7 @@ import io.github.theminionooo.tokenmonitor.data.storage.DisplayOptions
 import io.github.theminionooo.tokenmonitor.data.storage.LimitBarMetric
 import io.github.theminionooo.tokenmonitor.data.storage.RankingMetric
 import io.github.theminionooo.tokenmonitor.data.storage.ReduceMotionMode
+import io.github.theminionooo.tokenmonitor.data.storage.IconScale
 import io.github.theminionooo.tokenmonitor.data.storage.TextScale
 import java.util.Locale
 
@@ -103,6 +105,8 @@ internal fun ConnectionScreen(
     onOpenReleasePage: () -> Unit,
     discovery: HubDiscoveryState,
     onFindHomeHub: () -> Unit,
+    onIconScaleChange: (IconScale) -> Unit = {},
+    onHomeChineseUnitsChange: (Boolean) -> Unit = {},
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
 ) {
     val hasConnection = state.hasConnection
@@ -196,14 +200,24 @@ internal fun ConnectionScreen(
                 SettingsToggle("Live indicator", "Show the small dot beside the Σ while the stream is live.", displayOptions.showLiveIndicator, onShowLiveIndicatorChange)
                 SettingsToggle("Tool icons", "Show provider marks beside tools and models instead of plain dots.", displayOptions.showToolIcons, onShowToolIconsChange)
                 SettingsToggle("Colorful tool marks", "Use original provider colors instead of monochrome marks.", displayOptions.colorfulToolMarks, onColorfulToolMarksChange)
-                SettingsToggle("Compact token total", "Use abbreviated totals such as 214.9M in the main header.", displayOptions.compactTokenTotal, onCompactTokenTotalChange)
+                SettingsToggle("Compact token total", "Abbreviate the Home total using the selected Home units.", displayOptions.compactTokenTotal, onCompactTokenTotalChange)
+                SettingsToggle("Home units", "On uses 万/亿; off uses K/M/B. Applies only to Home token values.", displayOptions.homeChineseUnits, onHomeChineseUnitsChange)
                 Text(tr("Text size"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = TextScale.entries.map { it.name.uppercase(Locale.US) to it.name },
                     selected = displayOptions.textScale.name,
+                    modifier = Modifier.testTag("text-size-choice"),
                     onSelect = { selected -> TextScale.entries.firstOrNull { it.name == selected }?.let(onTextScaleChange) },
                 )
                 Text(tr("Compact matches the desktop widget exactly. Comfortable and Large enlarge every label for reading at arm's length."), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("Icon size"), color = Ink, style = MaterialTheme.typography.bodyMedium)
+                ChoiceGroup(
+                    options = IconScale.entries.map { it.name.uppercase(Locale.US) to it.name },
+                    selected = displayOptions.iconScale.name,
+                    modifier = Modifier.testTag("icon-size-choice"),
+                    onSelect = { selected -> IconScale.entries.firstOrNull { it.name == selected }?.let(onIconScaleChange) },
+                )
+                Text(tr("Changes content icons independently of text size. Navigation and widgets keep their sizes."), color = Muted, style = MaterialTheme.typography.labelSmall)
                 Text(tr("Reduce motion"), color = Ink, style = MaterialTheme.typography.bodyMedium)
                 ChoiceGroup(
                     options = ReduceMotionMode.entries.map { it.name.uppercase() to it.name },
@@ -473,7 +487,7 @@ private fun SettingsToggle(label: String, description: String, checked: Boolean,
             Text(tr(description), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 17.sp)
         }
         Spacer(Modifier.width(12.dp))
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
+        Switch(checked = checked, onCheckedChange = onCheckedChange, modifier = Modifier.testTag("setting-$label"))
     }
 }
 

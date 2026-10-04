@@ -101,12 +101,12 @@ private fun UsageOverview(snapshot: HubSnapshot) {
     val peak = history.maxOfOrNull { it.tokens } ?: 0L
     val topModel = history.flatMap { it.perModel.entries }.groupingBy { it.key }.fold(0L) { sum, entry -> sum + entry.value.tokens }.maxByOrNull { it.value }?.key.orEmpty()
     val stats = listOf(
-        "TOTAL TOKENS" to formatCompactTokens(totalTokens),
+        "TOTAL TOKENS" to formatTokens(totalTokens),
         "TOTAL COST" to formatMoney(totalCost),
         "ACTIVE DAYS" to active.size.toString(),
         "CURRENT STREAK" to currentStreak(history).toString(),
         "ACTIVE TIME" to formatActiveDuration(activeTime),
-        "PEAK DAY" to formatCompactTokens(peak),
+        "PEAK DAY" to formatTokens(peak),
         "TOP MODEL" to topModel.displayName().ifBlank { "—" },
         "MESSAGES" to formatCompactTokens(messages),
     )
@@ -136,7 +136,7 @@ private fun UsageOverview(snapshot: HubSnapshot) {
 private fun OverviewStat(label: String, value: String, modifier: Modifier = Modifier) {
     Surface(color = Overlay, border = BorderStroke(1.dp, Line), shape = MaterialTheme.shapes.small, modifier = modifier) {
         Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 9.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text(value, color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(value, color = Ink, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
             Text(tr(label), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
         }
     }
@@ -150,11 +150,11 @@ private fun OverviewBreakdown(title: String, values: Map<String, Long>, totalTok
         values.entries.sortedByDescending { it.value }.take(5).forEach { (name, tokens) ->
             Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(vertical = 4.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (modelRows) ModelMark(name, accentFor(name), size = 8.dp)
-                    else UpstreamToolMark(name, accentFor(name), size = 8.dp)
+                    if (modelRows) ModelMark(name, accentFor(name), size = LocalContentIconSize.current)
+                    else UpstreamToolMark(name, accentFor(name), size = LocalContentIconSize.current)
                     Spacer(Modifier.width(7.dp))
                     Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    Text(formatCompactTokens(tokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                    Text(formatTokens(tokens), color = Ink, style = MaterialTheme.typography.bodySmall)
                     Text(tr(String.format(Locale.US, "  %.1f%%", tokens.toDouble() / totalTokens.coerceAtLeast(1L) * 100.0)), color = Muted, style = MaterialTheme.typography.bodySmall)
                 }
                 UsageBar(tokens.toFloat() / values.values.maxOrNull().orEmptyAtLeastOne(), accentFor(name))
@@ -204,7 +204,7 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
         )
         Row(verticalAlignment = Alignment.Bottom) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(formatCompactTokens(points.sumOf { it.tokens }), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(formatTokens(points.sumOf { it.tokens }), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Text(tr("${points.size} days · ${formatMoney(points.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
             Text(tr(if (group == TrendGroup.Tool) "BY TOOL" else "BY MODEL"), color = Muted, style = MaterialTheme.typography.labelSmall)
@@ -228,7 +228,7 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
                     StatusDot(trendSeriesColor(LocalPalette.current, index), size = 8.dp)
                     Spacer(Modifier.width(7.dp))
                     Text(key.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    Text(formatCompactTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
+                    Text(formatTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
                     Text(tr(String.format(Locale.US, "  %.1f%%", value.toDouble() / total * 100.0)), color = Muted, style = MaterialTheme.typography.bodySmall)
                 }
             }

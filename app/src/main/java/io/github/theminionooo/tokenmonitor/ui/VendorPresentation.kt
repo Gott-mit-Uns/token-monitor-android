@@ -4,6 +4,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -11,6 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import io.github.theminionooo.tokenmonitor.R
 import java.util.Locale
+
+internal val LocalContentIconSize = staticCompositionLocalOf { 20.dp }
 
 private val modelVendorRules = listOf(
     Regex("^(cursor-)?auto$") to "cursor",
@@ -148,16 +153,19 @@ internal fun ModelMark(name: String, color: Color, size: Dp) {
     }
 }
 
-internal fun devicePlatformAsset(platform: String): Int = when (platform.trim().lowercase(Locale.US).substringBefore('-')) {
-    "win32", "windows" -> R.drawable.upstream_os_windows
-    "darwin", "macos", "mac" -> R.drawable.upstream_os_apple
-    "linux" -> R.drawable.os_server
+internal fun devicePlatformAsset(platform: String, lightTheme: Boolean = false): Int = when (platform.trim().lowercase(Locale.US).substringBefore('-')) {
+    "win32", "windows" -> if (lightTheme) R.drawable.device_windows_dark else R.drawable.device_windows_light
+    "darwin", "macos", "mac" -> if (lightTheme) R.drawable.device_apple_dark else R.drawable.device_apple_light
+    "linux" -> if (lightTheme) R.drawable.device_ugreen_dark else R.drawable.device_ugreen_light
     else -> R.drawable.view_device
 }
 
 @Composable
 internal fun DevicePlatformMark(platform: String, color: Color, size: Dp) {
-    Icon(painterResource(devicePlatformAsset(platform)), contentDescription = null, tint = color, modifier = Modifier.size(size))
+    val brandAsset = devicePlatformAsset(platform, LocalPalette.current.isLight)
+    val known = brandAsset != R.drawable.view_device
+    Icon(painterResource(brandAsset), contentDescription = null, tint = if (known) Color.Unspecified else color,
+        modifier = Modifier.size(size).alpha(if (color == Muted) 0.65f else 1f))
 }
 
 internal fun DashboardDestination.iconRes(): Int = when (this) {

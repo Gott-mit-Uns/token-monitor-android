@@ -46,7 +46,7 @@ internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDesti
                     Column {
                         HomeListRow(
                             name = sessionRowLabels(session, LocalSessionTitles.current).title,
-                            primary = formatCompactTokens(session.totalTokens),
+                            primary = formatHomeTokens(session.totalTokens, LocalHomeChineseUnits.current),
                             secondary = listOf(session.client.displayName(), localizedText(state.name), age, session.projectLabel)
                                 .filter { it.isNotBlank() }.joinToString(" · "),
                             color = when (state) {

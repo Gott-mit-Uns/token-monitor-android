@@ -11,6 +11,8 @@ internal enum class LimitBarMetric { Remaining, Used }
 internal enum class ReduceMotionMode { System, On, Off }
 
 /** Mirrors the desktop Zoom control in three steps; [step] is added to every type size in sp. */
+internal enum class IconScale(val dp: Int) { Compact(16), Comfortable(20), Large(24) }
+
 internal enum class TextScale(val step: Int) { Compact(0), Comfortable(1), Large(2) }
 
 /** Mobile-owned presentation choices. Hub credentials remain in [SecureConnectionStore]. */
@@ -19,6 +21,8 @@ internal data class DisplayOptions(
     val compactTokenTotal: Boolean = false,
     val reduceMotion: ReduceMotionMode = ReduceMotionMode.System,
     val textScale: TextScale = TextScale.Comfortable,
+    val iconScale: IconScale = IconScale.Comfortable,
+    val homeChineseUnits: Boolean = true,
     /** A desktop `TM1-…` theme code; null means the default preset. */
     val themeCode: String? = null,
     /** Porcelain while the phone is in light mode and the chosen dark preset at night. */
@@ -50,6 +54,8 @@ internal class DisplayPreferences(context: Context) {
     fun setCompactTokenTotal(enabled: Boolean) = update { copy(compactTokenTotal = enabled) }
     fun setReduceMotion(mode: ReduceMotionMode) = update { copy(reduceMotion = mode) }
     fun setTextScale(scale: TextScale) = update { copy(textScale = scale) }
+    fun setIconScale(scale: IconScale) = update { copy(iconScale = scale) }
+    fun setHomeChineseUnits(enabled: Boolean) = update { copy(homeChineseUnits = enabled) }
     fun setThemeCode(code: String?) = update { copy(themeCode = code) }
     fun setFollowSystemTheme(enabled: Boolean) = update { copy(followSystemTheme = enabled) }
     fun setShowLiveIndicator(enabled: Boolean) = update { copy(showLiveIndicator = enabled) }
@@ -80,6 +86,8 @@ internal class DisplayPreferences(context: Context) {
             putBoolean(compactTokenTotalKey, next.compactTokenTotal)
             putString(reduceMotionKey, next.reduceMotion.name)
             putString(textScaleKey, next.textScale.name)
+            putString(iconScaleKey, next.iconScale.name)
+            putBoolean(homeChineseUnitsKey, next.homeChineseUnits)
             putString(themeCodeKey, next.themeCode)
             putBoolean(followSystemThemeKey, next.followSystemTheme)
             putBoolean(showLiveIndicatorKey, next.showLiveIndicator)
@@ -101,6 +109,8 @@ internal class DisplayPreferences(context: Context) {
         compactTokenTotal = preferences.getBoolean(compactTokenTotalKey, false),
         reduceMotion = preferences.getString(reduceMotionKey, null).enumOrDefault(ReduceMotionMode.System),
         textScale = preferences.getString(textScaleKey, null).enumOrDefault(TextScale.Comfortable),
+        iconScale = preferences.getString(iconScaleKey, null).enumOrDefault(IconScale.Comfortable),
+        homeChineseUnits = preferences.getBoolean(homeChineseUnitsKey, true),
         themeCode = preferences.getString(themeCodeKey, null)?.takeIf { it.isNotBlank() },
         followSystemTheme = preferences.getBoolean(followSystemThemeKey, false),
         showLiveIndicator = preferences.getBoolean(showLiveIndicatorKey, true),
@@ -121,6 +131,8 @@ internal class DisplayPreferences(context: Context) {
         const val compactTokenTotalKey = "compact_token_total"
         const val reduceMotionKey = "reduce_motion"
         const val textScaleKey = "text_scale"
+        const val iconScaleKey = "icon_scale"
+        const val homeChineseUnitsKey = "home_chinese_units"
         const val themeCodeKey = "theme_code"
         const val followSystemThemeKey = "follow_system_theme"
         const val showLiveIndicatorKey = "show_live_indicator"

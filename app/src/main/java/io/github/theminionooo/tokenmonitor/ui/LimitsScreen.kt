@@ -142,7 +142,7 @@ internal fun prioritizeAvailableLimits(providers: List<LimitAccount>): List<Limi
 internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptions, deviceNames: Map<String, String> = emptyMap()) {
     Column(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            UpstreamToolMark(account.provider, Blue, size = 10.dp)
+            UpstreamToolMark(account.provider, Blue, size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)

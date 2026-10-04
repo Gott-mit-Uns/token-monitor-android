@@ -170,7 +170,7 @@ internal fun DeviceUsageRow(
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            DevicePlatformMark(device.platform, if (device.stale) Muted else Ink, size = 12.dp)
+            DevicePlatformMark(device.platform, if (device.stale) Muted else Ink, size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(device.hostname.ifBlank { device.id }, color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -182,11 +182,11 @@ internal fun DeviceUsageRow(
                 )
             }
             if (onRename != null) TextButton(onClick = { aliasInput = if (device.hostname == originalName) "" else device.hostname; renameError = null; renaming = true }) { Text(tr("Rename device")) }
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.End) {
-                Text(formatTokens(usage.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                Text(formatMoney(usage.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
-            }
+
+        }
+        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
+            Text(formatTokens(usage.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+            Text(formatMoney(usage.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         if (device.hostname != originalName) Text(tr("Hub original name: ${originalName.ifBlank { device.id }}"), color = Muted, style = MaterialTheme.typography.labelSmall)
         UsageBar(ratio, tone)
@@ -198,29 +198,29 @@ internal fun DeviceUsageRow(
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 val total = usage.totalTokens.coerceAtLeast(1L)
                 usage.clients.entries.sortedByDescending { it.value }.forEach { (client, tokens) ->
-                    Row(modifier = Modifier.padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
-                        UpstreamToolMark(client, accentFor(client), size = 8.dp)
+                    Row(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        UpstreamToolMark(client, accentFor(client), size = LocalContentIconSize.current)
                         Spacer(Modifier.width(7.dp))
                         Text(client.displayName(), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                         Text(tr("${formatPercent(tokens.toDouble() / total * 100.0)}  ${formatTokens(tokens)}"), color = Ink, style = MaterialTheme.typography.bodySmall)
                     }
                 }
                 if (usage.models.isNotEmpty()) {
-                    HorizontalDivider(color = Line, modifier = Modifier.padding(start = 20.dp, top = 6.dp, bottom = 4.dp))
-                    Text(tr("TOP MODELS ON THIS DEVICE"), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 20.dp))
+                    HorizontalDivider(color = Line, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, top = 6.dp, bottom = 4.dp))
+                    Text(tr("TOP MODELS ON THIS DEVICE"), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
                 }
                 usage.models.entries.sortedByDescending { it.value }.take(4).forEach { (model, tokens) ->
-                    Row(modifier = Modifier.padding(start = 20.dp, top = 3.dp, bottom = 3.dp), verticalAlignment = Alignment.CenterVertically) {
-                        ModelMark(model, accentFor(model), size = 8.dp)
+                    Row(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, top = 3.dp, bottom = 3.dp), verticalAlignment = Alignment.CenterVertically) {
+                        ModelMark(model, accentFor(model), size = LocalContentIconSize.current)
                         Spacer(Modifier.width(7.dp))
                         Text(model.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text(formatCompactTokens(tokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                        Text(formatTokens(tokens), color = Ink, style = MaterialTheme.typography.bodySmall)
                     }
                 }
                 Text(tr(listOf(tr(syncCadence), if (device.historyAvailable == true) tr("History available") else null).filterNotNull().joinToString(" · ")),
                     color = Muted,
                     style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(start = 20.dp, top = 2.dp),
+                    modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, top = 2.dp),
                 )
             }
         }

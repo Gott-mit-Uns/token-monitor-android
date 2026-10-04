@@ -164,7 +164,7 @@ internal fun DashboardContent(
         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(if (destination in listOf(DashboardDestination.Models, DashboardDestination.Projects, DashboardDestination.Tools)) 4.dp else 10.dp),
     ) {
-        item { TotalPanel(if (destination == DashboardDestination.Models) modelUsage else usage, displayOptions.compactTokenTotal) }
+        item { TotalPanel(if (destination == DashboardDestination.Models) modelUsage else usage, destination == DashboardDestination.Home && displayOptions.compactTokenTotal, home = destination == DashboardDestination.Home) }
         if (destination == DashboardDestination.Models && filteredTool != null) item {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -216,19 +216,18 @@ internal fun DashboardContent(
 }
 
 @Composable
-internal fun TotalPanel(usage: UsagePeriod, compact: Boolean) {
-    val tokens = rememberRollingValue(usage.totalTokens.toDouble()).roundToLong()
+internal fun TotalPanel(usage: UsagePeriod, compact: Boolean, home: Boolean = true) {
+    val rollingTokens = rememberRollingValue(usage.totalTokens.toDouble())
+    val tokens = if (rollingTokens == usage.totalTokens.toDouble()) usage.totalTokens else rollingTokens.roundToLong()
     val cost = rememberRollingValue(usage.costUsd)
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
         Text(tr("TOTAL TOKENS"), color = Muted, style = MaterialTheme.typography.labelMedium)
         Text(
-            if (compact) formatCompactTokens(tokens) else formatTokens(tokens),
+            formatTokenTotal(tokens, home, compact, LocalHomeChineseUnits.current),
             color = Ink,
             style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 5.dp),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
         )
         Text(formatMoney(cost), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
     }

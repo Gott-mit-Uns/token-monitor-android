@@ -373,4 +373,9 @@
     <string name="ui_tpl_appearance_summary">%1$s · %2$s</string>
     <string name="ui_tpl_usage_summary">%1$s · %2$s</string>
     <string name="ui_tpl_follow_theme">手机浅色模式使用瓷白，深色模式使用%1$s。小组件在下次更新时切换。</string>
+    <string name="ui_cf4_a86cafc756" formatted="false">图标大小</string>
+    <string name="ui_cf4_473d53e5a8" formatted="false">主页单位</string>
+    <string name="ui_cf4_28123b8b80" formatted="false">开启使用万／亿，关闭使用 K／M／B；仅影响主页的 Token 数量。</string>
+    <string name="ui_cf4_324e02b3f6" formatted="false">内容图标大小与文字大小独立；导航与桌面小组件保持原尺寸。</string>
+    <string name="ui_cf4_f4e818d28b" formatted="false">按所选主页单位简写主页总量，二级页面始终显示完整数量。</string>
 </resources>

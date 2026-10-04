@@ -3,6 +3,9 @@ package io.github.theminionooo.tokenmonitor.ui
 import io.github.theminionooo.tokenmonitor.localization.localizedText
 import io.github.theminionooo.tokenmonitor.localization.LanguagePreferences
 import io.github.theminionooo.tokenmonitor.localization.localizedContext
+import androidx.compose.runtime.staticCompositionLocalOf
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -26,6 +29,28 @@ internal fun formatCompactTokens(tokens: Long): String = when {
     tokens >= 1_000_000L -> String.format(Locale.US, "%.1fM", tokens / 1_000_000.0)
     tokens >= 10_000L -> String.format(Locale.US, "%.1fK", tokens / 1_000.0)
     else -> formatTokens(tokens)
+}
+
+/** Homepage-only unit preference: independent of language and secondary pages. */
+internal val LocalHomeChineseUnits = staticCompositionLocalOf { true }
+
+internal fun formatTokenTotal(tokens: Long, home: Boolean, compact: Boolean, chinese: Boolean): String =
+    if (home && compact) formatHomeTokens(tokens, chinese) else formatTokens(tokens)
+
+internal fun formatHomeTokens(tokens: Long, chinese: Boolean): String {
+    if (!chinese) return formatCompactTokens(tokens)
+    if (tokens < 10_000L) return formatTokens(tokens)
+    var divisor = if (tokens >= 100_000_000L) 100_000_000L else 10_000L
+    fun rounded(unit: Long): BigDecimal {
+        val value = BigDecimal.valueOf(tokens).divide(BigDecimal.valueOf(unit), 12, RoundingMode.HALF_UP)
+        return value.setScale(if (value < BigDecimal.TEN) 2 else 1, RoundingMode.HALF_UP)
+    }
+    var value = rounded(divisor)
+    if (divisor == 10_000L && value >= BigDecimal.valueOf(10_000L)) {
+        divisor = 100_000_000L
+        value = rounded(divisor)
+    }
+    return value.stripTrailingZeros().toPlainString() + if (divisor == 100_000_000L) "亿" else "万"
 }
 
 internal fun formatMoney(value: Double): String = currencyFormat.format(value)

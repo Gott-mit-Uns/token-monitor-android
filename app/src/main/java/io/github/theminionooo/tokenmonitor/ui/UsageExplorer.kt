@@ -38,7 +38,7 @@ internal fun UsageComparisonPanel(history: List<HistoryPoint>) {
         Text(tr("PERIOD COMPARISON"), color = Ink, style = MaterialTheme.typography.labelMedium)
         ChoiceGroup(listOf("7 DAYS" to "7", "30 DAYS" to "30"), days.toString(), { days = it.toInt() })
         Text(tr("Last $days completed days vs preceding $days"), color = Muted, style = MaterialTheme.typography.labelSmall)
-        Text(tr("${formatCompactTokens(comparison.current.sumOf { it.tokens })} vs ${formatCompactTokens(comparison.previous.sumOf { it.tokens })} tokens"), color = Ink)
+        Text(tr("${formatTokens(comparison.current.sumOf { it.tokens })} vs ${formatTokens(comparison.previous.sumOf { it.tokens })} tokens"), color = Ink)
         if (comparison.complete) {
             Text(tr("${signedTokens(comparison.tokenDelta)} tokens${comparison.percentChange?.let { " · %+.1f%%".format(java.util.Locale.US, it) }.orEmpty()}"), color = Accent)
             Text(tr("Estimated cost: ${formatMoney(comparison.current.sumOf { it.costUsd })} vs ${formatMoney(comparison.previous.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.bodySmall)
@@ -53,7 +53,7 @@ internal fun UsageComparisonPanel(history: List<HistoryPoint>) {
     }
 }
 
-private fun signedTokens(value: Long) = (if (value >= 0) "+" else "−") + formatCompactTokens(kotlin.math.abs(value))
+private fun signedTokens(value: Long) = (if (value >= 0) "+" else "−") + formatTokens(kotlin.math.abs(value))
 
 @Composable
 internal fun UsageExplorer(history: List<HistoryPoint>) {
@@ -72,7 +72,7 @@ internal fun UsageExplorer(history: List<HistoryPoint>) {
         ChoiceGroup(listOf("BY MODEL" to "model", "BY TOOL" to "tool"), if (models) "model" else "tool", { models = it == "model" })
         CompactSearchField(query, { query = it }, "Find a tool or model")
         Column { values.take(8).forEach { (name, value) ->
-            ExplorerRow(name, formatCompactTokens(value)) { focus.clearFocus(); selected = name }
+            ExplorerRow(name, formatTokens(value)) { focus.clearFocus(); selected = name }
         } }
         if (values.size > 8) Text(tr("${values.size - 8} more matches. Refine the search to find them."), color = Muted, style = MaterialTheme.typography.labelSmall)
         if (values.isEmpty()) Text(tr("No matching attribution in the available history."), color = Muted)
@@ -91,7 +91,7 @@ internal fun DayUsageDialog(date: String, history: List<HistoryPoint>, onDismiss
             ChoiceGroup(listOf("MODELS" to "model", "TOOLS" to "tool"), if (models) "model" else "tool", { models = it == "model" })
             val entries = (if (models) point?.perModel else point?.perClient).orEmpty().entries.sortedByDescending { it.value.tokens }
             LazyColumn(Modifier.heightIn(max = 320.dp)) {
-                items(entries, key = { it.key }) { (name, value) -> ExplorerRow(name, formatCompactTokens(value.tokens)) { selected = name } }
+                items(entries, key = { it.key }) { (name, value) -> ExplorerRow(name, formatTokens(value.tokens)) { selected = name } }
                 if (entries.isEmpty()) item { Text(tr("The Hub has no breakdown for this day."), color = Muted) }
             }
             Text(tr("Sessions and projects are available for the Hub's Day, Month, and Total periods."), color = Muted, style = MaterialTheme.typography.labelSmall)
@@ -105,13 +105,13 @@ private fun SeriesUsageDialog(name: String, models: Boolean, history: List<Histo
     val points = history.mapNotNull { point -> (if (models) point.perModel else point.perClient)[name]?.let { point.label to it } }
     UsageDetailDialog(name, onDismiss) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(tr("${formatCompactTokens(points.sumOf { it.second.tokens })} tokens across ${points.size} recorded ${if (points.size == 1) "day" else "days"}"), color = Ink)
+            Text(tr("${formatTokens(points.sumOf { it.second.tokens })} tokens across ${points.size} recorded ${if (points.size == 1) "day" else "days"}"), color = Ink)
             Text(tr("Daily usage, newest first. Costs are estimates from the desktop Hub."), color = Muted, style = MaterialTheme.typography.bodySmall)
             LazyColumn(Modifier.heightIn(max = 360.dp)) {
                 items(points.reversed(), key = { it.first }) { (date, value) ->
                     Column(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                         Text(date, color = Ink, fontWeight = FontWeight.SemiBold)
-                        Text(tr("${formatCompactTokens(value.tokens)} tokens · ${formatMoney(value.costUsd)}"), color = Muted)
+                        Text(tr("${formatTokens(value.tokens)} tokens · ${formatMoney(value.costUsd)}"), color = Muted)
                         UsageBar(value.tokens.toFloat() / points.maxOf { it.second.tokens }.coerceAtLeast(1), Blue)
                     }
                 }

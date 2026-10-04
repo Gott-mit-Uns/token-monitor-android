@@ -136,9 +136,9 @@ internal fun DesktopDetailRow(
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             when {
-                platform != null -> DevicePlatformMark(platform, if (color == Muted) Muted else Ink, size = 12.dp)
+                platform != null -> DevicePlatformMark(platform, if (color == Muted) Muted else Ink, size = LocalContentIconSize.current)
                 upstreamName == null -> StatusDot(color, size = 10.dp)
-                else -> UpstreamToolMark(upstreamName, color, size = 12.dp)
+                else -> UpstreamToolMark(upstreamName, color, size = LocalContentIconSize.current)
             }
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
@@ -151,7 +151,7 @@ internal fun DesktopDetailRow(
                 if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
             }
         }
-        if (extra.isNotBlank()) Text(extra, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 20.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+        if (extra.isNotBlank()) Text(extra, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
         ratio?.let { UsageBar(it, color) }
         HorizontalDivider(color = Line)
     }

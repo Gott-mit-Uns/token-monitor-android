@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.test.platform.app.InstrumentationRegistry
 import io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser
 import io.github.theminionooo.tokenmonitor.data.storage.RankingMetric
+import io.github.theminionooo.tokenmonitor.data.storage.IconScale
+import io.github.theminionooo.tokenmonitor.data.storage.TextScale
 import io.github.theminionooo.tokenmonitor.data.storage.DisplayOptions
 import io.github.theminionooo.tokenmonitor.domain.*
 import io.github.theminionooo.tokenmonitor.localization.*
@@ -40,7 +42,17 @@ class HomeIconShowcaseTest {
     @Test fun lightLarge() = gallery(true, 1.5f, false)
     @Test fun lightLargest() = gallery(true, 2f, false)
 
-    private fun gallery(light: Boolean, fontScale: Float, colorful: Boolean) {
+    @Test fun pairCompactCompact() = gallery(false, 1f, true, IconScale.Compact, TextScale.Compact)
+    @Test fun pairCompactComfortable() = gallery(false, 1f, true, IconScale.Comfortable, TextScale.Compact)
+    @Test fun pairCompactLarge() = gallery(false, 1f, true, IconScale.Large, TextScale.Compact)
+    @Test fun pairComfortableCompact() = gallery(false, 1f, true, IconScale.Compact, TextScale.Comfortable)
+    @Test fun pairComfortableComfortable() = gallery(false, 1f, true, IconScale.Comfortable, TextScale.Comfortable)
+    @Test fun pairComfortableLarge() = gallery(false, 1f, true, IconScale.Large, TextScale.Comfortable)
+    @Test fun pairLargeCompact() = gallery(false, 1f, true, IconScale.Compact, TextScale.Large)
+    @Test fun pairLargeComfortable() = gallery(false, 1f, true, IconScale.Comfortable, TextScale.Large)
+    @Test fun pairLargeLarge() = gallery(false, 1f, true, IconScale.Large, TextScale.Large)
+
+    private fun gallery(light: Boolean, fontScale: Float, colorful: Boolean, iconScale: IconScale = IconScale.Comfortable, textScale: TextScale = TextScale.Comfortable) {
         check(context.packageName.endsWith(".preview"))
         LanguagePreferences.set(context, "zh-CN")
         fun asset(name: String) = instrumentation.context.assets.open("showcase/$name.json").bufferedReader().use { it.readText() }
@@ -53,8 +65,8 @@ class HomeIconShowcaseTest {
         val palette = Palette.from(if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian)
         compose.setContent {
             val density = LocalDensity.current.density
-            MaterialTheme(colorScheme = tokenMonitorColors(palette), typography = tokenMonitorTypography(1)) {
-                CompositionLocalProvider(LocalContext provides localizedContext(context), LocalDensity provides Density(density, fontScale), LocalPalette provides palette, LocalNow provides now, LocalToolIcons provides true, LocalColorfulToolMarks provides colorful) {
+            MaterialTheme(colorScheme = tokenMonitorColors(palette), typography = tokenMonitorTypography(textScale.step)) {
+                CompositionLocalProvider(LocalContext provides localizedContext(context), LocalDensity provides Density(density, fontScale), LocalPalette provides palette, LocalNow provides now, LocalToolIcons provides true, LocalContentIconSize provides iconScale.dp.dp, LocalColorfulToolMarks provides colorful) {
                     Column(Modifier.width(360.dp).fillMaxHeight().background(palette.shell).verticalScroll(rememberScrollState()).padding(14.dp).testTag("icon-home")) {
                         DesktopModule("LIMITS", DashboardDestination.Limits, {}) { HomeLimits(snapshot.stats.limits.providers, DisplayOptions()) }
                         DesktopModule("TOOLS", DashboardDestination.Tools, {}) { HomeBreakdown(usage.clients, usage.clientCosts, RankingMetric.Tokens) }
@@ -65,7 +77,7 @@ class HomeIconShowcaseTest {
                 }
             }
         }
-        val prefix = "icons-${if(light) "light" else "dark"}-$fontScale-${if(colorful) "brand" else "mono"}"
+        val prefix = "cf4-${textScale.name}-${iconScale.name}-icons-${if(light) "light" else "dark"}-$fontScale-${if(colorful) "brand" else "mono"}"
         fun save(suffix: String) {
             compose.waitForIdle()
             val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()

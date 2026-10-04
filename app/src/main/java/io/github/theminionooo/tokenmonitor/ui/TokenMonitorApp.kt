@@ -94,6 +94,7 @@ import io.github.theminionooo.tokenmonitor.data.storage.DisplayOptions
 import io.github.theminionooo.tokenmonitor.data.storage.LimitBarMetric
 import io.github.theminionooo.tokenmonitor.data.storage.RankingMetric
 import io.github.theminionooo.tokenmonitor.data.storage.ReduceMotionMode
+import io.github.theminionooo.tokenmonitor.data.storage.IconScale
 import io.github.theminionooo.tokenmonitor.data.storage.TextScale
 import java.util.Locale
 import kotlin.math.max
@@ -160,6 +161,8 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
             LocalPalette provides palette,
             LocalColorfulToolMarks provides displayOptions.colorfulToolMarks,
             LocalToolIcons provides displayOptions.showToolIcons,
+            LocalContentIconSize provides displayOptions.iconScale.dp.dp,
+            LocalHomeChineseUnits provides displayOptions.homeChineseUnits,
             LocalInteractionMotion provides interactionMotionEnabled(displayOptions.reduceMotion, systemAnimationsEnabled),
             LocalNow provides rememberNow(),
             LocalSessionTitles provides displayOptions.showSessionTitles,
@@ -190,6 +193,8 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     onCompactTokenTotalChange = viewModel::setCompactTokenTotal,
                     onReduceMotionChange = viewModel::setReduceMotion,
                     onTextScaleChange = viewModel::setTextScale,
+                    onIconScaleChange = viewModel::setIconScale,
+                    onHomeChineseUnitsChange = viewModel::setHomeChineseUnits,
                     onThemeCodeChange = viewModel::setThemeCode,
                     onFollowSystemThemeChange = viewModel::setFollowSystemTheme,
                     onShowLiveIndicatorChange = viewModel::setShowLiveIndicator,
@@ -249,10 +254,13 @@ internal fun DashboardScaffold(
     onOpenReleasePage: () -> Unit,
     discovery: HubDiscoveryState,
     onFindHomeHub: () -> Unit,
+    onIconScaleChange: (IconScale) -> Unit = {},
+    onHomeChineseUnitsChange: (Boolean) -> Unit = {},
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
 ) {
+    CompositionLocalProvider(LocalContentIconSize provides displayOptions.iconScale.dp.dp, LocalHomeChineseUnits provides displayOptions.homeChineseUnits) {
     var periodName by rememberSaveable { mutableStateOf(displayOptions.defaultPeriod) }
     var homeReturnVisible by rememberSaveable { mutableStateOf(false) }
     // Destinations have separate compositions during AnimatedContent transitions.
@@ -313,6 +321,8 @@ internal fun DashboardScaffold(
                 onCompactTokenTotalChange = onCompactTokenTotalChange,
                 onReduceMotionChange = onReduceMotionChange,
                 onTextScaleChange = onTextScaleChange,
+                onIconScaleChange = onIconScaleChange,
+                onHomeChineseUnitsChange = onHomeChineseUnitsChange,
                 onThemeCodeChange = onThemeCodeChange,
                 onFollowSystemThemeChange = onFollowSystemThemeChange,
                 onShowLiveIndicatorChange = onShowLiveIndicatorChange,
@@ -356,6 +366,7 @@ internal fun DashboardScaffold(
         }
         }
     }
+}
 }
 
 internal const val androidReleasesUrl = "https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases"

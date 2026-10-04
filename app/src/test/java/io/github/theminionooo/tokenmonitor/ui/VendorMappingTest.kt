@@ -93,10 +93,10 @@ class VendorMappingTest {
     }
 
     @Test fun platformsAreTrimmedAndDoNotUseDeviceNames() {
-        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_os_windows, devicePlatformAsset("WINDOWS-x64"))
-        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_os_apple, devicePlatformAsset(" darwin "))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.device_windows_light, devicePlatformAsset("WINDOWS-x64"))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.device_apple_light, devicePlatformAsset(" darwin "))
         listOf("linux", "Linux-arm64", " linux-x64 ").forEach {
-            assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.os_server, devicePlatformAsset(it))
+            assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.device_ugreen_light, devicePlatformAsset(it))
         }
         assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.view_device, devicePlatformAsset("unknown"))
         assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.view_device, devicePlatformAsset(""))

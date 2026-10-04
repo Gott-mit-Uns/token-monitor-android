@@ -139,11 +139,11 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
                 }
                 Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.End) {
-                Text(formatTokens(project.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                Text(formatMoney(project.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
-            }
+
+        }
+        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
+            Text(formatTokens(project.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+            Text(formatMoney(project.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         UsageBar(ratio, Purple)
         AnimatedVisibility(
@@ -153,8 +153,8 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 project.clients.entries.sortedByDescending { it.value }.forEach { (client, tokens) ->
-                    Row(modifier = Modifier.padding(start = 20.dp), verticalAlignment = Alignment.CenterVertically) {
-                        UpstreamToolMark(client, accentFor(client), size = 8.dp)
+                    Row(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        UpstreamToolMark(client, accentFor(client), size = LocalContentIconSize.current)
                         Spacer(Modifier.width(7.dp))
                         Text(client.displayName(), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                         Text(formatTokens(tokens), color = Ink, style = MaterialTheme.typography.bodySmall)
@@ -195,7 +195,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            UpstreamToolMark(session.client, accentFor(session.client), size = 12.dp)
+            UpstreamToolMark(session.client, accentFor(session.client), size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(title, color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -212,11 +212,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                     )
                 }
             }
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.End) {
-                Text(formatTokens(session.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                Text(formatMoney(session.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
-            }
+
             Spacer(Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
@@ -225,9 +221,13 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)),
             )
         }
+        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
+            Text(formatTokens(session.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+            Text(formatMoney(session.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+        }
         UsageBar(ratio, accentFor(session.client))
         sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
-            Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 20.dp))
+            Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
         }
         context?.let { reading ->
             val contextColor = when {
@@ -235,7 +235,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 reading.percentLeft <= 30 -> Orange
                 else -> Muted
             }
-            Row(modifier = Modifier.fillMaxWidth().padding(start = 20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(tr("Context ${reading.percentUsed}% used"), color = Muted, style = MaterialTheme.typography.labelSmall)
                 Text(tr("${reading.percentLeft}% left"), color = contextColor, style = MaterialTheme.typography.labelSmall)
             }
@@ -254,7 +254,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 Text(tr("Prompt and reply text stays on the desktop and is not synchronized by the v${BuildConfig.UPSTREAM_VERSION} Hub."),
                     color = Muted,
                     style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(start = 20.dp, top = 2.dp),
+                    modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, top = 2.dp),
                     lineHeight = 15.sp,
                 )
             }

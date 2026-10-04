@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Source: https://cdn.jsdelivr.net/gh/selfhst/icons/svg/microsoft-windows-light.svg; retrieved 2026-10-04.
+     Dark/light suffix describes icon color, not the background theme.
+     SVG paths/colors preserved; centered in a square viewport. See THIRD_PARTY_NOTICES.md. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="20dp" android:height="20dp"
+    android:viewportWidth="512" android:viewportHeight="512">
+    <path android:fillColor="#ffffff" android:pathData="M0 0h242.7v242.6H0zm269.3 0H512v242.6H269.3zM0 269.3h242.7V512H0zm269.3 0H512V512H269.3" />
+</vector>

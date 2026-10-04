@@ -373,4 +373,9 @@
     <string name="ui_tpl_appearance_summary">%1$s · %2$s</string>
     <string name="ui_tpl_usage_summary">%1$s · %2$s</string>
     <string name="ui_tpl_follow_theme">Porcelain while the phone is in light mode, %1$s at night. Widgets follow at their next update.</string>
+    <string name="ui_cf4_a86cafc756" formatted="false">Icon size</string>
+    <string name="ui_cf4_473d53e5a8" formatted="false">Home units</string>
+    <string name="ui_cf4_28123b8b80" formatted="false">On uses 万/亿; off uses K/M/B. Applies only to Home token values.</string>
+    <string name="ui_cf4_324e02b3f6" formatted="false">Changes content icons independently of text size. Navigation and widgets keep their sizes.</string>
+    <string name="ui_cf4_f4e818d28b" formatted="false">Abbreviate the Home total using the selected Home units.</string>
 </resources>

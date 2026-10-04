@@ -231,7 +231,7 @@ internal fun HomeBreakdown(
         tokens.entries.sortedByDescending { (name, count) -> if (rankingMetric == RankingMetric.Cost) costs[name] ?: 0.0 else count.toDouble() }.take(5).forEach { (name, count) ->
             HomeListRow(
                 name = name,
-                primary = "${formatCompactTokens(count)}  ${formatPercent(count.toDouble() / total * 100.0)}",
+                primary = "${formatHomeTokens(count, LocalHomeChineseUnits.current)}  ${formatPercent(count.toDouble() / total * 100.0)}",
                 secondary = costs[name]?.let(::formatMoney).orEmpty(),
                 upstreamName = name,
                 modelRow = modelRows,
@@ -253,7 +253,7 @@ internal fun HomeDevices(devices: List<DeviceUsage>, period: DashboardPeriod, ag
                 ?: if (devices.size == 1) aggregateUsage.totalTokens else 0L
             HomeListRow(
                 name = device.hostname.ifBlank { device.id },
-                primary = if (device.stale) localizedText("Stale") else formatCompactTokens(deviceTokens),
+                primary = if (device.stale) localizedText("Stale") else formatHomeTokens(deviceTokens, LocalHomeChineseUnits.current),
                 secondary = listOf(device.osName, localizedText(if (device.stale) "Stale" else "Synced")).filter { it.isNotBlank() }.joinToString(" · "),
                 color = if (device.stale) Muted else Ink,
                 devicePlatform = device.platform,
@@ -263,8 +263,10 @@ internal fun HomeDevices(devices: List<DeviceUsage>, period: DashboardPeriod, ag
     }
 }
 
-internal val HomeContentIconSize = 20.dp
-internal val HomeContentIndent = 28.dp
+internal val HomeContentIconSize: androidx.compose.ui.unit.Dp
+    @Composable get() = LocalContentIconSize.current
+internal val HomeContentIndent: androidx.compose.ui.unit.Dp
+    @Composable get() = HomeContentIconSize + 8.dp
 
 @Composable
 internal fun HomeListRow(
@@ -298,11 +300,11 @@ internal fun homeActivityPoints(snapshot: HubSnapshot): List<HistoryPoint> = io.
 @Composable
 internal fun HomeActivity(activity: ActivityHeatmap, history: List<HistoryPoint>) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        ActivityHeatmapGrid(activity, history)
+        ActivityHeatmapGrid(activity, history, home = true)
         val recent = history.takeLast(45)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(tr("TREND"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-            Text(tr("Peak ${formatCompactTokens(history.maxOfOrNull { it.tokens } ?: 0L)}"), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Text(tr("Peak ${formatHomeTokens(history.maxOfOrNull { it.tokens } ?: 0L, LocalHomeChineseUnits.current)}"), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         TrendChart(recent.map { it.tokens }, height = 70.dp)
         if (recent.isNotEmpty()) {

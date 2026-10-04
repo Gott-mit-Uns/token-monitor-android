@@ -161,15 +161,14 @@ internal fun DesktopUsageRow(
     }
     Column(modifier = rowModifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            if (modelRow) ModelMark(name, accentFor(name), size = 10.dp)
-            else UpstreamToolMark(name, accentFor(name), size = 10.dp)
+            if (modelRow) ModelMark(name, accentFor(name), size = LocalContentIconSize.current)
+            else UpstreamToolMark(name, accentFor(name), size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.End) {
-                Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
-            }
+        }
+        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
+            Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+            if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         UsageBar(ratio, accentFor(name))
         AnimatedVisibility(
@@ -209,7 +208,7 @@ internal fun TokenComponentBreakdown(
         add(Triple("Output", output, null))
         if (unclassified > 0) add(Triple("Unclassified", unclassified, null))
     }
-    Column(modifier = Modifier.padding(start = 20.dp, end = 2.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+    Column(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, end = 2.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
         rows.forEach { (label, value, percent) ->
             Row {
                 Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
