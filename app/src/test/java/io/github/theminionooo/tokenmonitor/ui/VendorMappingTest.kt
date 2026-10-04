@@ -75,4 +75,31 @@ class VendorMappingTest {
         assertNull(vendorOf("local-model"))
         assertNull(vendorOf(""))
     }
+    @Test fun harnessAliasesUseTheOfficialWhale() {
+        listOf("dsh", "DeepSeek Harness", "deepseek-harness", "deepseek_harness", " DSH ").forEach {
+            assertEquals("deepseek", toolVendorOf(it))
+            assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_logo_deepseek, upstreamToolAsset(it))
+        }
+    }
+
+    @Test fun hermesToolAliasesDoNotBecomeModelVendors() {
+        listOf("hermes", "Hermes Agent", "hermes-agent", "hermes_agent").forEach {
+            assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_logo_hermes, upstreamToolAsset(it))
+            assertNull(upstreamModelAsset(it))
+        }
+        assertNull(upstreamModelAsset("Nous-Hermes-3"))
+        assertNull(upstreamModelAsset("dsh"))
+        assertNull(upstreamToolAsset("unknown-tool"))
+    }
+
+    @Test fun platformsAreTrimmedAndDoNotUseDeviceNames() {
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_os_windows, devicePlatformAsset("WINDOWS-x64"))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_os_apple, devicePlatformAsset(" darwin "))
+        listOf("linux", "Linux-arm64", " linux-x64 ").forEach {
+            assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.os_server, devicePlatformAsset(it))
+        }
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.view_device, devicePlatformAsset("unknown"))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.view_device, devicePlatformAsset(""))
+    }
+
 }

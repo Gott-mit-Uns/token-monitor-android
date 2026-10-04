@@ -156,7 +156,7 @@ internal fun DesktopModule(
             Text(tr(title), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             meta?.let { Text(tr(it), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
             Spacer(Modifier.width(7.dp))
-            Icon(painterResource(destination.iconRes()), contentDescription = null, tint = Muted, modifier = Modifier.size(13.dp))
+            Icon(painterResource(destination.iconRes()), contentDescription = null, tint = Muted, modifier = Modifier.size(18.dp))
         }
         content()
         HorizontalDivider(color = Line)
@@ -176,7 +176,7 @@ internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOpt
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
         visible.forEach { account ->
             Row(verticalAlignment = Alignment.CenterVertically) {
-                UpstreamToolMark(account.provider, Blue, size = 6.dp)
+                UpstreamToolMark(account.provider, Blue, size = HomeContentIconSize)
                 Spacer(Modifier.width(8.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -186,9 +186,9 @@ internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOpt
                 }
             }
             if (account.windows.isEmpty()) {
-                MutedCopy("No quota windows reported", modifier = Modifier.padding(start = 14.dp))
+                MutedCopy("No quota windows reported", modifier = Modifier.padding(start = HomeContentIndent))
             } else {
-                Row(modifier = Modifier.padding(start = 14.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(modifier = Modifier.padding(start = HomeContentIndent), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     account.windows.take(2).forEach { window ->
                         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -247,19 +247,24 @@ internal fun HomeDevices(devices: List<DeviceUsage>, period: DashboardPeriod, ag
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        devices.take(3).forEach { device ->
+        devices.forEach { device ->
             val deviceUsage = period.usage(device)
             val deviceTokens = deviceUsage.totalTokens.takeIf { it > 0 }
                 ?: if (devices.size == 1) aggregateUsage.totalTokens else 0L
             HomeListRow(
                 name = device.hostname.ifBlank { device.id },
-                primary = if (device.stale) "Stale" else formatCompactTokens(deviceTokens),
-                secondary = listOf(device.osName, if (device.stale) "Stale" else "Synced").filter { it.isNotBlank() }.joinToString(" · "),
-                color = if (device.stale) Muted else Blue,
+                primary = if (device.stale) localizedText("Stale") else formatCompactTokens(deviceTokens),
+                secondary = listOf(device.osName, localizedText(if (device.stale) "Stale" else "Synced")).filter { it.isNotBlank() }.joinToString(" · "),
+                color = if (device.stale) Muted else Ink,
+                devicePlatform = device.platform,
+                literalName = true,
             )
         }
     }
 }
+
+internal val HomeContentIconSize = 20.dp
+internal val HomeContentIndent = 28.dp
 
 @Composable
 internal fun HomeListRow(
@@ -270,12 +275,14 @@ internal fun HomeListRow(
     upstreamName: String? = null,
     modelRow: Boolean = false,
     literalName: Boolean = false,
+    devicePlatform: String? = null,
 ) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         when {
-            upstreamName == null -> StatusDot(color, size = 8.dp)
-            modelRow -> ModelMark(upstreamName, color, size = 8.dp)
-            else -> UpstreamToolMark(upstreamName, color, size = 8.dp)
+            devicePlatform != null -> DevicePlatformMark(devicePlatform, color, HomeContentIconSize)
+            upstreamName == null -> ModelMark("", color, HomeContentIconSize)
+            modelRow -> ModelMark(upstreamName, color, size = HomeContentIconSize)
+            else -> UpstreamToolMark(upstreamName, color, size = HomeContentIconSize)
         }
         Spacer(Modifier.width(8.dp))
         Column(modifier = Modifier.weight(1f)) {

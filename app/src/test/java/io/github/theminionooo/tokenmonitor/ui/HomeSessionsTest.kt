@@ -31,6 +31,15 @@ class HomeSessionsTest {
         assertEquals(5, recentHomeSessions(snapshot(recent + archived), now).size)
     }
 
+
+    @Test fun `primary model is first nonblank reported model without guessing current usage`() {
+        val row = session("models", now)
+        assertEquals("gpt-5.6-sol", sessionPrimaryModel(row.copy(modelNames = listOf(" ", " gpt-5.6-sol ", "deepseek-flash"))))
+        assertEquals("unknown-model", sessionPrimaryModel(row.copy(modelNames = listOf("unknown-model", "deepseek-flash"))))
+        assertNull(sessionPrimaryModel(row))
+        assertNull(sessionPrimaryModel(row.copy(modelNames = listOf("", " "))))
+    }
+
     private fun snapshot(month: List<SessionUsage>, today: List<SessionUsage> = emptyList()) =
         HubSnapshot(stats = HubStats(periods = mapOf("month" to UsagePeriod(sessions = month), "today" to UsagePeriod(sessions = today))))
 

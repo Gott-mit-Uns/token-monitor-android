@@ -28,6 +28,8 @@ internal fun recentHomeSessions(snapshot: HubSnapshot, now: Long): List<SessionU
             session.takeIf { index < 5 || sessionActivityState(it, now) == SessionActivityState.Running }
         }
 
+internal fun sessionPrimaryModel(session: SessionUsage): String? = session.modelNames.firstOrNull { it.isNotBlank() }?.trim()
+
 @Composable
 internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDestination) -> Unit) {
     val now = LocalNow.current
@@ -53,12 +55,17 @@ internal fun HomeSessionsModule(snapshot: HubSnapshot, onChoose: (DashboardDesti
                                 SessionActivityState.Idle -> Muted
                             },
                             literalName = true,
+                            upstreamName = sessionPrimaryModel(session) ?: session.client,
+                            modelRow = sessionPrimaryModel(session) != null,
                         )
+                        session.modelNames.filter { it.isNotBlank() }.takeIf { it.size > 1 }?.let { models ->
+                            Text(models.joinToString(" · "), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = HomeContentIndent))
+                        }
                         sessionContextForRow(session, now)?.let { context ->
-                            Text(tr("Context ${context.percentLeft}% left"), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))
+                            Text(tr("Context ${context.percentLeft}% left"), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = HomeContentIndent))
                         }
                         sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
-                            Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 16.dp))
+                            Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = HomeContentIndent))
                         }
                     }
                 }

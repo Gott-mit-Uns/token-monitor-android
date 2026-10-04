@@ -143,3 +143,41 @@ The optional screenshot-board renderer uses sharp (Apache-2.0) and its bundled
 image-processing dependencies. The font subsetter uses subset-font and fontverter
 (BSD-3-Clause) plus harfbuzzjs (MIT) and their bundled dependencies. These are
 documentation and build tools, not part of the APK.
+
+## Hermes Agent icon
+
+The silhouette in `upstream_logo_hermes.png` is adapted from
+[NousResearch/hermes-agent assets/icon-master.svg](https://github.com/NousResearch/hermes-agent/blob/c2b69de66d847318f05356c666f21e046d2e9468/assets/icon-master.svg).
+The official silhouette is rasterized at 512×512 with its tile background omitted,
+keeping the original path geometry and transparency for theme tinting. This avoids
+Android's vector string-size limit. Hermes Agent remains a Nous Research
+mark and is used only to identify the data source.
+
+```text
+MIT License
+
+Copyright (c) 2025 Nous Research
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+DeepSeek Harness uses the existing DeepSeek whale mark imported from Token Monitor
+desktop; the product identity is verified against
+[DeepSeek's official Harness repository](https://github.com/deepseek-ai/deepseek-harness).
+The Linux/NAS server silhouette is original to this client.

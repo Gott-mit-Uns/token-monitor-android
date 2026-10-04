@@ -49,7 +49,13 @@ internal fun vendorOf(name: String): String? {
     return modelVendorRules.firstOrNull { (pattern, _) -> pattern.containsMatchIn(key) }?.second
 }
 
-internal fun originalToolColor(name: String, fallback: Color): Color = when (vendorOf(name)) {
+internal fun toolVendorOf(name: String): String? = when (name.trim().lowercase(Locale.US).replace(Regex("[-_ ]+"), "")) {
+    "dsh", "deepseekharness" -> "deepseek"
+    "hermes", "hermesagent" -> "hermes"
+    else -> vendorOf(name)
+}
+
+internal fun originalToolColor(name: String, fallback: Color, model: Boolean = false): Color = when (if (model) vendorOf(name) else toolVendorOf(name)) {
     "openai" -> Color(0xFF49A3B0)
     "claude" -> Color(0xFFCC7C5E)
     "gemini" -> Color(0xFF4285F4)
@@ -73,7 +79,11 @@ internal fun originalToolColor(name: String, fallback: Color): Color = when (ven
     else -> fallback
 }
 
-internal fun upstreamToolAsset(name: String): Int? = when (vendorOf(name)) {
+internal fun upstreamToolAsset(name: String): Int? = vendorAsset(toolVendorOf(name))
+internal fun upstreamModelAsset(name: String): Int? = vendorAsset(vendorOf(name))
+
+private fun vendorAsset(vendor: String?): Int? = when (vendor) {
+    "hermes" -> R.drawable.upstream_logo_hermes
     "openai" -> R.drawable.upstream_logo_codex
     "claude" -> R.drawable.upstream_logo_claude
     "cursor" -> R.drawable.upstream_logo_cursor
@@ -108,7 +118,7 @@ internal fun StatusDot(color: Color, size: Dp) {
 
 @Composable
 internal fun UpstreamToolMark(name: String, color: Color, size: Dp) {
-    val sourceAsset = if (LocalToolIcons.current) upstreamToolAsset(name) else null
+    val sourceAsset = if (LocalToolIcons.current) upstreamToolAsset(name) ?: R.drawable.view_tool else null
     val resolvedColor = if (LocalColorfulToolMarks.current) originalToolColor(name, color) else Ink
     if (sourceAsset == null) {
         StatusDot(resolvedColor, size)
@@ -124,8 +134,8 @@ internal fun UpstreamToolMark(name: String, color: Color, size: Dp) {
 
 @Composable
 internal fun ModelMark(name: String, color: Color, size: Dp) {
-    val sourceAsset = if (LocalToolIcons.current) upstreamToolAsset(name) ?: R.drawable.view_model else null
-    val resolvedColor = if (LocalColorfulToolMarks.current) originalToolColor(name, color) else Ink
+    val sourceAsset = if (LocalToolIcons.current) upstreamModelAsset(name) ?: R.drawable.view_model else null
+    val resolvedColor = if (LocalColorfulToolMarks.current) originalToolColor(name, color, model = true) else Ink
     if (sourceAsset == null) {
         StatusDot(resolvedColor, size)
     } else {
@@ -138,14 +148,16 @@ internal fun ModelMark(name: String, color: Color, size: Dp) {
     }
 }
 
+internal fun devicePlatformAsset(platform: String): Int = when (platform.trim().lowercase(Locale.US).substringBefore('-')) {
+    "win32", "windows" -> R.drawable.upstream_os_windows
+    "darwin", "macos", "mac" -> R.drawable.upstream_os_apple
+    "linux" -> R.drawable.os_server
+    else -> R.drawable.view_device
+}
+
 @Composable
 internal fun DevicePlatformMark(platform: String, color: Color, size: Dp) {
-    val icon = when (platform.lowercase(Locale.US).substringBefore('-')) {
-        "win32", "windows" -> R.drawable.upstream_os_windows
-        "darwin", "macos", "mac" -> R.drawable.upstream_os_apple
-        else -> R.drawable.view_device
-    }
-    Icon(painterResource(icon), contentDescription = null, tint = color, modifier = Modifier.size(size))
+    Icon(painterResource(devicePlatformAsset(platform)), contentDescription = null, tint = color, modifier = Modifier.size(size))
 }
 
 internal fun DashboardDestination.iconRes(): Int = when (this) {
