@@ -182,11 +182,11 @@ internal fun DeviceUsageRow(
                 )
             }
             if (onRename != null) TextButton(onClick = { aliasInput = if (device.hostname == originalName) "" else device.hostname; renameError = null; renaming = true }) { Text(tr("Rename device")) }
-
-        }
-        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
-            Text(formatTokens(usage.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-            Text(formatMoney(usage.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(usage.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                Text(formatMoney(usage.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
         }
         if (device.hostname != originalName) Text(tr("Hub original name: ${originalName.ifBlank { device.id }}"), color = Muted, style = MaterialTheme.typography.labelSmall)
         UsageBar(ratio, tone)

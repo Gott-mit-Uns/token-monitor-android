@@ -139,11 +139,11 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
                 }
                 Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-
-        }
-        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
-            Text(formatTokens(project.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-            Text(formatMoney(project.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(project.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                Text(formatMoney(project.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
         }
         UsageBar(ratio, Purple)
         AnimatedVisibility(
@@ -213,6 +213,11 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 }
             }
 
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(session.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                Text(formatMoney(session.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
             Spacer(Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
@@ -220,10 +225,6 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 tint = Muted,
                 modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)),
             )
-        }
-        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
-            Text(formatTokens(session.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-            Text(formatMoney(session.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         UsageBar(ratio, accentFor(session.client))
         sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {

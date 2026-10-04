@@ -1,6 +1,6 @@
 # Cloudflare Hub 兼容版
 
-本项目基于 The-Minion-oOo/token-monitor-android，保留原有界面、统计视图和小组件，以独立应用提供 Cloudflare HTTPS Hub 连接。版本为 `v0.65.0-cf.4`；不会修改或部署 Worker，不改变电脑、NAS 的上报配置。
+本项目基于 The-Minion-oOo/token-monitor-android，保留原有界面、统计视图和小组件，以独立应用提供 Cloudflare HTTPS Hub 连接。版本为 `v0.65.0-cf.5`；不会修改或部署 Worker，不改变电脑、NAS 的上报配置。
 
 ## 手机连接
 

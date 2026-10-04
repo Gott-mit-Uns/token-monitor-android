@@ -165,10 +165,11 @@ internal fun DesktopUsageRow(
             else UpstreamToolMark(name, accentFor(name), size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        }
-        Column(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp)) {
-            Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-            if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
         }
         UsageBar(ratio, accentFor(name))
         AnimatedVisibility(
