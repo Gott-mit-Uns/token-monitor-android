@@ -1,6 +1,6 @@
 # Cloudflare Hub 兼容版
 
-本项目基于 The-Minion-oOo/token-monitor-android，保留原有界面、统计视图和小组件，以独立应用提供 Cloudflare HTTPS Hub 连接。版本为 `v0.65.0-cf.6`；不会修改或部署 Worker，不改变电脑、NAS 的上报配置。
+本项目基于 The-Minion-oOo/token-monitor-android，保留原有界面、统计视图和小组件，以独立应用提供 Cloudflare HTTPS Hub 连接。版本为 `v0.65.0-cf.7`；不会修改或部署 Worker，不改变电脑、NAS 的上报配置。
 
 ## 手机连接
 
@@ -65,3 +65,7 @@ Linux 平台默认使用绿联 NAS 标识，Windows 和 Mac 按平台识别，�
 ## cf.6 已确认黑白素材
 
 OpenAI／Codex、DeepSeek、Hermes Agent 与绿联 NAS 按实际主题选择原始黑白素材：浅色背景用黑色，深色背景用白色。这三个 AI 品牌不再应用强调色；品牌色设置继续作用于其他品牌。保留独立图标尺寸、图标开关及 cf.5 二级列表布局。
+
+## cf.7 NAS 简化图标
+
+两台 NAS 共用已确认的通用机箱示意：单层圆角边框、四个竖直盘位和底部四个指示灯，无额外内圈。浅色黑、深色白，继续支持 16／20／24dp。灯点仅为装饰，不表示设备状态。

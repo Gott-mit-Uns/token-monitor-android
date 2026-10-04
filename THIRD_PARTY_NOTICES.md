@@ -439,3 +439,7 @@ SVG path geometry preserved; fills normalized to confirmed black/white. The Open
 | brand_openai_dark | 8a6030406f34ee761c3d60dd95cc49af8c3ca1c9f45b61a3d8648d60c91cba62 |
 | brand_openai_light | 5c94498ddd61f3cde18aee94d2d1a8a593329253bed24c3e84ec419890553f09 |
 | device_ugreen_dark | 8a733f2e38bc374cb76953a310c9e675b2f28825b6361dbf0c1f214e309931de |
+
+## cf.7 generic NAS illustration
+
+The two `device_ugreen_*` resource names are retained for compatibility but now contain a newly drawn generic four-bay NAS illustration, confirmed by the user. These paths do not reproduce the selfh.st UGREEN brand artwork. The illustration is distributed under this project's MIT license. Earlier selfh.st attribution remains for historical assets and other icons.

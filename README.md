@@ -1,4 +1,4 @@
-> **Cloudflare 兼容分支：Token Monitor Minion CF · v0.65.0-cf.6**
+> **Cloudflare 兼容分支：Token Monitor Minion CF · v0.65.0-cf.7**
 >
 > 发布仓库：[Gott-mit-Uns/token-monitor-android-minion-cloudflare](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare)。[下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases/latest)。
 >
