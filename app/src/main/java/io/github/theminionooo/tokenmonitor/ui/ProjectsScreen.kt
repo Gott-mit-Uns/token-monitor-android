@@ -106,8 +106,8 @@ import kotlin.math.roundToLong
 /*
  * Projects and Sessions lists.
  */
-internal fun LazyListScope.projectItems(projects: List<ProjectUsage>, period: DashboardPeriod) {
-    if (projects.isEmpty()) item { MutedCopy(if (period in DashboardPeriod.rangeChoices) "The Hub reports projects for Day, Month, and Total only." else "No project attribution is available for ${period.label.lowercase(Locale.US)}.", modifier = Modifier.padding(vertical = 12.dp)) }
+internal fun LazyListScope.projectItems(projects: List<ProjectUsage>, period: DashboardPeriod, searching: Boolean = false) {
+    if (projects.isEmpty()) item { MutedCopy(usageListEmptyMessage(false, period, searching), modifier = Modifier.padding(vertical = 12.dp)) }
     else {
         val maximum = projects.maxOfOrNull { it.totalTokens }?.coerceAtLeast(1L) ?: 1L
         items(projects.sortedByDescending { it.totalTokens }, key = { it.id }) { project ->
@@ -166,8 +166,8 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
     }
 }
 
-internal fun LazyListScope.sessionItems(sessions: List<SessionUsage>, period: DashboardPeriod) {
-    if (sessions.isEmpty()) item { MutedCopy(if (period in DashboardPeriod.rangeChoices) "The Hub reports sessions for Day, Month, and Total only." else "No session detail is available for ${period.label.lowercase(Locale.US)}.", modifier = Modifier.padding(vertical = 12.dp)) }
+internal fun LazyListScope.sessionItems(sessions: List<SessionUsage>, period: DashboardPeriod, searching: Boolean = false) {
+    if (sessions.isEmpty()) item { MutedCopy(usageListEmptyMessage(true, period, searching), modifier = Modifier.padding(vertical = 12.dp)) }
     else {
         val maximum = sessions.maxOfOrNull { it.totalTokens }?.coerceAtLeast(1L) ?: 1L
         items(sessions.sortedByDescending { it.totalTokens }, key = { "${it.client}:${it.id}" }) { session ->

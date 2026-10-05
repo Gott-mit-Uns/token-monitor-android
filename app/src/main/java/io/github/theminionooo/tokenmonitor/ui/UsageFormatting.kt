@@ -157,6 +157,7 @@ private val toolLabels = mapOf(
     "cherrystudio" to "Cherry Studio", "lmstudio" to "LM Studio", "unsloth" to "Unsloth", "devin" to "Devin", "openrouter" to "OpenRouter",
     "deepseek" to "DeepSeek", "ollama" to "Ollama", "thirdparty" to "Third-party",
     "factory" to "Factory", "nvidia" to "NVIDIA", "stepfun" to "StepFun", "muse" to "Muse Code", "fx" to "fx",
+    "mcode" to "MiniMax Code",
 )
 
 /**

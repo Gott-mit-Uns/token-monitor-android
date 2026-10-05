@@ -5,7 +5,8 @@ import io.github.theminionooo.tokenmonitor.localization.localizedText
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -77,7 +79,7 @@ internal fun <T> TactileSegmentedControl(
                 border = BorderStroke(1.dp, Ink.copy(alpha = 0.13f)),
                 modifier = Modifier.offset(x = (segmentWidth + gap) * indicatorPosition).width(segmentWidth).fillMaxHeight(),
             ) {}
-            Row(horizontalArrangement = Arrangement.spacedBy(gap), modifier = Modifier.fillMaxSize()) {
+            Row(horizontalArrangement = Arrangement.spacedBy(gap), modifier = Modifier.fillMaxSize().selectableGroup()) {
                 options.forEach { (label, value) ->
                     val active = value == selected
                     val interactionSource = remember { MutableInteractionSource() }
@@ -88,7 +90,7 @@ internal fun <T> TactileSegmentedControl(
                             .weight(1f)
                             .fillMaxHeight()
                             .clip(RoundedCornerShape(6.dp))
-                            .clickable(interactionSource = interactionSource, indication = null) {
+                            .selectable(selected = active, role = Role.Tab, interactionSource = interactionSource, indication = null) {
                                 if (!active) haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
                                 onSelect(value)
                             }

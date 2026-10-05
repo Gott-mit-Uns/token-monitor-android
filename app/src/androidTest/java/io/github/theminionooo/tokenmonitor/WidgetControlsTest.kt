@@ -24,6 +24,7 @@ import java.net.ServerSocket
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
+import kotlin.math.roundToInt
 
 class WidgetControlsTest {
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -130,6 +131,7 @@ class WidgetControlsTest {
 
     @Test fun livePollsWithoutDashboardSwitchesToOneStreamThenStops() {
         check(context.packageName.endsWith(".preview"))
+        grantFixtureNetworkAccess()
         val address = NetworkInterface.getNetworkInterfaces().toList().flatMap { it.inetAddresses.toList() }
             .filterIsInstance<Inet4Address>().first { it.isSiteLocalAddress }.hostAddress
         val streams = AtomicInteger()

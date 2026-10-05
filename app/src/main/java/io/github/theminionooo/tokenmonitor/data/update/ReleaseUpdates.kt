@@ -53,7 +53,7 @@ internal object ReleaseUpdates {
     internal const val automaticUpdatesEnabled = false
 
     internal fun requireAutomaticUpdates() {
-        check(automaticUpdatesEnabled) { "Automatic upstream updates are disabled in the Cloudflare edition." }
+        check(automaticUpdatesEnabled) { "Automatic upstream updates are disabled in this independent edition." }
     }
     suspend fun check(installedName: String, installedCode: Int): UpdateCheck = withContext(Dispatchers.IO) {
         requireAutomaticUpdates()

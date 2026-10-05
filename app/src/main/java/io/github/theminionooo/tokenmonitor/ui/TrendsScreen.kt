@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,6 +35,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -108,7 +111,7 @@ private fun UsageOverview(snapshot: HubSnapshot) {
         "ACTIVE TIME" to formatActiveDuration(activeTime),
         "PEAK DAY" to formatTokens(peak),
         "TOP MODEL" to topModel.displayName().ifBlank { "—" },
-        "MESSAGES" to formatCompactTokens(messages),
+        "MESSAGES" to formatTokens(messages),
     )
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         stats.chunked(2).forEach { rowStats ->
@@ -174,12 +177,11 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
     val group = TrendGroup.entries.firstOrNull { it.name == groupName } ?: TrendGroup.Tool
     val style = TrendStyle.entries.firstOrNull { it.name == styleName } ?: TrendStyle.Bars
     val range = TrendRange.entries.firstOrNull { it.name == rangeName } ?: TrendRange.Thirty
-    val points = io.github.theminionooo.tokenmonitor.domain.historyInRange(history, range.days?.let { LocalDate.now().minusDays(it - 1L) } ?: LocalDate.MIN, LocalDate.now())
-    val series = points
-        .flatMap { point -> (if (group == TrendGroup.Tool) point.perClient else point.perModel).keys }
-        .distinct()
-        .sortedByDescending { key -> points.sumOf { point -> (if (group == TrendGroup.Tool) point.perClient else point.perModel)[key]?.tokens ?: 0L } }
-    val total = points.sumOf { it.tokens }.coerceAtLeast(1L)
+    val today = LocalDate.now()
+    val trend = remember(history, range, group, today) {
+        prepareTrends(history, group == TrendGroup.Model, range.days?.let { today.minusDays(it - 1L) }, today)
+    }
+    val total = trend.totalTokens.coerceAtLeast(1L)
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -204,32 +206,32 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
         )
         Row(verticalAlignment = Alignment.Bottom) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(formatTokens(points.sumOf { it.tokens }), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(tr("${points.size} days · ${formatMoney(points.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(formatTokens(trend.totalTokens), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Text(tr("${trend.days.size} recorded days · ${formatMoney(trend.days.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
             Text(tr(if (group == TrendGroup.Tool) "BY TOOL" else "BY MODEL"), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
         if (style == TrendStyle.Bars) {
-            StackedTrendChart(points = points, group = group, series = series, height = 178.dp)
+            StackedTrendChart(trend = trend, height = 178.dp)
         } else {
-            CandleTrendChart(points = points, height = 178.dp)
+            CandleTrendChart(trend = trend, height = 178.dp)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(points.firstOrNull()?.label.orEmpty(), color = Muted, style = MaterialTheme.typography.labelSmall)
-            Text(points.lastOrNull()?.label.orEmpty(), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Text(trend.start.toString(), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Text(trend.end.toString(), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
+        if (trend.missingDays > 0) Text(tr("${trend.missingDays} days have no observation; gaps are left blank."), color = Muted, style = MaterialTheme.typography.labelSmall)
+        if (style == TrendStyle.KLine) Text(tr("Each candle covers up to ${trendCandleDays(trend.calendarDays)} consecutive recorded days: first, last, highest and lowest daily totals."), color = Muted, style = MaterialTheme.typography.labelSmall)
+        if (style == TrendStyle.Bars && trend.days.any { it.inconsistentAttribution }) Text(tr("Some reported breakdowns conflict with their daily totals. Those days are shown as unattributed."), color = Muted, style = MaterialTheme.typography.labelSmall)
         if (style == TrendStyle.Bars) {
-            val legend = if (series.isEmpty()) listOf("All usage") else series.take(8)
-            legend.forEachIndexed { index, key ->
-                val value = if (series.isEmpty()) points.sumOf { it.tokens } else points.sumOf { point ->
-                    (if (group == TrendGroup.Tool) point.perClient else point.perModel)[key]?.tokens ?: 0L
-                }
+            trend.series.forEachIndexed { index, series ->
+                val value = trend.days.sumOf { it.segments[series] ?: 0L }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    StatusDot(trendSeriesColor(LocalPalette.current, index), size = 8.dp)
+                    StatusDot(if (series.name == null) Muted else trendSeriesColor(LocalPalette.current, index), size = 8.dp)
                     Spacer(Modifier.width(7.dp))
-                    Text(key.displayName(), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(series.name?.let { if (series.other) tr(it) else it.displayName() } ?: tr("Unattributed"), color = Ink, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(formatTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
-                    Text(tr(String.format(Locale.US, "  %.1f%%", value.toDouble() / total * 100.0)), color = Muted, style = MaterialTheme.typography.bodySmall)
+                    Text(String.format(Locale.US, "  %.1f%%", value.toDouble() / total * 100.0), color = Muted, style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
@@ -237,27 +239,30 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
 }
 
 @Composable
-private fun StackedTrendChart(points: List<HistoryPoint>, group: TrendGroup, series: List<String>, height: androidx.compose.ui.unit.Dp) {
-    val reveal = rememberChartReveal(Triple(points.size, group, points.firstOrNull()?.label))
+internal fun StackedTrendChart(trend: TrendPresentation, height: androidx.compose.ui.unit.Dp) {
+    val reveal = rememberChartReveal(Triple(trend.start, trend.end, trend.series))
     val palette = LocalPalette.current
-    Canvas(modifier = Modifier.fillMaxWidth().height(height)) {
-        if (points.isEmpty()) return@Canvas
-        val maximum = max(1f, points.maxOf { it.tokens }.toFloat()) / reveal.coerceAtLeast(0.001f)
-        val slot = size.width / points.size
-        val barWidth = (slot * 0.66f).coerceAtLeast(1.dp.toPx())
+    Canvas(modifier = Modifier.fillMaxWidth().height(height).semantics { contentDescription = trendChartDescription(trend, false) }) {
+        if (trend.days.isEmpty()) return@Canvas
+        val maximum = max(1f, trend.days.maxOf { it.tokens }.toFloat()) / reveal.coerceAtLeast(0.001f)
+        val slot = size.width / trend.calendarDays
+        val barWidth = slot * 0.66f
         repeat(4) { tick ->
             val y = size.height * tick / 3f
             drawLine(palette.line, Offset(0f, y), Offset(size.width, y), strokeWidth = 1.dp.toPx())
         }
-        points.forEachIndexed { pointIndex, point ->
-            val entries = if (group == TrendGroup.Tool) point.perClient else point.perModel
-            val values = if (series.isEmpty()) listOf(point.tokens) else series.map { entries[it]?.tokens ?: 0L }
+        trend.days.forEach { day ->
+            if (day.tokens == 0L) {
+                val left = trend.dayOffset(day.date) * slot + (slot - barWidth) / 2f
+                drawLine(palette.muted, Offset(left, size.height - 1.dp.toPx()), Offset(left + barWidth, size.height - 1.dp.toPx()), strokeWidth = 1.dp.toPx())
+            }
             var bottom = size.height
-            values.forEachIndexed { seriesIndex, value ->
+            trend.series.forEachIndexed { seriesIndex, series ->
+                val value = day.segments[series] ?: 0L
                 if (value <= 0) return@forEachIndexed
                 val segmentHeight = size.height * value.toFloat() / maximum
-                val left = pointIndex * slot + (slot - barWidth) / 2f
-                drawRect(trendSeriesColor(palette, seriesIndex), topLeft = Offset(left, bottom - segmentHeight), size = Size(barWidth, segmentHeight))
+                val left = trend.dayOffset(day.date) * slot + (slot - barWidth) / 2f
+                drawRect(if (series.name == null) palette.muted else trendSeriesColor(palette, seriesIndex), topLeft = Offset(left, bottom - segmentHeight), size = Size(barWidth, segmentHeight))
                 bottom -= segmentHeight
             }
         }
@@ -265,36 +270,28 @@ private fun StackedTrendChart(points: List<HistoryPoint>, group: TrendGroup, ser
 }
 
 @Composable
-private fun CandleTrendChart(points: List<HistoryPoint>, height: androidx.compose.ui.unit.Dp) {
-    val reveal = rememberChartReveal(points.size to points.firstOrNull()?.label)
+internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose.ui.unit.Dp) {
+    val reveal = rememberChartReveal(trend.start to trend.end)
     val palette = LocalPalette.current
-    Canvas(modifier = Modifier.fillMaxWidth().height(height).alpha(reveal)) {
-        if (points.isEmpty()) return@Canvas
-        val bucketSize = when {
-            points.size <= 10 -> 2
-            points.size <= 30 -> 3
-            points.size <= 90 -> 7
-            else -> 14
-        }
-        val candles = points.chunked(bucketSize)
-        val maximum = max(1f, points.maxOf { it.tokens }.toFloat())
-        val slot = size.width / candles.size
-        val bodyWidth = (slot * 0.45f).coerceAtLeast(2.dp.toPx())
+    val candles = remember(trend) { trendCandles(trend) }
+    Canvas(modifier = Modifier.fillMaxWidth().height(height).alpha(reveal).semantics { contentDescription = trendChartDescription(trend, true) }) {
+        if (trend.days.isEmpty()) return@Canvas
+        val maximum = max(1f, trend.days.maxOf { it.tokens }.toFloat())
+        val dayWidth = size.width / trend.calendarDays
         repeat(4) { tick ->
             val y = size.height * tick / 3f
             drawLine(palette.line, Offset(0f, y), Offset(size.width, y), strokeWidth = 1.dp.toPx())
         }
         fun y(value: Long) = size.height - size.height * value.toFloat() / maximum
-        candles.forEachIndexed { index, bucket ->
-            val open = bucket.first().tokens
-            val close = bucket.last().tokens
-            val high = bucket.maxOf { it.tokens }
-            val low = bucket.minOf { it.tokens }
-            val x = index * slot + slot / 2f
-            val color = if (close >= open) palette.blue else palette.orange
-            drawLine(color, Offset(x, y(high)), Offset(x, y(low)), strokeWidth = 1.dp.toPx())
-            val top = minOf(y(open), y(close))
-            val bodyHeight = max(2.dp.toPx(), kotlin.math.abs(y(open) - y(close)))
+        candles.forEach { candle ->
+            val first = trend.dayOffset(candle.first)
+            val last = trend.dayOffset(candle.last)
+            val x = (first + last + 1) * dayWidth / 2f
+            val bodyWidth = (last - first + 1) * dayWidth * 0.45f
+            val color = if (candle.close >= candle.open) palette.blue else palette.orange
+            drawLine(color, Offset(x, y(candle.high)), Offset(x, y(candle.low)), strokeWidth = 1.dp.toPx())
+            val bodyHeight = max(2.dp.toPx(), kotlin.math.abs(y(candle.open) - y(candle.close)))
+            val top = minOf(y(candle.open), y(candle.close)).coerceAtMost(size.height - bodyHeight)
             drawRect(color, topLeft = Offset(x - bodyWidth / 2f, top), size = Size(bodyWidth, bodyHeight))
         }
     }

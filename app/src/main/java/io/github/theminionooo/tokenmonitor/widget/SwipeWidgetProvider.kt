@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Build
+import android.util.SizeF
 import android.widget.RemoteViews
 import io.github.theminionooo.tokenmonitor.R
 
@@ -36,13 +38,15 @@ class SwipeWidgetProvider : AppWidgetProvider() {
     private fun configure(context: Context, manager: AppWidgetManager, widgetId: Int) {
         val state = loadWidgetDeck(context, widgetId)
         val page = WidgetDeckPageState.read(context, widgetId)
-        val views = WidgetDeckRenderer.render(context, page, state.data, state.theme, state.size).apply {
+        fun render(size: SizeF) = WidgetDeckRenderer.render(context, page, state.data, state.theme, size).apply {
             setOnClickPendingIntent(R.id.swipe_page_open, activityIntent(context, widgetId, 0, WidgetControlActivity.ACTION_OPEN))
             setOnClickPendingIntent(R.id.swipe_page_previous, pageIntent(context, widgetId, 1, ACTION_PREVIOUS))
             setOnClickPendingIntent(R.id.swipe_page_next, pageIntent(context, widgetId, 2, ACTION_NEXT))
             setOnClickPendingIntent(R.id.widget_refresh, activityIntent(context, widgetId, 3, WidgetLiveService.ACTION_REFRESH))
             setOnClickPendingIntent(R.id.widget_live, activityIntent(context, widgetId, 4, WidgetLiveService.ACTION_LIVE))
         }
+        val sizes = widgetHostSizes(manager.getAppWidgetOptions(widgetId))
+        val views = if (Build.VERSION.SDK_INT >= 31 && sizes.isNotEmpty()) RemoteViews(sizes.associateWith(::render)) else render(state.size)
         manager.updateAppWidget(widgetId, views)
     }
 

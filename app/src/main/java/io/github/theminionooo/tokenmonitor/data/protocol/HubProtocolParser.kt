@@ -33,7 +33,7 @@ import kotlinx.serialization.json.longOrNull
  * Android client renders and intentionally ignores unknown fields.
  */
 object HubProtocolParser {
-    const val SUPPORTED_UPSTREAM_VERSION = "v0.65.0"
+    const val SUPPORTED_UPSTREAM_VERSION = "v0.66.0"
 
     private val json = Json {
         ignoreUnknownKeys = true

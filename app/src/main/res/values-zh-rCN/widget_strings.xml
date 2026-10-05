@@ -20,4 +20,10 @@
     <string name="widget_deck_limits">额度 · 2/4</string>
     <string name="widget_deck_breakdown">明细 · 3/4</string>
     <string name="widget_deck_activity">活动 · 4/4</string>
+    <string name="widget_compact_label">Token Monitor · 紧凑</string>
+    <string name="widget_wide_label">Token Monitor · 横向</string>
+    <string name="widget_portrait_label">Token Monitor · 竖向</string>
+    <string name="widget_overview_label">Token Monitor · 总览</string>
+    <string name="widget_large_label">Token Monitor · 详细</string>
+    <string name="widget_preset_description">按所选样式显示，拉大可增加空间。与其他小组件共享 Hub 缓存和刷新操作。</string>
 </resources>

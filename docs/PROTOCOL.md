@@ -4,7 +4,7 @@ This Android app treats the desktop Hub as an external, read-only protocol.
 
 ## Verified baseline
 
-The verified baseline is upstream Token Monitor **v0.65.0**, released 2026-10-02. The
+The verified baseline is upstream Token Monitor **v0.66.0**, released 2026-10-04. The
 release and source were checked directly from the `Javis603/token-monitor`
 tag before this implementation. The older local desktop checkout was not
 changed and is not the protocol authority.
@@ -51,9 +51,9 @@ replaces the snapshot with the current read endpoints.
 
 ## Fixtures
 
-Sanitized v0.65.0 examples for all five read endpoints and the live stream live
-in `app/src/test/resources/protocol/v0.65.0/`; the retained v0.54.0, v0.55.0,
-v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, v0.63.1, and v0.64.0 fixtures prove backward compatibility. They contain no user secrets,
+Sanitized v0.66.0 examples for all five read endpoints and the live stream live
+in `app/src/test/resources/protocol/v0.66.0/`; the retained v0.54.0, v0.55.0,
+v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, v0.63.1, v0.64.0, and v0.65.0 fixtures prove backward compatibility. They contain no user secrets,
 machine paths, account identifiers, or real usage. Parser tests cover every
 read surface, the SSE envelope, omitted optional fields, and a future unknown
 field. The compatibility parser maps only the fields the dashboard needs and
@@ -150,3 +150,24 @@ The existing slow UI clock updates the label without another timer or request.
 The optional period `modelThroughput` map is tolerated and retained in the raw
 cached snapshot, but Android does not display per-model throughput. Desktop
 provider usage-row visibility is a desktop setting, not a new Hub write API.
+
+## v0.66.0 MiniMax Code and reported costs
+
+The Hub routes, Bearer authentication and stream-v2 envelope are unchanged.
+MiniMax Code usage uses client ID `mcode`, distinct from the `minimax` limit
+provider and MiniMax model IDs. Android supplies its label and existing vendor
+mark without renaming the wire keys. The new synthetic fixtures cover all read
+endpoints, complete/freshness events, MiniMax's normalized five-hour and weekly
+windows, title-free sessions and corrected current/historical costs. They are
+contract examples checked against the released source, not real account captures.
+
+Desktop custom pricing, including one-hour cache-write rates, changes the costs
+the Hub reports. Android displays those values without recalculating prices or
+adding another collector. MiniMax API-region selection, collection and device
+management stay on desktop. `hubReceivedAt` belongs to the desktop's composed
+local sync view, not a new Hub endpoint or phone upload timestamp.
+
+The desktop's export privacy fix does not add titles to the Hub: existing Hub
+ingress strips session text. Android retains its optional-title fallback and
+local visibility setting for older or other compatible snapshots. Desktop JSON
+export and large-transcript fixes remain outside the phone's read-only contract.

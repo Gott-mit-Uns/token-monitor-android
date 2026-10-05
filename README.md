@@ -1,14 +1,12 @@
-> **Cloudflare 兼容分支：Token Monitor Minion CF · v0.65.0-cf.7**
+> **独立 Hub 客户端：v0.66.0-hub.1**
 >
-> 发布仓库：[Gott-mit-Uns/token-monitor-android-minion-cloudflare](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare)。[下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases/latest)。
+> 基于安卓上游 v0.66.0 r2，保留中文、设备别名、主题图标、独立图标尺寸及主页中文单位。支持 NAS／电脑 Hub、HTTPS 反代域名、Tailscale 和局域网。应用 ID 与签名保持不变，可覆盖安装旧 cf 版本；原作者自动 APK 更新保持关闭。
 >
-> 此分支基于 The-Minion-oOo 的 MIT 项目，保留原界面与小组件，增加公网 HTTPS Cloudflare Hub 接入并优化缓存、重连及凭据安全。独立应用 ID，可与原版并存；原作者的自动 APK 更新在此分支已关闭。
+> 新增紧凑、横向、竖向、总览、详细五个小组件入口，保留自动适配与四页切换，共七个入口。网格大小由启动器决定，以实际 dp 空间适配。Pages 的四个页面通过左右点击切换。
 >
-> 简体中文、安卓本地设备改名，以及独立图标大小、主页万／亿单位、二级页面完整 Token 数字与主题适配的绿联 NAS／Windows／Mac 图标。沿用现有签名支持覆盖安装。
+> [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.66.0-hub.1.md)
 >
-> [Cloudflare 配置](CLOUDFLARE.md) · [审核与修改](docs/audit.md) · [验证记录](docs/validation-cloudflare.md)
->
-> 下方为上游原始项目介绍，私有网络限制和原版发布渠道不适用于本分支。
+> 下方为上游项目介绍，原版发布渠道及验证记录不代表本分支验证结果。
 
 <p align="center">
   <img src="docs/images/app-icon.png" alt="Token Monitor app icon" width="96" height="96">
@@ -29,7 +27,7 @@ Tokens, account limits, models and trends from the desktop Token Monitor Hub, pl
 <p align="center">
   <a href="https://github.com/The-Minion-oOo/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
   <img alt="Android 8 or newer" src="https://img.shields.io/badge/Android-8%2B-6fa79b?style=flat-square&logo=android&logoColor=10221c">
-  <img alt="Desktop baseline v0.65.0" src="https://img.shields.io/badge/Desktop-v0.65.0-73bdf5?style=flat-square">
+  <img alt="Desktop baseline v0.66.0" src="https://img.shields.io/badge/Desktop-v0.66.0-73bdf5?style=flat-square">
   <img alt="Kotlin and Compose" src="https://img.shields.io/badge/Kotlin-Compose-ff9c72?style=flat-square&logo=kotlin&logoColor=white">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-b39cff?style=flat-square"></a>
 </p>
@@ -132,9 +130,9 @@ Session rows also show generation speed, cache-hit percentage and prompt-cache e
 
 ## Get connected
 
-You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android v0.65.0 r1 is fixture-verified against desktop v0.65.0. A physical-phone upgrade has not yet been checked for this release.
+You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android v0.66.0 r1 is fixture-verified against desktop v0.66.0. A physical-phone upgrade has not yet been checked for this release.
 
-1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.65.0 r1 APK.
+1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.66.0 r1 APK.
 2. Put [Tailscale](https://tailscale.com/) on the desktop and the phone, signed into the same tailnet.
 3. In desktop Token Monitor, open **Settings → Multi-device Sync → Host Hub** and copy the address and shared secret.
 4. In the app, type the address that starts with `100.`, paste the secret, tap **Connect**. Just the numbers are enough.
@@ -148,10 +146,10 @@ Desktop v0.64's optional iCloud Drive sync does not replace the Hub connection f
 
 | | |
 | --- | --- |
-| Current public release | [`v0.65.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.65.0-r1) |
+| Current public release | [`v0.66.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.66.0-r2) |
 | Latest phone-verified build | signed `v0.62.0-r1` over v0.61.0 r1; saved connection and placed Pages widget registration preserved |
-| v0.65.0 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
-| Desktop baseline | Token Monitor `v0.65.0` |
+| v0.66.0 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
+| Desktop baseline | Token Monitor `v0.66.0` |
 | Upstream commit | [`db325fd`](https://github.com/Javis603/token-monitor/commit/db325fdf46ea7f7328feeb47a4f2005fe339909f) |
 
 The visible version matches the desktop release the phone understands. Android-only

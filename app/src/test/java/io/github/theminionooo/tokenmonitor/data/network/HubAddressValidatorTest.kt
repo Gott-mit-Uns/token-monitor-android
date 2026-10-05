@@ -70,7 +70,7 @@ class HubAddressValidatorTest {
         val custom = HubAddressValidator.validate("https://hub.example.com:8443", "synthetic", false)
         assertEquals("https://hub.example.com:8443", (custom as HubAddressValidation.Allowed).connection.baseUrl)
         assertTrue(HubAddressValidator.validate("hub.example.com", "synthetic", false) is HubAddressValidation.Rejected)
-        assertEquals("Cloudflare Hub", HubAddressValidator.routeLabel("https://usage.workers.dev:443"))
+        assertEquals("HTTPS Hub", HubAddressValidator.routeLabel("https://usage.workers.dev:443"))
         assertEquals("HTTPS Hub", HubAddressValidator.routeLabel("https://hub.example.com:443"))
     }
 

@@ -134,10 +134,6 @@ internal fun limitStatusLabel(status: String): String = when (status) {
     else -> "Not available"
 }
 
-internal fun prioritizeAvailableLimits(providers: List<LimitAccount>): List<LimitAccount> = providers.withIndex()
-    .sortedWith(compareBy<IndexedValue<LimitAccount>> { it.value.windows.isEmpty() }.thenBy { account -> account.value.windows.mapNotNull { it.remainingPercent ?: it.usedPercent?.let { used -> 100.0 - used } }.minOrNull() ?: 101.0 }.thenBy { it.index })
-    .map { it.value }
-
 @Composable
 internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptions, deviceNames: Map<String, String> = emptyMap()) {
     Column(modifier = Modifier.fillMaxWidth().padding(bottom = 13.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {

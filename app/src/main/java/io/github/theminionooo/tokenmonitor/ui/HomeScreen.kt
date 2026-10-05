@@ -165,9 +165,8 @@ internal fun DesktopModule(
 
 @Composable
 internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOptions) {
-    val visible = accounts
-        .filter { account -> account.windows.any { it.remainingPercent != null || it.usedPercent != null || it.remaining != null } }
-        .sortedBy { account -> account.windows.mapNotNull { it.remainingPercent }.minOrNull() ?: 100.0 }
+    val visible = prioritizeAvailableLimits(accounts
+        .filter { account -> account.windows.any { it.remainingPercent != null || it.usedPercent != null || it.remaining != null } })
         .take(3)
     if (visible.isEmpty()) {
         MutedCopy("No account limits available")

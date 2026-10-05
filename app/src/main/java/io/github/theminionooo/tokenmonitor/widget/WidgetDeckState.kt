@@ -4,6 +4,8 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.res.Configuration
 import android.util.SizeF
+import android.os.Build
+import android.os.Bundle
 import io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser
 import io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences
 import io.github.theminionooo.tokenmonitor.data.storage.SnapshotCache
@@ -50,11 +52,11 @@ internal fun widgetDeckSize(context: Context, widgetId: Int): SizeF {
     val width = options.getInt(
         if (portrait) AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH else AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH,
         320,
-    ).coerceAtLeast(250)
+    ).coerceAtLeast(1)
     val height = options.getInt(
         if (portrait) AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT else AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT,
         180,
-    ).coerceAtLeast(110)
+    ).coerceAtLeast(1)
     return SizeF(width.toFloat(), height.toFloat())
 }
 
@@ -78,4 +80,17 @@ internal object WidgetDeckPageState {
             widgetIds.forEach { remove(it.toString()) }
         }.apply()
     }
+}
+
+/** Use launcher allocations, including orientation variants; never enlarge an undersized host. */
+internal fun widgetHostSizes(options: Bundle): List<SizeF> {
+    val advertised = if (Build.VERSION.SDK_INT >= 33) options.getParcelableArrayList(AppWidgetManager.OPTION_APPWIDGET_SIZES, SizeF::class.java)
+        else if (Build.VERSION.SDK_INT >= 31) { @Suppress("DEPRECATION") options.getParcelableArrayList<SizeF>(AppWidgetManager.OPTION_APPWIDGET_SIZES) } else null
+    fun valid(size: SizeF) = size.width.isFinite() && size.height.isFinite() && size.width > 0 && size.height > 0
+    val sizes = advertised.orEmpty().filter(::valid).distinct().take(16)
+    if (sizes.isNotEmpty()) return sizes
+    return listOf(
+        SizeF(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH).toFloat(), options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT).toFloat()),
+        SizeF(options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH).toFloat(), options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT).toFloat()),
+    ).filter(::valid).distinct()
 }

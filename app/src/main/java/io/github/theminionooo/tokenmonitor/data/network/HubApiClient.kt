@@ -38,7 +38,9 @@ internal class HubApiException(
 internal fun isEventStream(contentType: String?): Boolean =
     contentType?.substringBefore(";")?.trim()?.equals("text/event-stream", ignoreCase = true) == true
 
-internal class HubApiClient : Closeable {
+internal class HubApiClient(
+    private val beforeRequest: (HubConnection) -> Unit = {},
+) : Closeable {
     private val requests = mutableSetOf<HttpURLConnection>()
     private var closed = false
 
@@ -149,6 +151,7 @@ internal class HubApiClient : Closeable {
         accept: String = "application/json",
         headers: Map<String, String> = emptyMap(),
     ): HttpURLConnection {
+        beforeRequest(connection)
         val http = (URL(connection.baseUrl + path).openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"
             connectTimeout = 10_000
@@ -243,7 +246,7 @@ internal class HubApiClient : Closeable {
 
     private companion object {
         const val maxResponseBytes = 32 * 1024 * 1024
-        const val maxSseLineChars = 8 * 1024 * 1024
-        const val maxSseEventChars = 8 * 1024 * 1024
+        const val maxSseEventChars = maxResponseBytes + 16 * 1024
+        const val maxSseLineChars = maxSseEventChars + 6
     }
 }

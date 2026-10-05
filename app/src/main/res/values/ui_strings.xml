@@ -109,7 +109,7 @@
     <string name="ui_93f285223942" formatted="false">App updates</string>
     <string name="ui_475b43e19d3b" formatted="false">The dashboard streams immediately while visible. Widget Live uses a lighter 60-second refresh and stops after one hour.</string>
     <string name="ui_fe21a32fbf54" formatted="false">Hub address</string>
-    <string name="ui_222cbc2f0c92" formatted="false">Cloudflare: paste the complete HTTPS base address, without /api/stats. HTTPS defaults to port 443. Bare Tailscale or LAN addresses use HTTP port 17321.</string>
+    <string name="ui_222cbc2f0c92" formatted="false">Enter the complete Hub base address, without /api/stats. Use HTTPS for a reverse-proxy domain; private NAS, desktop or Tailscale addresses default to HTTP port 17321.</string>
     <string name="ui_9d32b680780a" formatted="false">Home Wi-Fi address (optional)</string>
     <string name="ui_3703287c6c15" formatted="false">Private desktop Hub only. Use this only if it shares the same data and secret as the primary Hub; otherwise leave it blank.</string>
     <string name="ui_ded8dae5786f" formatted="false">Find</string>
@@ -121,14 +121,14 @@
     <string name="ui_d4911489c222" formatted="false">Your desktop dashboard, live on your phone.</string>
     <string name="ui_00d3c7ab5e0e" formatted="false">CONNECT YOUR HUB</string>
     <string name="ui_cc2a08ca0550" formatted="false">Choose your existing Hub</string>
-    <string name="ui_7a1672916de4" formatted="false">Use your Cloudflare HTTPS Hub, or a desktop Hub over Tailscale or home Wi-Fi.</string>
+    <string name="ui_7a1672916de4" formatted="false">Use your NAS or desktop Hub over a HTTPS domain, Tailscale or home Wi-Fi.</string>
     <string name="ui_8778f2819b3c" formatted="false">Enter its base address</string>
-    <string name="ui_9b424030a94b" formatted="false">Cloudflare uses https://your-hub.example.com. For a desktop Hub, use its private address and port.</string>
+    <string name="ui_9b424030a94b" formatted="false">For a reverse proxy, use https://your-hub.example.com. On home Wi-Fi, use the NAS or desktop private address and port.</string>
     <string name="ui_48612ee2988e" formatted="false">Enter the shared Hub secret</string>
-    <string name="ui_4905ecd1397f" formatted="false">Use the Token Monitor Hub secret, not a Cloudflare account API token. Check and save to connect.</string>
+    <string name="ui_4905ecd1397f" formatted="false">Enter the shared Token Monitor Hub secret. Check and save to verify the connection.</string>
     <string name="ui_f11a107f3832" formatted="false">Connect</string>
-    <string name="ui_d40ebebf5bad" formatted="false">Usage is read from the Hub you configure. Credentials are encrypted with Android Keystore. This independent Cloudflare edition uses manually installed updates.</string>
-    <string name="ui_ef542ec29ddb" formatted="false">This phone only reads your Token Monitor Hub. HTTPS Cloudflare Hubs and private desktop Hubs are supported.</string>
+    <string name="ui_d40ebebf5bad" formatted="false">Usage is read from your configured Hub. Credentials are encrypted with Android Keystore. This independent edition uses manually installed updates.</string>
+    <string name="ui_ef542ec29ddb" formatted="false">This phone only reads your Token Monitor Hub. NAS and desktop Hubs support HTTPS domains, Tailscale and home Wi-Fi.</string>
     <string name="ui_ed40bdf3fce2" formatted="false">The saved Hub is shown below. Enter the secret again only to change the connection.</string>
     <string name="ui_6bb963c298a3" formatted="false">1. Install Tailscale on the desktop and phone, then use the same tailnet.</string>
     <string name="ui_6961a573f74f" formatted="false">2. In the desktop app, open Settings → Multi-device Sync and choose Host Hub.</string>
@@ -136,7 +136,7 @@
     <string name="ui_6656018ac96d" formatted="false">Always</string>
     <string name="ui_85841abddb12" formatted="false">Installed</string>
     <string name="ui_194562b97b02" formatted="false">Edition</string>
-    <string name="ui_40d57ec40577" formatted="false">Cloudflare compatible</string>
+    <string name="ui_40d57ec40577" formatted="false">Independent Hub client</string>
     <string name="ui_e69243169611" formatted="false">This independent edition uses a separate package and signing key. Automatic upstream update checks and APK installation are disabled. Install future updates supplied for this edition; upstream APKs do not update it.</string>
     <string name="ui_26b56c1bdfb0" formatted="false">Refresh</string>
     <string name="ui_6e9c6c40ef0a" formatted="false">Refreshing</string>
@@ -247,7 +247,7 @@
     <string name="ui_15f90b181664" formatted="false">Tailscale</string>
     <string name="ui_c3e43e15c2b0" formatted="false">Private network</string>
     <string name="ui_6ac3cf070e92" formatted="false">HTTPS Hub</string>
-    <string name="ui_b1e471b0d308" formatted="false">Cloudflare Hub</string>
+    <string name="ui_b1e471b0d308" formatted="false">HTTPS Hub</string>
     <string name="ui_6a6a39ac493f" formatted="false">Enter the Hub secret before connecting.</string>
     <string name="ui_842ff3b32076" formatted="false">The Hub secret must not contain control characters or line breaks.</string>
     <string name="ui_b3e43b7e2ea7" formatted="false">The Hub address must not contain spaces or control characters.</string>
@@ -379,4 +379,21 @@
     <string name="ui_cf4_324e02b3f6" formatted="false">Changes content icons independently of text size. Navigation and widgets keep their sizes.</string>
     <string name="ui_cf4_f4e818d28b" formatted="false">Abbreviate the Home total using the selected Home units.</string>
     <string name="ui_home_activity">Activity</string>
+    <string name="ui_hub066_0" formatted="false">Android needs your permission to reach the home Wi-Fi Hub. Tailscale can still be used when available.</string>
+    <string name="ui_hub066_1" formatted="false">ALLOW HOME WI-FI ACCESS</string>
+    <string name="ui_hub066_2" formatted="false">Open Android permissions</string>
+    <string name="ui_hub066_3" formatted="false">Uses the saved Hub secret to verify only this home address. Other edited fields are not saved.</string>
+    <string name="ui_hub066_4" formatted="false">CHECKING HOME ADDRESS…</string>
+    <string name="ui_hub066_5" formatted="false">TEST AND SAVE HOME ADDRESS</string>
+    <string name="ui_hub066_6" formatted="false">Clear search</string>
+    <string name="ui_hub066_7" formatted="false">Some reported breakdowns conflict with their daily totals. Those days are shown as unattributed.</string>
+    <string name="ui_hub066_8" formatted="false">Other tools</string>
+    <string name="ui_hub066_9" formatted="false">Other models</string>
+    <string name="ui_hub066_10" formatted="false">Unattributed</string>
+    <string name="ui_hub066_11" formatted="false">Home Wi-Fi access is off. Allow local network access in Settings to use this route.</string>
+    <string name="ui_hub066_12" formatted="false">Home address saved.</string>
+    <string name="ui_hub066_tpl_0">%1$s recorded days · %2$s</string>
+    <string name="ui_hub066_tpl_1">%1$s days have no observation; gaps are left blank.</string>
+    <string name="ui_hub066_tpl_2">Each candle covers up to %1$s consecutive recorded days: first, last, highest and lowest daily totals.</string>
+    <string name="ui_hub066_tpl_3">%1$s more quota notices; see the accounts below.</string>
 </resources>

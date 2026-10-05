@@ -20,4 +20,10 @@
     <string name="widget_deck_limits">LIMITS · 2/4</string>
     <string name="widget_deck_breakdown">BREAKDOWN · 3/4</string>
     <string name="widget_deck_activity">ACTIVITY · 4/4</string>
+    <string name="widget_compact_label">Token Monitor · Compact</string>
+    <string name="widget_wide_label">Token Monitor · Wide</string>
+    <string name="widget_portrait_label">Token Monitor · Portrait</string>
+    <string name="widget_overview_label">Token Monitor · Overview</string>
+    <string name="widget_large_label">Token Monitor · Detailed</string>
+    <string name="widget_preset_description">A named layout that fits its minimum size. Resize for more space. Uses the shared Hub cache and refresh controls.</string>
 </resources>

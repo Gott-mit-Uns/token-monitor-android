@@ -12,7 +12,7 @@ internal object WidgetUpdateCoordinator {
 
     fun stopLiveIfUnused(context: Context) {
         val manager = AppWidgetManager.getInstance(context)
-        val hasResponsive = manager.getAppWidgetIds(ComponentName(context, UsageWidgetProvider::class.java)).isNotEmpty()
+        val hasResponsive = usageWidgetProviders.any { manager.getAppWidgetIds(ComponentName(context, it)).isNotEmpty() }
         val hasDeck = manager.getAppWidgetIds(ComponentName(context, SwipeWidgetProvider::class.java)).isNotEmpty()
         if (!hasResponsive && !hasDeck) WidgetLiveService.stop(context)
     }

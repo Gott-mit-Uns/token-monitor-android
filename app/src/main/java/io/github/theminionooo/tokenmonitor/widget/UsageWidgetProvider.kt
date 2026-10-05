@@ -151,7 +151,7 @@ internal fun widgetStats(history: List<HistoryPoint>, date: LocalDate?): List<Pa
     return stats
 }
 
-class UsageWidgetProvider : AppWidgetProvider() {
+open class UsageWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) = updateAsync(context)
     override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: Bundle) = updateAsync(context)
     override fun onDisabled(context: Context) = WidgetUpdateCoordinator.stopLiveIfUnused(context)
@@ -169,7 +169,7 @@ class UsageWidgetProvider : AppWidgetProvider() {
 
         @Synchronized internal fun refresh(context: Context) {
             val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(ComponentName(context, UsageWidgetProvider::class.java))
+            val ids = usageWidgetProviders.flatMap { manager.getAppWidgetIds(ComponentName(context, it)).toList() }.toIntArray()
             if (ids.isEmpty()) return
             val session = WidgetRuntime.session
             val cached = if ((session.enabled || session.refreshing) && session.snapshot != null) null else SnapshotCache(context).read()?.let { wire ->
@@ -190,29 +190,25 @@ class UsageWidgetProvider : AppWidgetProvider() {
             ids.forEach { id ->
                 val frame = synchronized(frames) { counterFrame(frames[id], snapshot?.today?.totalTokens).also { frames[id] = it } }
                 val options = manager.getAppWidgetOptions(id)
+                val preset = widgetPreset(manager.getAppWidgetInfo(id)?.provider?.className)
+                fun select(width: Int, height: Int): WidgetLayout = preset?.takeIf { width >= it.width && height >= it.requiredHeight(fontScale) } ?: widgetLayout(width, height, fontScale)
                 fun sized(layout: WidgetLayout, size: SizeF) = render(context, snapshot, theme, layout, frame, motion, session, size)
                 val views = if (Build.VERSION.SDK_INT >= 31) {
                     // The launcher lists every size this widget can take; each gets a render drawn for exactly that space.
-                    val sizes = if (Build.VERSION.SDK_INT >= 33) {
-                        options.getParcelableArrayList(AppWidgetManager.OPTION_APPWIDGET_SIZES, SizeF::class.java)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        options.getParcelableArrayList<SizeF>(AppWidgetManager.OPTION_APPWIDGET_SIZES)
-                    }.orEmpty()
-                        .filter { it.width > 0 && it.height > 0 }.distinct().take(16)
+                    val sizes = widgetHostSizes(options)
                     if (sizes.isEmpty()) {
                         RemoteViews(WidgetLayout.entries.associate { layout ->
                             val size = SizeF(layout.width.toFloat(), layout.requiredHeight(fontScale))
                             size to sized(layout, size)
                         })
                     } else {
-                        RemoteViews(sizes.associateWith { size -> sized(widgetLayout(size.width.toInt(), size.height.toInt(), fontScale), size) })
+                        RemoteViews(sizes.associateWith { size -> sized(select(size.width.toInt(), size.height.toInt()), size) })
                     }
                 } else {
                     fun forSize(widthKey: String, heightKey: String): RemoteViews {
                         val width = options.getInt(widthKey)
                         val height = options.getInt(heightKey)
-                        val layout = widgetLayout(width, height, fontScale)
+                        val layout = select(width, height)
                         return sized(layout, SizeF(width.coerceAtLeast(layout.width).toFloat(), height.coerceAtLeast(layout.height).toFloat()))
                     }
                     RemoteViews(
@@ -658,4 +654,25 @@ class UsageWidgetProvider : AppWidgetProvider() {
             return bitmap
         }
     }
+}
+
+/** Explicit picker entries share rendering, cache and update controls with the original responsive widget. */
+class CompactWidgetProvider : UsageWidgetProvider()
+class WideWidgetProvider : UsageWidgetProvider()
+class PortraitWidgetProvider : UsageWidgetProvider()
+class OverviewWidgetProvider : UsageWidgetProvider()
+class LargeWidgetProvider : UsageWidgetProvider()
+
+internal val usageWidgetProviders = listOf(
+    UsageWidgetProvider::class.java, CompactWidgetProvider::class.java, WideWidgetProvider::class.java,
+    PortraitWidgetProvider::class.java, OverviewWidgetProvider::class.java, LargeWidgetProvider::class.java,
+)
+
+internal fun widgetPreset(className: String?): WidgetLayout? = when (className?.substringAfterLast('.')) {
+    "CompactWidgetProvider" -> WidgetLayout.Compact
+    "WideWidgetProvider" -> WidgetLayout.Wide
+    "PortraitWidgetProvider" -> WidgetLayout.Portrait
+    "OverviewWidgetProvider" -> WidgetLayout.Overview
+    "LargeWidgetProvider" -> WidgetLayout.Large
+    else -> null
 }

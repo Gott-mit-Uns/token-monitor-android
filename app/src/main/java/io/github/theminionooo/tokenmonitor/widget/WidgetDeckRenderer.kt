@@ -105,7 +105,7 @@ internal object WidgetDeckRenderer {
     }
 
     private fun description(context: Context, page: WidgetDeckPage, data: WidgetDeckData): String {
-        val summary = data.snapshot?.let { "${formatTokens(it.today.totalTokens)} tokens. ${formatMoney(it.today.costUsd)} today." }.orEmpty()
+        val summary = widgetDeckPageSummary(page, data)
         return "Token Monitor ${context.getString(page.subtitle)}. $summary ${data.statusDescription}. Tap the left or right edge to change page, or tap the content to open."
     }
 }

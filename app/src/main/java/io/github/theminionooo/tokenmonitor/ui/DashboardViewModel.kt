@@ -8,6 +8,7 @@ import io.github.theminionooo.tokenmonitor.widget.WidgetLiveService
 import io.github.theminionooo.tokenmonitor.widget.WidgetUpdateCoordinator
 import io.github.theminionooo.tokenmonitor.data.HubRepositoryState
 import io.github.theminionooo.tokenmonitor.data.network.HubDiscovery
+import io.github.theminionooo.tokenmonitor.data.network.LocalNetworkAccess
 import io.github.theminionooo.tokenmonitor.data.network.ServiceStatusClient
 import io.github.theminionooo.tokenmonitor.data.storage.DisplayPreferences
 import io.github.theminionooo.tokenmonitor.data.storage.LimitBarMetric
@@ -97,6 +98,14 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
 
     fun onResume() {
         resumed = true
+        if (LocalNetworkAccess.granted(getApplication())) {
+            if (_connectionForm.value.result == LocalNetworkAccess.deniedMessage) {
+                _connectionForm.value = _connectionForm.value.copy(result = null)
+            }
+            if (_discovery.value.message == LocalNetworkAccess.deniedMessage) {
+                _discovery.value = _discovery.value.copy(message = null)
+            }
+        }
         updateForegroundWork()
     }
 
@@ -171,15 +180,31 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
     fun moveHomeModule(module: String, offset: Int) = displayPreferences.moveHomeModule(module, offset)
 
     fun saveConnection(url: String, fallbackUrl: String, secret: String, allowLocalNetwork: Boolean) {
+        checkConnection(returnHome = true) { repository.validateAndSave(url, fallbackUrl, secret, allowLocalNetwork) }
+    }
+
+    fun repairHomeAddress(address: String) {
+        checkConnection(returnHome = false) { repository.repairHomeAddress(address) }
+    }
+
+    fun localNetworkPermissionDenied() {
+        _connectionForm.value = ConnectionFormState(result = LocalNetworkAccess.deniedMessage)
+        _discovery.value = HubDiscoveryState(message = LocalNetworkAccess.deniedMessage)
+    }
+
+    private fun checkConnection(returnHome: Boolean, operation: suspend () -> String?) {
         if (_connectionForm.value.saving) return
         viewModelScope.launch {
             _connectionForm.value = ConnectionFormState(saving = true)
             try {
                 WidgetLiveService.stop(getApplication())
                 repository.setWidgetActive(false)
-                val error = repository.validateAndSave(url, fallbackUrl, secret, allowLocalNetwork)
-                _connectionForm.value = ConnectionFormState(result = error ?: "Connected securely to the Hub.")
-                if (error == null) choose(DashboardDestination.Home)
+                val error = operation()
+                _connectionForm.value = ConnectionFormState(result = error ?: "Connected. The home address is verified and saved.")
+                if (error == null) {
+                    _discovery.value = HubDiscoveryState()
+                    if (returnHome) choose(DashboardDestination.Home)
+                }
             } catch (cancelled: kotlinx.coroutines.CancellationException) {
                 _connectionForm.value = ConnectionFormState(result = "Connection check paused. Try again.")
                 throw cancelled
@@ -191,13 +216,17 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
 
     /** Looks for a Hub on the current Wi-Fi and reports the address so the form can fill it in. */
     fun findHomeHub() {
+        if (!LocalNetworkAccess.granted(getApplication())) {
+            localNetworkPermissionDenied()
+            return
+        }
         if (discoveryJob?.isActive == true) return
         _discovery.value = HubDiscoveryState(searching = true)
         discoveryJob = viewModelScope.launch {
             val found = runCatching { hubDiscovery.findOnLocalNetwork() }.getOrNull()
             _discovery.value = HubDiscoveryState(
                 found = found,
-                message = if (found != null) "Found your desktop at ${found.removePrefix("http://")}."
+                message = if (found != null) "Found a Hub. Test and save this address to use it."
                 else "No Hub answered on this Wi-Fi. Check that the desktop app is running with Host Hub on, then try again.",
             )
         }
