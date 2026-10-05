@@ -1,6 +1,8 @@
-> **Cloudflare 兼容分支：Token Monitor Minion CF · v0.65.0-cf.7**
+> **Token Monitor Android（Cloudflare Hub 兼容版） · v0.65.0-cf.7**
 >
-> 发布仓库：[Gott-mit-Uns/token-monitor-android-minion-cloudflare](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare)。[下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases/latest)。
+> 发布仓库：[Gott-mit-Uns/token-monitor-android](https://github.com/Gott-mit-Uns/token-monitor-android)。[下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest)。
+>
+> 项目与应用显示名现统一为 **Token Monitor Android**。Android 应用 ID 与现有签名保持不变，支持后续覆盖安装；历史 Release 的 APK 文件名保留发布时的名称。
 >
 > 此分支基于 The-Minion-oOo 的 MIT 项目，保留原界面与小组件，增加公网 HTTPS Cloudflare Hub 接入并优化缓存、重连及凭据安全。独立应用 ID，可与原版并存；原作者的自动 APK 更新在此分支已关闭。
 >
@@ -27,7 +29,7 @@ Tokens, account limits, models and trends from the desktop Token Monitor Hub, pl
 </p>
 
 <p align="center">
-  <a href="https://github.com/The-Minion-oOo/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
+  <a href="https://github.com/Gott-mit-Uns/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
   <img alt="Android 8 or newer" src="https://img.shields.io/badge/Android-8%2B-6fa79b?style=flat-square&logo=android&logoColor=10221c">
   <img alt="Desktop baseline v0.65.0" src="https://img.shields.io/badge/Desktop-v0.65.0-73bdf5?style=flat-square">
   <img alt="Kotlin and Compose" src="https://img.shields.io/badge/Kotlin-Compose-ff9c72?style=flat-square&logo=kotlin&logoColor=white">

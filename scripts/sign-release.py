@@ -32,7 +32,11 @@ def main():
     java_home = os.environ.get("JAVA_HOME")
     if not java_home:
         raise SystemExit("Set JAVA_HOME to a JDK 17 installation.")
-    private = Path.home() / ".local/share/token-monitor-minion-cloudflare/private"
+    private = Path.home() / ".local/share/token-monitor-android/cloudflare/private"
+    # Reuse the existing key after the project rename so installed apps can upgrade.
+    legacy_private = Path.home() / ".local/share/token-monitor-minion-cloudflare/private"
+    if (legacy_private / "release.jks").is_file():
+        private = legacy_private
     private.mkdir(parents=True, exist_ok=True); private.chmod(0o700)
     keystore = private / "release.jks"
     with tempfile.TemporaryDirectory(prefix="tm-signing-") as tmp:
@@ -55,7 +59,7 @@ def main():
                         "-storetype", "PKCS12", "-storepass:env", "ANDROID_KEYSTORE_PASSWORD",
                         "-keypass:env", "ANDROID_KEY_PASSWORD", "-alias", env["ANDROID_KEY_ALIAS"],
                         "-keyalg", "RSA", "-keysize", "3072", "-validity", "10000",
-                        "-dname", "CN=Token Monitor Minion CF Personal Release", "-noprompt"],
+                        "-dname", "CN=Token Monitor Android Personal Release", "-noprompt"],
                        env=env, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         keystore.chmod(0o600)
     gradle = os.environ.get("TM_GRADLE_EXECUTABLE", str(ROOT/"gradlew"))

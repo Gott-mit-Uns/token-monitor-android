@@ -369,4 +369,4 @@ internal fun DashboardScaffold(
 }
 }
 
-internal const val androidReleasesUrl = "https://github.com/Gott-mit-Uns/token-monitor-android-minion-cloudflare/releases"
+internal const val androidReleasesUrl = "https://github.com/Gott-mit-Uns/token-monitor-android/releases"
