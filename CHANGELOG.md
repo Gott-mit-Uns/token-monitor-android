@@ -1,5 +1,11 @@
 ## v0.65.0-cf.2 — Simplified Chinese and local device names
 
+## v0.65.0-cf.8
+
+- 修复主页 Activity 标题中文翻译。
+- 主页保留活动热力图，移除趋势标题、峰值、折线图及日期轴；完整趋势详情和导航入口保留。
+- 保持同步、统计、凭据、设备别名、小组件及其他主页模块不变。
+
 - Added system / Simplified Chinese / English language selection, including first connection.
 - Translated app labels, known dynamic messages, date/countdown formatting, widgets and Live notifications using desktop v0.65.0 terminology.
 - Added persistent Android-only device aliases, scoped by normalized Hub and stable device ID; restore original names without changing Hub data.

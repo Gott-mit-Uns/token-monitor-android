@@ -378,4 +378,5 @@
     <string name="ui_cf4_28123b8b80" formatted="false">开启使用万／亿，关闭使用 K／M／B；仅影响主页的 Token 数量。</string>
     <string name="ui_cf4_324e02b3f6" formatted="false">内容图标大小与文字大小独立；导航与桌面小组件保持原尺寸。</string>
     <string name="ui_cf4_f4e818d28b" formatted="false">按所选主页单位简写主页总量，二级页面始终显示完整数量。</string>
+    <string name="ui_home_activity">活动</string>
 </resources>

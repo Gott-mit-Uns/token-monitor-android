@@ -7,6 +7,7 @@ import io.github.theminionooo.tokenmonitor.R
 import java.util.Locale
 
 private val labels = mapOf(
+    "activity" to R.string.ui_home_activity,
     "icon size" to R.string.ui_cf4_a86cafc756,
     "home units" to R.string.ui_cf4_473d53e5a8,
     "on uses 万/亿; off uses k/m/b. applies only to home token values." to R.string.ui_cf4_28123b8b80,
