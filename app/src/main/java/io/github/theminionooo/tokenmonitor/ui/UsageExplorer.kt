@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -145,9 +147,14 @@ internal fun CompactSearchField(value: String, onValueChange: (String) -> Unit, 
         BasicTextField(value, onValueChange, singleLine = true, textStyle = textStyle, cursorBrush = SolidColor(Accent),
             modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).onFocusChanged { focused = it.isFocused }.semantics { contentDescription = localizedText(hint) },
             decorationBox = { inner ->
-                Box(Modifier.padding(horizontal = 12.dp, vertical = 10.dp), contentAlignment = Alignment.CenterStart) {
-                    if (value.isEmpty()) Text(tr(hint), color = Muted, style = MaterialTheme.typography.bodySmall)
-                    inner()
+                Row(Modifier.padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.weight(1f).padding(vertical = 10.dp), contentAlignment = Alignment.CenterStart) {
+                        if (value.isEmpty()) Text(tr(hint), color = Muted, style = MaterialTheme.typography.bodySmall)
+                        inner()
+                    }
+                    if (value.isNotEmpty()) IconButton(onClick = { onValueChange("") }) {
+                        Icon(Icons.Outlined.Close, contentDescription = localizedText("Clear search"), tint = Muted, modifier = Modifier.size(18.dp))
+                    } else Spacer(Modifier.width(12.dp))
                 }
             })
     }

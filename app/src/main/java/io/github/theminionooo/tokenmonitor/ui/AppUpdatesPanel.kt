@@ -11,7 +11,7 @@ import io.github.theminionooo.tokenmonitor.BuildConfig
 @Suppress("UNUSED_PARAMETER")
 internal fun AppUpdatesPanel(onOpenReleasePage: () -> Unit) {
     StatusLine("Installed", BuildConfig.VERSION_NAME)
-    StatusLine("Edition", tr("Cloudflare compatible"))
+    StatusLine("Edition", tr("Independent Hub client"))
     Text(tr("This independent edition uses a separate package and signing key. Automatic upstream update checks and APK installation are disabled. Install future updates supplied for this edition; upstream APKs do not update it."),
         color = Muted,
         style = MaterialTheme.typography.bodySmall,

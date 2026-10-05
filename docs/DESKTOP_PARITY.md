@@ -1,6 +1,6 @@
-# Desktop parity for v0.65.0
+# Desktop parity for v0.66.0
 
-The Android release is fixture-verified against desktop Token Monitor v0.65.0. It mirrors
+The Android release is fixture-verified against desktop Token Monitor v0.66.0. It mirrors
 the desktop information that the Hub can safely provide while keeping the phone
 read-only and lightweight.
 
@@ -40,7 +40,7 @@ controls are window-specific rather than Hub dashboard features.
 ## Intentional boundaries
 
 The following remain on desktop because they collect data, control a desktop
-window, or require information the v0.65.0 Hub does not transmit:
+window, or require information the v0.66.0 Hub does not transmit:
 
 - tool discovery, account sign-in, collection cadence, diagnostics, export, and
   subscription editing;
@@ -90,6 +90,14 @@ can hide reported session titles locally without removing them from the snapshot
 cache. Countdown labels are estimates, not guaranteed provider retention.
 Desktop hover scrolling, Edge Dock quota animations, per-provider hidden usage
 items, and collector changes remain desktop responsibilities.
+
+v0.66.0 recognizes MiniMax Code (`mcode`) with its label and MiniMax mark in
+the existing tool, session, device and widget surfaces. Its usage remains separate
+from the `minimax` quota provider. Corrected custom-pricing and cache-write costs
+are read from the Hub, including history; Android does not recompute them.
+MiniMax API-region selection, sync/device management, T3 Code title discovery,
+large-transcript handling, JSON exports and bundled Tokscale updates remain
+desktop responsibilities. Hub-stripped titles keep the existing client/model fallback.
 
 Optional macOS iCloud Drive sync, Edge Dock fullscreen/quota pins, Claude Web
 organization selection, and collection/watch fixes remain desktop features.

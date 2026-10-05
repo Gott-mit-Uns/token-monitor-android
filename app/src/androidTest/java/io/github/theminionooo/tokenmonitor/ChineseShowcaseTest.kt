@@ -48,6 +48,7 @@ class ChineseShowcaseTest {
     }
     @Test fun appearanceGallery() = dashboardGallery(DashboardDestination.Settings, appearance = true)
     @Test fun homeGallery() = dashboardGallery(DashboardDestination.Home)
+    @Test fun homeActivityGallery() = dashboardGallery(DashboardDestination.Home, activityOnly = true)
     @Test fun modelsGallery() = dashboardGallery(DashboardDestination.Models)
     @Test fun devicesGallery() = dashboardGallery(DashboardDestination.Devices)
     @Test fun projectsGallery() = dashboardGallery(DashboardDestination.Projects)
@@ -56,14 +57,14 @@ class ChineseShowcaseTest {
     @Test fun connectionGallery() = dashboardGallery(DashboardDestination.Settings, connected = false)
     @Test fun filteredModelsGallery() = dashboardGallery(DashboardDestination.Tools)
 
-    private fun dashboardGallery(initial: DashboardDestination, connected: Boolean = true, appearance: Boolean = false) {
+    private fun dashboardGallery(initial: DashboardDestination, connected: Boolean = true, appearance: Boolean = false, activityOnly: Boolean = false) {
         check(context.packageName.endsWith(".preview"))
         val raw = snapshot()
         val originalNames = raw.stats.devices.associate { it.id to it.hostname }
         val shown = if (initial == DashboardDestination.Devices) raw.copy(stats = raw.stats.copy(devices = raw.stats.devices.mapIndexed { index, device -> if (index == 0) device.copy(hostname = "家中 NAS") else device })) else raw
         val state = HubRepositoryState(hasConnection = connected, snapshot = shown.takeIf { connected }, streamActive = connected)
         var destination by mutableStateOf(initial)
-        var options by mutableStateOf(DisplayOptions(colorfulToolMarks = true))
+        var options by mutableStateOf(DisplayOptions(colorfulToolMarks = true, visibleHomeModules = if (activityOnly) listOf("Activity") else DisplayOptions.defaultHomeModules))
         val palette = Palette.from(InterfaceTheme.Default)
         var captureWindow: android.view.Window? = null
         compose.setContent {
@@ -128,7 +129,14 @@ class ChineseShowcaseTest {
             compose.onNodeWithText("Codex").performClick()
             compose.onNodeWithText("Codex · 模型").assertIsDisplayed()
             capture("filtered-models")
-        } else capture(if (connected) initial.name.lowercase() else "connection")
+        } else {
+            if (activityOnly) {
+                compose.onNodeWithText("活动", useUnmergedTree = true).assertExists()
+                compose.onNodeWithText("ACTIVITY").assertDoesNotExist()
+                compose.onNodeWithText("趋势").assertDoesNotExist()
+            }
+            capture(if (activityOnly) "home-activity" else if (connected) initial.name.lowercase() else "connection")
+        }
     }
 
     @Test fun widgetGallery() {

@@ -28,6 +28,27 @@ import java.time.LocalDate
 class DashboardInteractionTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun miniMaxCodeFiltersModelsAndKeepsUntitledSessionFallback() {
+        fun asset(name: String) = InstrumentationRegistry.getInstrumentation().context.assets
+            .open("protocol/v0.66.0/$name").bufferedReader().use { it.readText() }
+        val snapshot = HubProtocolParser.decodeSnapshot(asset("health.json"), asset("stats.json"),
+            asset("devices.json"), asset("history.json"), asset("subscriptions.json"), 0)
+        var destination by mutableStateOf(DashboardDestination.Tools)
+        var modelFilter by mutableStateOf<String?>(null)
+        compose.setContent { MaterialTheme { CompositionLocalProvider(LocalInteractionMotion provides false) {
+            DashboardContent(Modifier.fillMaxSize(), HubRepositoryState(snapshot = snapshot), destination,
+                DashboardPeriod.Today, { destination = it }, {}, false, ServiceStatusState(), DisplayOptions(), {},
+                modelFilter = modelFilter,
+                onOpenToolModels = { modelFilter = it; destination = DashboardDestination.Models })
+        } } }
+        compose.onNodeWithText("MiniMax Code").assertIsDisplayed().performClick()
+        compose.onNodeWithText("MiniMax Code · Models").assertIsDisplayed()
+        compose.onNodeWithText("minimax-m2.5").assertIsDisplayed()
+        compose.onNodeWithText("claude-sonnet-4-5").assertDoesNotExist()
+        compose.runOnIdle { destination = DashboardDestination.Sessions }
+        compose.onNodeWithText("MiniMax Code · minimax-m2.5").assertIsDisplayed()
+    }
+
     private fun metricSession() = SessionUsage("metrics", "Private planning title", "codex", "Example", 100, 1.0,
         listOf("gpt-6-sol"), 1, "", "2026-10-02T11:59:00Z",
         inputTokens = 20, outputTokens = 100, cacheReadTokens = 60, cacheWriteTokens = 20,

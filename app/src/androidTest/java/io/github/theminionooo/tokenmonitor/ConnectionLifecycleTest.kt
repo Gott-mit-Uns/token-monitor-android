@@ -18,6 +18,7 @@ class ConnectionLifecycleTest {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         check(context.packageName.endsWith(".preview"))
+        grantFixtureNetworkAccess()
         val address = NetworkInterface.getNetworkInterfaces().toList().flatMap { it.inetAddresses.toList() }
             .filterIsInstance<Inet4Address>().first { it.isSiteLocalAddress }.hostAddress
         val accepted = CountDownLatch(1)

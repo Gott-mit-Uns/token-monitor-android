@@ -10,6 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import io.github.theminionooo.tokenmonitor.MainActivity
+import io.github.theminionooo.tokenmonitor.data.network.LocalNetworkAccess
+import io.github.theminionooo.tokenmonitor.data.storage.SecureConnectionStore
 
 /** A user-visible activity supplies the foreground-start gesture and first-use permission prompt. */
 class WidgetControlActivity : Activity() {
@@ -24,17 +26,28 @@ class WidgetControlActivity : Activity() {
             finish()
         } else if (action !in listOf(WidgetLiveService.ACTION_LIVE, WidgetLiveService.ACTION_REFRESH)) {
             finish()
-        } else if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            if (savedInstanceState == null) requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
-        } else startUpdates()
+        } else if (savedInstanceState == null) requestAccessAndStart()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1 && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) startUpdates()
+        if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) requestAccessAndStart()
         else {
-            Toast.makeText(this, "Allow notifications to use widget updates with a visible Stop control.", Toast.LENGTH_LONG).show()
+            val message = if (requestCode == 2) LocalNetworkAccess.deniedMessage
+                else "Allow notifications to use widget updates with a visible Stop control."
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             finish()
+        }
+    }
+
+    private fun requestAccessAndStart() {
+        val pairing = SecureConnectionStore(this).read()
+        when {
+            pairing != null && LocalNetworkAccess.allowedRoutes(pairing, null, false).isEmpty() && !LocalNetworkAccess.granted(this) ->
+                requestPermissions(arrayOf(LocalNetworkAccess.permission), 2)
+            Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED ->
+                requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+            else -> startUpdates()
         }
     }
 

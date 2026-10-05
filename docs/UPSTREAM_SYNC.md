@@ -2,7 +2,7 @@
 
 ## Version rule
 
-The current Android release displays `v0.65.0` because it is fixture-verified against desktop Token Monitor `v0.65.0`. The Gradle properties and `upstream.json` identify tag `v0.65.0` and peeled commit `db325fdf46ea7f7328feeb47a4f2005fe339909f`. The signed release is [`android-v0.65.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.65.0-r1); physical-phone upgrade checks remain pending.
+The current Android release displays `v0.66.0` because it is fixture-verified against desktop Token Monitor `v0.66.0`. The Gradle properties and `upstream.json` identify tag `v0.66.0` and peeled commit `e7bac3aff6a1bc7cf74fd149a26d2730cfe32de8`. The signed release is [`android-v0.66.0-r2`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.66.0-r2), recorded with its source commit in `release.json`. The earlier r1 Galaxy S25 Ultra upgrade preserved pairing and the placed Pages widget; r2 physical-device checks remain pending.
 
 An Android-only fix increments `versionCode` and the GitHub release revision,
 for example `android-vX.Y.Z-rN`, without changing the visible compatibility
@@ -33,7 +33,13 @@ it and starts again at release revision 1.
    candidate release notes, and validation evidence together.
 8. Run unit tests, lint, debug/release builds, emulator interaction checks, and the physical-phone gate before publishing.
 
-The scheduled check reports a release; it never merges upstream code automatically. Desktop renderer code cannot be copied wholesale into a native Android app, and protocol or privacy changes require review.
+The scheduled check reports a release and closes obsolete automated review
+reminders already covered by the verified baseline. It preserves manual issues
+and closed review decisions, and never merges upstream code automatically.
+The pinned-source contract workflow also exercises the released Hub with
+synthetic data and passes its responses through Android's parser; see
+[Development](DEVELOPMENT.md). Desktop renderer code cannot be copied wholesale
+into a native Android app, and protocol or privacy changes require review.
 
 ## Why updates stay contained
 

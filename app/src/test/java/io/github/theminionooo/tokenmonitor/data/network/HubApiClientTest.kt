@@ -2,8 +2,12 @@ package io.github.theminionooo.tokenmonitor.data.network
 
 import com.sun.net.httpserver.HttpServer
 import io.github.theminionooo.tokenmonitor.domain.HubConnection
+import io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
 import kotlinx.coroutines.runBlocking
@@ -55,7 +59,7 @@ class HubApiClientTest {
             counts.forEach { (path, count) -> createContext(path) { exchange ->
                 count.incrementAndGet()
                 // Real multi-device histories can comfortably exceed the upstream 2 MiB limit.
-                val body = (if (path == "/api/history") " " .repeat(3 * 1024 * 1024) + "{}" else "{}").toByteArray()
+                val body = (if (path == "/api/history") " " .repeat(3 * 1024 * 1024) + "{}" else """{"periods":{}}""").toByteArray()
                 exchange.sendResponseHeaders(200, body.size.toLong())
                 exchange.responseBody.use { it.write(body) }
             } }
@@ -78,6 +82,98 @@ class HubApiClientTest {
                 assertEquals(3, counts.getValue("/api/history").get())
             }
         } finally { server.stop(0) }
+    }
+
+    @Test
+    fun `expired ownership prevents the next endpoint in a snapshot read`() {
+        val checks = AtomicInteger()
+        val reads = java.util.Collections.synchronizedList(mutableListOf<String>())
+        val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
+            createContext("/api/") { exchange ->
+                val path = exchange.requestURI.path
+                reads.add(path)
+                val body = (if (path == "/api/health") """{"ok":true,"role":"hub"}""" else """{"periods":{}}""").toByteArray()
+                exchange.sendResponseHeaders(200, body.size.toLong())
+                exchange.responseBody.use { it.write(body) }
+            }
+            start()
+        }
+        try {
+            val connection = HubConnection("http://127.0.0.1:${server.address.port}", "synthetic-secret", true)
+            HubApiClient(beforeRequest = {
+                if (checks.incrementAndGet() == 3) throw CancellationException("Widget session expired")
+            }).use { client ->
+                try {
+                    client.loadSnapshot(connection)
+                    fail("Expected the expired widget lease to cancel before the devices request")
+                } catch (_: CancellationException) {
+                    assertEquals(listOf("/api/health", "/api/stats"), reads.toList())
+                    assertEquals(3, checks.get())
+                }
+            }
+        } finally {
+            server.stop(0)
+        }
+    }
+
+    @Test
+    fun `a valid snapshot above the old stream limit remains live`() = runBlocking {
+        val sessions = (0 until 2400).joinToString(",") { index ->
+            """"synthetic-$index":{"sessionId":"synthetic-$index","title":"Synthetic parser capacity sample $index","client":"codex","projectLabel":"Benchmark project","totalTokens":1000,"costUsd":0.01,"models":{"synthetic-model":1000},"messageCount":5,"startedAt":"2026-10-04T10:00:00Z","lastUsedAt":"2026-10-04T12:00:00Z"}"""
+        }
+        val stats = """{"periods":{"month":{"totalTokens":2400000,"sessions":{$sessions}}}}"""
+        val payload = "event: snapshot\ndata: {\"stats\":$stats}\n\n"
+        assertTrue(payload.length > 512 * 1024)
+        assertTrue(payload.length < 2 * 1024 * 1024)
+        val server = streamServer(payload)
+        try {
+            val connection = HubConnection("http://127.0.0.1:${server.address.port}", "synthetic-secret", true)
+            val events = mutableListOf<HubStreamEvent>()
+            HubApiClient().use { client ->
+                client.streamStats(connection, onOpen = {}, onEvent = { events.add(it) })
+            }
+            assertEquals(1, events.size)
+            assertEquals("snapshot", events.single().type)
+            val decoded = HubProtocolParser.decodeStats(events.single().data)
+            assertEquals(2400, decoded.periods.getValue("month").sessions.size)
+            assertEquals(2_400_000, decoded.periods.getValue("month").totalTokens)
+        } finally {
+            server.stop(0)
+        }
+    }
+
+    @Test
+    fun `streaming still rejects an oversized event`() = runBlocking {
+        val payload = "event: snapshot\ndata: {\"padding\":\"${"x".repeat(33 * 1024 * 1024)}\"}\n\n"
+        val server = streamServer(payload)
+        try {
+            val connection = HubConnection("http://127.0.0.1:${server.address.port}", "synthetic-secret", true)
+            HubApiClient().use { client ->
+                try {
+                    client.streamStats(connection, onOpen = {}, onEvent = { fail("Oversized event must not be delivered") })
+                    fail("Expected oversized SSE rejection")
+                } catch (error: HubApiException) {
+                    assertTrue(error.presentation.contains("too large"))
+                }
+            }
+        } finally {
+            server.stop(0)
+        }
+    }
+
+    private fun streamServer(payload: String): HttpServer = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0).apply {
+        createContext("/api/stats/stream") { exchange ->
+            // A bounded reader deliberately closes an oversized response early.
+            try {
+                val body = payload.toByteArray()
+                exchange.responseHeaders.add("Content-Type", "text/event-stream")
+                exchange.sendResponseHeaders(200, body.size.toLong())
+                exchange.responseBody.use { it.write(body) }
+            } catch (_: java.io.IOException) {
+                exchange.close()
+            }
+        }
+        start()
     }
 
     @Test

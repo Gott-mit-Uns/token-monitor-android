@@ -1,5 +1,21 @@
 ## v0.65.0-cf.2 — Simplified Chinese and local device names
 
+## v0.66.0-hub.1
+
+- 跟进安卓上游 v0.66.0 r2 与桌面 v0.66.0 协议基线，增加 MiniMax Code 识别和版本化协议样例。
+- 吸收局域网权限、家庭地址修复、额度提示排序、趋势缺失日期与分类完整性、搜索清空及小组件会话到期修复。
+- 保留本分支 HTTPS 接入、SSE v2、历史缓存、Keystore 存储、中文、设备别名及个性化图标和数字格式。
+- APK 文案改为通用 NAS／电脑 Hub，显示名称改为 Token Monitor；应用 ID 和固定签名保持原值。
+- 新增五个具名小组件入口，保留自动适配和四页切换；按启动器实际尺寸和横竖屏空间绘制。
+- 保留 cf.8 的活动翻译及主页移除趋势图。
+
+
+## v0.65.0-cf.8
+
+- 修复主页 Activity 标题中文翻译。
+- 主页保留活动热力图，移除趋势标题、峰值、折线图及日期轴；完整趋势详情和导航入口保留。
+- 保持同步、统计、凭据、设备别名、小组件及其他主页模块不变。
+
 - Added system / Simplified Chinese / English language selection, including first connection.
 - Translated app labels, known dynamic messages, date/countdown formatting, widgets and Live notifications using desktop v0.65.0 terminology.
 - Added persistent Android-only device aliases, scoped by normalized Hub and stable device ID; restore original names without changing Hub data.

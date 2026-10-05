@@ -7,11 +7,11 @@ import { createShowcaseResponses } from "./showcase-data.mjs";
 const protocolRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "app", "src", "test", "resources", "protocol");
 const fixture = async (version, name) => readFile(join(protocolRoot, version, name), "utf8");
 let responses = {
-    "/api/health": await fixture("v0.65.0", "health.json"),
-    "/api/stats": await fixture("v0.65.0", "stats.json"),
-    "/api/devices": await fixture("v0.65.0", "devices.json"),
-    "/api/history": await fixture("v0.65.0", "history.json"),
-    "/api/subscriptions": await fixture("v0.65.0", "subscriptions.json"),
+    "/api/health": await fixture("v0.66.0", "health.json"),
+    "/api/stats": await fixture("v0.66.0", "stats.json"),
+    "/api/devices": await fixture("v0.66.0", "devices.json"),
+    "/api/history": await fixture("v0.66.0", "history.json"),
+    "/api/subscriptions": await fixture("v0.66.0", "subscriptions.json"),
 };
 
 const showcaseMode = process.env.TOKEN_MONITOR_SHOWCASE === "1";

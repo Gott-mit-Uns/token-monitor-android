@@ -109,7 +109,7 @@
     <string name="ui_93f285223942" formatted="false">应用更新</string>
     <string name="ui_475b43e19d3b" formatted="false">应用前台通过实时连接接收更新。小组件实时模式每 60 秒刷新，一小时后停止。</string>
     <string name="ui_fe21a32fbf54" formatted="false">Hub 地址</string>
-    <string name="ui_222cbc2f0c92" formatted="false">Cloudflare 请填写完整 HTTPS 根地址，不加 /api/stats。HTTPS 默认端口 443；裸 Tailscale 或局域网地址使用 HTTP 端口 17321。</string>
+    <string name="ui_222cbc2f0c92" formatted="false">填写完整 Hub 根地址，不加 /api/stats。反代域名使用 HTTPS；NAS、电脑或 Tailscale 私网地址默认使用 HTTP 端口 17321。</string>
     <string name="ui_9d32b680780a" formatted="false">家庭 Wi-Fi 地址（可选）</string>
     <string name="ui_3703287c6c15" formatted="false">仅用于私网电脑 Hub。只有它与主 Hub 使用相同数据和密钥时才填写，否则留空。</string>
     <string name="ui_ded8dae5786f" formatted="false">查找</string>
@@ -121,14 +121,14 @@
     <string name="ui_d4911489c222" formatted="false">在手机上实时查看电脑端统计。</string>
     <string name="ui_00d3c7ab5e0e" formatted="false">连接你的 Hub</string>
     <string name="ui_cc2a08ca0550" formatted="false">选择现有 Hub</string>
-    <string name="ui_7a1672916de4" formatted="false">使用现有 Cloudflare HTTPS Hub，或通过 Tailscale／家庭 Wi-Fi 连接电脑 Hub。</string>
+    <string name="ui_7a1672916de4" formatted="false">通过 HTTPS 域名、Tailscale 或家庭 Wi-Fi 连接 NAS／电脑 Hub。</string>
     <string name="ui_8778f2819b3c" formatted="false">填写 Hub 根地址</string>
-    <string name="ui_9b424030a94b" formatted="false">Cloudflare 填写完整 HTTPS 地址；电脑 Hub 使用私网地址和端口。</string>
+    <string name="ui_9b424030a94b" formatted="false">反代使用 https://your-hub.example.com；家庭 Wi-Fi 下填写 NAS／电脑的私网地址和端口。</string>
     <string name="ui_48612ee2988e" formatted="false">填写共享 Hub 密钥</string>
-    <string name="ui_4905ecd1397f" formatted="false">填写 Token Monitor Hub 密钥，不是 Cloudflare 账户 API Token。检查并保存后连接。</string>
+    <string name="ui_4905ecd1397f" formatted="false">填写 Token Monitor Hub 的共享密钥，检查并保存后验证连接。</string>
     <string name="ui_f11a107f3832" formatted="false">连接</string>
-    <string name="ui_d40ebebf5bad" formatted="false">从你配置的 Hub 读取用量。凭据通过 Android Keystore 加密。此独立 Cloudflare 版通过手动安装更新。</string>
-    <string name="ui_ef542ec29ddb" formatted="false">手机只读访问 Token Monitor Hub，支持 HTTPS Cloudflare Hub 和私网电脑 Hub。</string>
+    <string name="ui_d40ebebf5bad" formatted="false">从你配置的 Hub 读取用量。凭据通过 Android Keystore 加密。此独立版本通过手动安装更新。</string>
+    <string name="ui_ef542ec29ddb" formatted="false">手机只读访问 Token Monitor Hub，支持通过 HTTPS 域名、Tailscale 和家庭 Wi-Fi 连接 NAS／电脑 Hub。</string>
     <string name="ui_ed40bdf3fce2" formatted="false">下方显示已保存的 Hub。修改连接时需要重新输入密钥。</string>
     <string name="ui_6bb963c298a3" formatted="false">1. 在电脑和手机安装 Tailscale，并加入同一网络。</string>
     <string name="ui_6961a573f74f" formatted="false">2. 在电脑端打开设置 → 多设备同步，选择托管 Hub。</string>
@@ -136,7 +136,7 @@
     <string name="ui_6656018ac96d" formatted="false">始终显示</string>
     <string name="ui_85841abddb12" formatted="false">已安装</string>
     <string name="ui_194562b97b02" formatted="false">版本类型</string>
-    <string name="ui_40d57ec40577" formatted="false">Cloudflare 兼容版</string>
+    <string name="ui_40d57ec40577" formatted="false">独立 Hub 客户端</string>
     <string name="ui_e69243169611" formatted="false">此独立版本使用不同包名和签名，已停用上游自动更新检查和 APK 安装。请安装本兼容版的后续更新；上游 APK 无法覆盖它。</string>
     <string name="ui_26b56c1bdfb0" formatted="false">刷新</string>
     <string name="ui_6e9c6c40ef0a" formatted="false">正在刷新</string>
@@ -247,7 +247,7 @@
     <string name="ui_15f90b181664" formatted="false">Tailscale</string>
     <string name="ui_c3e43e15c2b0" formatted="false">私网</string>
     <string name="ui_6ac3cf070e92" formatted="false">HTTPS Hub</string>
-    <string name="ui_b1e471b0d308" formatted="false">Cloudflare Hub</string>
+    <string name="ui_b1e471b0d308" formatted="false">HTTPS Hub</string>
     <string name="ui_6a6a39ac493f" formatted="false">连接前请填写 Hub 密钥。</string>
     <string name="ui_842ff3b32076" formatted="false">Hub 密钥不能包含控制字符或换行。</string>
     <string name="ui_b3e43b7e2ea7" formatted="false">Hub 地址不能包含空格或控制字符。</string>
@@ -378,4 +378,22 @@
     <string name="ui_cf4_28123b8b80" formatted="false">开启使用万／亿，关闭使用 K／M／B；仅影响主页的 Token 数量。</string>
     <string name="ui_cf4_324e02b3f6" formatted="false">内容图标大小与文字大小独立；导航与桌面小组件保持原尺寸。</string>
     <string name="ui_cf4_f4e818d28b" formatted="false">按所选主页单位简写主页总量，二级页面始终显示完整数量。</string>
+    <string name="ui_home_activity">活动</string>
+    <string name="ui_hub066_0" formatted="false">Android 需要局域网访问权限才能连接家庭 Wi-Fi Hub；可用时仍可使用 Tailscale。</string>
+    <string name="ui_hub066_1" formatted="false">允许局域网访问</string>
+    <string name="ui_hub066_2" formatted="false">打开 Android 权限设置</string>
+    <string name="ui_hub066_3" formatted="false">使用已保存的 Hub 密钥验证这个家庭地址，不保存其他正在编辑的字段。</string>
+    <string name="ui_hub066_4" formatted="false">正在检查家庭地址…</string>
+    <string name="ui_hub066_5" formatted="false">验证并保存家庭地址</string>
+    <string name="ui_hub066_6" formatted="false">清空搜索</string>
+    <string name="ui_hub066_7" formatted="false">部分分类数据与每日总量不一致，这些日期显示为未分类。</string>
+    <string name="ui_hub066_8" formatted="false">其他工具</string>
+    <string name="ui_hub066_9" formatted="false">其他模型</string>
+    <string name="ui_hub066_10" formatted="false">未分类</string>
+    <string name="ui_hub066_11" formatted="false">局域网访问未开启，请在设置中允许局域网访问后使用此地址。</string>
+    <string name="ui_hub066_12" formatted="false">家庭地址已保存。</string>
+    <string name="ui_hub066_tpl_0">已记录 %1$s 天 · %2$s</string>
+    <string name="ui_hub066_tpl_1">有 %1$s 天缺少记录，图表保留空缺。</string>
+    <string name="ui_hub066_tpl_2">每根 K 线最多涵盖 %1$s 个连续记录日，显示首日、末日、最高和最低日用量。</string>
+    <string name="ui_hub066_tpl_3">另有 %1$s 条额度提示，请查看下方账户。</string>
 </resources>

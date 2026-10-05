@@ -101,7 +101,15 @@ class LaunchShowcaseTest {
             compose.onNodeWithText("Codex").performClick()
             compose.onNodeWithText("Codex · Models").assertIsDisplayed()
             capture("filtered-models")
-        } else capture(initial.name.lowercase())
+        } else {
+            capture(initial.name.lowercase())
+            if (initial == DashboardDestination.Trends) {
+                compose.onNodeWithText("TRENDS").performClick()
+                capture("trends-bars")
+                compose.onNodeWithText("K-LINE").performClick()
+                capture("trends-kline")
+            }
+        }
     }
 
     @Test fun widgetGallery() {

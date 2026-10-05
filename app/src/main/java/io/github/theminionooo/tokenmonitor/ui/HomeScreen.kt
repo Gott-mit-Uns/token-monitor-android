@@ -165,9 +165,8 @@ internal fun DesktopModule(
 
 @Composable
 internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOptions) {
-    val visible = accounts
-        .filter { account -> account.windows.any { it.remainingPercent != null || it.usedPercent != null || it.remaining != null } }
-        .sortedBy { account -> account.windows.mapNotNull { it.remainingPercent }.minOrNull() ?: 100.0 }
+    val visible = prioritizeAvailableLimits(accounts
+        .filter { account -> account.windows.any { it.remainingPercent != null || it.usedPercent != null || it.remaining != null } })
         .take(3)
     if (visible.isEmpty()) {
         MutedCopy("No account limits available")
@@ -299,20 +298,5 @@ internal fun homeActivityPoints(snapshot: HubSnapshot): List<HistoryPoint> = io.
 
 @Composable
 internal fun HomeActivity(activity: ActivityHeatmap, history: List<HistoryPoint>) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        ActivityHeatmapGrid(activity, history, home = true)
-        val recent = history.takeLast(45)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(tr("TREND"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
-            Text(tr("Peak ${formatHomeTokens(history.maxOfOrNull { it.tokens } ?: 0L, LocalHomeChineseUnits.current)}"), color = Muted, style = MaterialTheme.typography.labelSmall)
-        }
-        TrendChart(recent.map { it.tokens }, height = 70.dp)
-        if (recent.isNotEmpty()) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                listOf(recent.first(), recent[recent.lastIndex / 2], recent.last()).forEach { point ->
-                    Text(shortDate(point.label), color = Muted, style = MaterialTheme.typography.labelSmall)
-                }
-            }
-        }
-    }
+    ActivityHeatmapGrid(activity, history, home = true)
 }

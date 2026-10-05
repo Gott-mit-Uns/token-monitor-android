@@ -47,6 +47,7 @@ internal fun vendorOf(name: String): String? {
     if (key.isEmpty()) return null
     if (key == "cursor") return "cursor"
     if (key == "fx") return "fx"
+    if (key == "mcode") return "minimax"
     if (key == "muse" || key == "muse code") return "meta"
     if (key == "openrouter" || key.startsWith("openrouter/")) return "openrouter"
     if (key == "zed" || key.startsWith("zed-")) return "zed"

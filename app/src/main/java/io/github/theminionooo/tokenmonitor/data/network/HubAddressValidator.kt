@@ -83,10 +83,15 @@ object HubAddressValidator {
         return when {
             host.endsWith(".ts.net") || isTailscaleAddress(host) -> "Tailscale"
             isPrivateIpv4(host) || host.endsWith(".local") -> "Private network"
-            uri?.scheme.equals("https", ignoreCase = true) && host.endsWith(".workers.dev") -> "Cloudflare Hub"
             uri?.scheme.equals("https", ignoreCase = true) -> "HTTPS Hub"
             else -> "Hub"
         }
+    }
+
+    /** True only for the private LAN forms accepted by [validate], never the Tailscale range. */
+    fun isLocalAddress(url: String): Boolean {
+        val host = runCatching { URI(normalize(url)).host }.getOrNull().orEmpty().trim('[', ']').lowercase()
+        return isPrivateIpv4(host) || host.endsWith(".local")
     }
 
     private fun isTailscaleAddress(host: String): Boolean {

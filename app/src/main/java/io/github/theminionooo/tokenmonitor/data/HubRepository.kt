@@ -1,6 +1,7 @@
 package io.github.theminionooo.tokenmonitor.data
 
 import android.content.Context
+import android.os.SystemClock
 import io.github.theminionooo.tokenmonitor.data.network.BackoffPolicy
 import io.github.theminionooo.tokenmonitor.data.network.EndpointFailover
 import io.github.theminionooo.tokenmonitor.data.network.HubAddressValidation
@@ -8,6 +9,8 @@ import io.github.theminionooo.tokenmonitor.data.network.HubAddressValidator
 import io.github.theminionooo.tokenmonitor.data.network.HubDetailRevisions
 import io.github.theminionooo.tokenmonitor.data.network.HubApiClient
 import io.github.theminionooo.tokenmonitor.data.network.HubApiException
+import io.github.theminionooo.tokenmonitor.data.network.LocalNetworkAccess
+import io.github.theminionooo.tokenmonitor.data.network.prepareHomeAddressRepair
 import io.github.theminionooo.tokenmonitor.data.network.WireHubSnapshot
 import io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser
 import io.github.theminionooo.tokenmonitor.data.protocol.HubStreamProtocol
@@ -45,6 +48,7 @@ internal data class HubRepositoryState(
     /** Whichever saved address answered most recently. */
     val activeUrl: String? = null,
     val allowLocalNetwork: Boolean = false,
+    val localNetworkPermissionRequired: Boolean = false,
     val snapshot: HubSnapshot? = null,
     val refreshing: Boolean = false,
     val streamActive: Boolean = false,
@@ -66,13 +70,27 @@ internal fun retainDeviceHistory(streamed: HubStats, previous: List<DeviceUsage>
     },
 )
 
+/** Stream/poll updates reuse the latest device history rather than decoding the older /devices response. */
+internal fun decodeStatsUpdate(wire: WireHubSnapshot, previousDevices: List<DeviceUsage>): HubSnapshot {
+    val decoded = HubProtocolParser.decodeSnapshot(
+        wire.health, wire.stats, null, wire.history, wire.subscriptions, wire.capturedAt,
+    )
+    if (!decoded.health.ok || decoded.health.role != "hub") throw HubApiException(200, "The address is not a Token Monitor Hub.")
+    return decoded.copy(stats = retainDeviceHistory(decoded.stats, previousDevices))
+}
+
 internal enum class HubWorkMode { Idle, WidgetPolling, DashboardStreaming }
 
 internal const val WIDGET_POLL_INTERVAL_MS = 60_000L
 
-internal fun selectHubWorkMode(dashboardVisible: Boolean, widgetActive: Boolean): HubWorkMode = when {
+internal fun selectHubWorkMode(
+    dashboardVisible: Boolean,
+    widgetActive: Boolean,
+    widgetDeadline: Long? = null,
+    elapsedRealtime: Long = 0,
+): HubWorkMode = when {
     dashboardVisible -> HubWorkMode.DashboardStreaming
-    widgetActive -> HubWorkMode.WidgetPolling
+    widgetActive && (widgetDeadline == null || elapsedRealtime < widgetDeadline) -> HubWorkMode.WidgetPolling
     else -> HubWorkMode.Idle
 }
 
@@ -101,11 +119,12 @@ internal class HubRepository(context: Context) {
     private var forceDetails = false
     private var authenticationRejected = false
     private var activeApi: HubApiClient? = null
-    private var dashboardVisible = false
-    private var widgetActive = false
-    private val desiredWorkMode get() = selectHubWorkMode(dashboardVisible, widgetActive)
+    @Volatile private var dashboardVisible = false
+    @Volatile private var widgetActive = false
+    @Volatile private var widgetDeadline: Long? = null
+    private val desiredWorkMode get() = selectHubWorkMode(dashboardVisible, widgetActive, widgetDeadline, SystemClock.elapsedRealtime())
     private val workAllowed get() = desiredWorkMode != HubWorkMode.Idle
-    private var generation = 0L
+    @Volatile private var generation = 0L
     private var lastSubscriptionAttemptAt = 0L
     private var attemptedSubscriptionVersion = ""
 
@@ -114,12 +133,14 @@ internal class HubRepository(context: Context) {
         reconcileWork()
     }
 
-    fun setWidgetActive(active: Boolean) {
+    fun setWidgetActive(active: Boolean, deadlineElapsedRealtime: Long? = null) {
         widgetActive = active
+        widgetDeadline = if (active) deadlineElapsedRealtime else null
         reconcileWork()
     }
 
     private fun reconcileWork() {
+        _state.update { it.copy(localNetworkPermissionRequired = needsLocalPermission()) }
         val desired = desiredWorkMode
         if (desired == HubWorkMode.Idle) {
             network.stop()
@@ -154,13 +175,31 @@ internal class HubRepository(context: Context) {
                 is HubAddressValidation.Rejected -> return "Home Wi-Fi address: ${result.reason}"
             }
         }
+        val candidate = primary.copy(fallbackUrl = fallback?.takeIf { it != primary.baseUrl })
+        return verifyAndSave(candidate)
+    }
+
+    suspend fun repairHomeAddress(rawAddress: String): String? {
+        val saved = connection
+        val candidate = when (val result = prepareHomeAddressRepair(saved, rawAddress)) {
+            is HubAddressValidation.Allowed -> result.connection
+            is HubAddressValidation.Rejected -> return result.reason
+        }
+        // Test the address the person selected; a reachable primary must not conceal a bad repair.
+        return verifyAndSave(candidate, candidate.fallbackUrl ?: candidate.baseUrl)
+    }
+
+    private suspend fun verifyAndSave(candidate: HubConnection, testAddress: String? = null): String? {
         stopForegroundWork()
         val token = generation
-        val candidate = primary.copy(fallbackUrl = fallback?.takeIf { it != primary.baseUrl })
-        val api = HubApiClient().also { activeApi = it }
+        val api = HubApiClient { route ->
+            if (generation != token) throw CancellationException("Connection check cancelled")
+            requireLocalPermission(route)
+        }.also { activeApi = it }
         return try {
             val (url, wire) = withContext(Dispatchers.IO) {
-                EndpointFailover.run(EndpointFailover.candidates(candidate, null)) { api.loadSnapshot(candidate.copy(baseUrl = it)) }
+                val routes = testAddress?.let(::listOf) ?: permittedRoutes(candidate, null)
+                EndpointFailover.run(routes) { api.loadSnapshot(candidate.copy(baseUrl = it)) }
             }
             coroutineContext.ensureActive()
             if (generation != token) return "Connection check cancelled. Try again."
@@ -202,6 +241,7 @@ internal class HubRepository(context: Context) {
         fallbackUrl = connection?.fallbackUrl,
         activeUrl = activeUrl,
         allowLocalNetwork = connection?.allowLocalNetwork ?: false,
+        localNetworkPermissionRequired = needsLocalPermission(),
         snapshot = if (connection == null) null else lastWireSnapshot?.let { runCatching { parse(it, true) }.getOrNull() },
     )
 
@@ -211,7 +251,10 @@ internal class HubRepository(context: Context) {
         val token = generation
         val refreshDetails = forceDetails
         forceDetails = false
-        val api = HubApiClient().also { activeApi = it }
+        val api = HubApiClient { route ->
+            if (generation != token || desiredWorkMode != mode) throw CancellationException("Hub work ended")
+            requireLocalPermission(route)
+        }.also { activeApi = it }
         activeWorkMode = mode
         foregroundJob = scope.launch {
             var attempt = 0
@@ -224,7 +267,7 @@ internal class HubRepository(context: Context) {
                         val url = if (!initialized) {
                             val previous = if (refreshDetails) null else lastWireSnapshot
                             val (route, wire) = withContext(Dispatchers.IO) {
-                                EndpointFailover.run(EndpointFailover.candidates(saved, activeUrl)) { api.loadSnapshot(saved.copy(baseUrl = it), previous) }
+                                EndpointFailover.run(permittedRoutes(saved, activeUrl)) { api.loadSnapshot(saved.copy(baseUrl = it), previous) }
                             }
                             ensureActive()
                             if (generation != token) break
@@ -265,6 +308,7 @@ internal class HubRepository(context: Context) {
                                 _state.update { it.copy(streamActive = false, widgetLiveActive = true, refreshing = false) }
                                 while (desiredWorkMode == mode && generation == token) {
                                     delay(WIDGET_POLL_INTERVAL_MS)
+                                    if (generation != token || desiredWorkMode != mode) break
                                     val raw = withContext(Dispatchers.IO) {
                                         api.getStats(saved.copy(baseUrl = url))
                                     }
@@ -327,6 +371,21 @@ internal class HubRepository(context: Context) {
         wire.health, wire.stats, wire.devices, wire.history, wire.subscriptions, wire.capturedAt, cached,
     ).also { if (!it.health.ok || it.health.role != "hub") throw HubApiException(200, "The address is not a Token Monitor Hub.") }
 
+    private fun needsLocalPermission(): Boolean = connection?.let {
+        LocalNetworkAccess.needed(it) && !LocalNetworkAccess.granted(appContext)
+    } ?: false
+
+    private fun requireLocalPermission(route: HubConnection) {
+        if (HubAddressValidator.isLocalAddress(route.baseUrl) && !LocalNetworkAccess.granted(appContext)) {
+            throw HubApiException(0, LocalNetworkAccess.deniedMessage)
+        }
+    }
+
+    private fun permittedRoutes(saved: HubConnection, preferred: String?): List<String> =
+        LocalNetworkAccess.allowedRoutes(saved, preferred, LocalNetworkAccess.granted(appContext)).ifEmpty {
+            throw HubApiException(0, LocalNetworkAccess.deniedMessage)
+        }
+
     private fun applySuccess(wire: WireHubSnapshot, snapshot: HubSnapshot) {
         lastWireSnapshot = wire
         persist(wire, true)
@@ -334,6 +393,7 @@ internal class HubRepository(context: Context) {
             hasConnection = connection != null, connectionUrl = connection?.baseUrl,
             fallbackUrl = connection?.fallbackUrl, activeUrl = activeUrl,
             allowLocalNetwork = connection?.allowLocalNetwork ?: false, snapshot = snapshot,
+            localNetworkPermissionRequired = needsLocalPermission(),
         )
     }
 
@@ -348,10 +408,8 @@ internal class HubRepository(context: Context) {
                 if (HubStreamProtocol.isFreshness(raw, streamEventType)) HubStreamProtocol.mergeFreshness(wire.stats, raw)
                 else HubStreamProtocol.normalizeComplete(raw)
             }.getOrNull() ?: return@withContext null
-            val stats = runCatching { HubProtocolParser.decodeStats(normalized) }.getOrNull() ?: return@withContext null
             val updatedWire = wire.copy(stats = HubDetailRevisions.retainMarkers(wire.stats, normalized), capturedAt = System.currentTimeMillis())
-            val decoded = parse(updatedWire)
-            updatedWire to decoded.copy(stats = retainDeviceHistory(stats, previous.stats.devices))
+            updatedWire to decodeStatsUpdate(updatedWire, previous.stats.devices)
         } ?: return false
         if (generation != token) return false
         if (lastWireSnapshot !== wire) return applyStatsUpdate(raw, token, streamEventType)

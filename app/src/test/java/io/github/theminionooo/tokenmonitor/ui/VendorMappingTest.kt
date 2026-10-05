@@ -17,6 +17,18 @@ class VendorMappingTest {
     }
 
     @Test
+    fun miniMaxCodeUsesTheVendorMarkWithoutRenamingTheProviderOrModels() {
+        assertEquals("MiniMax Code", "mcode".displayName())
+        assertEquals("minimax", vendorOf("mcode"))
+        assertEquals("minimax", vendorOf("MiniMax Code"))
+        assertEquals(io.github.theminionooo.tokenmonitor.R.drawable.upstream_logo_minimax, upstreamToolAsset("mcode"))
+        assertEquals(originalToolColor("minimax", androidx.compose.ui.graphics.Color.White), originalToolColor("mcode", androidx.compose.ui.graphics.Color.White))
+        assertEquals("Minimax", "minimax".providerLabel())
+        assertEquals("minimax-m2.5", "minimax-m2.5".displayName())
+        assertNull(vendorOf("mcode-helper"))
+    }
+
+    @Test
     fun modelsMapToTheVendorBehindThem() {
         assertEquals("openai", vendorOf("gpt-5.6-sol"))
         assertEquals("openai", vendorOf("GPT-5.5"))

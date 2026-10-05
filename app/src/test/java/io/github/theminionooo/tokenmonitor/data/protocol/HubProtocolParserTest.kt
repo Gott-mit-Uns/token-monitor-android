@@ -8,6 +8,55 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HubProtocolParserTest {
+    @Test fun `v0 66 keeps MiniMax Code usage distinct from the limit provider and preserves reported costs`() {
+        val snapshot = HubProtocolParser.decodeSnapshot(
+            resource("health.json", "v0.66.0"), resource("stats.json", "v0.66.0"),
+            resource("devices.json", "v0.66.0"), resource("history.json", "v0.66.0"),
+            resource("subscriptions.json", "v0.66.0"), 0,
+        )
+        assertEquals("v0.66.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals("v0.66.0", snapshot.health.hubBuild)
+        assertEquals(220_000, snapshot.today.totalTokens)
+        assertEquals(50_000, snapshot.today.clients.getValue("mcode"))
+        assertFalse("minimax" in snapshot.today.clients)
+        assertEquals(0.22, snapshot.today.clientCosts.getValue("mcode"), 0.0001)
+        assertEquals(0.85, snapshot.today.modelCosts.getValue("claude-sonnet-4-5"), 0.0001)
+        assertEquals(2.47, snapshot.today.costUsd, 0.0001)
+        assertEquals(7000, snapshot.today.clientCacheWrites.getValue("mcode"))
+        val session = snapshot.today.sessions.first { it.client == "mcode" }
+        assertEquals("", session.title)
+        assertEquals(listOf("minimax-m2.5"), session.modelNames)
+        assertEquals(0.22, session.costUsd, 0.0001)
+        assertEquals(8000, session.outputTokens)
+        assertNull(session.promptCache)
+        val device = snapshot.stats.devices.single()
+        assertEquals(listOf("codex", "claude", "mcode"), device.trackedClients)
+        assertEquals(50_000, device.periods.getValue("today").clients.getValue("mcode"))
+        assertEquals(0.22, device.history.daily.single().perClient.getValue("mcode").costUsd, 0.0001)
+        assertEquals(0.85, snapshot.history.daily.single().perModel.getValue("claude-sonnet-4-5").costUsd, 0.0001)
+        val provider = snapshot.stats.limits.providers.single()
+        assertEquals("minimax", provider.provider)
+        assertEquals(listOf("session", "weekly"), provider.windows.map { it.kind })
+        assertEquals(80.0, provider.windows.first().remainingPercent!!, 0.001)
+        assertEquals("minimax", snapshot.subscriptions.entries.single().provider)
+    }
+
+    @Test fun `v0 66 stream and freshness retain untitled sessions usage and repriced history`() {
+        val source = resource("stats.json", "v0.66.0")
+        val expected = HubProtocolParser.decodeStats(source)
+        fun event(name: String) = resource(name, "v0.66.0").lineSequence()
+            .first { it.startsWith("data:") }.removePrefix("data:").trim()
+        assertEquals(expected, HubProtocolParser.decodeStatsStreamEvent(event("stats-stream.sse")))
+        val refreshed = HubProtocolParser.decodeStats(HubStreamProtocol.mergeFreshness(source, event("stats-freshness.sse")))
+        assertEquals("2026-10-04T12:02:00.000Z", refreshed.updatedAt)
+        assertEquals(expected.periods, refreshed.periods)
+        assertEquals(expected.historyPreview, refreshed.historyPreview)
+        assertEquals(expected.limits.providers, refreshed.limits.providers)
+        assertEquals("2026-10-04T12:02:00.000Z", refreshed.limits.updatedAt)
+        assertEquals(expected.devices.single().periods, refreshed.devices.single().periods)
+        assertEquals("2026-10-04T12:02:00.000Z", refreshed.devices.single().receivedAt)
+    }
+
     @Test fun `v0 65 fixture maps optional session counters across snapshot devices and stream`() {
         val snapshot = HubProtocolParser.decodeSnapshot(
             resource("health.json", "v0.65.0"), resource("stats.json", "v0.65.0"),
@@ -15,7 +64,6 @@ class HubProtocolParserTest {
             resource("subscriptions.json", "v0.65.0"), 0,
         )
         assertEquals("v0.65.0", snapshot.health.hubBuild)
-        assertEquals("v0.65.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
         assertEquals(50_000, snapshot.today.clients.getValue("fx"))
         fun checkSessions(sessions: List<io.github.theminionooo.tokenmonitor.domain.SessionUsage>) {
             val session = sessions.first { it.id == "sample-speed" }

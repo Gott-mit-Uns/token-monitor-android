@@ -90,6 +90,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.theminionooo.tokenmonitor.data.HubRepositoryState
+import io.github.theminionooo.tokenmonitor.data.network.HubAddressValidator
 import io.github.theminionooo.tokenmonitor.data.storage.DisplayOptions
 import io.github.theminionooo.tokenmonitor.data.storage.LimitBarMetric
 import io.github.theminionooo.tokenmonitor.data.storage.RankingMetric
@@ -115,7 +116,11 @@ internal fun TokenMonitorApp(viewModel: DashboardViewModel) {
     val translatedContext = remember(systemContext, language, configuration) {
         io.github.theminionooo.tokenmonitor.localization.localizedContext(systemContext)
     }
-    CompositionLocalProvider(LocalContext provides translatedContext) {
+    CompositionLocalProvider(
+        LocalContext provides translatedContext,
+        androidx.activity.compose.LocalActivityResultRegistryOwner provides
+            checkNotNull(systemContext.findActivity() as? androidx.activity.result.ActivityResultRegistryOwner),
+    ) {
         TokenMonitorLocalizedApp(viewModel)
     }
 }
@@ -130,6 +135,7 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
     val discovery by viewModel.discovery.collectAsState()
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
+    val withLocalNetworkAccess = rememberLocalNetworkAction(viewModel::localNetworkPermissionDenied)
     val systemAnimationsEnabled = Settings.Global.getFloat(
         context.contentResolver,
         Settings.Global.ANIMATOR_DURATION_SCALE,
@@ -188,7 +194,11 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     serviceStatus = serviceStatus,
                     onChoose = viewModel::choose,
                     onRefresh = viewModel::refresh,
-                    onSaveConnection = viewModel::saveConnection,
+                    onSaveConnection = { url, fallback, secret, allowLocal ->
+                        withLocalNetworkAccess(HubAddressValidator.isLocalAddress(url) || HubAddressValidator.isLocalAddress(fallback)) {
+                            viewModel.saveConnection(url, fallback, secret, allowLocal)
+                        }
+                    },
                     onColorfulToolMarksChange = viewModel::setColorfulToolMarks,
                     onCompactTokenTotalChange = viewModel::setCompactTokenTotal,
                     onReduceMotionChange = viewModel::setReduceMotion,
@@ -213,7 +223,9 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     onOpenServicePage = { url -> runCatching { uriHandler.openUri(url) } },
                     onOpenReleasePage = { runCatching { uriHandler.openUri(androidReleasesUrl) } },
                     discovery = discovery,
-                    onFindHomeHub = viewModel::findHomeHub,
+                    onFindHomeHub = { withLocalNetworkAccess(true, viewModel::findHomeHub) },
+                    onRepairHomeAddress = { address -> withLocalNetworkAccess(true) { viewModel.repairHomeAddress(address) } },
+                    onAllowLocalNetwork = { withLocalNetworkAccess(true, viewModel::onResume) },
                     originalDeviceNames = viewModel.originalDeviceNames,
                     onRenameDevice = viewModel::saveDeviceAlias,
                 )
@@ -259,6 +271,8 @@ internal fun DashboardScaffold(
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
+    onRepairHomeAddress: (String) -> Unit = {},
+    onAllowLocalNetwork: () -> Unit = {},
 ) {
     CompositionLocalProvider(LocalContentIconSize provides displayOptions.iconScale.dp.dp, LocalHomeChineseUnits provides displayOptions.homeChineseUnits) {
     var periodName by rememberSaveable { mutableStateOf(displayOptions.defaultPeriod) }
@@ -341,6 +355,8 @@ internal fun DashboardScaffold(
                 onOpenReleasePage = onOpenReleasePage,
                 discovery = discovery,
                 onFindHomeHub = onFindHomeHub,
+                onRepairHomeAddress = onRepairHomeAddress,
+                onAllowLocalNetwork = onAllowLocalNetwork,
             )
         } else {
             DashboardContent(

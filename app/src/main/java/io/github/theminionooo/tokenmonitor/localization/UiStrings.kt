@@ -7,6 +7,20 @@ import io.github.theminionooo.tokenmonitor.R
 import java.util.Locale
 
 private val labels = mapOf(
+    "android needs your permission to reach the home wi-fi hub. tailscale can still be used when available." to R.string.ui_hub066_0,
+    "allow home wi-fi access" to R.string.ui_hub066_1,
+    "open android permissions" to R.string.ui_hub066_2,
+    "uses the saved hub secret to verify only this home address. other edited fields are not saved." to R.string.ui_hub066_3,
+    "checking home address…" to R.string.ui_hub066_4,
+    "test and save home address" to R.string.ui_hub066_5,
+    "clear search" to R.string.ui_hub066_6,
+    "some reported breakdowns conflict with their daily totals. those days are shown as unattributed." to R.string.ui_hub066_7,
+    "other tools" to R.string.ui_hub066_8,
+    "other models" to R.string.ui_hub066_9,
+    "unattributed" to R.string.ui_hub066_10,
+    "home wi-fi access is off. allow local network access in settings to use this route." to R.string.ui_hub066_11,
+    "home address saved." to R.string.ui_hub066_12,
+    "activity" to R.string.ui_home_activity,
     "icon size" to R.string.ui_cf4_a86cafc756,
     "home units" to R.string.ui_cf4_473d53e5a8,
     "on uses 万/亿; off uses k/m/b. applies only to home token values." to R.string.ui_cf4_28123b8b80,
@@ -121,7 +135,7 @@ private val labels = mapOf(
     "app updates" to R.string.ui_93f285223942,
     "the dashboard streams immediately while visible. widget live uses a lighter 60-second refresh and stops after one hour." to R.string.ui_475b43e19d3b,
     "hub address" to R.string.ui_fe21a32fbf54,
-    "cloudflare: paste the complete https base address, without /api/stats. https defaults to port 443. bare tailscale or lan addresses use http port 17321." to R.string.ui_222cbc2f0c92,
+    "enter the complete hub base address, without /api/stats. use https for a reverse-proxy domain; private nas, desktop or tailscale addresses default to http port 17321." to R.string.ui_222cbc2f0c92,
     "home wi-fi address (optional)" to R.string.ui_9d32b680780a,
     "private desktop hub only. use this only if it shares the same data and secret as the primary hub; otherwise leave it blank." to R.string.ui_3703287c6c15,
     "find" to R.string.ui_ded8dae5786f,
@@ -133,14 +147,14 @@ private val labels = mapOf(
     "your desktop dashboard, live on your phone." to R.string.ui_d4911489c222,
     "connect your hub" to R.string.ui_00d3c7ab5e0e,
     "choose your existing hub" to R.string.ui_cc2a08ca0550,
-    "use your cloudflare https hub, or a desktop hub over tailscale or home wi-fi." to R.string.ui_7a1672916de4,
+    "use your nas or desktop hub over a https domain, tailscale or home wi-fi." to R.string.ui_7a1672916de4,
     "enter its base address" to R.string.ui_8778f2819b3c,
-    "cloudflare uses https://your-hub.example.com. for a desktop hub, use its private address and port." to R.string.ui_9b424030a94b,
+    "for a reverse proxy, use https://your-hub.example.com. on home wi-fi, use the nas or desktop private address and port." to R.string.ui_9b424030a94b,
     "enter the shared hub secret" to R.string.ui_48612ee2988e,
-    "use the token monitor hub secret, not a cloudflare account api token. check and save to connect." to R.string.ui_4905ecd1397f,
+    "enter the shared token monitor hub secret. check and save to verify the connection." to R.string.ui_4905ecd1397f,
     "connect" to R.string.ui_f11a107f3832,
-    "usage is read from the hub you configure. credentials are encrypted with android keystore. this independent cloudflare edition uses manually installed updates." to R.string.ui_d40ebebf5bad,
-    "this phone only reads your token monitor hub. https cloudflare hubs and private desktop hubs are supported." to R.string.ui_ef542ec29ddb,
+    "usage is read from your configured hub. credentials are encrypted with android keystore. this independent edition uses manually installed updates." to R.string.ui_d40ebebf5bad,
+    "this phone only reads your token monitor hub. nas and desktop hubs support https domains, tailscale and home wi-fi." to R.string.ui_ef542ec29ddb,
     "the saved hub is shown below. enter the secret again only to change the connection." to R.string.ui_ed40bdf3fce2,
     "1. install tailscale on the desktop and phone, then use the same tailnet." to R.string.ui_6bb963c298a3,
     "2. in the desktop app, open settings → multi-device sync and choose host hub." to R.string.ui_6961a573f74f,
@@ -148,7 +162,7 @@ private val labels = mapOf(
     "always" to R.string.ui_6656018ac96d,
     "installed" to R.string.ui_85841abddb12,
     "edition" to R.string.ui_194562b97b02,
-    "cloudflare compatible" to R.string.ui_40d57ec40577,
+    "independent hub client" to R.string.ui_40d57ec40577,
     "this independent edition uses a separate package and signing key. automatic upstream update checks and apk installation are disabled. install future updates supplied for this edition; upstream apks do not update it." to R.string.ui_e69243169611,
     "refresh" to R.string.ui_26b56c1bdfb0,
     "refreshing" to R.string.ui_6e9c6c40ef0a,
@@ -259,7 +273,7 @@ private val labels = mapOf(
     "tailscale" to R.string.ui_15f90b181664,
     "private network" to R.string.ui_c3e43e15c2b0,
     "https hub" to R.string.ui_6ac3cf070e92,
-    "cloudflare hub" to R.string.ui_b1e471b0d308,
+    "https hub" to R.string.ui_b1e471b0d308,
     "enter the hub secret before connecting." to R.string.ui_6a6a39ac493f,
     "the hub secret must not contain control characters or line breaks." to R.string.ui_842ff3b32076,
     "the hub address must not contain spaces or control characters." to R.string.ui_b3e43b7e2ea7,
@@ -326,6 +340,14 @@ private val labels = mapOf(
 )
 
 private val templates = listOf(
+    Regex("(\\d+) more quota notices; see the accounts below\\.") to R.string.ui_hub066_tpl_3,
+
+    Regex("Each candle covers up to (\\d+) consecutive recorded days: first, last, highest and lowest daily totals\\.") to R.string.ui_hub066_tpl_2,
+
+    Regex("(\\d+) days have no observation; gaps are left blank\\.") to R.string.ui_hub066_tpl_1,
+
+    Regex("(\\d+) recorded days · (.+)") to R.string.ui_hub066_tpl_0,
+
     Regex("Context (.+)% left") to R.string.ui_tpl_context_left,
     Regex("Context (.+)% used") to R.string.ui_tpl_context_used,
     Regex("(.+)% left") to R.string.ui_tpl_remaining_percent,
