@@ -8,7 +8,24 @@
 >
 > [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.66.0-hub.1.md)
 >
-> 下方为上游项目介绍，原版发布渠道及验证记录不代表本分支验证结果。
+## 本分支主页 · 浅色与深色
+
+中文界面、主页万／亿单位、独立图标尺寸，以及按主题切换的黑白工具和设备标识。支持 NAS／电脑 Hub 与 HTTPS 反代域名；设备可设置安卓本地别名。
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="50%"><b>浅色 · Porcelain</b><br><br><a href="docs/images/fork-home-light.png"><img src="docs/images/fork-home-light.png" alt="本分支浅色中文主页：Codex、Hermes Agent、DeepSeek Harness，Mac、Windows、两台 NAS 及对应模型" width="360"></a></td>
+    <td align="center" valign="top" width="50%"><b>深色 · Obsidian</b><br><br><a href="docs/images/fork-home-dark.png"><img src="docs/images/fork-home-dark.png" alt="本分支深色中文主页：Codex、Hermes Agent、DeepSeek Harness，Mac、Windows、两台 NAS 及对应模型" width="360"></a></td>
+  </tr>
+</table>
+
+> 两张图由本分支的实际 Android 主页组件使用同一份合成数据渲染，为同时展示额度、工具、设备和模型采用加长视口；普通手机可纵向滚动查看。用量、费用、账户和设备均为示意数据，不包含真实 Hub 地址或凭据。
+>
+> 示例模型配置：Codex → `gpt-6.1-sol`；Hermes Agent → `claude-sonnet-4-6`；DeepSeek Harness → `deepseek-v4-flash`。这些是示例配置，实际可用模型与用量以 Hub 上报为准。
+
+---
+
+> 下方保留上游项目介绍与上游截图；原版发布渠道及验证记录不代表本分支验证结果。
 
 <p align="center">
   <img src="docs/images/app-icon.png" alt="Token Monitor app icon" width="96" height="96">
