@@ -23,6 +23,19 @@
 >
 > 示例模型配置：Codex → `gpt-6.1-sol`；Hermes Agent → `claude-sonnet-4-6`；DeepSeek Harness → `deepseek-v4-flash`。这些是示例配置，实际可用模型与用量以 Hub 上报为准。
 
+### 本分支设置 · 外观
+
+图标大小与文字大小独立选择；主页单位开关控制万／亿或 K／M／B，仅影响主页。二级页面继续显示完整 Token 数量。图标可按主题使用黑白标识，也可开启品牌色。
+
+<table>
+  <tr>
+    <td align="center" valign="top" width="50%"><b>浅色 · 外观设置</b><br><br><a href="docs/images/fork-settings-light.png"><img src="docs/images/fork-settings-light.png" alt="本分支浅色外观设置：主页中文单位、独立文字大小与图标大小、黑白或品牌色标识" width="360"></a></td>
+    <td align="center" valign="top" width="50%"><b>深色 · 外观设置</b><br><br><a href="docs/images/fork-settings-dark.png"><img src="docs/images/fork-settings-dark.png" alt="本分支深色外观设置：主页中文单位、独立文字大小与图标大小、黑白或品牌色标识" width="360"></a></td>
+  </tr>
+</table>
+
+> 截图来自实际 Android 设置页面，已展开“外观”并滚动到显示选项；图标尺寸提供紧凑 16dp、舒适 20dp、大号 24dp 三档。设备别名在设备详情中修改，不在外观设置中。
+
 ---
 
 > 下方保留上游项目介绍与上游截图；原版发布渠道及验证记录不代表本分支验证结果。

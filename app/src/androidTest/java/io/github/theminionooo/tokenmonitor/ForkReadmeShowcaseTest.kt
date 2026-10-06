@@ -43,7 +43,10 @@ class ForkReadmeShowcaseTest {
     @Test fun lightHome() = dashboardGallery(light = true)
     @Test fun darkHome() = dashboardGallery(light = false)
 
-    private fun dashboardGallery(light: Boolean) {
+    @Test fun lightAppearance() = dashboardGallery(light = true, appearance = true)
+    @Test fun darkAppearance() = dashboardGallery(light = false, appearance = true)
+
+    private fun dashboardGallery(light: Boolean, appearance: Boolean = false) {
         check(context.packageName.endsWith(".preview"))
         val base = snapshot()
         val clients = linkedMapOf("codex" to 25200000L, "hermes" to 12400000L, "dsh" to 7980000L)
@@ -66,8 +69,8 @@ class ForkReadmeShowcaseTest {
         val raw = base.copy(stats = base.stats.copy(devices = devices, periods = mapOf("today" to usage), limits = base.stats.limits.copy(providers = listOf(codex, deepseek))))
         val originalNames = raw.stats.devices.associate { it.id to it.hostname }
         val state = HubRepositoryState(hasConnection = true, snapshot = raw, streamActive = true)
-        var destination by mutableStateOf(DashboardDestination.Home)
-        var options by mutableStateOf(DisplayOptions(colorfulToolMarks = false, visibleHomeModules = listOf("Limits", "Tools", "Devices", "Models")))
+        var destination by mutableStateOf(if (appearance) DashboardDestination.Settings else DashboardDestination.Home)
+        var options by mutableStateOf(DisplayOptions(themeCode = (if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian).code, colorfulToolMarks = false, visibleHomeModules = listOf("Limits", "Tools", "Devices", "Models")))
         val palette = Palette.from(if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian)
         var captureWindow: android.view.Window? = null
         compose.setContent {
@@ -118,9 +121,18 @@ class ForkReadmeShowcaseTest {
             save(name, bitmap)
             bitmap.recycle()
         }
-        compose.onNodeWithText("DeepSeek Harness").assertIsDisplayed()
-        compose.onNodeWithText("Hermes Agent").assertIsDisplayed()
-        compose.onNodeWithText("NAS DH4300plus").assertIsDisplayed()
-        capture(if (light) "light" else "dark")
+        if (appearance) {
+            compose.onNodeWithText("外观").performClick()
+            compose.onNodeWithText(localizedText("System follows Android. On minimizes motion; Off keeps the app's interaction animations.")).performScrollTo()
+            compose.onNodeWithTag("icon-size-choice").assertIsDisplayed()
+            compose.onNodeWithTag("setting-Home units").assertIsOn().assertIsDisplayed()
+            compose.onNodeWithTag("text-size-choice").assertIsDisplayed()
+            capture("settings-${if (light) "light" else "dark"}")
+        } else {
+            compose.onNodeWithText("DeepSeek Harness").assertIsDisplayed()
+            compose.onNodeWithText("Hermes Agent").assertIsDisplayed()
+            compose.onNodeWithText("NAS DH4300plus").assertIsDisplayed()
+            capture(if (light) "light" else "dark")
+        }
     }
 }
