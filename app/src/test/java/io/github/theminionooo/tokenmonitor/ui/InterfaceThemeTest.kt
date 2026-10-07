@@ -7,6 +7,22 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class InterfaceThemeTest {
+    @Test fun chartCodesRoundTripWithoutChangingProviderColors() {
+        val theme = InterfaceTheme.fromCode(" tm2-b7ead4-303438-eef5fb-a3adbb-ff6688 ")!!
+        assertEquals("TM2-B7EAD4-303438-EEF5FB-A3ADBB-FF6688", theme.code)
+        val palette = Palette.from(theme)
+        val original = Palette.from(InterfaceTheme.Default)
+        assertEquals(original.blue, palette.blue)
+        assertEquals(original.orange, palette.orange)
+        assertEquals(palette.chart, palette.heat[1])
+        assertEquals(original.heat[0], palette.heat[0])
+        assertEquals("#73bdf5", InterfaceTheme.fromCode(InterfaceTheme.Default.code)!!.chart)
+        assertEquals(original.heat, Palette.from(InterfaceTheme.Default.copy(chart = "#73BDF5")).heat)
+        assertEquals(Palette.from(InterfaceTheme.Porcelain).blue, Palette.from(InterfaceTheme.Porcelain).chart)
+        assertNull(InterfaceTheme.fromCode("TM1-B7EAD4-303438-EEF5FB-A3ADBB-FF6688"))
+        assertNull(InterfaceTheme.fromCode("TM3-B7EAD4-303438-EEF5FB-A3ADBB-FF6688"))
+    }
+
     @Test
     fun presetCodesMatchTheDesktop() {
         assertEquals("TM1-B7EAD4-303438-EEF5FB-A3ADBB", InterfaceTheme.Default.code)

@@ -225,3 +225,9 @@ internal fun String.providerLabel(): String {
     val key = trim().lowercase(Locale.US)
     return providerLabels[key] ?: displayName()
 }
+
+/** Products from one MiMo account are distinct rows even when their names match. */
+internal fun limitAccountIdentity(account: io.github.theminionooo.tokenmonitor.domain.LimitAccount): String =
+    account.provider + ":" + account.productLabel + ":" + account.accountKey.ifBlank {
+        listOf(account.accountName, account.accountEmail, account.productLabel).joinToString(":")
+    }

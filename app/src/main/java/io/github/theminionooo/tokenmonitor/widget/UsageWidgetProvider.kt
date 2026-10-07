@@ -643,7 +643,7 @@ open class UsageWidgetProvider : AppWidgetProvider() {
                 val value = byDay[day.toString()]?.tokens
                 val left = index * column + (column - barWidth) / 2
                 if (value != null) {
-                    paint.color = (if (index == 6) palette.accent else palette.blue).toArgb()
+                    paint.color = (if (index == 6) palette.accent else palette.chart).toArgb()
                     val barHeight = (value.toDouble() * (floor - 2f) / maximum).toFloat().coerceAtLeast(2f * density)
                     canvas.drawRoundRect(left, floor - barHeight, left + barWidth, floor, radius, radius, paint)
                 } else {

@@ -1,0 +1,732 @@
+{
+  "updatedAt": "2026-10-06T12:00:00.000Z",
+  "periods": {
+    "today": {
+      "capabilities": {
+        "tokenComponents": true,
+        "throughput": true
+      },
+      "totalTokens": 220000,
+      "costUsd": 2.47,
+      "cacheReadTokens": 140000,
+      "cacheWriteTokens": 32000,
+      "outputTokens": 28000,
+      "unclassifiedTokens": 20000,
+      "clients": {
+        "mcode": 50000,
+        "claude": 100000,
+        "codex": 70000
+      },
+      "clientCosts": {
+        "mcode": 0.22,
+        "claude": 0.85,
+        "codex": 1.4
+      },
+      "models": {
+        "minimax-m2.5": 50000,
+        "claude-sonnet-4-5": 100000,
+        "gpt-6-sol": 70000
+      },
+      "modelCosts": {
+        "minimax-m2.5": 0.22,
+        "claude-sonnet-4-5": 0.85,
+        "gpt-6-sol": 1.4
+      },
+      "clientModels": {
+        "mcode": {
+          "minimax-m2.5": 50000
+        },
+        "claude": {
+          "claude-sonnet-4-5": 100000
+        },
+        "codex": {
+          "gpt-6-sol": 70000
+        }
+      },
+      "clientCacheReads": {
+        "mcode": 30000,
+        "claude": 60000,
+        "codex": 50000
+      },
+      "clientCacheWrites": {
+        "mcode": 7000,
+        "claude": 20000,
+        "codex": 5000
+      },
+      "clientOutputs": {
+        "mcode": 8000,
+        "claude": 10000,
+        "codex": 10000
+      },
+      "clientUnclassifiedTokens": {
+        "mcode": 5000,
+        "claude": 10000,
+        "codex": 5000
+      },
+      "sessions": {
+        "mcode:sample-mcode": {
+          "sessionId": "sample-mcode",
+          "client": "mcode",
+          "projectLabel": "Example Project",
+          "totalTokens": 50000,
+          "costUsd": 0.22,
+          "models": {
+            "minimax-m2.5": 50000
+          },
+          "inputTokens": 5000,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "lastUsedAt": "2026-10-06T11:59:00.000Z",
+          "turnEnded": true
+        },
+        "claude:sample-claude": {
+          "sessionId": "sample-claude",
+          "client": "claude",
+          "totalTokens": 100000,
+          "costUsd": 0.85,
+          "models": {
+            "claude-sonnet-4-5": 100000
+          },
+          "inputTokens": 10000,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "lastUsedAt": "2026-10-06T11:58:00.000Z",
+          "turnEnded": true
+        },
+        "codex:sample-codex": {
+          "sessionId": "sample-codex",
+          "client": "codex",
+          "totalTokens": 70000,
+          "costUsd": 1.4,
+          "models": {
+            "gpt-6-sol": 70000
+          },
+          "inputTokens": 5000,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "timedOutputTokens": 8000,
+          "timedDurationMs": 100000,
+          "lastUsedAt": "2026-10-06T11:59:00.000Z",
+          "turnEnded": false,
+          "promptCache": {
+            "observedAt": "2026-10-06T11:59:00.000Z",
+            "ttlSeconds": 300
+          }
+        }
+      }
+    },
+    "month": {
+      "capabilities": {
+        "tokenComponents": true,
+        "throughput": true
+      },
+      "totalTokens": 220000,
+      "costUsd": 2.47,
+      "cacheReadTokens": 140000,
+      "cacheWriteTokens": 32000,
+      "outputTokens": 28000,
+      "unclassifiedTokens": 20000,
+      "clients": {
+        "mcode": 50000,
+        "claude": 100000,
+        "codex": 70000
+      },
+      "clientCosts": {
+        "mcode": 0.22,
+        "claude": 0.85,
+        "codex": 1.4
+      },
+      "models": {
+        "minimax-m2.5": 50000,
+        "claude-sonnet-4-5": 100000,
+        "gpt-6-sol": 70000
+      },
+      "modelCosts": {
+        "minimax-m2.5": 0.22,
+        "claude-sonnet-4-5": 0.85,
+        "gpt-6-sol": 1.4
+      },
+      "clientModels": {
+        "mcode": {
+          "minimax-m2.5": 50000
+        },
+        "claude": {
+          "claude-sonnet-4-5": 100000
+        },
+        "codex": {
+          "gpt-6-sol": 70000
+        }
+      },
+      "clientCacheReads": {
+        "mcode": 30000,
+        "claude": 60000,
+        "codex": 50000
+      },
+      "clientCacheWrites": {
+        "mcode": 7000,
+        "claude": 20000,
+        "codex": 5000
+      },
+      "clientOutputs": {
+        "mcode": 8000,
+        "claude": 10000,
+        "codex": 10000
+      },
+      "clientUnclassifiedTokens": {
+        "mcode": 5000,
+        "claude": 10000,
+        "codex": 5000
+      },
+      "sessions": {
+        "mcode:sample-mcode": {
+          "sessionId": "sample-mcode",
+          "client": "mcode",
+          "projectLabel": "Example Project",
+          "totalTokens": 50000,
+          "costUsd": 0.22,
+          "models": {
+            "minimax-m2.5": 50000
+          },
+          "inputTokens": 5000,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "lastUsedAt": "2026-10-06T11:59:00.000Z",
+          "turnEnded": true
+        },
+        "claude:sample-claude": {
+          "sessionId": "sample-claude",
+          "client": "claude",
+          "totalTokens": 100000,
+          "costUsd": 0.85,
+          "models": {
+            "claude-sonnet-4-5": 100000
+          },
+          "inputTokens": 10000,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "lastUsedAt": "2026-10-06T11:58:00.000Z",
+          "turnEnded": true
+        },
+        "codex:sample-codex": {
+          "sessionId": "sample-codex",
+          "client": "codex",
+          "totalTokens": 70000,
+          "costUsd": 1.4,
+          "models": {
+            "gpt-6-sol": 70000
+          },
+          "inputTokens": 5000,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "timedOutputTokens": 8000,
+          "timedDurationMs": 100000,
+          "lastUsedAt": "2026-10-06T11:59:00.000Z",
+          "turnEnded": false,
+          "promptCache": {
+            "observedAt": "2026-10-06T11:59:00.000Z",
+            "ttlSeconds": 300
+          }
+        }
+      }
+    },
+    "allTime": {
+      "capabilities": {
+        "tokenComponents": true,
+        "throughput": true
+      },
+      "totalTokens": 220000,
+      "costUsd": 2.47,
+      "cacheReadTokens": 140000,
+      "cacheWriteTokens": 32000,
+      "outputTokens": 28000,
+      "unclassifiedTokens": 20000,
+      "clients": {
+        "mcode": 50000,
+        "claude": 100000,
+        "codex": 70000
+      },
+      "clientCosts": {
+        "mcode": 0.22,
+        "claude": 0.85,
+        "codex": 1.4
+      },
+      "models": {
+        "minimax-m2.5": 50000,
+        "claude-sonnet-4-5": 100000,
+        "gpt-6-sol": 70000
+      },
+      "modelCosts": {
+        "minimax-m2.5": 0.22,
+        "claude-sonnet-4-5": 0.85,
+        "gpt-6-sol": 1.4
+      },
+      "clientModels": {
+        "mcode": {
+          "minimax-m2.5": 50000
+        },
+        "claude": {
+          "claude-sonnet-4-5": 100000
+        },
+        "codex": {
+          "gpt-6-sol": 70000
+        }
+      },
+      "clientCacheReads": {
+        "mcode": 30000,
+        "claude": 60000,
+        "codex": 50000
+      },
+      "clientCacheWrites": {
+        "mcode": 7000,
+        "claude": 20000,
+        "codex": 5000
+      },
+      "clientOutputs": {
+        "mcode": 8000,
+        "claude": 10000,
+        "codex": 10000
+      },
+      "clientUnclassifiedTokens": {
+        "mcode": 5000,
+        "claude": 10000,
+        "codex": 5000
+      },
+      "sessions": {
+        "mcode:sample-mcode": {
+          "sessionId": "sample-mcode",
+          "client": "mcode",
+          "projectLabel": "Example Project",
+          "totalTokens": 50000,
+          "costUsd": 0.22,
+          "models": {
+            "minimax-m2.5": 50000
+          },
+          "inputTokens": 5000,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "lastUsedAt": "2026-10-06T11:59:00.000Z",
+          "turnEnded": true
+        },
+        "claude:sample-claude": {
+          "sessionId": "sample-claude",
+          "client": "claude",
+          "totalTokens": 100000,
+          "costUsd": 0.85,
+          "models": {
+            "claude-sonnet-4-5": 100000
+          },
+          "inputTokens": 10000,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "lastUsedAt": "2026-10-06T11:58:00.000Z",
+          "turnEnded": true
+        },
+        "codex:sample-codex": {
+          "sessionId": "sample-codex",
+          "client": "codex",
+          "totalTokens": 70000,
+          "costUsd": 1.4,
+          "models": {
+            "gpt-6-sol": 70000
+          },
+          "inputTokens": 5000,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "timedOutputTokens": 8000,
+          "timedDurationMs": 100000,
+          "lastUsedAt": "2026-10-06T11:59:00.000Z",
+          "turnEnded": false,
+          "promptCache": {
+            "observedAt": "2026-10-06T11:59:00.000Z",
+            "ttlSeconds": 300
+          }
+        }
+      }
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "sample-desktop",
+      "hostname": "Example Desktop",
+      "platform": "win32",
+      "osName": "Windows",
+      "osVersion": "11",
+      "agentVersion": "0.67.0",
+      "agentRuntime": "electron",
+      "updatedAt": "2026-10-06T11:59:59.000Z",
+      "receivedAt": "2026-10-06T12:00:00.000Z",
+      "ageMs": 1000,
+      "stale": false,
+      "trackedClients": [
+        "codex",
+        "claude",
+        "mcode"
+      ],
+      "syncUploadIntervalMs": 30000,
+      "historyAvailable": true,
+      "periods": {
+        "today": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": true
+          },
+          "totalTokens": 220000,
+          "costUsd": 2.47,
+          "cacheReadTokens": 140000,
+          "cacheWriteTokens": 32000,
+          "outputTokens": 28000,
+          "unclassifiedTokens": 20000,
+          "clients": {
+            "mcode": 50000,
+            "claude": 100000,
+            "codex": 70000
+          },
+          "clientCosts": {
+            "mcode": 0.22,
+            "claude": 0.85,
+            "codex": 1.4
+          },
+          "models": {
+            "minimax-m2.5": 50000,
+            "claude-sonnet-4-5": 100000,
+            "gpt-6-sol": 70000
+          },
+          "modelCosts": {
+            "minimax-m2.5": 0.22,
+            "claude-sonnet-4-5": 0.85,
+            "gpt-6-sol": 1.4
+          },
+          "clientModels": {
+            "mcode": {
+              "minimax-m2.5": 50000
+            },
+            "claude": {
+              "claude-sonnet-4-5": 100000
+            },
+            "codex": {
+              "gpt-6-sol": 70000
+            }
+          },
+          "clientCacheReads": {
+            "mcode": 30000,
+            "claude": 60000,
+            "codex": 50000
+          },
+          "clientCacheWrites": {
+            "mcode": 7000,
+            "claude": 20000,
+            "codex": 5000
+          },
+          "clientOutputs": {
+            "mcode": 8000,
+            "claude": 10000,
+            "codex": 10000
+          },
+          "clientUnclassifiedTokens": {
+            "mcode": 5000,
+            "claude": 10000,
+            "codex": 5000
+          },
+          "sessions": {
+            "mcode:sample-mcode": {
+              "sessionId": "sample-mcode",
+              "client": "mcode",
+              "projectLabel": "Example Project",
+              "totalTokens": 50000,
+              "costUsd": 0.22,
+              "models": {
+                "minimax-m2.5": 50000
+              },
+              "inputTokens": 5000,
+              "cacheReadTokens": 30000,
+              "cacheWriteTokens": 7000,
+              "outputTokens": 8000,
+              "lastUsedAt": "2026-10-06T11:59:00.000Z",
+              "turnEnded": true
+            },
+            "claude:sample-claude": {
+              "sessionId": "sample-claude",
+              "client": "claude",
+              "totalTokens": 100000,
+              "costUsd": 0.85,
+              "models": {
+                "claude-sonnet-4-5": 100000
+              },
+              "inputTokens": 10000,
+              "cacheReadTokens": 60000,
+              "cacheWriteTokens": 20000,
+              "outputTokens": 10000,
+              "lastUsedAt": "2026-10-06T11:58:00.000Z",
+              "turnEnded": true
+            },
+            "codex:sample-codex": {
+              "sessionId": "sample-codex",
+              "client": "codex",
+              "totalTokens": 70000,
+              "costUsd": 1.4,
+              "models": {
+                "gpt-6-sol": 70000
+              },
+              "inputTokens": 5000,
+              "cacheReadTokens": 50000,
+              "cacheWriteTokens": 5000,
+              "outputTokens": 10000,
+              "timedOutputTokens": 8000,
+              "timedDurationMs": 100000,
+              "lastUsedAt": "2026-10-06T11:59:00.000Z",
+              "turnEnded": false,
+              "promptCache": {
+                "observedAt": "2026-10-06T11:59:00.000Z",
+                "ttlSeconds": 300
+              }
+            }
+          }
+        },
+        "month": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": true
+          },
+          "totalTokens": 220000,
+          "costUsd": 2.47,
+          "cacheReadTokens": 140000,
+          "cacheWriteTokens": 32000,
+          "outputTokens": 28000,
+          "unclassifiedTokens": 20000,
+          "clients": {
+            "mcode": 50000,
+            "claude": 100000,
+            "codex": 70000
+          },
+          "clientCosts": {
+            "mcode": 0.22,
+            "claude": 0.85,
+            "codex": 1.4
+          },
+          "models": {
+            "minimax-m2.5": 50000,
+            "claude-sonnet-4-5": 100000,
+            "gpt-6-sol": 70000
+          },
+          "modelCosts": {
+            "minimax-m2.5": 0.22,
+            "claude-sonnet-4-5": 0.85,
+            "gpt-6-sol": 1.4
+          },
+          "clientModels": {
+            "mcode": {
+              "minimax-m2.5": 50000
+            },
+            "claude": {
+              "claude-sonnet-4-5": 100000
+            },
+            "codex": {
+              "gpt-6-sol": 70000
+            }
+          },
+          "clientCacheReads": {
+            "mcode": 30000,
+            "claude": 60000,
+            "codex": 50000
+          },
+          "clientCacheWrites": {
+            "mcode": 7000,
+            "claude": 20000,
+            "codex": 5000
+          },
+          "clientOutputs": {
+            "mcode": 8000,
+            "claude": 10000,
+            "codex": 10000
+          },
+          "clientUnclassifiedTokens": {
+            "mcode": 5000,
+            "claude": 10000,
+            "codex": 5000
+          },
+          "sessions": {
+            "mcode:sample-mcode": {
+              "sessionId": "sample-mcode",
+              "client": "mcode",
+              "projectLabel": "Example Project",
+              "totalTokens": 50000,
+              "costUsd": 0.22,
+              "models": {
+                "minimax-m2.5": 50000
+              },
+              "inputTokens": 5000,
+              "cacheReadTokens": 30000,
+              "cacheWriteTokens": 7000,
+              "outputTokens": 8000,
+              "lastUsedAt": "2026-10-06T11:59:00.000Z",
+              "turnEnded": true
+            },
+            "claude:sample-claude": {
+              "sessionId": "sample-claude",
+              "client": "claude",
+              "totalTokens": 100000,
+              "costUsd": 0.85,
+              "models": {
+                "claude-sonnet-4-5": 100000
+              },
+              "inputTokens": 10000,
+              "cacheReadTokens": 60000,
+              "cacheWriteTokens": 20000,
+              "outputTokens": 10000,
+              "lastUsedAt": "2026-10-06T11:58:00.000Z",
+              "turnEnded": true
+            },
+            "codex:sample-codex": {
+              "sessionId": "sample-codex",
+              "client": "codex",
+              "totalTokens": 70000,
+              "costUsd": 1.4,
+              "models": {
+                "gpt-6-sol": 70000
+              },
+              "inputTokens": 5000,
+              "cacheReadTokens": 50000,
+              "cacheWriteTokens": 5000,
+              "outputTokens": 10000,
+              "timedOutputTokens": 8000,
+              "timedDurationMs": 100000,
+              "lastUsedAt": "2026-10-06T11:59:00.000Z",
+              "turnEnded": false,
+              "promptCache": {
+                "observedAt": "2026-10-06T11:59:00.000Z",
+                "ttlSeconds": 300
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "limits": {
+    "updatedAt": "2026-10-06T12:00:00.000Z",
+    "providers": [
+      {
+        "provider": "mimo",
+        "accountKey": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "accountName": "Example account",
+        "accountLabel": "Console",
+        "planLabel": "Pay-as-you-go",
+        "status": "ok",
+        "balance": {
+          "currency": "CNY",
+          "amount": 42,
+          "todaySpend": 0,
+          "weekSpend": 4,
+          "monthSpend": 12,
+          "allTimeSpend": 24,
+          "trackingSince": "2026-10-01"
+        },
+        "windows": [
+          {
+            "kind": "billing",
+            "label": "Balance",
+            "metric": "credits",
+            "currency": "CNY",
+            "remaining": 42,
+            "showMeter": false
+          }
+        ]
+      },
+      {
+        "provider": "mimo",
+        "accountKey": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "accountName": "Example account",
+        "accountLabel": "Desktop Membership",
+        "planLabel": "Pro",
+        "status": "ok",
+        "windows": [
+          {
+            "kind": "weekly",
+            "usedPercent": 25,
+            "remainingPercent": 75,
+            "resetsAt": "2026-10-13T12:00:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "historyPreview": {
+    "daily": [
+      {
+        "date": "2026-10-06",
+        "tokens": 220000,
+        "cost": 2.47,
+        "cacheReadTokens": 140000,
+        "cacheWriteTokens": 32000,
+        "outputTokens": 28000,
+        "unclassifiedTokens": 20000,
+        "perClient": {
+          "mcode": {
+            "tokens": 50000,
+            "cost": 0.22,
+            "cacheReadTokens": 30000,
+            "cacheWriteTokens": 7000,
+            "outputTokens": 8000,
+            "unclassifiedTokens": 5000
+          },
+          "claude": {
+            "tokens": 100000,
+            "cost": 0.85,
+            "cacheReadTokens": 60000,
+            "cacheWriteTokens": 20000,
+            "outputTokens": 10000,
+            "unclassifiedTokens": 10000
+          },
+          "codex": {
+            "tokens": 70000,
+            "cost": 1.4,
+            "cacheReadTokens": 50000,
+            "cacheWriteTokens": 5000,
+            "outputTokens": 10000,
+            "unclassifiedTokens": 5000
+          }
+        },
+        "perModel": {
+          "minimax-m2.5": {
+            "tokens": 50000,
+            "cost": 0.22,
+            "cacheReadTokens": 30000,
+            "cacheWriteTokens": 7000,
+            "outputTokens": 8000,
+            "unclassifiedTokens": 5000
+          },
+          "claude-sonnet-4-5": {
+            "tokens": 100000,
+            "cost": 0.85,
+            "cacheReadTokens": 60000,
+            "cacheWriteTokens": 20000,
+            "outputTokens": 10000,
+            "unclassifiedTokens": 10000
+          },
+          "gpt-6-sol": {
+            "tokens": 70000,
+            "cost": 1.4,
+            "cacheReadTokens": 50000,
+            "cacheWriteTokens": 5000,
+            "outputTokens": 10000,
+            "unclassifiedTokens": 5000
+          }
+        }
+      }
+    ]
+  },
+  "staleAfterMs": 300000,
+  "syncSettingsRevisions": {
+    "modelAliases": 2,
+    "customPricing": 1
+  }
+}

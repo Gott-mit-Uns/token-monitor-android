@@ -33,7 +33,7 @@ import kotlinx.serialization.json.longOrNull
  * Android client renders and intentionally ignores unknown fields.
  */
 object HubProtocolParser {
-    const val SUPPORTED_UPSTREAM_VERSION = "v0.66.0"
+    const val SUPPORTED_UPSTREAM_VERSION = "v0.67.0"
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -251,6 +251,21 @@ object HubProtocolParser {
         sourceDeviceId = string("sourceDeviceId"),
         updatedAt = string("updatedAt"),
         windows = array("windows").mapNotNull { it.objectOrNull()?.toLimitWindowDto() },
+        accountKey = string("accountKey"),
+        productLabel = if (string("provider") == "mimo") string("accountLabel").takeIf {
+            it in setOf("Console", "Desktop Membership", "Membership")
+        }.orEmpty() else "",
+        spend = if (string("provider") == "mimo") objectField("balance")?.let { balance ->
+            val currency = balance.string("currency").uppercase(java.util.Locale.US)
+            if (!currency.matches(Regex("[A-Z]{3}"))) null else HubLimitSpendDto(
+                currency = currency,
+                today = balance.double("todaySpend")?.takeIf { it.isFinite() && it >= 0 },
+                week = balance.double("weekSpend")?.takeIf { it.isFinite() && it >= 0 },
+                month = balance.double("monthSpend")?.takeIf { it.isFinite() && it >= 0 },
+                allTime = balance.double("allTimeSpend")?.takeIf { it.isFinite() && it >= 0 },
+                trackingSince = balance.string("trackingSince"),
+            )
+        } else null,
     )
 
     private fun JsonObject.toLimitWindowDto() = HubLimitWindowDto(
@@ -423,6 +438,13 @@ object HubProtocolParser {
         sourceDeviceId = sourceDeviceId,
         updatedAt = updatedAt,
         windows = windows.map { it.toDomain() },
+        accountKey = accountKey,
+        productLabel = productLabel,
+        spend = spend?.let {
+            io.github.theminionooo.tokenmonitor.domain.LimitSpend(
+                it.currency, it.today, it.week, it.month, it.allTime, it.trackingSince,
+            )
+        },
     )
 
     private fun HubLimitWindowDto.toDomain() = LimitWindow(

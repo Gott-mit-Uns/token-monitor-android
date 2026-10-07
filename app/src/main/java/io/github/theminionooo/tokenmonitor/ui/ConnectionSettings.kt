@@ -195,7 +195,7 @@ internal fun ConnectionScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(tr("Theme code")) },
-                    supportingText = { Text(tr(if (themeCodeInvalid) "That is not a TM1 theme code." else "Paste a code from the desktop's Appearance settings to use the same colors here.")) },
+                    supportingText = { Text(tr(if (themeCodeInvalid) "That is not a valid TM1 or TM2 theme code." else "Paste a code from the desktop's Appearance settings. TM2 also carries its chart color.")) },
                     isError = themeCodeInvalid,
                     trailingIcon = {
                         TextButton(

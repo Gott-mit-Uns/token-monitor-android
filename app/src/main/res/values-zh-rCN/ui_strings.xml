@@ -396,4 +396,11 @@
     <string name="ui_hub066_tpl_1">有 %1$s 天缺少记录，图表保留空缺。</string>
     <string name="ui_hub066_tpl_2">每根 K 线最多涵盖 %1$s 个连续记录日，显示首日、末日、最高和最低日用量。</string>
     <string name="ui_hub066_tpl_3">另有 %1$s 条额度提示，请查看下方账户。</string>
+    <string name="ui_hub067_0" formatted="false">这不是有效的 TM1 或 TM2 主题代码。</string>
+    <string name="ui_hub067_1" formatted="false">粘贴电脑端外观设置中的代码；TM2 还包含独立图表颜色。</string>
+    <string name="ui_hub067_2" formatted="false">本月费用</string>
+    <string name="ui_hub067_3" formatted="false">累计费用</string>
+    <string name="ui_hub067_4" formatted="false">今日费用（本地追踪）</string>
+    <string name="ui_hub067_5" formatted="false">本周费用（本地追踪）</string>
+    <string name="ui_hub067_6" formatted="false">开始追踪时间</string>
 </resources>

@@ -16,20 +16,23 @@ import androidx.compose.ui.unit.sp
 import java.util.Locale
 
 /**
- * The four interface colors the desktop lets people customize, in the desktop's
- * portable `TM1-ACCENT-BG-TEXT-MUTED` code format so a theme copied from the
- * desktop's Appearance settings applies here unchanged.
+ * Desktop theme codes retain TM1's four colors; TM2 appends an independent chart color.
  */
 internal data class InterfaceTheme(
     val accent: String,
     val bg: String,
     val text: String,
     val muted: String,
+    val chart: String = "#73bdf5",
 ) {
     /** Perceived brightness above 0.6 flips the overlay and border system, as on the desktop. */
     val isLight: Boolean get() = luminance(bg) > 0.6
 
-    val code: String get() = listOf(accent, bg, text, muted).joinToString("-", prefix = "TM1-") { it.removePrefix("#").uppercase(Locale.US) }
+    val code: String get() {
+        val customChart = !chart.equals("#73bdf5", ignoreCase = true)
+        val colors = listOf(accent, bg, text, muted) + if (customChart) listOf(chart) else emptyList()
+        return colors.joinToString("-", prefix = if (customChart) "TM2-" else "TM1-") { it.removePrefix("#").uppercase(Locale.US) }
+    }
 
     companion object {
         val Default = InterfaceTheme(accent = "#b7ead4", bg = "#303438", text = "#eef5fb", muted = "#a3adbb")
@@ -38,13 +41,15 @@ internal data class InterfaceTheme(
 
         val presets: Map<String, InterfaceTheme> = linkedMapOf("default" to Default, "obsidian" to Obsidian, "porcelain" to Porcelain)
 
-        private val codePattern = Regex("^TM1-([0-9a-f]{6})-([0-9a-f]{6})-([0-9a-f]{6})-([0-9a-f]{6})$", RegexOption.IGNORE_CASE)
+        private val codePattern = Regex("^TM([12])-([0-9a-f]{6})-([0-9a-f]{6})-([0-9a-f]{6})-([0-9a-f]{6})(?:-([0-9a-f]{6}))?$", RegexOption.IGNORE_CASE)
 
-        /** Decodes a desktop theme code; null when it is not a well-formed TM1 code. */
+        /** TM1 resets chart color to default; unknown versions and wrong field counts are refused. */
         fun fromCode(value: String): InterfaceTheme? {
             val match = codePattern.matchEntire(value.trim()) ?: return null
-            val (accent, bg, text, muted) = match.destructured
-            return InterfaceTheme("#${accent.lowercase(Locale.US)}", "#${bg.lowercase(Locale.US)}", "#${text.lowercase(Locale.US)}", "#${muted.lowercase(Locale.US)}")
+            val (version, accent, bg, text, muted, chart) = match.destructured
+            if ((version == "2") != chart.isNotEmpty()) return null
+            return InterfaceTheme("#${accent.lowercase(Locale.US)}", "#${bg.lowercase(Locale.US)}", "#${text.lowercase(Locale.US)}", "#${muted.lowercase(Locale.US)}",
+                if (chart.isEmpty()) "#73bdf5" else "#${chart.lowercase(Locale.US)}")
         }
 
         /** The preset id whose colors equal [theme], or `custom`. */
@@ -83,6 +88,7 @@ internal data class Palette(
     val accent: Color,
     val success: Color,
     val blue: Color,
+    val chart: Color,
     val orange: Color,
     val purple: Color,
     val yellow: Color,
@@ -114,11 +120,16 @@ internal data class Palette(
                 accent = hex(theme.accent),
                 success = if (light) Color(0xFF18794E) else Color(0xFFB7EAD4),
                 blue = blue,
+                chart = if (theme.chart.equals("#73bdf5", ignoreCase = true)) blue else hex(theme.chart),
                 orange = Color(0xFFF4A073),
                 purple = Color(0xFFB394F4),
                 yellow = Color(0xFFF1D973),
                 danger = Color(0xFFF47788),
-                heat = if (light) {
+                heat = if (!theme.chart.equals("#73bdf5", ignoreCase = true)) {
+                    val chart = hex(theme.chart)
+                    listOf(if (light) Color(0xFFE3E7EC) else lerp(shell, Color.Black, 0.35f)) +
+                        (0..3).map { level -> lerp(chart, Color.White, level * 0.18f) }
+                } else if (light) {
                     listOf(Color(0xFFE3E7EC), lerp(Color(0xFFE3E7EC), blue, 0.3f), lerp(Color(0xFFE3E7EC), blue, 0.55f), lerp(Color(0xFFE3E7EC), blue, 0.8f), Color(0xFF2E7BD6))
                 } else {
                     listOf(lerp(shell, Color.Black, 0.35f), Color(0xFF2E4645), Color(0xFF46706A), Color(0xFF6FA79B), Color(0xFFA9D9C8))

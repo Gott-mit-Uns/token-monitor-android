@@ -138,8 +138,8 @@ screen files (`HomeScreen`, `BreakdownScreen`, `LimitsScreen`, `DevicesScreen`,
 `Primitives.kt`, and `ActivityHeatmapGrid.kt`; `ConnectionSettings.kt` owns pairing
 and settings. Shared presentation rules live alongside them in focused files:
 
-- **Palette and typography.** `Theme.kt` holds `InterfaceTheme` (the four
-  desktop-customizable colors, with the desktop's `TM1-…` code format) and
+- **Palette and typography.** `Theme.kt` holds `InterfaceTheme` (TM1's four
+  desktop-customizable colors and TM2's additional chart color) and
   `Palette`, every color the app draws, resolved from a theme the way the
   desktop stylesheet does it: a light background flips the overlay, line,
   panel, and sunken surfaces, and semantic colors stay fixed. The palette is
@@ -147,6 +147,9 @@ and settings. Shared presentation rules live alongside them in focused files:
   in `Theme.kt`. Typography is built once per text size setting. Widget RemoteViews
   resolve this same Palette; the theme preference changes both surfaces. A local
   widget redraw applies new colors without enabling Live or fetching data.
+  A custom chart color changes K-line up candles, seven-day widget bars and
+  active heat steps, not attributed bar-series or vendor colors. Default chart
+  codes retain each preset's established bar color and heat ramp.
 - **Time.** `LocalNow` is a composition local updated every thirty seconds.
   Countdowns (`formatReset`) and relative ages (`formatRelativeAge`) read it,
   so labels stay accurate between Hub events without per-row timers.

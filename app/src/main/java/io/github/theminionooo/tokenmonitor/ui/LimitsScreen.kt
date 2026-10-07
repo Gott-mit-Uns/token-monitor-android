@@ -112,7 +112,7 @@ internal fun LazyListScope.limitItems(snapshot: HubSnapshot, displayOptions: Dis
     if (snapshot.stats.limits.providers.isEmpty()) item { MutedCopy("No account limits are available from this Hub yet.", modifier = Modifier.padding(vertical = 12.dp)) }
     else {
         val providers = prioritizeAvailableLimits(snapshot.stats.limits.providers)
-        items(providers, key = { "${it.provider}:${it.accountName}:${it.accountEmail}" }) { account ->
+        items(providers, key = { limitAccountIdentity(it) }) { account ->
             LimitAccountRow(account, displayOptions, deviceNames)
         }
     }
@@ -145,7 +145,7 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
                 val email = account.accountEmail.takeIf { displayOptions.showAccountEmails }.orEmpty()
                 val source = account.sourceDeviceId.takeIf { displayOptions.showLimitSource && it.isNotBlank() }?.let { tr("Source ${deviceNames[it] ?: it.displayName()}") }
                 val updated = account.updatedAt.relativeAge(LocalNow.current).takeIf { it.isNotBlank() }?.let { tr("Updated $it") }
-                val meta = listOf(account.accountName, account.plan, email, source, updated).filterNotNull().filter { it.isNotBlank() }.joinToString(" · ")
+                val meta = listOf(account.productLabel, account.accountName, account.plan, email, source, updated).filterNotNull().filter { it.isNotBlank() }.joinToString(" · ")
                 if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             if (account.windows.isEmpty()) {
@@ -181,6 +181,15 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
                     }
                     if (windows.size == 1) Spacer(Modifier.weight(1f))
                 }
+            }
+        }
+        account.spend?.let { spend ->
+            listOf("Month spend" to spend.month, "All-time spend" to spend.allTime,
+                "Today spend (tracked)" to spend.today, "Week spend (tracked)" to spend.week).forEach { (label, amount) ->
+                if (amount != null) Text("${tr(label)} ${formatWindowAmount(amount, spend.currency)}", color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
+            if ((spend.today != null || spend.week != null) && spend.trackingSince.isNotBlank()) {
+                Text("${tr("Tracked since")} ${spend.trackingSince}", color = Muted, style = MaterialTheme.typography.labelSmall)
             }
         }
         HorizontalDivider(color = Line)

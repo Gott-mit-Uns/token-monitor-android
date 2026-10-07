@@ -1,12 +1,14 @@
-> **Token Monitor Android · 非官方独立 Hub 客户端 · v0.66.0-hub.1**
+> **Token Monitor Android · 非官方独立 Hub 客户端 · v0.67.0-hub.1**
 >
 > 发布仓库：[Gott-mit-Uns/token-monitor-android](https://github.com/Gott-mit-Uns/token-monitor-android) · [下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest)。
 >
-> 基于安卓上游 v0.66.0 r2，保留中文、设备别名、主题图标、独立图标尺寸及主页中文单位。支持 NAS／电脑 Hub、HTTPS 反代域名、Tailscale 和局域网。应用 ID 与签名保持不变，可覆盖安装旧 cf 版本；原作者自动 APK 更新保持关闭。
+> 基于安卓上游 v0.67.0 r1，保留中文、设备别名、主题图标、独立图标尺寸及主页中文单位。支持 NAS／电脑 Hub、HTTPS 反代域名、Tailscale 和局域网。应用 ID 与签名保持不变，可覆盖安装旧 cf 版本；原作者自动 APK 更新保持关闭。
+>
+> 0.67 跟进 TM2 独立图表颜色、MiMo 分产品额度与原币费用，并验证会话标题共享及撤销。保留本分支全部自定义设置。
 >
 > 新增紧凑、横向、竖向、总览、详细五个小组件入口，保留自动适配与四页切换，共七个入口。网格大小由启动器决定，以实际 dp 空间适配。Pages 的四个页面通过左右点击切换。
 >
-> [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.66.0-hub.1.md)
+> [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.67.0-hub.1.md)
 >
 ## 本分支主页 · 浅色与深色
 
@@ -59,7 +61,7 @@ Tokens, account limits, models and trends from the desktop Token Monitor Hub, pl
 <p align="center">
   <a href="https://github.com/Gott-mit-Uns/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
   <img alt="Android 8 or newer" src="https://img.shields.io/badge/Android-8%2B-6fa79b?style=flat-square&logo=android&logoColor=10221c">
-  <img alt="Desktop baseline v0.66.0" src="https://img.shields.io/badge/Desktop-v0.66.0-73bdf5?style=flat-square">
+  <img alt="Desktop baseline v0.67.0" src="https://img.shields.io/badge/Desktop-v0.67.0-73bdf5?style=flat-square">
   <img alt="Kotlin and Compose" src="https://img.shields.io/badge/Kotlin-Compose-ff9c72?style=flat-square&logo=kotlin&logoColor=white">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-b39cff?style=flat-square"></a>
 </p>
@@ -117,6 +119,7 @@ The widget picker also includes the original **Token Monitor · Usage** widget. 
 is a separate responsive provider that reflows a single summary as its launcher
 allocation changes; its layouts are not alternate sizes of the four Pages shown
 above. Both widgets follow the app theme, including desktop `TM1-…` theme codes.
+The v0.67.0 release also accepts `TM2-…` codes with an independent chart color.
 
 [Widget behavior and controls](docs/WIDGETS.md) · [Widget design notes](docs/WIDGET_DESIGN.md).
 
@@ -162,9 +165,9 @@ Session rows also show generation speed, cache-hit percentage and prompt-cache e
 
 ## Get connected
 
-You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android v0.66.0 r1 is fixture-verified against desktop v0.66.0. A physical-phone upgrade has not yet been checked for this release.
+You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android upstream v0.67.0 r1 is fixture-verified against desktop v0.67.0. A physical-phone upgrade has not yet been checked for this release.
 
-1. Follow [Installing and updating](docs/INSTALL.md) to get the signed v0.66.0 r1 APK.
+1. Follow [Installing and updating](docs/INSTALL.md) to get the signed fork APK from this repository’s Releases.
 2. Put [Tailscale](https://tailscale.com/) on the desktop and the phone, signed into the same tailnet.
 3. In desktop Token Monitor, open **Settings → Multi-device Sync → Host Hub** and copy the address and shared secret.
 4. In the app, type the address that starts with `100.`, paste the secret, tap **Connect**. Just the numbers are enough.
@@ -178,11 +181,11 @@ Desktop v0.64's optional iCloud Drive sync does not replace the Hub connection f
 
 | | |
 | --- | --- |
-| Current public release | [`v0.66.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.66.0-r2) |
+| Current public release | [`v0.67.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.67.0-r1) |
 | Latest phone-verified build | signed `v0.62.0-r1` over v0.61.0 r1; saved connection and placed Pages widget registration preserved |
-| v0.66.0 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
-| Desktop baseline | Token Monitor `v0.66.0` |
-| Upstream commit | [`db325fd`](https://github.com/Javis603/token-monitor/commit/db325fdf46ea7f7328feeb47a4f2005fe339909f) |
+| v0.67.0 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
+| Desktop baseline | Token Monitor `v0.67.0` |
+| Upstream commit | [`338a965`](https://github.com/Javis603/token-monitor/commit/338a965f6c9a5a06b017eba4ebd7d5997973519e) |
 
 The visible version matches the desktop release the phone understands. Android-only
 builds bump the release revision and internal version code while the compatibility

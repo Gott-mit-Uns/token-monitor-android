@@ -4,7 +4,7 @@ This Android app treats the desktop Hub as an external, read-only protocol.
 
 ## Verified baseline
 
-The verified baseline is upstream Token Monitor **v0.66.0**, released 2026-10-04. The
+The verified baseline is upstream Token Monitor **v0.67.0**, released 2026-10-06. The
 release and source were checked directly from the `Javis603/token-monitor`
 tag before this implementation. The older local desktop checkout was not
 changed and is not the protocol authority.
@@ -51,9 +51,9 @@ replaces the snapshot with the current read endpoints.
 
 ## Fixtures
 
-Sanitized v0.66.0 examples for all five read endpoints and the live stream live
-in `app/src/test/resources/protocol/v0.66.0/`; the retained v0.54.0, v0.55.0,
-v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, v0.63.1, v0.64.0, and v0.65.0 fixtures prove backward compatibility. They contain no user secrets,
+Synthetic v0.67.0 examples for all five read endpoints and the live stream live
+in `app/src/test/resources/protocol/v0.67.0/`; the retained v0.54.0, v0.55.0,
+v0.56.0, v0.60.0, v0.61.0, v0.62.0, v0.63.0, v0.63.1, v0.64.0, v0.65.0 and v0.66.0 fixtures prove backward compatibility. They contain no user secrets,
 machine paths, account identifiers, or real usage. Parser tests cover every
 read surface, the SSE envelope, omitted optional fields, and a future unknown
 field. The compatibility parser maps only the fields the dashboard needs and
@@ -171,3 +171,33 @@ The desktop's export privacy fix does not add titles to the Hub: existing Hub
 ingress strips session text. Android retains its optional-title fallback and
 local visibility setting for older or other compatible snapshots. Desktop JSON
 export and large-transcript fixes remain outside the phone's read-only contract.
+
+## v0.67.0 titles, MiMo products and shared settings
+
+The existing read routes, Bearer authentication and stream-v2 envelope remain
+unchanged. The additive `syncSettingsRevisions` marker is tolerated in complete
+stats; a shared-settings notification still carries a complete snapshot.
+Android does not fetch or edit the new shared alias/pricing documents. It
+continues to display the Hub's reported model names and costs.
+
+Session titles now require server permission and per-device desktop consent.
+The isolated released-Hub check verifies default stripping, opt-in delivery,
+revocation clearing stored titles, and prompt/message-body exclusion. Android
+displays only received titles, subject to its local visibility preference;
+an untitled replacement snapshot restores the client/model fallback. Android
+does not negotiate consent or write title policies. Hiding titles locally is
+not a cache-erasure control.
+
+MiMo `accountLabel` distinguishes Console from Desktop Membership (and legacy
+Membership). `accountKey` keeps products with the same display name separate.
+Console wallet windows remain native-currency balances with no invented quota
+percentage. Optional `balance` spend fields retain their reported currency;
+today/week readings are explicitly labeled tracked, with `trackingSince`
+when supplied. Month/all-time readings come from the provider. Missing,
+negative or non-finite spend is not displayed. Membership's unlabeled weekly
+window keeps the existing Weekly fallback.
+
+CodeBuddy/WorkBuddy and Cherry Studio counters already include the desktop's
+reasoning normalization. Android does not add those tokens again. Desktop
+collectors, alias/pricing synchronization, title-sharing controls, export,
+locale and window-management features remain desktop responsibilities.

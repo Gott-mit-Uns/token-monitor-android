@@ -34,7 +34,8 @@ class WidgetThemeTest {
         check(context.packageName.endsWith(".preview"))
         fun asset(name: String) = instrumentation.context.assets.open("showcase/$name.json").bufferedReader().use { it.readText() }
         val snapshot = HubProtocolParser.decodeSnapshot(asset("health"), asset("stats"), asset("devices"), asset("history"), asset("subscriptions"), Instant.parse("2026-09-07T18:00:00Z").toEpochMilli(), false)
-        val themes = InterfaceTheme.presets + ("custom" to InterfaceTheme("#c4b5fd", "#241e30", "#f5f0ff", "#b8adc9"))
+        val themes = InterfaceTheme.presets + ("custom" to InterfaceTheme("#c4b5fd", "#241e30", "#f5f0ff", "#b8adc9")) +
+            ("chart" to InterfaceTheme.fromCode("TM2-B7EAD4-303438-EEF5FB-A3ADBB-FF6688")!!)
         instrumentation.runOnMainSync {
             for ((name, theme) in themes) for (layout in WidgetLayout.entries) for (empty in listOf(false, true)) {
                 val palette = Palette.from(theme)

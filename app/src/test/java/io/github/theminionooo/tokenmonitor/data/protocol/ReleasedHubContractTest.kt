@@ -26,5 +26,10 @@ class ReleasedHubContractTest {
         assertEquals(1234L, HubProtocolParser.decodeStats(refreshed).periods["today"]?.totalTokens)
         val changed = HubStreamProtocol.normalizeComplete(response("stream-stats"))
         assertEquals(1235L, HubProtocolParser.decodeStats(changed).periods["today"]?.totalTokens)
+        val shared = HubProtocolParser.decodeStats(response("titles-enabled"))
+        assertEquals("Synthetic shared title", shared.periods.getValue("today").sessions.single().title)
+        val revoked = HubProtocolParser.decodeStats(response("titles-revoked"))
+        assertEquals("", revoked.periods.getValue("today").sessions.single().title)
+        assertEquals(shared.periods.getValue("today").totalTokens, revoked.periods.getValue("today").totalTokens)
     }
 }

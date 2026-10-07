@@ -396,4 +396,11 @@
     <string name="ui_hub066_tpl_1">%1$s days have no observation; gaps are left blank.</string>
     <string name="ui_hub066_tpl_2">Each candle covers up to %1$s consecutive recorded days: first, last, highest and lowest daily totals.</string>
     <string name="ui_hub066_tpl_3">%1$s more quota notices; see the accounts below.</string>
+    <string name="ui_hub067_0" formatted="false">That is not a valid TM1 or TM2 theme code.</string>
+    <string name="ui_hub067_1" formatted="false">Paste a code from the desktop\'s Appearance settings. TM2 also carries its chart color.</string>
+    <string name="ui_hub067_2" formatted="false">Month spend</string>
+    <string name="ui_hub067_3" formatted="false">All-time spend</string>
+    <string name="ui_hub067_4" formatted="false">Today spend (tracked)</string>
+    <string name="ui_hub067_5" formatted="false">Week spend (tracked)</string>
+    <string name="ui_hub067_6" formatted="false">Tracked since</string>
 </resources>

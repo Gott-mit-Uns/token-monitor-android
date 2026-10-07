@@ -288,7 +288,7 @@ internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose
             val last = trend.dayOffset(candle.last)
             val x = (first + last + 1) * dayWidth / 2f
             val bodyWidth = (last - first + 1) * dayWidth * 0.45f
-            val color = if (candle.close >= candle.open) palette.blue else palette.orange
+            val color = if (candle.close >= candle.open) palette.chart else palette.orange
             drawLine(color, Offset(x, y(candle.high)), Offset(x, y(candle.low)), strokeWidth = 1.dp.toPx())
             val bodyHeight = max(2.dp.toPx(), kotlin.math.abs(y(candle.open) - y(candle.close)))
             val top = minOf(y(candle.open), y(candle.close)).coerceAtMost(size.height - bodyHeight)

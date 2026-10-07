@@ -19,6 +19,8 @@ async function isolatedContract(source, output, upstream) {
     const now = new Date().toISOString();
     const day = now.slice(0, 10);
     const period = { totalTokens: 1234, costUsd: 0.42, clients: { mcode: 1234 },
+        sessions: { "mcode:contract-session": { sessionId: "contract-session", client: "mcode",
+            title: "Synthetic shared title", totalTokens: 1234, prompt: "NEVER_EXPORT_PROMPT", messages: ["NEVER_EXPORT_MESSAGES"] } },
         clientCosts: { mcode: 0.42 }, models: { "minimax-m2.5": 1234 },
         modelCosts: { "minimax-m2.5": 0.42 }, clientModels: { mcode: { "minimax-m2.5": 1234 } } };
     const device = { deviceId: "contract-desktop", hostname: "Synthetic desktop", platform: "linux",
@@ -58,6 +60,9 @@ async function isolatedContract(source, output, upstream) {
         assert.equal(responses["health.json"].secretRequired, true);
         assert.equal(responses["stats.json"].periods.today.totalTokens, 1234);
         assert.equal(responses["stats.json"].periods.today.clients.mcode, 1234);
+        assert.ok(!JSON.stringify(responses["stats.json"]).includes("Synthetic shared title"), "Titles must be absent by default");
+        assert.ok(!JSON.stringify(responses["stats.json"]).includes("NEVER_EXPORT"), "Conversation content must never cross the Hub");
+        assert.ok(responses["stats.json"].syncSettingsRevisions, "Shared settings revisions must remain additive");
         assert.equal(responses["devices.json"].devices[0].deviceId, device.deviceId);
         assert.ok(responses["history.json"].daily.some(point => point.tokens === 1234));
         assert.ok(Array.isArray(responses["subscriptions.json"].subscriptions));
@@ -96,6 +101,17 @@ async function isolatedContract(source, output, upstream) {
         assert.equal(changed.event, "stats");
         assert.equal(changed.data.stats.periods.today.totalTokens, 1235);
         responses["stream-stats.json"] = changed.data;
+        // Consent setup is confined to another disposable Hub; Android still makes no writes.
+        const titleHub = createHub({ port: 0, host: "127.0.0.1", secret, syncSessionTitles: true,
+            dataFile: join(source, "synthetic-titles.json"), broadcastDelayMs: 5 });
+        const policy = titleHub.setSyncTitlePolicy(device.deviceId, true);
+        titleHub.ingest({ ...device, sessionTitleSyncGeneration: policy.generation });
+        responses["titles-enabled.json"] = titleHub.getStats();
+        assert.ok(JSON.stringify(responses["titles-enabled.json"]).includes("Synthetic shared title"));
+        assert.ok(!JSON.stringify(responses["titles-enabled.json"]).includes("NEVER_EXPORT"));
+        titleHub.setSyncTitlePolicy(device.deviceId, false);
+        responses["titles-revoked.json"] = titleHub.getStats();
+        assert.ok(!JSON.stringify(responses["titles-revoked.json"]).includes("Synthetic shared title"), "Revocation must clear stored titles");
         responses["contract.json"] = { upstream, generatedAt: new Date().toISOString(), synthetic: true,
             expectedTodayTokens: 1234, expectedUpdatedTokens: 1235 };
         await mkdir(output, { recursive: true });

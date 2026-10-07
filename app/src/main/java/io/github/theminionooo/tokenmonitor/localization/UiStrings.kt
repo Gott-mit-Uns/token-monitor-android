@@ -7,6 +7,13 @@ import io.github.theminionooo.tokenmonitor.R
 import java.util.Locale
 
 private val labels = mapOf(
+    "that is not a valid tm1 or tm2 theme code." to R.string.ui_hub067_0,
+    "paste a code from the desktop's appearance settings. tm2 also carries its chart color." to R.string.ui_hub067_1,
+    "month spend" to R.string.ui_hub067_2,
+    "all-time spend" to R.string.ui_hub067_3,
+    "today spend (tracked)" to R.string.ui_hub067_4,
+    "week spend (tracked)" to R.string.ui_hub067_5,
+    "tracked since" to R.string.ui_hub067_6,
     "android needs your permission to reach the home wi-fi hub. tailscale can still be used when available." to R.string.ui_hub066_0,
     "allow home wi-fi access" to R.string.ui_hub066_1,
     "open android permissions" to R.string.ui_hub066_2,

@@ -421,7 +421,7 @@ private class DeckCanvas(
             } else {
                 val barHeight = (point.tokens.toDouble() / top * plotHeight).toFloat().coerceIn(2f, plotHeight)
                 val barTop = g.PLOT_BOTTOM - barHeight
-                fillRoundRect(RectF(x, barTop, x + barWidth, g.PLOT_BOTTOM), g.BAR_RADIUS, if (today) accent else palette.blue.toArgb())
+                fillRoundRect(RectF(x, barTop, x + barWidth, g.PLOT_BOTTOM), g.BAR_RADIUS, if (today) accent else palette.chart.toArgb())
                 if (!today) {
                     val claude = point.perClient.entries.filter { vendorOf(it.key) == "claude" }.sumOf { it.value.tokens }
                     if (claude > 0 && point.tokens > 0) {

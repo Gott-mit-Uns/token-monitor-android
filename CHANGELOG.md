@@ -1,3 +1,7 @@
+# v0.67.0-hub.1（本分支）
+
+跟进安卓上游 android-v0.67.0-r1：TM2 独立图表颜色、MiMo 分产品额度及原币费用、会话标题授权与撤销兼容测试。保留中文、设备别名、独立图标大小、主页万／亿、NAS 黑白图标和本分支小组件尺寸。详见 [更新与验证](docs/releases/v0.67.0-hub.1.md)。
+
 ## v0.65.0-cf.2 — Simplified Chinese and local device names
 
 ## v0.66.0-hub.1

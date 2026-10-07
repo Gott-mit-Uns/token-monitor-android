@@ -23,7 +23,7 @@ internal data class DisplayOptions(
     val textScale: TextScale = TextScale.Comfortable,
     val iconScale: IconScale = IconScale.Comfortable,
     val homeChineseUnits: Boolean = true,
-    /** A desktop `TM1-…` theme code; null means the default preset. */
+    /** A desktop TM1 or TM2 theme code; null means the default preset. */
     val themeCode: String? = null,
     /** Porcelain while the phone is in light mode and the chosen dark preset at night. */
     val followSystemTheme: Boolean = false,

@@ -71,16 +71,18 @@ stay narrow.
 All colors come from the dashboard `Palette` for the active theme.
 
 - ink, muted, label: text as above.
-- accent: Live status, the Live toggle, the current-day bar, the heatmap's top
-  step, the active page dot.
+- accent: Live status, the Live toggle, the current-day bar and active page dot.
 - success, orange, danger: quota bar fill at more than 35, 15–35, and at most
   15 percent remaining.
 - Vendor colors (`originalToolColor`): tool and model marks, breakdown bars,
   the Overview segmented bar and legend dots, and the Claude share on the
   seven-day chart. Unknown vendors fall back to blue, orange, purple, yellow in
   row order.
-- blue: seven-day bars for days other than today.
-- heat ramp: the five palette heat steps, index 0 for an inactive day.
+- chart: seven-day bars for days other than today. TM2 may supply a custom
+  chart color; TM1 and unchanged presets retain their existing blue bars.
+- heat ramp: the five palette heat steps, index 0 for an inactive day. A custom
+  TM2 chart color supplies the four active steps with successive white tints;
+  otherwise the established theme ramp is retained.
 - line and strongLine: rules, dividers, bar tracks, inactive page dots.
 
 ## Header (all pages)
@@ -214,7 +216,7 @@ Fewer rows leave the remaining space empty; row pitch never changes.
 | Axis labels (axis) | x 18, at the 100, 67, 33 percent gridlines and 0 at the floor |
 | Gridlines | dashed, line color, at 33, 67 and 100 percent of the peak |
 | Floor | solid strong line at y 168 |
-| Bars | 7 columns, bar width 56 percent of the column, radius 2; blue with the Claude share stacked in orange; today in accent |
+| Bars | 7 columns, bar width 56 percent of the column, radius 2; chart color with the Claude share stacked in orange; today in accent |
 | Day labels (caption) | centered under each bar, baseline 179 |
 | "ACTIVITY" section | x 226, baseline 60 |
 | Heatmap | x 226 … 346, y 68 … 132; 13 week columns, 7 rows Sunday first, 2-unit gaps, radius 1.5 |
@@ -245,7 +247,8 @@ drawn only at columns that contain the first day of a month.
 - `WidgetDeckDesignTest` (instrumented) renders all four pages from the dense
   showcase fixture, which has three tools, four models, four quota windows and
   65 days of history, at 250×110, 320×180 and 360×220 dp in Default and
-  Porcelain, and captures the 360×220 renders as the gallery images.
+  Porcelain and a custom TM2 chart theme. The Default 360×220 renders supply
+  the gallery images; custom-theme checks do not replace the approved gallery.
 - Before any release, the four gallery images are placed beside the concept
   cards at phone size and approved by the owner. Emulator captures alone do
   not pass the visual gate.

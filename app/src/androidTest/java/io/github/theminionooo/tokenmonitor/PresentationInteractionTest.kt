@@ -1,10 +1,12 @@
 package io.github.theminionooo.tokenmonitor
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -20,6 +22,31 @@ import java.time.LocalDate
 
 class PresentationInteractionTest {
     @get:Rule val compose = createComposeRule()
+
+    @Test fun mimoProductsRemainSeparateAndWalletIsNotAQuota() {
+        val instrumentation = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+        val wire = instrumentation.context.assets.open("protocol/v0.67.0/stats.json").bufferedReader().use { it.readText() }
+        val snapshot = HubSnapshot(stats = io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser.decodeStats(wire))
+        val (console, membership) = snapshot.stats.limits.providers
+        val palette = Palette.from(InterfaceTheme.Default)
+        compose.setContent { MaterialTheme(colorScheme = tokenMonitorColors(palette), typography = tokenMonitorTypography(1)) {
+            CompositionLocalProvider(LocalPalette provides palette, LocalInteractionMotion provides false) {
+            DashboardContent(Modifier.fillMaxSize().background(palette.shell), HubRepositoryState(snapshot = snapshot), DashboardDestination.Limits,
+                DashboardPeriod.Today, {}, {}, false, ServiceStatusState(), DisplayOptions(), {})
+        } } }
+        compose.onNodeWithText("Console · Example account · Pay-as-you-go", substring = true).assertIsDisplayed()
+        compose.onNodeWithText("Desktop Membership · Example account · Pro", substring = true).assertIsDisplayed()
+        compose.onNodeWithText("75% left").assertIsDisplayed()
+        compose.onNodeWithText("CNY 42").assertIsDisplayed()
+        compose.onNodeWithText("42% left").assertDoesNotExist()
+        compose.onNodeWithText("Month spend", substring = true).assertIsDisplayed()
+        compose.onNodeWithText("Today spend (tracked)", substring = true).assertIsDisplayed()
+        org.junit.Assert.assertNotEquals(limitAccountIdentity(console), limitAccountIdentity(membership))
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        instrumentation.targetContext.openFileOutput("mimo-products.png", 0).use {
+            bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+        }
+    }
 
     @Test fun sessionSearchRespectsTitlePrivacyAndCanBeCleared() {
         val session = SessionUsage("search-42", "Private planning title", "codex", "Example", 100, 0.0, listOf("gpt-6"), 1, "", "")

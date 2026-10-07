@@ -8,13 +8,67 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HubProtocolParserTest {
+    @Test fun `v0 67 distinguishes MiMo products and keeps monetary values in native currency`() {
+        val source = resource("stats.json", "v0.67.0")
+        val snapshot = HubProtocolParser.decodeSnapshot(
+            resource("health.json", "v0.67.0"), source, resource("devices.json", "v0.67.0"),
+            resource("history.json", "v0.67.0"), resource("subscriptions.json", "v0.67.0"), 0,
+        )
+        val stats = HubProtocolParser.decodeStats(source)
+        assertEquals("v0.67.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals("v0.67.0", snapshot.health.hubBuild)
+        assertEquals(220_000L, snapshot.today.totalTokens)
+        assertEquals(220_000L, snapshot.history.daily.single().tokens)
+        assertEquals(1, stats.devices.size)
+        assertEquals(1, snapshot.subscriptions.entries.size)
+        val console = stats.limits.providers.first()
+        val membership = stats.limits.providers.last()
+        assertEquals("Console", console.productLabel)
+        assertEquals("Desktop Membership", membership.productLabel)
+        assertEquals(console.accountName, membership.accountName)
+        assertTrue(console.accountKey != membership.accountKey)
+        assertEquals("Pay-as-you-go", console.plan)
+        assertEquals("CNY", console.spend!!.currency)
+        assertEquals(0.0, console.spend.today!!, 0.001)
+        assertEquals(12.0, console.spend.month!!, 0.001)
+        assertEquals("credits", console.windows.single().metric)
+        assertFalse(console.windows.single().showMeter!!)
+        assertNull(console.windows.single().usedPercent)
+        assertEquals(42.0, console.windows.single().remaining!!, 0.001)
+        assertEquals(75.0, membership.windows.single().remainingPercent!!, 0.001)
+        assertNull(membership.spend)
+        val frame = resource("stats-stream.sse", "v0.67.0").lineSequence()
+            .first { it.startsWith("data:") }.removePrefix("data:").trim()
+        assertEquals(stats, HubProtocolParser.decodeStatsStreamEvent(frame))
+        val freshness = resource("stats-freshness.sse", "v0.67.0").lineSequence()
+            .first { it.startsWith("data:") }.removePrefix("data:").trim()
+        val refreshed = HubProtocolParser.decodeStats(HubStreamProtocol.mergeFreshness(source, freshness))
+        assertEquals("2026-10-06T12:02:00.000Z", refreshed.updatedAt)
+        assertEquals(stats.periods, refreshed.periods)
+        assertEquals(stats.limits.providers, refreshed.limits.providers)
+    }
+
+    @Test fun `MiMo rejects invalid spend and tolerates older unlabeled accounts`() {
+        fun account(balance: String, provider: String = "mimo") = HubProtocolParser.decodeStats(
+            """{"limits":{"providers":[{"provider":"$provider","balance":$balance}]}}""",
+        ).limits.providers.single()
+        assertEquals("", account("null").productLabel)
+        assertNull(account("null").spend)
+        assertNull(account("""{"currency":"money","todaySpend":2}""").spend)
+        assertNull(account("""{"currency":"CNY","todaySpend":2}""", "claude").spend)
+        val spend = account("""{"currency":"cny","todaySpend":-1,"weekSpend":1e999,"monthSpend":null,"allTimeSpend":0}""").spend!!
+        assertNull(spend.today)
+        assertNull(spend.week)
+        assertNull(spend.month)
+        assertEquals(0.0, spend.allTime!!, 0.001)
+    }
+
     @Test fun `v0 66 keeps MiniMax Code usage distinct from the limit provider and preserves reported costs`() {
         val snapshot = HubProtocolParser.decodeSnapshot(
             resource("health.json", "v0.66.0"), resource("stats.json", "v0.66.0"),
             resource("devices.json", "v0.66.0"), resource("history.json", "v0.66.0"),
             resource("subscriptions.json", "v0.66.0"), 0,
         )
-        assertEquals("v0.66.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
         assertEquals("v0.66.0", snapshot.health.hubBuild)
         assertEquals(220_000, snapshot.today.totalTokens)
         assertEquals(50_000, snapshot.today.clients.getValue("mcode"))

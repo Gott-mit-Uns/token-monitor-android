@@ -123,6 +123,19 @@ data class LimitAccount(
     val sourceDeviceId: String,
     val updatedAt: String,
     val windows: List<LimitWindow>,
+    val accountKey: String = "",
+    val productLabel: String = "",
+    val spend: LimitSpend? = null,
+)
+
+/** Provider-reported native-currency spend; daily/weekly values may be locally tracked. */
+data class LimitSpend(
+    val currency: String,
+    val today: Double? = null,
+    val week: Double? = null,
+    val month: Double? = null,
+    val allTime: Double? = null,
+    val trackingSince: String = "",
 )
 
 data class HubLimits(

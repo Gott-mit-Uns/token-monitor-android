@@ -197,7 +197,8 @@ class WidgetDeckDesignTest {
         assertEquals(2, data.limitGroups.size)
         assertEquals(7, data.week.size)
         instrumentation.runOnMainSync {
-            for (theme in listOf(InterfaceTheme.Default, InterfaceTheme.Porcelain)) {
+            for (theme in listOf(InterfaceTheme.Default, InterfaceTheme.Porcelain,
+                InterfaceTheme.fromCode("TM2-B7EAD4-303438-EEF5FB-A3ADBB-FF6688")!!)) {
                 for (size in listOf(SizeF(250f, 110f), SizeF(320f, 180f), SizeF(360f, 220f))) {
                     val renderedSizes = mutableListOf<Pair<Int, Int>>()
                     for (page in WidgetDeckPage.entries) {
