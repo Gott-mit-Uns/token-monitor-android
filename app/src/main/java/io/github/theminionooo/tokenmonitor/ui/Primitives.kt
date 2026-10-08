@@ -132,7 +132,7 @@ internal fun MutedCopy(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-internal fun UsageBar(ratio: Float, color: Color) {
+internal fun UsageBar(ratio: Float, color: Color, minimumFill: Float = 0.02f) {
     val motionEnabled = LocalInteractionMotion.current
     val animatedRatio by animateFloatAsState(
         targetValue = ratio.coerceIn(0f, 1f),
@@ -143,7 +143,7 @@ internal fun UsageBar(ratio: Float, color: Color) {
     Canvas(modifier = Modifier.fillMaxWidth().height(6.dp)) {
         val radius = CornerRadius(size.height / 2f, size.height / 2f)
         drawRoundRect(palette.sunken.copy(alpha = 0.55f), cornerRadius = radius)
-        drawRoundRect(color, size = Size(size.width * animatedRatio.coerceIn(0.02f, 1f), size.height), cornerRadius = radius)
+        if (animatedRatio > 0f || minimumFill > 0f) drawRoundRect(color, size = Size(size.width * animatedRatio.coerceIn(minimumFill, 1f), size.height), cornerRadius = radius)
     }
 }
 

@@ -42,6 +42,11 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -124,6 +129,8 @@ internal fun LazyListScope.deviceItems(devices: List<DeviceUsage>, period: Dashb
                 ratio = usage.totalTokens.toFloat() / maximum,
                 originalName = originalNames[device.id] ?: device.hostname,
                 onRename = onRename,
+                maximumTokenText = formatTokens(values.values.maxOrNull() ?: 0),
+                maximumCostText = formatMoney(devices.maxOfOrNull { period.usage(it).costUsd } ?: 0.0),
             )
         }
     }
@@ -138,6 +145,8 @@ internal fun DeviceUsageRow(
     ratio: Float,
     originalName: String = device.hostname,
     onRename: ((String, String) -> String?)? = null,
+    maximumTokenText: String = "999,999,999",
+    maximumCostText: String = "",
 ) {
     var renaming by remember { mutableStateOf(false) }
     var aliasInput by remember { mutableStateOf("") }
@@ -159,7 +168,7 @@ internal fun DeviceUsageRow(
             } },
         )
     }
-    val expandable = usage.clients.isNotEmpty() || usage.models.isNotEmpty() || device.trackedClients.isNotEmpty()
+    val expandable = usage.clients.isNotEmpty() || usage.models.isNotEmpty() || device.trackedClients.isNotEmpty() || compactDeviceSystem(operatingSystem) != operatingSystem
     var expanded by rememberSaveable(device.id) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
     val tone = if (device.stale) Muted else Blue
@@ -169,33 +178,77 @@ internal fun DeviceUsageRow(
         ).padding(vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            DevicePlatformMark(device.platform, if (device.stale) Muted else Ink, size = LocalContentIconSize.current)
-            Spacer(Modifier.width(8.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(device.hostname.ifBlank { device.id }, color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(tr(listOf(operatingSystem, if (device.stale) tr("Stale") else tr("Synced ${device.updatedAt.relativeAge(LocalNow.current)}".trimEnd())).filter { it.isNotBlank() }.joinToString(" · ")),
-                    color = Muted,
-                    style = MaterialTheme.typography.labelSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-            if (onRename != null) TextButton(onClick = { aliasInput = if (device.hostname == originalName) "" else device.hostname; renameError = null; renaming = true }) { Text(tr("Rename device")) }
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.End) {
-                Text(formatTokens(usage.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                Text(formatMoney(usage.costUsd), color = Muted, style = MaterialTheme.typography.labelSmall)
+        val name = device.hostname.ifBlank { device.id }
+        val indent = LocalContentIconSize.current + 8.dp
+        val density = LocalDensity.current
+        val measurer = rememberTextMeasurer()
+        val numberStyle = MaterialTheme.typography.bodySmall
+        val tokenText = formatTokens(usage.totalTokens)
+        val costText = formatMoney(usage.costUsd)
+        val statsWidth = with(density) {
+            maxOf(measurer.measure(tokenText, numberStyle).size.width,
+                measurer.measure(costText, numberStyle).size.width,
+                measurer.measure(maximumTokenText, numberStyle).size.width,
+                measurer.measure(maximumCostText, MaterialTheme.typography.labelSmall).size.width).toDp()
+        }
+        @Composable fun renameButton() {
+            if (onRename != null) IconButton(
+                onClick = { aliasInput = if (device.hostname == originalName) "" else device.hostname; renameError = null; renaming = true },
+                modifier = Modifier.size(48.dp),
+            ) { Icon(Icons.Outlined.Edit, contentDescription = "${tr("Rename device")}: $name", tint = Muted, modifier = Modifier.size(18.dp)) }
+        }
+        @Composable fun completeNumber(value: String, style: androidx.compose.ui.text.TextStyle, color: Color, modifier: Modifier) {
+            BoxWithConstraints(modifier, contentAlignment = Alignment.CenterEnd) {
+                val measured = measurer.measure(value, style).size.width
+                val factor = if (measured > 0) minOf(1f, with(density) { maxWidth.toPx() } / measured) else 1f
+                Text(value, color = color, style = style.copy(fontSize = style.fontSize * factor), maxLines = 1)
             }
         }
-        if (device.hostname != originalName) Text(tr("Hub original name: ${originalName.ifBlank { device.id }}"), color = Muted, style = MaterialTheme.typography.labelSmall)
-        UsageBar(ratio, tone)
+        BoxWithConstraints(Modifier.fillMaxWidth()) {
+            val stacked = density.fontScale >= 1.5f || maxWidth < 320.dp ||
+                maxWidth < indent + statsWidth + 48.dp + 108.dp
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    DevicePlatformMark(device.platform, if (device.stale) Muted else Ink, size = LocalContentIconSize.current)
+                    Spacer(Modifier.width(8.dp))
+                    Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                        Text(name, color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                        renameButton()
+                    }
+                    if (!stacked) Text(tokenText, color = Ink, style = numberStyle,
+                        modifier = Modifier.width(statsWidth), textAlign = androidx.compose.ui.text.style.TextAlign.End, maxLines = 1)
+                }
+                Row(Modifier.padding(start = indent), verticalAlignment = Alignment.Top) {
+                    Text(compactDeviceSystem(operatingSystem), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f))
+                    if (!stacked) {
+                        Spacer(Modifier.width(8.dp))
+                        Text(costText, color = Muted, style = MaterialTheme.typography.labelSmall,
+                            modifier = Modifier.width(statsWidth), textAlign = androidx.compose.ui.text.style.TextAlign.End, maxLines = 1)
+                    }
+                }
+                val age = device.updatedAt.relativeAge(LocalNow.current)
+                val syncText = if (device.stale) {
+                    "${tr("Data stale")} · ${if (age.isBlank()) tr("Update time unknown") else "${tr("Last updated")} ${tr(age)}"}"
+                } else if (age.isBlank()) tr("Update time unknown") else "${tr("Synced")} · ${tr(age)}"
+                Text(syncText, color = if (device.stale) tone else Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
+                if (device.hostname != originalName) Text(tr("Hub original name: ${originalName.ifBlank { device.id }}"), color = Muted,
+                    style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
+                if (stacked) {
+                    Column(Modifier.fillMaxWidth().padding(start = indent), horizontalAlignment = Alignment.End) {
+                        completeNumber(tokenText, numberStyle, Ink, Modifier.fillMaxWidth())
+                        completeNumber(costText, MaterialTheme.typography.labelSmall, Muted, Modifier.fillMaxWidth())
+                    }
+                }
+            }
+        }
+        UsageBar(ratio, tone, minimumFill = 0f)
         AnimatedVisibility(
             visible = expanded,
             enter = fadeIn(tween(if (motionEnabled) 160 else 0)) + expandVertically(tween(if (motionEnabled) 240 else 0, easing = DesktopEaseOut)),
             exit = fadeOut(tween(if (motionEnabled) 100 else 0)) + shrinkVertically(tween(if (motionEnabled) 180 else 0, easing = DesktopEaseOut)),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                if (compactDeviceSystem(operatingSystem) != operatingSystem) Text(operatingSystem, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
                 val total = usage.totalTokens.coerceAtLeast(1L)
                 usage.clients.entries.sortedByDescending { it.value }.forEach { (client, tokens) ->
                     Row(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -227,3 +280,6 @@ internal fun DeviceUsageRow(
         HorizontalDivider(color = Line)
     }
 }
+
+/** Keep the full Hub string for expanded details; shorten only Debian’s codename suffix. */
+internal fun compactDeviceSystem(value: String): String = if (value.startsWith("Debian GNU/Linux ")) value.replace(Regex("""\s+\([^)]*\)$"""), "") else value

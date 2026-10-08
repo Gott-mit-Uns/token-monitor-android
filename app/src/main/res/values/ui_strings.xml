@@ -403,4 +403,8 @@
     <string name="ui_hub067_4" formatted="false">Today spend (tracked)</string>
     <string name="ui_hub067_5" formatted="false">Week spend (tracked)</string>
     <string name="ui_hub067_6" formatted="false">Tracked since</string>
+    <string name="ui_device2_0" formatted="false">Data stale</string>
+    <string name="ui_device2_1" formatted="false">Update time unknown</string>
+    <string name="ui_device2_2" formatted="false">Last updated</string>
+    <string name="ui_device2_3" formatted="false">Synced</string>
 </resources>

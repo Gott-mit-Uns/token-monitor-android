@@ -7,6 +7,10 @@ import io.github.theminionooo.tokenmonitor.R
 import java.util.Locale
 
 private val labels = mapOf(
+    "data stale" to R.string.ui_device2_0,
+    "update time unknown" to R.string.ui_device2_1,
+    "last updated" to R.string.ui_device2_2,
+    "synced" to R.string.ui_device2_3,
     "that is not a valid tm1 or tm2 theme code." to R.string.ui_hub067_0,
     "paste a code from the desktop's appearance settings. tm2 also carries its chart color." to R.string.ui_hub067_1,
     "month spend" to R.string.ui_hub067_2,

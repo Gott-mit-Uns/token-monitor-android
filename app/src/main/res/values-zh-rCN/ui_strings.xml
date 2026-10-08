@@ -403,4 +403,8 @@
     <string name="ui_hub067_4" formatted="false">今日费用（本地追踪）</string>
     <string name="ui_hub067_5" formatted="false">本周费用（本地追踪）</string>
     <string name="ui_hub067_6" formatted="false">开始追踪时间</string>
+    <string name="ui_device2_0" formatted="false">数据过期</string>
+    <string name="ui_device2_1" formatted="false">更新时间未知</string>
+    <string name="ui_device2_2" formatted="false">上次更新</string>
+    <string name="ui_device2_3" formatted="false">已同步</string>
 </resources>
