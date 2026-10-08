@@ -1,0 +1,128 @@
+{
+  "daily": [
+    {
+      "date": "2026-10-06",
+      "tokens": 220000,
+      "cost": 2.47,
+      "cacheReadTokens": 140000,
+      "cacheWriteTokens": 32000,
+      "outputTokens": 28000,
+      "unclassifiedTokens": 20000,
+      "perClient": {
+        "mcode": {
+          "tokens": 50000,
+          "cost": 0.22,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "unclassifiedTokens": 5000
+        },
+        "claude": {
+          "tokens": 100000,
+          "cost": 0.85,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 10000
+        },
+        "codex": {
+          "tokens": 70000,
+          "cost": 1.4,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 5000
+        }
+      },
+      "perModel": {
+        "minimax-m2.5": {
+          "tokens": 50000,
+          "cost": 0.22,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "unclassifiedTokens": 5000
+        },
+        "claude-sonnet-4-5": {
+          "tokens": 100000,
+          "cost": 0.85,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 10000
+        },
+        "gpt-6-sol": {
+          "tokens": 70000,
+          "cost": 1.4,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 5000
+        }
+      }
+    }
+  ],
+  "monthly": [
+    {
+      "date": "2026-10",
+      "tokens": 220000,
+      "cost": 2.47,
+      "cacheReadTokens": 140000,
+      "cacheWriteTokens": 32000,
+      "outputTokens": 28000,
+      "unclassifiedTokens": 20000,
+      "perClient": {
+        "mcode": {
+          "tokens": 50000,
+          "cost": 0.22,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "unclassifiedTokens": 5000
+        },
+        "claude": {
+          "tokens": 100000,
+          "cost": 0.85,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 10000
+        },
+        "codex": {
+          "tokens": 70000,
+          "cost": 1.4,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 5000
+        }
+      },
+      "perModel": {
+        "minimax-m2.5": {
+          "tokens": 50000,
+          "cost": 0.22,
+          "cacheReadTokens": 30000,
+          "cacheWriteTokens": 7000,
+          "outputTokens": 8000,
+          "unclassifiedTokens": 5000
+        },
+        "claude-sonnet-4-5": {
+          "tokens": 100000,
+          "cost": 0.85,
+          "cacheReadTokens": 60000,
+          "cacheWriteTokens": 20000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 10000
+        },
+        "gpt-6-sol": {
+          "tokens": 70000,
+          "cost": 1.4,
+          "cacheReadTokens": 50000,
+          "cacheWriteTokens": 5000,
+          "outputTokens": 10000,
+          "unclassifiedTokens": 5000
+        }
+      }
+    }
+  ]
+}

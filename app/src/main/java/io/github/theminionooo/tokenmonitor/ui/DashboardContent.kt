@@ -133,9 +133,9 @@ internal fun DashboardContent(
     }
     // Aggregating a rolling range walks the whole daily history; do it once per Hub event, not per recomposition.
     val usage = remember(snapshot, period, desktopOptions) { visibleUsage(period.usage(snapshot), desktopOptions) }
-    val homeActivity = remember(snapshot) {
+    val homeActivity = remember(snapshot, desktopOptions.homeActivityMetric) {
         val history = homeActivityPoints(snapshot)
-        history to buildActivityHeatmap(history)
+        history to buildActivityHeatmap(history, metric = when (desktopOptions.homeActivityMetric) { "tokens" -> ActivityMetric.Tokens; "cost" -> ActivityMetric.Cost; else -> ActivityMetric.Automatic })
     }
     BackHandler(destination == DashboardDestination.Models && modelFilter != null) {
         onChoose(DashboardDestination.Tools)
@@ -167,6 +167,9 @@ internal fun DashboardContent(
         verticalArrangement = Arrangement.spacedBy(if (destination in listOf(DashboardDestination.Models, DashboardDestination.Projects, DashboardDestination.Tools)) 4.dp else 10.dp),
     ) {
         item { TotalPanel(if (destination == DashboardDestination.Models) modelUsage else usage, destination == DashboardDestination.Home && displayOptions.compactTokenTotal, home = destination == DashboardDestination.Home) }
+        if (usage.unpricedTokens > 0) item {
+            Text(desktopText("${formatTokens(usage.unpricedTokens)} Token 缺少价格，费用仅含已知小计", "${formatTokens(usage.unpricedTokens)} tokens lack pricing; costs show the known subtotal"), color = Orange, style = MaterialTheme.typography.bodySmall)
+        }
         if (destination == DashboardDestination.Models && filteredTool != null) item {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -189,6 +192,8 @@ internal fun DashboardContent(
             DashboardDestination.Tools -> breakdownItems(
                 tokens = usage.clients,
                 costs = usage.clientCosts,
+                unpriced = usage.clientUnpricedTokens,
+                options = desktopOptions,
                 cacheReads = usage.clientCacheReads,
                 cacheWrites = usage.clientCacheWrites,
                 history = io.github.theminionooo.tokenmonitor.domain.usageHistory(snapshot),
@@ -203,6 +208,8 @@ internal fun DashboardContent(
             DashboardDestination.Models -> breakdownItems(
                 tokens = modelUsage.models,
                 costs = modelUsage.modelCosts,
+                unpriced = modelUsage.modelUnpricedTokens,
+                options = desktopOptions,
                 cacheReads = modelUsage.modelCacheReads,
                 cacheWrites = modelUsage.modelCacheWrites,
                 history = if (modelFilter == null) io.github.theminionooo.tokenmonitor.domain.usageHistory(snapshot) else emptyList(),

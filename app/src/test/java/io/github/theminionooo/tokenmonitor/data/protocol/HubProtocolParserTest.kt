@@ -15,7 +15,7 @@ class HubProtocolParserTest {
             resource("history.json", "v0.67.0"), resource("subscriptions.json", "v0.67.0"), 0,
         )
         val stats = HubProtocolParser.decodeStats(source)
-        assertEquals("v0.67.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
+        assertEquals("v0.68.0", HubProtocolParser.SUPPORTED_UPSTREAM_VERSION)
         assertEquals("v0.67.0", snapshot.health.hubBuild)
         assertEquals(220_000L, snapshot.today.totalTokens)
         assertEquals(220_000L, snapshot.history.daily.single().tokens)

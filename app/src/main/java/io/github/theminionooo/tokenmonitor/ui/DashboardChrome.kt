@@ -57,6 +57,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -139,7 +140,7 @@ internal fun DesktopHeader(
             if (status != null) Text(tr(status), color = if (state.snapshot?.stale == true) Orange else Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         if (settingsOpen) {
-            IconButton(onClick = onGoHome, modifier = Modifier.size(30.dp)) {
+            IconButton(onClick = onGoHome, modifier = Modifier.size(48.dp)) {
                 Icon(painterResource(R.drawable.action_arrow_left), contentDescription = localizedText("Back to Home"), tint = Muted, modifier = Modifier.size(18.dp))
             }
         } else {
@@ -190,8 +191,29 @@ internal fun DesktopFooter(
     ) {
         DesktopViewSwitcher(destination = destination, displayOptions = displayOptions, onChoose = onChoose)
         Spacer(Modifier.weight(1f))
+        val tracker = remember(state.connectionUrl) { LiveTokenRateTracker() }
+        var sample by remember(state.connectionUrl) { mutableStateOf<LiveRateSample?>(null) }
+        var burnMode by remember { mutableStateOf(false) }
+        val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+        androidx.compose.runtime.DisposableEffect(lifecycle, tracker) {
+            val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                if (event == androidx.lifecycle.Lifecycle.Event.ON_PAUSE || event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) { tracker.reset(); sample = null }
+            }
+            lifecycle.addObserver(observer)
+            onDispose { lifecycle.removeObserver(observer); tracker.reset() }
+        }
+        LaunchedEffect(state.snapshot) {
+            val snapshot = state.snapshot
+            sample = if (snapshot == null || snapshot.fromCache || snapshot.stale) { tracker.reset(); null }
+                else tracker.observe(snapshot.today, System.currentTimeMillis())
+        }
+        val now = LocalNow.current
+        val visibleSample = sample?.takeIf { now - it.sampledAt < 180_000 }
+        if (state.streamActive || state.widgetLiveActive) TextButton(onClick = { burnMode = !burnMode }, modifier = Modifier.height(48.dp)) {
+            Text(visibleSample?.let { String.format(java.util.Locale.US, "%.1f", if (burnMode) it.burn else it.speed) }?.plus(if (burnMode) "/m" else "/s") ?: "— /s", color = if (visibleSample != null && now - visibleSample.sampledAt < 8_000) Accent else Muted, style = MaterialTheme.typography.labelSmall)
+        }
         if (!state.streamActive || state.refreshing) {
-            IconButton(onClick = onRefresh, enabled = !state.refreshing, modifier = Modifier.size(30.dp)) {
+            IconButton(onClick = onRefresh, enabled = !state.refreshing, modifier = Modifier.size(48.dp)) {
                 Icon(Icons.Outlined.Refresh, contentDescription = localizedText("Refresh"), tint = if (state.refreshing) Muted.copy(alpha = 0.5f) else Muted, modifier = Modifier.size(18.dp))
             }
             Spacer(Modifier.width(6.dp))
@@ -200,7 +222,7 @@ internal fun DesktopFooter(
             color = Overlay,
             shape = MaterialTheme.shapes.small,
             border = BorderStroke(1.dp, Line),
-            modifier = Modifier.size(34.dp),
+            modifier = Modifier.size(48.dp),
         ) {
             IconButton(onClick = { onChoose(DashboardDestination.Settings) }) {
                 Icon(painterResource(R.drawable.action_settings), contentDescription = localizedText("Settings"), tint = Ink, modifier = Modifier.size(16.dp))
@@ -222,7 +244,7 @@ internal fun DesktopViewSwitcher(
             color = if (expanded) Accent.copy(alpha = 0.08f) else Overlay,
             shape = MaterialTheme.shapes.small,
             border = BorderStroke(1.dp, if (expanded) Accent.copy(alpha = 0.24f) else StrongLine),
-            modifier = Modifier.height(30.dp).width(154.dp),
+            modifier = Modifier.height(48.dp).width(154.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Row(
@@ -234,7 +256,7 @@ internal fun DesktopViewSwitcher(
                     Text(tr(destination.title), color = if (expanded) Ink else Muted, style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 Spacer(Modifier.width(1.dp).fillMaxHeight().background(if (expanded) Accent.copy(alpha = 0.24f) else StrongLine))
-                IconButton(onClick = { expanded = !expanded }, modifier = Modifier.size(30.dp)) {
+                IconButton(onClick = { expanded = !expanded }, modifier = Modifier.size(48.dp)) {
                     Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = localizedText("Choose view"), tint = Muted, modifier = Modifier.size(16.dp))
                 }
             }

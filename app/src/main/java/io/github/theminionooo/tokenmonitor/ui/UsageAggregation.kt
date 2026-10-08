@@ -83,6 +83,9 @@ private fun aggregateHistoryPoints(points: List<HistoryPoint>, startDate: LocalD
     }
     return UsagePeriod(
         totalTokens = selected.sumOf { it.tokens },
+        unpricedTokens = selected.sumOf { it.unpricedTokens },
+        clientUnpricedTokens = clientTotals.mapValues { it.value.unpricedTokens },
+        modelUnpricedTokens = modelTotals.mapValues { it.value.unpricedTokens },
         costUsd = selected.sumOf { it.costUsd },
         clients = clientTotals.mapValues { it.value.tokens },
         clientCosts = clientTotals.mapValues { it.value.costUsd },
@@ -105,6 +108,7 @@ private fun MutableMap<String, HistoryAttribution>.mergeAttribution(key: String,
         key,
         HistoryAttribution(
             tokens = current.tokens + value.tokens,
+            unpricedTokens = current.unpricedTokens + value.unpricedTokens,
             costUsd = current.costUsd + value.costUsd,
             cacheReadTokens = current.cacheReadTokens + value.cacheReadTokens,
             cacheWriteTokens = current.cacheWriteTokens + value.cacheWriteTokens,
@@ -120,6 +124,9 @@ private operator fun UsagePeriod.plus(other: UsagePeriod): UsagePeriod = UsagePe
     timedOutputTokens = timedOutputTokens + other.timedOutputTokens,
     timedDurationMs = timedDurationMs + other.timedDurationMs,
     totalTokens = totalTokens + other.totalTokens,
+    unpricedTokens = unpricedTokens + other.unpricedTokens,
+    clientUnpricedTokens = clientUnpricedTokens.plusCounts(other.clientUnpricedTokens),
+    modelUnpricedTokens = modelUnpricedTokens.plusCounts(other.modelUnpricedTokens),
     costUsd = costUsd + other.costUsd,
     clients = clients.plusCounts(other.clients),
     clientCosts = clientCosts.plusCosts(other.clientCosts),

@@ -63,45 +63,24 @@ class LocalizationAndAliasesTest {
         compose.onNodeWithText(uiText(context, "Source 家中 NAS"), substring = true).assertIsDisplayed()
         compose.onNodeWithText("Home", substring = true).assertIsDisplayed()
     }
-    @Test fun renameCancelAndRestoreAreLocalAndKeepRawNames() {
+    @Test fun hubNamesWinAndLegacyAliasesRemainDormant() {
         val raw = fixture()
         val first = raw.stats.devices.first()
         val hub = "https://alias-ui.example.com"
         val store = DeviceAliasStore(context)
-        store.save(hub, first.id, "")
-        var display by mutableStateOf(store.displaySnapshot(hub, raw))
-        val originalNames = raw.stats.devices.associate { it.id to it.id.ifBlank { it.hostname } }
+        val previous = store.alias(hub, first.id)
         try {
+            store.save(hub, first.id, "旧安卓别名")
+            val display = hubNamedSnapshot(raw)
             compose.setContent {
                 CompositionLocalProvider(LocalContext provides localizedContext(context), LocalPalette provides Palette.from(InterfaceTheme.Default)) {
-                    MaterialTheme {
-                        LazyColumn {
-                            deviceItems(display.stats.devices, DashboardPeriod.Today, originalNames) { id, input ->
-                                store.save(hub, id, input).also { if (it == null) display = store.displaySnapshot(hub, raw) }
-                            }
-                        }
-                    }
+                    MaterialTheme { LazyColumn { deviceItems(display.stats.devices, DashboardPeriod.Today) } }
                 }
             }
-            compose.onAllNodesWithContentDescription(uiText(context, "Rename device") + ":", substring = true)[0].performClick()
-            compose.onNodeWithText(uiText(context, "TOP MODELS ON THIS DEVICE")).assertDoesNotExist()
-            compose.onNodeWithText("安卓本地名称").performTextReplacement("家中 NAS")
-            compose.onNodeWithText("取消").performClick()
-            assertNull(store.alias(hub, first.id))
-            compose.onAllNodesWithContentDescription(uiText(context, "Rename device") + ":", substring = true)[0].performClick()
-            compose.onNodeWithText(uiText(context, "TOP MODELS ON THIS DEVICE")).assertDoesNotExist()
-            compose.onNodeWithText("安卓本地名称").performTextReplacement("家中 NAS")
-            compose.onNodeWithText("保存").performClick()
-            compose.onNodeWithText("家中 NAS").assertIsDisplayed()
-            assertEquals("家中 NAS", store.alias(hub, first.id))
-            val reopened = DeviceAliasStore(context)
-            assertEquals("家中 NAS", reopened.alias(hub, first.id))
-            reopened.close()
-            assertEquals(first.hostname, raw.stats.devices.first().hostname)
-            compose.onAllNodesWithContentDescription(uiText(context, "Rename device") + ":", substring = true)[0].performClick()
-            compose.onNodeWithText("恢复原名").performClick()
-            assertNull(store.alias(hub, first.id))
             compose.onNodeWithText(first.id.ifBlank { first.hostname }).assertIsDisplayed()
-        } finally { store.save(hub, first.id, ""); store.close() }
+            compose.onNodeWithText("旧安卓别名").assertDoesNotExist()
+            compose.onAllNodesWithContentDescription(uiText(context, "Rename device") + ":", substring = true).assertCountEquals(0)
+            assertEquals("旧安卓别名", store.alias(hub, first.id))
+        } finally { store.save(hub, first.id, previous.orEmpty()); store.close() }
     }
 }

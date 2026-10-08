@@ -33,7 +33,7 @@ class DesktopAlignmentTest {
         val previous = prefs.getString("options", null)
         try {
             val store = DesktopPreferences(context)
-            val options = DesktopOptions("CNY", 7.0, mapOf("m1" to "merged", "m2" to "merged"), setOf("tool"), setOf("model"))
+            val options = DesktopOptions("CNY", 7.0, mapOf("m1" to "merged", "m2" to "merged"), setOf("tool"), setOf("model"), currencyRates = mapOf("CNY" to 7.0))
             assertTrue(store.save(options))
             assertEquals(options, DesktopPreferences(context).options.value)
             assertFalse(store.save(options.copy(usdRate = Double.NaN)))
@@ -55,6 +55,10 @@ class DesktopAlignmentTest {
                     }
                 }
             }
+        }
+        compose.onRoot().captureToImage().asAndroidBitmap().let { bitmap ->
+            val directory = File(context.getExternalFilesDir(null), "desktop-alignment").apply { mkdirs() }
+            File(directory, "fonts-$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }
         compose.onNodeWithText("CNY", useUnmergedTree = true).performClick()
         compose.onNodeWithText("1 USD = 多少 CNY").performTextReplacement("7")
@@ -99,8 +103,50 @@ class DesktopAlignmentTest {
         } }
         compose.onNodeWithText("Token 明细").performClick()
         assertFalse(selected)
-        compose.onNodeWithText("缓存写入").assertIsDisplayed()
+        compose.onNodeWithText("其中缓存写入").assertIsDisplayed()
         compose.onNodeWithText("Codex").performClick()
         assertTrue(selected)
+    }
+    @Test fun longPressHandleMovesOnlyAfterDrop() {
+        var shift = 0
+        compose.setContent { MaterialTheme { DragOrderHandle("测试", onMove = { shift = it }) } }
+        compose.onNodeWithContentDescription("拖动排序：测试").performTouchInput {
+            down(center)
+            advanceEventTime(650)
+            moveBy(androidx.compose.ui.geometry.Offset(0f, 150f), delayMillis = 100)
+            up()
+        }
+        compose.waitForIdle()
+        assertTrue(shift > 0)
+    }
+    @Test fun fontChoicesAreChineseAndIndependent() {
+        var options by mutableStateOf(DesktopOptions())
+        compose.setContent { MaterialTheme { LazyColumn { item { DesktopSettingsPanel(null, options) { options = it; true } } } } }
+        compose.onAllNodesWithText("系统", useUnmergedTree = true)[0].performClick()
+        assertEquals("system", options.interfaceFont)
+        assertEquals("system", options.displayFont)
+        compose.onAllNodesWithText("等宽", useUnmergedTree = true)[1].performClick()
+        assertEquals("system", options.interfaceFont)
+        assertEquals("mono", options.displayFont)
+    }
+    @Test fun oldSettingsMigrateAndNewPreferencesPersist() {
+        check(context.packageName.endsWith(".preview"))
+        val prefs = context.getSharedPreferences("desktop_presentation", Context.MODE_PRIVATE)
+        val previous = prefs.getString("options", null)
+        try {
+            prefs.edit().putString("options", """{"currency":"CNY","rate":7.0,"aliases":{"a":"b"},"tools":["tool"],"models":[]}""").commit()
+            val store = DesktopPreferences(context)
+            val old = store.options.value
+            assertEquals("mono", old.interfaceFont)
+            assertEquals("system", old.displayFont)
+            assertEquals("off", old.modelGrouping)
+            assertEquals(mapOf("a" to "b"), old.modelAliases)
+            val changed = old.copy(interfaceFont = "system", displayFont = "follow", modelGrouping = "duplicates", contextRemaining = true, pinnedTools = setOf("codex"), toolOrder = listOf("codex", "hermes"))
+            assertTrue(store.save(changed))
+            val reopened = DesktopPreferences(context).options.value
+            assertEquals(changed.copy(currencyRates = mapOf("CNY" to 7.0)), reopened)
+            assertTrue(store.save(reopened.copy(currency = "HKD", usdRate = 7.8)))
+            assertEquals(mapOf("CNY" to 7.0, "HKD" to 7.8), DesktopPreferences(context).options.value.currencyRates)
+        } finally { prefs.edit().putString("options", previous).commit(); DesktopPreferences(context) }
     }
 }

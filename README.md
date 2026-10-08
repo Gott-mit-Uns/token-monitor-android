@@ -1,223 +1,61 @@
-> **Token Monitor Android · 非官方独立 Hub 客户端 · v0.67.0-hub.3**
->
-> 发布仓库：[Gott-mit-Uns/token-monitor-android](https://github.com/Gott-mit-Uns/token-monitor-android) · [下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest)。
->
-> 基于安卓上游 v0.67.0 r1，保留中文、设备别名、主题图标、独立图标尺寸及主页中文单位。支持 NAS／电脑 Hub、HTTPS 反代域名、Tailscale 和局域网。应用 ID 与签名保持不变，可覆盖安装旧 cf 版本；原作者自动 APK 更新保持关闭。
->
-> hub.3 完成桌面端查看功能的三个阶段对齐：设备名称与缓存明细、币种与手动汇率、模型别名合并、行显示和数据导出，以及二级页面完整数字与图表点击。原币余额和订阅保持原币，安卓仍只读 Hub。
->
-> 0.67 跟进 TM2 独立图表颜色、MiMo 分产品额度与原币费用，并验证会话标题共享及撤销。保留本分支全部自定义设置。
->
-> 新增紧凑、横向、竖向、总览、详细五个小组件入口，保留自动适配与四页切换，共七个入口。网格大小由启动器决定，以实际 dp 空间适配。Pages 的四个页面通过左右点击切换。
->
-> [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.67.0-hub.3.md)
->
-## 本分支主页 · 浅色与深色
+# Token Monitor Android · Hub 查看端
 
-中文界面、主页万／亿单位、独立图标尺寸，以及按主题切换的黑白工具和设备标识。支持 NAS／电脑 Hub 与 HTTPS 反代域名；设备可设置安卓本地别名。
+本项目基于 [The-Minion-oOo/token-monitor-android](https://github.com/The-Minion-oOo/token-monitor-android)，提供中文界面及本分支的显示与 Hub 兼容改进。感谢原作者做出了与桌面 Token Monitor 风格非常接近的安卓客户端。
 
-<table>
-  <tr>
-    <td align="center" valign="top" width="50%"><b>浅色 · Porcelain</b><br><br><a href="docs/images/fork-home-light.png"><img src="docs/images/fork-home-light.png" alt="本分支浅色中文主页：Codex、Hermes Agent、DeepSeek Harness，Mac、Windows、两台 NAS 及对应模型" width="360"></a></td>
-    <td align="center" valign="top" width="50%"><b>深色 · Obsidian</b><br><br><a href="docs/images/fork-home-dark.png"><img src="docs/images/fork-home-dark.png" alt="本分支深色中文主页：Codex、Hermes Agent、DeepSeek Harness，Mac、Windows、两台 NAS 及对应模型" width="360"></a></td>
-  </tr>
-</table>
+**0.68 起，本分支直接跟进 [Javis603/token-monitor 桌面端](https://github.com/Javis603/token-monitor) 的功能与界面，不再等待安卓上游发布相同版本。** 这表示更新依据改变，代码仍保留安卓上游基础；并非完全重写或取消原作者贡献。0.67 及以前的版本沿安卓上游更新。
 
-> 两张图由本分支的实际 Android 主页组件使用同一份合成数据渲染，为同时展示额度、工具、设备和模型采用加长视口；普通手机可纵向滚动查看。用量、费用、账户和设备均为示意数据，不包含真实 Hub 地址或凭据。
->
-> 示例模型配置：Codex → `gpt-6.1-sol`；Hermes Agent → `claude-sonnet-4-6`；DeepSeek Harness → `deepseek-v4-flash`。这些是示例配置，实际可用模型与用量以 Hub 上报为准。
+本分支版本：`v0.68.0-hub.1`，`versionCode 680101`。保持原应用 ID 和固定签名，可覆盖安装本分支旧版本。
 
-### 本分支设置 · 外观
+[下载已发布 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [Hub 连接说明](HUB.md) · [构建说明](BUILDING.md) · [0.68 改进与差异](docs/reviews/desktop-068-current.md)
 
-图标大小与文字大小独立选择；主页单位开关控制万／亿或 K／M／B，仅影响主页。二级页面继续显示完整 Token 数量。图标可按主题使用黑白标识，也可开启品牌色。
+## 使用方式
 
-<table>
-  <tr>
-    <td align="center" valign="top" width="50%"><b>浅色 · 外观设置</b><br><br><a href="docs/images/fork-settings-light.png"><img src="docs/images/fork-settings-light.png" alt="本分支浅色外观设置：主页中文单位、独立文字大小与图标大小、黑白或品牌色标识" width="360"></a></td>
-    <td align="center" valign="top" width="50%"><b>深色 · 外观设置</b><br><br><a href="docs/images/fork-settings-dark.png"><img src="docs/images/fork-settings-dark.png" alt="本分支深色外观设置：主页中文单位、独立文字大小与图标大小、黑白或品牌色标识" width="360"></a></td>
-  </tr>
-</table>
+手机只读取已有 Token Monitor Hub：支持 NAS／电脑 Hub、HTTPS 反代域名、Tailscale 和局域网。采集仍由各电脑或 NAS Agent 完成，安卓不会上传设备数据或修改共享订阅。
 
-> 截图来自实际 Android 设置页面，已展开“外观”并滚动到显示选项；图标尺寸提供紧凑 16dp、舒适 20dp、大号 24dp 三档。设备别名在设备详情中修改，不在外观设置中。
+凭据采用 Keystore 支持的加密存储并排除备份。输入地址及凭据后验证连接；不要把凭据写入 URL。已有配对和缓存保持兼容。
 
----
+前台启动读取一次统计并建立单条 SSE；断线采用重连和每 60 秒轮询后备。手动刷新重新读取相关数据；退到后台停止常规同步，保留离线缓存。若你主动开启小组件 Live，则每 60 秒读取一次，最多一小时，可随时停止；默认不创建周期后台任务。设备数据的新鲜度取决于采集设备上报，并不等于手机连接状态。
 
-> 下方保留上游项目介绍与上游截图；原版发布渠道及验证记录不代表本分支验证结果。
+## 本分支的改进
 
-<p align="center">
-  <img src="docs/images/app-icon.png" alt="Token Monitor app icon" width="96" height="96">
-</p>
+- 中文界面、黑白主题工具与设备图标；内容图标 16／20／24dp，与文字大小独立设置。
+- 主页万／亿或 K／M／B，二级页面完整 Token 整数；主页按本分支选择保留活动热力图、隐藏趋势模块。
+- 设备名称直接跟随 Hub，取消安卓改名入口。旧本地别名偏好保留但不再覆盖 Hub。
+- 缓存未命中包含写入，写入作为“其中缓存写入”展示；保留未分类 Token。
+- 未定价 Token 和已知费用小计提示；Codex Dots 的 observed-only 会话范围说明。
+- 独立界面／大数字字体角色；USD／CNY／HKD／TWD 手动汇率按币种保存，采用桌面端费用精度及符号。账户余额与订阅仍显示原币。
+- 模型规范化别名与自动分组（关闭／重复名称／移除前缀）；仅改变本机显示，不修改 Hub。
+- 工具、模型和重点账户置顶与排序；设置中支持长按手柄拖动及上移／下移。账户与额度窗口可以分别隐藏，不再固定截取前三个账户和前两个窗口。
+- 会话上下文已用／剩余显示；有来源时展示模型 Token 拆分，不推断逐条对话内容。
+- 实时速率使用计时计数的增量，支持速度／消耗切换，避免用累计平均值冒充实时速度。
+- 订阅开始／结束／续费／充值／时长只读详情；支持提供方汇总的本月 API 等价费用与月均订阅费比较，无法可靠换算时不显示倍数。
+- 用户主动导出 JSON、CSV 或 ZIP；ZIP 包含统计、每日工具、每日模型 CSV，使用 UTF-8 BOM。费用保持原始 USD，模型和工具保持 Hub 原始分类；排除凭据、会话标题、提示词与回复。
+- 保留七个小组件入口及原有自适应布局。
 
-<h1 align="center">Token Monitor for Android</h1>
+## 主页示意
 
-<p align="center"><b>Your desktop usage. In your pocket.</b><br>
-Tokens, account limits, models and trends from the desktop Token Monitor Hub, plus home-screen widgets that stay useful with the app closed.</p>
+<table><tr>
+<td width="50%"><b>浅色</b><br><img src="docs/images/fork-home-light.png" width="360" alt="浅色主页，Codex、Hermes Agent、DeepSeek Harness 和 Mac、Windows、NAS"></td>
+<td width="50%"><b>深色</b><br><img src="docs/images/fork-home-dark.png" width="360" alt="深色主页，工具、设备、模型与活动"></td>
+</tr></table>
 
-<p align="center">
-  <a href="docs/INSTALL.md">Build or install</a> ·
-  <a href="docs/PAIRING.md">Pair with your desktop</a> ·
-  <a href="docs/WIDGETS.md">Widgets</a> ·
-  <a href="CHANGELOG.md">What changed</a>
-</p>
+主页图片由 0.68 实际组件使用合成数据与加长视口渲染；不是用户真实用量。普通手机可纵向滚动查看。
 
-<p align="center">
-  <a href="https://github.com/Gott-mit-Uns/token-monitor-android/actions/workflows/android.yml"><img alt="Android checks" src="https://img.shields.io/badge/Android_checks-CI-73bdf5?style=flat-square&logo=githubactions&logoColor=10221c"></a>
-  <img alt="Android 8 or newer" src="https://img.shields.io/badge/Android-8%2B-6fa79b?style=flat-square&logo=android&logoColor=10221c">
-  <img alt="Desktop baseline v0.67.0" src="https://img.shields.io/badge/Desktop-v0.67.0-73bdf5?style=flat-square">
-  <img alt="Kotlin and Compose" src="https://img.shields.io/badge/Kotlin-Compose-ff9c72?style=flat-square&logo=kotlin&logoColor=white">
-  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-b39cff?style=flat-square"></a>
-</p>
+## 0.68 新增设置
 
-<img src="docs/images/hero.png?v=0.61.0-r1-readme" alt="Token Monitor's Android dashboard showing synthetic usage data" width="100%">
+<table><tr>
+<td width="50%"><b>浅色</b><br><img src="docs/images/desktop-068/settings-light.png" width="360" alt="浅色设置：字体角色、币种、模型分组、活动指标和上下文"></td>
+<td width="50%"><b>深色</b><br><img src="docs/images/desktop-068/settings-dark.png" width="360" alt="深色设置：新增桌面端显示功能"></td>
+</tr></table>
 
-Your desktop [Token Monitor](https://github.com/Javis603/token-monitor) already
-tracks the usage. This app brings the same dashboard, visual language, and
-numbers to your phone, with home-screen widgets for quick checks.
+来自 Android 实际组件与合成数据，不包含地址或凭据。字体采用 Android 可用字体，不捆绑 macOS／Windows 的专有字体。
 
-The desktop stays the collector and the source of truth. The phone reads its Hub over your own private network and shows what it finds. That is the whole trick.
+## 代码来源与许可
 
-## The desktop dashboard, made mobile
+本项目继续大量使用安卓上游的基础实现。按同路径 Kotlin 生产代码的非空、非注释行比较，当前文本保留比例约 **77.9%**；该数字不是作者贡献或版权归属比例，资源与构建继承也不在其中。[核对方法与基准](docs/reviews/upstream-code-retention.md)。
 
-<table>
-  <tr>
-    <td align="center" valign="top" width="33%"><a href="docs/images/home.png"><img src="docs/images/framed-home.png" alt="Home dashboard with totals, limits, tools, devices and models" width="100%"></a><br><sub><b>Command center</b><br>Totals, limits, tools, devices, models</sub></td>
-    <td align="center" valign="top" width="33%"><a href="docs/images/filtered-models.png"><img src="docs/images/framed-filtered-models.png" alt="Models filtered to Codex after tapping it in the tools list" width="100%"></a><br><sub><b>Tap a tool</b><br>See the models behind it</sub></td>
-    <td align="center" valign="top" width="33%"><a href="docs/images/trends.png"><img src="docs/images/framed-trends.png" alt="Usage overview cards and an activity heatmap with a selected day" width="100%"></a><br><sub><b>Find the busy days</b><br>Cards, heatmap, daily series</sub></td>
-  </tr>
-  <tr>
-    <td align="center" valign="top" width="33%"><a href="docs/images/devices.png"><img src="docs/images/framed-devices.png" alt="Usage grouped by two made-up desktop devices" width="100%"></a><br><sub><b>Every desktop</b><br>What each machine contributes</sub></td>
-    <td align="center" valign="top" width="33%"><a href="docs/images/projects.png"><img src="docs/images/framed-projects.png" alt="Searchable project usage with token and cost totals" width="100%"></a><br><sub><b>Projects and sessions</b><br>Searchable, without transcripts</sub></td>
-    <td align="center" valign="top" width="33%"><a href="docs/images/settings.png"><img src="docs/images/framed-settings.png" alt="Appearance, dashboard, widget and connection settings" width="100%"></a><br><sub><b>Make it yours</b><br>Themes, text size, motion, views</sub></td>
-  </tr>
-</table>
+保留安卓上游的 MIT 署名与许可；桌面端对齐逻辑和素材来源见 [第三方声明](THIRD_PARTY_NOTICES.md)。服务名称和标识属于各自权利人，展示不代表官方合作或认可。
 
-> Every image is a capture of the Android app using made-up accounts, devices,
-> projects, and usage. Capture instructions are in the [development guide](docs/DEVELOPMENT.md#showcase-captures).
+## 验证边界
 
-## One fixed card, four focused pages
-
-<a href="docs/images/widget-pages-gallery.png"><img src="docs/images/widget-pages-gallery.png" alt="The Pages widget showing Overview, Limits, Breakdown and Activity at one consistent size" width="100%"></a>
-
-**Token Monitor · Pages** is the redesigned widget shown above. It requests a
-wide 4×2 placement and always draws the same 1.82:1 composition. Android launchers
-can allocate different physical dimensions, and some may still show resize handles,
-but the Pages widget does not reflow, add rows, or switch layouts.
-
-- **Overview** keeps the complete token total, cost, recent activity, streak, tool
-  share, and week summary together.
-- **Limits** shows the four tightest reported account windows with their reset or
-  expiry wording.
-- **Breakdown** compares up to three tools and three models on one shared row rhythm.
-- **Activity** pairs the labeled seven-day chart with a thirteen-week heatmap and
-  recent activity totals.
-
-Tap the left or right edge to change pages. The selected page and four position
-dots update locally without waking the Hub or starting background work. Refresh
-performs one bounded fetch; Live checks current stats every 30 seconds for up to
-one hour and can be stopped from the widget or its notification. When the Hub is
-offline, the last snapshot remains visible with a `SAVED` status.
-
-The widget picker also includes the original **Token Monitor · Usage** widget. It
-is a separate responsive provider that reflows a single summary as its launcher
-allocation changes; its layouts are not alternate sizes of the four Pages shown
-above. Both widgets follow the app theme, including desktop `TM1-…` theme codes.
-The v0.67.0 release also accepts `TM2-…` codes with an independent chart color.
-
-[Widget behavior and controls](docs/WIDGETS.md) · [Widget design notes](docs/WIDGET_DESIGN.md).
-
-## How it works
-
-```mermaid
-flowchart LR
-    D[Desktop Token Monitor<br>collects and hosts usage] -->|read-only Hub| T[Tailscale or home Wi-Fi<br>your private network]
-    T --> A[Android app<br>dashboard and widgets]
-```
-
-The phone talks to the Hub the desktop already runs. It reads five documented
-endpoints and one live stream over Tailscale, or home Wi-Fi when enabled. There
-is no public server, vendor relay, or separate Token Monitor account.
-
-## What it shows
-
-- Live totals while the app is open, an immediate refresh on return, pull-to-refresh, and a saved snapshot when the Hub is unavailable.
-- Day, week, month, rolling 7, 30 and 90 days, one year, all history and total.
-- Account limits with the desktop's reset countdowns.
-- Tools, devices, models, projects, sessions, subscriptions, service status, activity and trends, each with an `updated 5m ago` freshness.
-- Recent and running sessions on Home, reported conversation titles, and context-window use when the desktop provides them, without reading prompt or response bodies.
-- Trends by tool or model, shown as bars or a K-line chart.
-- Cache hit, cache miss, output and unclassified token details where the Hub provides them.
-- The desktop's Default, Obsidian and Porcelain themes, theme codes pasted as-is, an option to follow the phone's light and dark setting, three text sizes, motion controls, and reorderable views and Home modules.
-- A Back button that goes Home instead of quitting on you, and a light haptic tick on every tab.
-
-The Hub does not carry prompt or response bodies. It can carry a conversation title, which may contain sensitive text; the phone shows it in Home and Sessions, never on a widget. Turn off **Show session titles** in Settings to hide them on the phone; this does not remove them from the local snapshot cache.
-
-Home shows the five most recent sessions plus any other running sessions. On an existing installation, enable **Sessions** under **Settings → Main dashboard → Home modules**; saved layouts are not reset.
-Session rows also show generation speed, cache-hit percentage and prompt-cache estimates when the Hub supplies them. Speed is a session average, not a live rate; cache retention is an estimate, not a guarantee.
-
-## Private and light
-
-- Read-only. The app cannot change desktop settings, usage data, or files.
-- Hub credentials live in an Android Keystore-backed store and are excluded from backups.
-- No ads, analytics, wake lock, scheduled background work or "please rate us" popup.
-- App updates checks published GitHub releases from Settings and verifies a downloaded signed APK before Android asks to install it; there is no background update check or silent install.
-- The visible dashboard streams immediately. Widget Live uses a lightweight 30-second stats refresh and stops after one hour.
-- Android 13 and newer asks for notification permission the first time you start a widget session, so the Stop control has somewhere to live. Ordinary use needs no permission prompts at all.
-
-[Privacy and security](docs/SECURITY.md) · [Report a concern](SECURITY.md).
-
-## Get connected
-
-You need Android 8.0 or newer and a desktop running Token Monitor with Hub hosting on. Android upstream v0.67.0 r1 is fixture-verified against desktop v0.67.0. A physical-phone upgrade has not yet been checked for this release.
-
-1. Follow [Installing and updating](docs/INSTALL.md) to get the signed fork APK from this repository’s Releases.
-2. Put [Tailscale](https://tailscale.com/) on the desktop and the phone, signed into the same tailnet.
-3. In desktop Token Monitor, open **Settings → Multi-device Sync → Host Hub** and copy the address and shared secret.
-4. In the app, type the address that starts with `100.`, paste the secret, tap **Connect**. Just the numbers are enough.
-5. At home, tap **Find** and the app fills in the desktop's Wi-Fi address as a fallback. From then on the phone uses whichever route answers.
-
-Desktop v0.64's optional iCloud Drive sync does not replace the Hub connection for Android.
-
-[Pairing and troubleshooting](docs/PAIRING.md) · [Installing and updating](docs/INSTALL.md).
-
-## Compatibility
-
-| | |
-| --- | --- |
-| Current public release | [`v0.67.0-r1`](https://github.com/The-Minion-oOo/token-monitor-android/releases/tag/android-v0.67.0-r1) |
-| Latest phone-verified build | signed `v0.62.0-r1` over v0.61.0 r1; saved connection and placed Pages widget registration preserved |
-| v0.67.0 phone checks | In-place upgrade, saved pairing, widget retention, and battery behavior await owner verification |
-| Desktop baseline | Token Monitor `v0.67.0` |
-| Upstream commit | [`338a965`](https://github.com/Javis603/token-monitor/commit/338a965f6c9a5a06b017eba4ebd7d5997973519e) |
-
-The visible version matches the desktop release the phone understands. Android-only
-builds bump the release revision and internal version code while the compatibility
-line stays on its verified desktop version. When desktop Token Monitor moves past that, the phone
-continues using the verified endpoints until a follow-up Android release checks
-the new protocol. Details are in [`upstream.json`](upstream.json) and
-[`RELEASING.md`](docs/RELEASING.md).
-
-## Build and contribute
-
-JDK 17 or newer, Android SDK 37 and the bundled Gradle wrapper:
-
-```powershell
-.\gradlew.bat :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
-```
-
-Add `-PtokenMonitorPreview=true` to install a separate `.preview` build next to the release without touching its pairing. [Development guide](docs/DEVELOPMENT.md) · [Contributing](CONTRIBUTING.md).
-
-## Documentation
-
-| Using it | Understanding it | Maintaining it |
-| --- | --- | --- |
-| [Installation](docs/INSTALL.md) | [Architecture](docs/ARCHITECTURE.md) | [Development](docs/DEVELOPMENT.md) |
-| [Pairing](docs/PAIRING.md) | [Hub protocol](docs/PROTOCOL.md) | [Validation](docs/VALIDATION.md) |
-| [Widgets](docs/WIDGETS.md) | [Desktop parity](docs/DESKTOP_PARITY.md) | [Releasing](docs/RELEASING.md) |
-| [Privacy](docs/SECURITY.md) | [Widget design](docs/WIDGET_DESIGN.md) | [Following upstream](docs/UPSTREAM_SYNC.md) |
-
-This project is independent of the upstream Token Monitor maintainers and of the services whose marks appear in the app. [MIT License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md).
-
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/The-Minion-oOo"><b>The_Minion_oOo</b></a><br>
-  <sub>...: Thanks to Codex and Claude :...</sub>
-</p>
+0.68 桌面源码的隔离 Hub 已验证认证读取和 SSE。模拟器验证与用户真实手机、启动器及已认证 NAS 联调分别记录，不能互相替代。Android 17 尚未验证。正式发布记录以 GitHub Release 及对应验证文件为准。

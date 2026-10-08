@@ -200,6 +200,8 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
             }
             Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = localizedText(if (expanded) "Collapse session details" else "Expand session details"), tint = Muted, modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)))
         }
+        if (session.usageCoverage == "observed-only") Text(desktopText("仅包含采集端观测用量，并非完整账户用量", "Collector-observed usage only; not complete account usage"), color = Orange, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
+        if (session.unpricedTokens > 0) Text(desktopText("${formatTokens(session.unpricedTokens)} Token 缺少价格", "${formatTokens(session.unpricedTokens)} tokens lack pricing"), color = Orange, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
         UsageBar(ratio, accentFor(session.client))
         sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
             Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
@@ -211,10 +213,10 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 else -> Muted
             }
             Row(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(tr("Context ${reading.percentUsed}% used"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr(if (LocalDesktopOptions.current.contextRemaining) "${reading.percentLeft}% left" else "Context ${reading.percentUsed}% used"), color = Muted, style = MaterialTheme.typography.labelSmall)
                 Text(tr("${reading.percentLeft}% left"), color = contextColor, style = MaterialTheme.typography.labelSmall)
             }
-            UsageBar(reading.percentUsed / 100f, contextColor)
+            UsageBar((if (LocalDesktopOptions.current.contextRemaining) reading.percentLeft else reading.percentUsed) / 100f, contextColor)
         }
         AnimatedVisibility(
             visible = expanded,
@@ -225,6 +227,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 if (session.projectLabel.isNotBlank()) DetailLine("Project", session.projectLabel)
                 if (session.startedAt.isNotBlank()) DetailLine("Started", session.startedAt.shortTime())
                 if (session.modelNames.isNotEmpty()) DetailLine("Models", session.modelNames.joinToString { it.displayName() })
+                session.modelTokens.forEach { (model, tokens) -> DetailLine(model, formatTokens(tokens) + if (session.totalTokens > 0) " · ${formatPercent(tokens.toDouble() / session.totalTokens * 100)}" else "") }
                 DetailLine("Session", session.id)
                 if (session.inputTokens + session.outputTokens + session.cacheReadTokens + session.cacheWriteTokens > 0) {
                     DetailLine("输入 Token", formatTokens(session.inputTokens))

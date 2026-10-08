@@ -147,7 +147,7 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
         viewModel.navigateBack()
     }
 
-    val typography = remember(displayOptions.textScale) { tokenMonitorTypography(displayOptions.textScale.step) }
+    val typography = remember(displayOptions.textScale, desktopOptions.interfaceFont, desktopOptions.displayFont) { tokenMonitorTypography(displayOptions.textScale.step, desktopOptions.interfaceFont, desktopOptions.displayFont) }
     val systemDark = androidx.compose.foundation.isSystemInDarkTheme()
     val palette = remember(displayOptions.themeCode, displayOptions.followSystemTheme, systemDark) {
         Palette.from(resolveInterfaceTheme(displayOptions.themeCode, displayOptions.followSystemTheme, systemDark))
@@ -165,6 +165,7 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
     }
     MaterialTheme(colorScheme = remember(palette) { tokenMonitorColors(palette) }, typography = typography) {
         CompositionLocalProvider(
+            LocalDesktopOptions provides desktopOptions,
             LocalPalette provides palette,
             LocalColorfulToolMarks provides displayOptions.colorfulToolMarks,
             LocalToolIcons provides displayOptions.showToolIcons,
@@ -230,7 +231,8 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     onRepairHomeAddress = { address -> withLocalNetworkAccess(true) { viewModel.repairHomeAddress(address) } },
                     onAllowLocalNetwork = { withLocalNetworkAccess(true, viewModel::onResume) },
                     originalDeviceNames = viewModel.originalDeviceNames,
-                    onRenameDevice = viewModel::saveDeviceAlias,
+                    onRenameDevice = null,
+                    rawExportSnapshot = viewModel.rawExportSnapshot,
                 )
             }
         }
@@ -274,6 +276,7 @@ internal fun DashboardScaffold(
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
     desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
     onSaveDesktopOptions: (io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions) -> Boolean = { false },
+    rawExportSnapshot: io.github.theminionooo.tokenmonitor.domain.HubSnapshot? = null,
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
     onRepairHomeAddress: (String) -> Unit = {},
@@ -335,6 +338,7 @@ internal fun DashboardScaffold(
                 state = state,
                 form = form,
                 desktopOptions = desktopOptions,
+                rawExportSnapshot = rawExportSnapshot,
                 onSaveDesktopOptions = onSaveDesktopOptions,
                 displayOptions = displayOptions,
                 onSaveConnection = onSaveConnection,

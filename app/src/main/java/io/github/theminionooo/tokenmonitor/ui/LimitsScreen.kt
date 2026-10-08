@@ -119,6 +119,11 @@ internal fun LazyListScope.limitItems(snapshot: HubSnapshot, displayOptions: Dis
     if (snapshot.subscriptions.entries.isNotEmpty()) {
         item { Text(tr("SUBSCRIPTIONS"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
         items(snapshot.subscriptions.entries, key = { it.id }) { subscription -> SubscriptionRow(subscription) }
+        snapshot.subscriptions.entries.map { it.provider }.distinct().forEach { provider -> item {
+            providerValueMultiple(snapshot, provider, LocalDesktopOptions.current)?.let { multiple ->
+                Text(desktopText("${provider.providerLabel()} 本月 API 等价费用／月均订阅费：${String.format(java.util.Locale.US, "%.2f", multiple)} 倍（提供方合计，非单账户）", "${provider.providerLabel()} monthly API-equivalent cost / monthly subscription: ${String.format(java.util.Locale.US, "%.2f", multiple)}× (provider total, not per account)"), color = Muted, style = MaterialTheme.typography.bodySmall)
+            }
+        } }
     }
 }
 
@@ -198,12 +203,24 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
 
 @Composable
 internal fun SubscriptionRow(subscription: Subscription) {
-    DesktopDetailRow(
-        label = subscription.provider.providerLabel(),
-        subtitle = subscription.planName.ifBlank { tr("Subscription") },
-        value = formatSubscriptionAmount(subscription.amountMinor, subscription.currency),
-        detail = subscription.interval.displayName(),
-        color = Purple,
-        upstreamName = subscription.provider,
-    )
+    var expanded by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    Column(Modifier.fillMaxWidth().clickable { expanded = !expanded }) {
+        DesktopDetailRow(
+            label = subscription.provider.providerLabel(),
+            subtitle = subscription.planName.ifBlank { tr("Subscription") },
+            value = formatSubscriptionAmount(if (subscription.kind == "topup") subscription.topUps.sumOf { it.amountMinor } else subscription.amountMinor, subscription.currency),
+            detail = if (subscription.kind == "topup") desktopText("充值", "Top-ups") else "${subscription.intervalCount} × ${subscription.interval.displayName()}",
+            color = Purple, upstreamName = subscription.provider,
+        )
+        if (expanded) Column(Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            if (subscription.startDate.isNotBlank()) Text(desktopText("开始：${subscription.startDate}", "Starts: ${subscription.startDate}"), color = Muted, style = MaterialTheme.typography.bodySmall)
+            if (subscription.endDate.isNotBlank()) Text(desktopText("结束：${subscription.endDate}", "Ends: ${subscription.endDate}"), color = Muted, style = MaterialTheme.typography.bodySmall)
+            subscriptionRenewal(subscription).takeIf { it.isNotBlank() }?.let { renewal -> Text(desktopText("下次续费：$renewal", "Next renewal: $renewal"), color = Muted, style = MaterialTheme.typography.bodySmall) }
+            subscriptionDays(subscription)?.let { days -> Text(if (subscription.kind == "topup") desktopText("自首次充值起 $days 天", "$days days since first top-up") else desktopText("已订阅 $days 天", "Subscribed for $days days"), color = Muted, style = MaterialTheme.typography.bodySmall) }
+            if (subscription.kind != "topup") Text(if (subscription.autoRenew) desktopText("自动续费", "Auto-renewal enabled") else desktopText("不自动续费", "Auto-renewal disabled"), color = Muted, style = MaterialTheme.typography.bodySmall)
+            subscription.topUps.forEach { top -> Text("${top.date} · ${formatSubscriptionAmount(top.amountMinor, subscription.currency)}", color = Ink, style = MaterialTheme.typography.bodySmall) }
+            if (subscription.note.isNotBlank()) Text(subscription.note, color = Muted, style = MaterialTheme.typography.bodySmall)
+            if (subscription.updatedAt.isNotBlank()) Text(desktopText("更新：${subscription.updatedAt.shortTime()}", "Updated: ${subscription.updatedAt.shortTime()}"), color = Muted, style = MaterialTheme.typography.bodySmall)
+        }
+    }
 }

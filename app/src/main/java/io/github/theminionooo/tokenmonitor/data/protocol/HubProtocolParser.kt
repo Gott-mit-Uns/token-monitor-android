@@ -33,7 +33,7 @@ import kotlinx.serialization.json.longOrNull
  * Android client renders and intentionally ignores unknown fields.
  */
 object HubProtocolParser {
-    const val SUPPORTED_UPSTREAM_VERSION = "v0.67.0"
+    const val SUPPORTED_UPSTREAM_VERSION = "v0.68.0"
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -177,6 +177,10 @@ object HubProtocolParser {
             modelCacheWrites = longMap("modelCacheWrites"),
             modelOutputs = longMap("modelOutputs"),
             modelUnclassifiedTokens = longMap("modelUnclassifiedTokens"),
+            unpricedTokens = (long("unpricedTokens") ?: 0).coerceIn(0, (long("totalTokens") ?: long("total_tokens") ?: 0).coerceAtLeast(0)),
+            clientUnpricedTokens = longMap("clientUnpricedTokens"),
+            modelUnpricedTokens = longMap("modelUnpricedTokens"),
+            clientModelUnpricedTokens = objectField("clientModelUnpricedTokens")?.mapValues { (_, value) -> JsonObject(mapOf("values" to value)).longMap("values") }.orEmpty(),
             projects = projects,
             sessions = sessions,
         )
@@ -199,6 +203,10 @@ object HubProtocolParser {
         totalTokens = long("totalTokens") ?: 0,
         costUsd = double("costUsd") ?: 0.0,
         modelNames = objectField("models")?.keys?.toList().orEmpty(),
+        modelTokens = longMap("models"),
+        usageSource = string("usageSource"),
+        usageCoverage = string("usageCoverage"),
+        unpricedTokens = (long("unpricedTokens") ?: 0).coerceIn(0, (long("totalTokens") ?: 0).coerceAtLeast(0)),
         messageCount = (long("messageCount") ?: 0).toIntSafely(),
         startedAt = string("startedAt"),
         lastUsedAt = string("lastUsedAt"),
@@ -225,6 +233,7 @@ object HubProtocolParser {
         id = string("deviceId").ifBlank { string("id") },
         hostname = string("hostname"),
         platform = string("platform"),
+        agentVersion = string("agentVersion"),
         osName = string("osName"),
         osVersion = string("osVersion"),
         updatedAt = string("updatedAt"),
@@ -298,21 +307,27 @@ object HubProtocolParser {
         outputTokens = long("outputTokens") ?: 0,
         unclassifiedTokens = long("unclassifiedTokens") ?: 0,
         tokenComponentsAvailable = boolean("tokenComponentsAvailable") ?: false,
-        perClient = attributionMap("perClient"),
-        perModel = attributionMap("perModel"),
+        unpricedTokens = (long("unpricedTokens") ?: 0).coerceIn(0, (long("tokens") ?: 0).coerceAtLeast(0)),
+        perClient = attributionMap("perClient", boolean("tokenComponentsAvailable") == true),
+        perModel = attributionMap("perModel", boolean("tokenComponentsAvailable") == true),
     )
 
-    private fun JsonObject.attributionMap(name: String): Map<String, HubHistoryAttributionDto> =
+    private fun JsonObject.attributionMap(name: String, componentsKnown: Boolean = false): Map<String, HubHistoryAttributionDto> =
         objectField(name)?.mapNotNull { (key, value) ->
             value.objectOrNull()?.let { entry ->
                 key to HubHistoryAttributionDto(
                     tokens = entry.long("tokens") ?: 0,
+                    unpricedTokens = (entry.long("unpricedTokens") ?: 0).coerceIn(0, (entry.long("tokens") ?: 0).coerceAtLeast(0)),
                     costUsd = entry.double("cost") ?: entry.double("costUsd") ?: 0.0,
                     cacheReadTokens = entry.long("cacheReadTokens") ?: 0,
                     cacheWriteTokens = entry.long("cacheWriteTokens") ?: 0,
                     outputTokens = entry.long("outputTokens") ?: 0,
-                    unclassifiedTokens = entry.long("unclassifiedTokens")
-                        ?: if (entry.boolean("tokenComponentsAvailable") == true) 0 else entry.long("tokens") ?: 0,
+                    unclassifiedTokens = entry.long("unclassifiedTokens") ?: if (componentsKnown || entry.boolean("tokenComponentsAvailable") == true) 0 else {
+                        val total = (entry.long("tokens") ?: 0).coerceAtLeast(0)
+                        listOf("cacheReadTokens", "cacheWriteTokens", "outputTokens").fold(total) { remaining, field ->
+                            remaining - (entry.long(field) ?: 0).coerceIn(0, remaining)
+                        }
+                    },
                 )
             }
         }?.toMap().orEmpty()
@@ -331,6 +346,14 @@ object HubProtocolParser {
         startDate = string("startDate"),
         interval = string("interval").ifBlank { "month" },
         autoRenew = boolean("autoRenew") ?: true,
+        kind = string("kind").takeIf { it == "topup" } ?: "subscription",
+        intervalCount = (long("intervalCount") ?: 1).coerceIn(1, 1200).toInt(),
+        nextRenewalOverride = string("nextRenewalOverride"),
+        endDate = string("endDate"), note = string("note"), updatedAt = string("updatedAt"),
+        topUps = array("topUps").mapNotNull { value -> value.objectOrNull()?.let { entry ->
+            val date = entry.string("date")
+            if (runCatching { java.time.LocalDate.parse(date) }.isSuccess) io.github.theminionooo.tokenmonitor.domain.SubscriptionTopUp(entry.string("id"), date, (entry.long("amountMinor") ?: 0).coerceAtLeast(0)) else null
+        } }.sortedByDescending { it.date },
     )
 
     private fun HubHealthDto.toDomain() = HubHealth(
@@ -374,6 +397,10 @@ object HubProtocolParser {
         modelCacheWrites = modelCacheWrites,
         modelOutputs = modelOutputs,
         modelUnclassifiedTokens = modelUnclassifiedTokens,
+        unpricedTokens = unpricedTokens,
+        clientUnpricedTokens = clientUnpricedTokens,
+        modelUnpricedTokens = modelUnpricedTokens,
+        clientModelUnpricedTokens = clientModelUnpricedTokens,
         projects = projects.map { it.toDomain() },
         sessions = sessions.map { it.toDomain() },
     )
@@ -395,6 +422,10 @@ object HubProtocolParser {
         totalTokens = totalTokens.coerceAtLeast(0),
         costUsd = costUsd.coerceAtLeast(0.0),
         modelNames = modelNames,
+        modelTokens = modelTokens,
+        usageSource = usageSource,
+        usageCoverage = usageCoverage,
+        unpricedTokens = unpricedTokens,
         messageCount = messageCount.coerceAtLeast(0),
         startedAt = startedAt,
         lastUsedAt = lastUsedAt,
@@ -416,6 +447,7 @@ object HubProtocolParser {
         id = id,
         hostname = hostname,
         platform = platform,
+        agentVersion = agentVersion,
         osName = osName,
         osVersion = osVersion,
         updatedAt = updatedAt,
@@ -479,6 +511,7 @@ object HubProtocolParser {
         tokenComponentsAvailable = tokenComponentsAvailable,
         perClient = perClient.mapValues { it.value.toDomain() },
         perModel = perModel.mapValues { it.value.toDomain() },
+        unpricedTokens = unpricedTokens,
     )
 
     private fun HubHistoryAttributionDto.toDomain() = HistoryAttribution(
@@ -488,6 +521,7 @@ object HubProtocolParser {
         cacheWriteTokens = cacheWriteTokens.coerceAtLeast(0),
         outputTokens = outputTokens.coerceAtLeast(0),
         unclassifiedTokens = unclassifiedTokens.coerceAtLeast(0),
+        unpricedTokens = unpricedTokens,
     )
 
     private fun HubSubscriptionsDto.toDomain() = HubSubscriptions(
@@ -504,6 +538,8 @@ object HubProtocolParser {
         startDate = startDate,
         interval = interval,
         autoRenew = autoRenew,
+        kind = kind, intervalCount = intervalCount, nextRenewalOverride = nextRenewalOverride,
+        endDate = endDate, note = note, updatedAt = updatedAt, topUps = topUps,
     )
 
     private fun JsonObject.objectField(name: String): JsonObject? = this[name].objectOrNull()

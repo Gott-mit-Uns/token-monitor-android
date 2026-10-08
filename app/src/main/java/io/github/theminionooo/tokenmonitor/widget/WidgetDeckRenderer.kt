@@ -123,9 +123,9 @@ private class DeckCanvas(
     private val left = WidgetDeckGrid.LEFT
     private val right = WidgetDeckGrid.RIGHT
 
-    private val mono = font(R.font.jetbrains_mono_regular, Typeface.MONOSPACE)
-    private val monoBold = font(R.font.jetbrains_mono_bold, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD))
-    private val sansBold = Typeface.create("sans-serif", Typeface.BOLD)
+    private val mono = if (io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences.active.interfaceFont == "system") Typeface.SANS_SERIF else font(R.font.jetbrains_mono_regular, Typeface.MONOSPACE)
+    private val monoBold = if (io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences.active.interfaceFont == "system") Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD) else font(R.font.jetbrains_mono_bold, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD))
+    private val sansBold = when (io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences.active.displayFont) { "mono" -> font(R.font.jetbrains_mono_bold, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)); "follow" -> monoBold; else -> Typeface.create("sans-serif", Typeface.BOLD) }
 
     private val brand = DeckType(monoBold, Type.BRAND, tracking = 0.04f, uppercase = true)
     private val pageType = DeckType(mono, Type.PAGE, tracking = 0.06f, uppercase = true)

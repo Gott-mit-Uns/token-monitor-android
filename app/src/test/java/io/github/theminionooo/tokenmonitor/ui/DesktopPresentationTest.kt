@@ -40,8 +40,8 @@ class DesktopPresentationTest {
         assertEquals(1, raw.today.clients.size)
     }
     @Test fun conversionIsExplicitAndUsdIgnoresRate() {
-        assertEquals("CN¥21.00", convertedCost(3.0, DesktopOptions(currency = "CNY", usdRate = 7.0)))
-        assertEquals("$3.00", convertedCost(3.0, DesktopOptions(currency = "USD", usdRate = 7.0)))
+        assertEquals("¥21.00", convertedCost(3.0, DesktopOptions(currency = "CNY", usdRate = 7.0)))
+        assertEquals("$3.0000", convertedCost(3.0, DesktopOptions(currency = "USD", usdRate = 7.0)))
     }
     @Test fun exportsNeverCarrySessionTitlesOrConnectionFields() {
         listOf("json", "csv").forEach { format ->
@@ -61,11 +61,11 @@ class DesktopPresentationTest {
         assertEquals("b", modelAlias("a", DesktopOptions(modelAliases = mapOf("a" to "b", "b" to "c"))))
         assertEquals("a", modelAlias("a", DesktopOptions()))
     }
-    @Test fun cacheWriteIsIndependentAndComponentsConserveTotal() {
+    @Test fun cacheWriteIsSubsetOfMissAndComponentsConserveTotal() {
         val c = tokenComponents(100, 30, 20, 25, 5)
-        assertEquals(20L, c.cacheMiss)
+        assertEquals(40L, c.cacheMiss)
         assertEquals(20L, c.cacheWrite)
-        assertEquals(100L, c.cacheRead + c.cacheMiss + c.cacheWrite + c.output + c.unclassified)
+        assertEquals(100L, c.cacheRead + c.cacheMiss + c.output + c.unclassified)
         assertEquals(30.0 / 70 * 100, c.hitPercent, 0.00001)
     }
     @Test fun malformedComponentsAreBoundedAndNeverNegative() {
@@ -74,5 +74,15 @@ class DesktopPresentationTest {
         assertEquals(0L, c.cacheMiss)
         assertEquals(0L, c.cacheWrite)
         assertEquals(0L, c.output)
+    }
+    @Test fun desktopMatchingNormalizesCaseAndSeparatorsWithoutChaining() {
+        val options = DesktopOptions(modelAliases = mapOf("Provider/GPT_6.SOL" to "gpt-6-sol", "gpt-6-sol" to "other"))
+        assertEquals("gpt-6-sol", modelAlias("provider/gpt 6-sol", options))
+    }
+    @Test fun smallCostsRemainVisibleAndCurrencySymbolsFollowDesktop() {
+        assertEquals("$0.0001", convertedCost(0.0001, DesktopOptions()))
+        assertEquals("$10.00", convertedCost(10.0, DesktopOptions()))
+        assertEquals("HK$0.7800", convertedCost(0.1, DesktopOptions(currency = "HKD", usdRate = 7.8)))
+        assertEquals("NT$31.50", convertedCost(1.0, DesktopOptions(currency = "TWD", usdRate = 31.5)))
     }
 }

@@ -118,15 +118,19 @@ internal fun LazyListScope.breakdownItems(
     onToolSelected: ((String) -> Unit)? = null,
     cacheWrites: Map<String, Long> = emptyMap(),
     history: List<HistoryPoint> = emptyList(),
+    unpriced: Map<String, Long> = emptyMap(),
+    options: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
 ) {
     if (tokens.isEmpty()) {
         item { MutedCopy(emptyMessage, modifier = Modifier.padding(vertical = 12.dp)) }
     } else {
         val maximum = tokens.values.maxOrNull()?.coerceAtLeast(1L) ?: 1L
-        items(tokens.entries.sortedByDescending { (name, count) -> if (rankingMetric == RankingMetric.Cost) costs[name] ?: 0.0 else count.toDouble() }, key = { it.key }) { (name, count) ->
+        items(rankedUsageNames(tokens, costs, rankingMetric == RankingMetric.Cost, modelRows, options), key = { it }) { name ->
+            val count = tokens.getValue(name)
             DesktopUsageRow(
                 name = name,
                 totalTokens = count,
+                unpricedTokens = unpriced[name] ?: 0,
                 detail = costs[name]?.let(::formatMoney).orEmpty(),
                 ratio = count.toFloat() / maximum,
                 cacheReadTokens = cacheReads[name] ?: 0L,
@@ -158,9 +162,10 @@ internal fun DesktopUsageRow(
     onToolSelected: ((String) -> Unit)? = null,
     cacheWriteTokens: Long = 0L,
     rowHistory: List<HistoryPoint> = emptyList(),
+    unpricedTokens: Long = 0,
 ) {
     val hasBreakdown = cacheReadTokens > 0 || cacheWriteTokens > 0 || outputTokens > 0 || unclassifiedTokens > 0
-    val hasDetails = hasBreakdown || rowHistory.isNotEmpty()
+    val hasDetails = hasBreakdown || rowHistory.isNotEmpty() || unpricedTokens > 0
     var expanded by rememberSaveable(name) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
     val rowModifier = (if (onToolSelected != null) {
@@ -172,6 +177,7 @@ internal fun DesktopUsageRow(
     }
     ).heightIn(min = 48.dp)
     Column(modifier = rowModifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (unpricedTokens > 0) Text(desktopText("${formatTokens(unpricedTokens)} Token 缺少价格", "${formatTokens(unpricedTokens)} tokens lack pricing"), color = Orange, style = MaterialTheme.typography.labelSmall)
         AlignedUsageIdentity(formatTokens(totalTokens), detail) {
             if (modelRow) ModelMark(name, accentFor(name), size = LocalContentIconSize.current)
             else UpstreamToolMark(name, accentFor(name), size = LocalContentIconSize.current)
@@ -227,7 +233,7 @@ internal fun TokenComponentBreakdown(
     val rows = buildList {
         add(Triple("Input (Cache Hit)", cacheRead, hit))
         add(Triple("Input (Cache Miss)", cacheMiss, miss))
-        add(Triple("缓存写入", cacheWrite, null))
+        if (cacheWrite > 0) add(Triple(desktopText("其中缓存写入", "Of which cache write"), cacheWrite, null))
         add(Triple("Output", output, null))
         if (unclassified > 0) add(Triple("Unclassified", unclassified, null))
     }

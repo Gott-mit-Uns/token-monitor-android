@@ -66,9 +66,9 @@ class ForkReadmeShowcaseTest {
             io.github.theminionooo.tokenmonitor.domain.LimitWindow("weekly", "Weekly", 66.0, 34.0, null, "2026-09-13T12:00:00Z", "percent", "", "", true)))
         val deepseek = codex.copy(provider = "deepseek", plan = "", windows = listOf(
             io.github.theminionooo.tokenmonitor.domain.LimitWindow("balance", "Balance", null, null, 28.37, "", "balance", "CNY", "", false)))
-        val raw = base.copy(stats = base.stats.copy(devices = devices, periods = mapOf("today" to usage), limits = base.stats.limits.copy(providers = listOf(codex, deepseek))))
+        val raw = base.copy(stats = base.stats.copy(devices = devices.map { it.copy(id = it.hostname.ifBlank { it.id }) }, periods = mapOf("today" to usage), limits = base.stats.limits.copy(providers = listOf(codex, deepseek))))
         val originalNames = raw.stats.devices.associate { it.id to it.hostname }
-        val state = HubRepositoryState(hasConnection = true, snapshot = raw, streamActive = true)
+        val state = HubRepositoryState(hasConnection = true, snapshot = hubNamedSnapshot(raw), streamActive = true)
         var destination by mutableStateOf(if (appearance) DashboardDestination.Settings else DashboardDestination.Home)
         var options by mutableStateOf(DisplayOptions(themeCode = (if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian).code, colorfulToolMarks = false, visibleHomeModules = listOf("Limits", "Tools", "Devices", "Models")))
         val palette = Palette.from(if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian)
@@ -82,7 +82,7 @@ class ForkReadmeShowcaseTest {
                     Box(Modifier.size(393.dp, 1000.dp).background(Brush.linearGradient(colorStops = arrayOf(0f to palette.gradientTop, 0.38f to palette.shell, 1f to palette.gradientBottom))).testTag("showcase")) {
                         DashboardScaffold(state = state, destination = destination, form = ConnectionFormState(), displayOptions = options, serviceStatus = ServiceStatusState(),
                     onChoose = { destination = it }, onRefresh = {}, onSaveConnection = { _, _, _, _ -> },
-                    originalDeviceNames = originalNames, onRenameDevice = { _, _ -> null },
+                    originalDeviceNames = originalNames, onRenameDevice = null,
                     onColorfulToolMarksChange = {}, onCompactTokenTotalChange = {}, onReduceMotionChange = {}, onTextScaleChange = { options = options.copy(textScale = it) },
                     onIconScaleChange = { options = options.copy(iconScale = it) },
                     onHomeChineseUnitsChange = { options = options.copy(homeChineseUnits = it) },

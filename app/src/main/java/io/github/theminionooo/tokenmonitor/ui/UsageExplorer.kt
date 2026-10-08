@@ -136,6 +136,8 @@ internal fun UsagePeriod.modelsForTool(tool: String): UsagePeriod = UsagePeriod(
     costUsd = clientCosts[tool] ?: 0.0,
     models = clientModels[tool].orEmpty(),
     modelCosts = clientModelCosts[tool].orEmpty(),
+    unpricedTokens = clientUnpricedTokens[tool] ?: 0,
+    modelUnpricedTokens = clientModelUnpricedTokens[tool].orEmpty(),
 )
 
 @Composable

@@ -1,0 +1,218 @@
+[
+  {
+    "mode": "off",
+    "aliases": {},
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "vendor/GPT_6.SOL",
+      "gpt-6-sol": "gpt-6-sol",
+      "provider/deepseek_flash": "provider/deepseek_flash",
+      "deepseek-flash": "deepseek-flash",
+      "supply/unique": "supply/unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "other/Claude Sonnet"
+    }
+  },
+  {
+    "mode": "off",
+    "aliases": {
+      "gpt_6.sol": "canonical",
+      "canonical": "do-not-chain"
+    },
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "vendor/GPT_6.SOL",
+      "gpt-6-sol": "canonical",
+      "provider/deepseek_flash": "provider/deepseek_flash",
+      "deepseek-flash": "deepseek-flash",
+      "supply/unique": "supply/unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "other/Claude Sonnet"
+    }
+  },
+  {
+    "mode": "off",
+    "aliases": {
+      "vendor/GPT_6.SOL": "manual",
+      "deepseek-flash": "display"
+    },
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "manual",
+      "gpt-6-sol": "gpt-6-sol",
+      "provider/deepseek_flash": "provider/deepseek_flash",
+      "deepseek-flash": "display",
+      "supply/unique": "supply/unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "other/Claude Sonnet"
+    }
+  },
+  {
+    "mode": "duplicates",
+    "aliases": {},
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "gpt-6-sol",
+      "gpt-6-sol": "gpt-6-sol",
+      "provider/deepseek_flash": "deepseek-flash",
+      "deepseek-flash": "deepseek-flash",
+      "supply/unique": "supply/unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "Claude.Sonnet"
+    }
+  },
+  {
+    "mode": "duplicates",
+    "aliases": {
+      "gpt_6.sol": "canonical",
+      "canonical": "do-not-chain"
+    },
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "canonical",
+      "gpt-6-sol": "canonical",
+      "provider/deepseek_flash": "deepseek-flash",
+      "deepseek-flash": "deepseek-flash",
+      "supply/unique": "supply/unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "Claude.Sonnet"
+    }
+  },
+  {
+    "mode": "duplicates",
+    "aliases": {
+      "vendor/GPT_6.SOL": "manual",
+      "deepseek-flash": "display"
+    },
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "manual",
+      "gpt-6-sol": "gpt-6-sol",
+      "provider/deepseek_flash": "display",
+      "deepseek-flash": "display",
+      "supply/unique": "supply/unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "Claude.Sonnet"
+    }
+  },
+  {
+    "mode": "prefix",
+    "aliases": {},
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "gpt-6-sol",
+      "gpt-6-sol": "gpt-6-sol",
+      "provider/deepseek_flash": "deepseek-flash",
+      "deepseek-flash": "deepseek-flash",
+      "supply/unique": "unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "Claude.Sonnet"
+    }
+  },
+  {
+    "mode": "prefix",
+    "aliases": {
+      "gpt_6.sol": "canonical",
+      "canonical": "do-not-chain"
+    },
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "canonical",
+      "gpt-6-sol": "canonical",
+      "provider/deepseek_flash": "deepseek-flash",
+      "deepseek-flash": "deepseek-flash",
+      "supply/unique": "unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "Claude.Sonnet"
+    }
+  },
+  {
+    "mode": "prefix",
+    "aliases": {
+      "vendor/GPT_6.SOL": "manual",
+      "deepseek-flash": "display"
+    },
+    "models": [
+      "vendor/GPT_6.SOL",
+      "gpt-6-sol",
+      "provider/deepseek_flash",
+      "deepseek-flash",
+      "supply/unique",
+      "Claude.Sonnet",
+      "other/Claude Sonnet"
+    ],
+    "expected": {
+      "vendor/GPT_6.SOL": "manual",
+      "gpt-6-sol": "gpt-6-sol",
+      "provider/deepseek_flash": "display",
+      "deepseek-flash": "display",
+      "supply/unique": "unique",
+      "Claude.Sonnet": "Claude.Sonnet",
+      "other/Claude Sonnet": "Claude.Sonnet"
+    }
+  }
+]

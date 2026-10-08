@@ -443,3 +443,13 @@ SVG path geometry preserved; fills normalized to confirmed black/white. The Open
 ## cf.7 generic NAS illustration
 
 The two `device_ugreen_*` resource names are retained for compatibility but now contain a newly drawn generic four-bay NAS illustration, confirmed by the user. These paths do not reproduce the selfh.st UGREEN brand artwork. The illustration is distributed under this project's MIT license. Earlier selfh.st attribution remains for historical assets and other icons.
+
+## Desktop 0.68 presentation semantics
+
+Model alias normalization/grouping, cache miss classification, currency precision,
+subscription renewal anchoring and export column definitions follow
+[Javis603/token-monitor v0.68.0](https://github.com/Javis603/token-monitor/tree/v0.68.0),
+commit `5d2db368d8313415763860d594de00e46a663418`.
+Android Kotlin implementations and tests retain the desktop project's MIT attribution above.
+The Android application continues to derive from The-Minion-oOo/token-monitor-android;
+its existing MIT license and copyright remain in LICENSE.

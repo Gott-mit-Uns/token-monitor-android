@@ -231,15 +231,20 @@ internal fun tokenMonitorColors(palette: Palette): ColorScheme {
 }
 
 /** Desktop type sizes at [step] 0; each step adds one point to every style and two to the headline total. */
-internal fun tokenMonitorTypography(step: Int): Typography = Typography(
-    displayMedium = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = (42 + 2 * step).sp, lineHeight = (46 + 2 * step).sp, fontFeatureSettings = "tnum"),
-    titleLarge = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (20 + step).sp, lineHeight = (26 + step).sp),
-    titleMedium = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (16 + step).sp, lineHeight = (20 + step).sp),
-    titleSmall = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (13 + step).sp, lineHeight = (18 + step).sp),
-    bodyLarge = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (12 + step).sp, lineHeight = (17 + step).sp),
-    labelLarge = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (11 + step).sp, lineHeight = (16 + step).sp),
-    bodyMedium = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (12 + step).sp, lineHeight = (16 + step).sp),
-    bodySmall = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (11 + step).sp, lineHeight = (15 + step).sp),
-    labelMedium = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (11 + step).sp, lineHeight = (14 + step).sp, letterSpacing = 0.2.sp),
-    labelSmall = TextStyle(fontFamily = FontFamily.Monospace, fontSize = (9 + step).sp, lineHeight = (12 + step).sp),
+internal fun tokenMonitorTypography(step: Int, interfaceFont: String = "mono", displayFont: String = "system"): Typography {
+    val bodyFamily = if (interfaceFont == "system") FontFamily.SansSerif else FontFamily.Monospace
+    val numberFamily = when (displayFont) { "mono" -> FontFamily.Monospace; "follow" -> bodyFamily; else -> FontFamily.SansSerif }
+    return Typography(
+    displayMedium = TextStyle(fontFamily = numberFamily, fontSize = (42 + 2 * step).sp, lineHeight = (46 + 2 * step).sp, fontFeatureSettings = "tnum"),
+    titleLarge = TextStyle(fontFamily = bodyFamily, fontSize = (20 + step).sp, lineHeight = (26 + step).sp),
+    titleMedium = TextStyle(fontFamily = bodyFamily, fontSize = (16 + step).sp, lineHeight = (20 + step).sp),
+    titleSmall = TextStyle(fontFamily = bodyFamily, fontSize = (13 + step).sp, lineHeight = (18 + step).sp),
+    bodyLarge = TextStyle(fontFamily = bodyFamily, fontSize = (12 + step).sp, lineHeight = (17 + step).sp),
+    labelLarge = TextStyle(fontFamily = bodyFamily, fontSize = (11 + step).sp, lineHeight = (16 + step).sp),
+    bodyMedium = TextStyle(fontFamily = bodyFamily, fontSize = (12 + step).sp, lineHeight = (16 + step).sp),
+    bodySmall = TextStyle(fontFamily = bodyFamily, fontSize = (11 + step).sp, lineHeight = (15 + step).sp),
+    labelMedium = TextStyle(fontFamily = bodyFamily, fontSize = (11 + step).sp, lineHeight = (14 + step).sp, letterSpacing = 0.2.sp),
+    labelSmall = TextStyle(fontFamily = bodyFamily, fontSize = (9 + step).sp, lineHeight = (12 + step).sp),
 )
+
+}
