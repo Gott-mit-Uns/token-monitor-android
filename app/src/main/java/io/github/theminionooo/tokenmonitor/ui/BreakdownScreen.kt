@@ -116,6 +116,8 @@ internal fun LazyListScope.breakdownItems(
     rankingMetric: RankingMetric,
     modelRows: Boolean = false,
     onToolSelected: ((String) -> Unit)? = null,
+    cacheWrites: Map<String, Long> = emptyMap(),
+    history: List<HistoryPoint> = emptyList(),
 ) {
     if (tokens.isEmpty()) {
         item { MutedCopy(emptyMessage, modifier = Modifier.padding(vertical = 12.dp)) }
@@ -128,6 +130,12 @@ internal fun LazyListScope.breakdownItems(
                 detail = costs[name]?.let(::formatMoney).orEmpty(),
                 ratio = count.toFloat() / maximum,
                 cacheReadTokens = cacheReads[name] ?: 0L,
+                cacheWriteTokens = cacheWrites[name] ?: 0L,
+                rowHistory = history.mapNotNull { point ->
+                    (if (modelRows) point.perModel else point.perClient)[name]?.let {
+                        point.copy(tokens = it.tokens, costUsd = it.costUsd)
+                    }
+                },
                 outputTokens = outputs[name] ?: 0L,
                 unclassifiedTokens = unclassified[name] ?: 0L,
                 modelRow = modelRows,
@@ -148,41 +156,57 @@ internal fun DesktopUsageRow(
     unclassifiedTokens: Long,
     modelRow: Boolean,
     onToolSelected: ((String) -> Unit)? = null,
+    cacheWriteTokens: Long = 0L,
+    rowHistory: List<HistoryPoint> = emptyList(),
 ) {
-    val hasBreakdown = cacheReadTokens > 0 || outputTokens > 0 || unclassifiedTokens > 0
+    val hasBreakdown = cacheReadTokens > 0 || cacheWriteTokens > 0 || outputTokens > 0 || unclassifiedTokens > 0
+    val hasDetails = hasBreakdown || rowHistory.isNotEmpty()
     var expanded by rememberSaveable(name) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
-    val rowModifier = if (onToolSelected != null) {
+    val rowModifier = (if (onToolSelected != null) {
         Modifier.fillMaxWidth().clickable(onClickLabel = localizedText("Models used through $name")) { onToolSelected(name) }.padding(vertical = 2.dp)
-    } else if (hasBreakdown) {
+    } else if (hasDetails) {
         Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 2.dp)
     } else {
         Modifier.fillMaxWidth().padding(vertical = 2.dp)
     }
+    ).heightIn(min = 48.dp)
     Column(modifier = rowModifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        AlignedUsageIdentity(formatTokens(totalTokens), detail) {
             if (modelRow) ModelMark(name, accentFor(name), size = LocalContentIconSize.current)
             else UpstreamToolMark(name, accentFor(name), size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
-            Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Spacer(Modifier.width(10.dp))
-            Column(horizontalAlignment = Alignment.End) {
-                Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
-                if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
-            }
+            Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+        }
+        if (hasDetails && onToolSelected != null) androidx.compose.material3.TextButton(onClick = { expanded = !expanded }) {
+            Text(tr(if (expanded) "收起 Token 明细" else "Token 明细"))
         }
         UsageBar(ratio, accentFor(name))
         AnimatedVisibility(
-            visible = expanded && hasBreakdown,
+            visible = expanded && hasDetails,
             enter = fadeIn(tween(if (motionEnabled) 160 else 0)) + expandVertically(tween(if (motionEnabled) 240 else 0, easing = DesktopEaseOut)),
             exit = fadeOut(tween(if (motionEnabled) 100 else 0)) + shrinkVertically(tween(if (motionEnabled) 180 else 0, easing = DesktopEaseOut)),
         ) {
-            TokenComponentBreakdown(
-                totalTokens = totalTokens,
-                cacheReadTokens = cacheReadTokens,
-                outputTokens = outputTokens,
-                unclassifiedTokens = unclassifiedTokens,
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                if (hasBreakdown) {
+                    TokenComponentBreakdown(
+                        totalTokens = totalTokens,
+                        cacheReadTokens = cacheReadTokens,
+                        cacheWriteTokens = cacheWriteTokens,
+                        outputTokens = outputTokens,
+                        unclassifiedTokens = unclassifiedTokens,
+                    )
+                }
+                if (rowHistory.isNotEmpty()) {
+                    Text(tr("历史记录 · 最近 7 个已记录日"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                    rowHistory.sortedBy { it.label }.takeLast(7).forEach { point ->
+                        AlignedUsageIdentity(formatTokens(point.tokens), formatMoney(point.costUsd)) {
+                            Text(point.label.take(10), color = Muted, style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+            }
+
         }
         HorizontalDivider(color = Line)
     }
@@ -194,27 +218,23 @@ internal fun TokenComponentBreakdown(
     cacheReadTokens: Long,
     outputTokens: Long,
     unclassifiedTokens: Long,
+    cacheWriteTokens: Long = 0L,
 ) {
-    val unclassified = unclassifiedTokens.coerceIn(0L, totalTokens)
-    val classified = totalTokens - unclassified
-    val cacheRead = cacheReadTokens.coerceIn(0L, classified)
-    val output = outputTokens.coerceIn(0L, classified - cacheRead)
-    val cacheMiss = (classified - cacheRead - output).coerceAtLeast(0L)
-    val input = cacheRead + cacheMiss
-    val hit = if (input > 0) cacheRead.toDouble() / input * 100.0 else 0.0
-    val miss = if (input > 0) 100.0 - hit else 0.0
+    val components = tokenComponents(totalTokens, cacheReadTokens, cacheWriteTokens, outputTokens, unclassifiedTokens)
+    val (cacheRead, cacheMiss, cacheWrite, output, unclassified) = components
+    val hit = components.hitPercent
+    val miss = components.missPercent
     val rows = buildList {
         add(Triple("Input (Cache Hit)", cacheRead, hit))
         add(Triple("Input (Cache Miss)", cacheMiss, miss))
+        add(Triple("缓存写入", cacheWrite, null))
         add(Triple("Output", output, null))
         if (unclassified > 0) add(Triple("Unclassified", unclassified, null))
     }
     Column(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, end = 2.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
         rows.forEach { (label, value, percent) ->
-            Row {
-                Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                percent?.let { Text(formatPercent(it), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(end = 12.dp)) }
-                Text(formatTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
+            AlignedUsageIdentity(formatTokens(value), percent?.let(::formatPercent).orEmpty()) {
+                Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall)
             }
         }
     }

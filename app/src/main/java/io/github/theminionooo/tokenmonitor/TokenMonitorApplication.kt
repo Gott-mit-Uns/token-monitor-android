@@ -14,6 +14,7 @@ class TokenMonitorApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences(this)
         nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
     }
 

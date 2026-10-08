@@ -131,6 +131,7 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
     val destination by viewModel.destination.collectAsState()
     val form by viewModel.connectionForm.collectAsState()
     val displayOptions by viewModel.displayOptions.collectAsState()
+    val desktopOptions by viewModel.desktopOptions.collectAsState()
     val serviceStatus by viewModel.serviceStatus.collectAsState()
     val discovery by viewModel.discovery.collectAsState()
     val uriHandler = LocalUriHandler.current
@@ -190,6 +191,8 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     state = repositoryState,
                     destination = destination,
                     form = form,
+                    desktopOptions = desktopOptions,
+                    onSaveDesktopOptions = viewModel::saveDesktopOptions,
                     displayOptions = displayOptions,
                     serviceStatus = serviceStatus,
                     onChoose = viewModel::choose,
@@ -269,6 +272,8 @@ internal fun DashboardScaffold(
     onIconScaleChange: (IconScale) -> Unit = {},
     onHomeChineseUnitsChange: (Boolean) -> Unit = {},
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
+    desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
+    onSaveDesktopOptions: (io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions) -> Boolean = { false },
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
     onRepairHomeAddress: (String) -> Unit = {},
@@ -329,6 +334,8 @@ internal fun DashboardScaffold(
                 modifier = Modifier.padding(padding),
                 state = state,
                 form = form,
+                desktopOptions = desktopOptions,
+                onSaveDesktopOptions = onSaveDesktopOptions,
                 displayOptions = displayOptions,
                 onSaveConnection = onSaveConnection,
                 onColorfulToolMarksChange = onColorfulToolMarksChange,
@@ -363,6 +370,7 @@ internal fun DashboardScaffold(
                 modifier = Modifier.padding(padding),
                 state = state,
                 destination = visibleDestination,
+                desktopOptions = desktopOptions,
                 period = period,
                 onChoose = chooseDestination,
                 onRefresh = onRefresh,

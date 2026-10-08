@@ -177,7 +177,7 @@ open class UsageWidgetProvider : AppWidgetProvider() {
                     HubProtocolParser.decodeSnapshot(wire.health, wire.stats, wire.devices, wire.history, wire.subscriptions, wire.capturedAt, true)
                 }.getOrNull()
             }
-            val snapshot = listOfNotNull(session.snapshot, cached).maxByOrNull { it.capturedAt }
+            val snapshot = listOfNotNull(session.snapshot, cached).maxByOrNull { it.capturedAt }?.let { io.github.theminionooo.tokenmonitor.ui.presentSnapshot(it, io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences(context).options.value) }
             val display = DisplayPreferences(context).options.value
             val systemDark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
             val theme = resolveInterfaceTheme(display.themeCode, display.followSystemTheme, systemDark)

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_align_0">费用币种与汇率</string>
+    <string name="ui_align_1">保存币种与汇率</string>
+    <string name="ui_align_2">原币余额、额度和订阅保持原币。汇率仅用于本机显示，目前由你手动设置。</string>
+    <string name="ui_align_3">估算费用以 USD 显示</string>
+    <string name="ui_align_4">请输入大于零的有效汇率</string>
+    <string name="ui_align_5">显示设置已保存</string>
+    <string name="ui_align_6">保存失败，请重试</string>
+    <string name="ui_align_7">输入一个或多个模型 ID（每行一个），统一显示为目标模型名；只合并安卓显示，不修改 Hub 数据。</string>
+    <string name="ui_align_8">来源模型 ID，每行一个</string>
+    <string name="ui_align_9">目标模型 ID／显示名称</string>
+    <string name="ui_align_10">从已同步模型中选择</string>
+    <string name="ui_align_11">保存模型别名</string>
+    <string name="ui_align_12">请输入有效的来源与目标名称</string>
+    <string name="ui_align_13">模型别名已保存</string>
+    <string name="ui_align_14">移除</string>
+    <string name="ui_align_15">工具／模型显示</string>
+    <string name="ui_align_16">隐藏仅作用于主页与工具／模型列表；总量、费用、历史和导出仍保留全部数据。</string>
+    <string name="ui_align_17">连接 Hub 后可选择显示项目</string>
+    <string name="ui_align_18">使用数据导出</string>
+    <string name="ui_align_19">导出当前已缓存的统计和历史，原始 USD 费用。不包含凭据、会话标题、提问或回复；离线缓存可能不是最新数据。</string>
+    <string name="ui_align_20">数据已导出</string>
+    <string name="ui_align_21">导出失败，请选择可写入的位置重试</string>
+    <string name="ui_align_22">桌面端显示功能</string>
+    <string name="ui_align_23">币种 · 模型别名 · 显示 · 导出</string>
+    <string name="ui_align_24">收起 Token 明细</string>
+    <string name="ui_align_25">Token 明细</string>
+    <string name="ui_align_26">缓存写入</string>
+    <string name="ui_align_27">缓存读取</string>
+    <string name="ui_align_28">输入 Token</string>
+    <string name="ui_align_29">历史记录 · 最近 7 个已记录日</string>
+    <string name="ui_align_30">该日期没有记录，不能视为零用量</string>
+    <string name="ui_align_search_0">搜索标题、ID、工具、模型或项目</string>
+    <string name="ui_align_search_1">搜索 ID、工具、模型或项目</string>
+    <string name="ui_align_search_2">搜索项目、ID 或工具</string>
+</resources>

@@ -118,9 +118,9 @@ internal fun LazyListScope.homeItems(
     displayOptions.visibleHomeModules.forEach { module ->
         when (module) {
             "Limits" -> item { DesktopModule("LIMITS", DashboardDestination.Limits, onChoose) { HomeLimits(snapshot.stats.limits.providers, displayOptions) } }
-            "Tools" -> item { DesktopModule("TOOLS", DashboardDestination.Tools, onChoose) { HomeBreakdown(usage.clients, usage.clientCosts, displayOptions.rankingMetric) } }
+            "Tools" -> item { DesktopModule("TOOLS", DashboardDestination.Tools, onChoose) { HomeBreakdown(usage.clients, usage.clientCosts, displayOptions.rankingMetric, denominator = usage.totalTokens) } }
             "Devices" -> item { DesktopModule("DEVICES", DashboardDestination.Devices, onChoose) { HomeDevices(snapshot.stats.devices, period = period, aggregateUsage = usage) } }
-            "Models" -> item { DesktopModule("MODELS", DashboardDestination.Models, onChoose) { HomeBreakdown(usage.models, usage.modelCosts, displayOptions.rankingMetric, modelRows = true) } }
+            "Models" -> item { DesktopModule("MODELS", DashboardDestination.Models, onChoose) { HomeBreakdown(usage.models, usage.modelCosts, displayOptions.rankingMetric, modelRows = true, denominator = usage.totalTokens) } }
             "Sessions" -> item { HomeSessionsModule(snapshot, onChoose) }
             "Activity" -> item {
                 DesktopModule(
@@ -220,13 +220,14 @@ internal fun HomeBreakdown(
     costs: Map<String, Double>,
     rankingMetric: RankingMetric,
     modelRows: Boolean = false,
+    denominator: Long = tokens.values.sum(),
 ) {
     if (tokens.isEmpty()) {
         MutedCopy("No activity for this period")
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        val total = tokens.values.sum().coerceAtLeast(1L)
+        val total = denominator.coerceAtLeast(1L)
         tokens.entries.sortedByDescending { (name, count) -> if (rankingMetric == RankingMetric.Cost) costs[name] ?: 0.0 else count.toDouble() }.take(5).forEach { (name, count) ->
             HomeListRow(
                 name = name,

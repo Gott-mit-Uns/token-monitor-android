@@ -1,16 +1,16 @@
-> **Token Monitor Android · 非官方独立 Hub 客户端 · v0.67.0-hub.2**
+> **Token Monitor Android · 非官方独立 Hub 客户端 · v0.67.0-hub.3**
 >
 > 发布仓库：[Gott-mit-Uns/token-monitor-android](https://github.com/Gott-mit-Uns/token-monitor-android) · [下载安装包](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest)。
 >
 > 基于安卓上游 v0.67.0 r1，保留中文、设备别名、主题图标、独立图标尺寸及主页中文单位。支持 NAS／电脑 Hub、HTTPS 反代域名、Tailscale 和局域网。应用 ID 与签名保持不变，可覆盖安装旧 cf 版本；原作者自动 APK 更新保持关闭。
 >
-> hub.2 优化设备页面：铅笔改名、独立同步信息、左右对齐、大字体统计行和空用量条。
+> hub.3 完成桌面端查看功能的三个阶段对齐：设备名称与缓存明细、币种与手动汇率、模型别名合并、行显示和数据导出，以及二级页面完整数字与图表点击。原币余额和订阅保持原币，安卓仍只读 Hub。
 >
 > 0.67 跟进 TM2 独立图表颜色、MiMo 分产品额度与原币费用，并验证会话标题共享及撤销。保留本分支全部自定义设置。
 >
 > 新增紧凑、横向、竖向、总览、详细五个小组件入口，保留自动适配与四页切换，共七个入口。网格大小由启动器决定，以实际 dp 空间适配。Pages 的四个页面通过左右点击切换。
 >
-> [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.67.0-hub.2.md)
+> [Hub 连接说明](HUB.md) · [更新与验证](docs/releases/v0.67.0-hub.3.md)
 >
 ## 本分支主页 · 浅色与深色
 

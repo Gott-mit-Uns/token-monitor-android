@@ -60,7 +60,7 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
     private val deviceAliasStore = io.github.theminionooo.tokenmonitor.data.storage.DeviceAliasStore(application)
     val deviceAliases = deviceAliasStore.aliases
     val originalDeviceNames: Map<String, String>
-        get() = repository.state.value.snapshot?.stats?.devices?.associate { it.id to it.hostname }.orEmpty()
+        get() = repository.state.value.snapshot?.stats?.devices?.associate { it.id to it.id.ifBlank { it.hostname } }.orEmpty()
     fun saveDeviceAlias(id: String, input: String): String? {
         val hubUrl = repository.state.value.connectionUrl ?: return "Connect to a Hub first."
         return deviceAliasStore.save(hubUrl, id, input)
@@ -69,10 +69,18 @@ internal class DashboardViewModel(application: Application) : AndroidViewModel(a
     private val displayPreferences = DisplayPreferences(application)
     private val serviceStatusClient = ServiceStatusClient()
 
-    val hubState: StateFlow<HubRepositoryState> = combine(repository.state, deviceAliases) { state, _ ->
+    private val desktopPreferences = io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences(application)
+    val desktopOptions = desktopPreferences.options
+    fun saveDesktopOptions(value: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions): Boolean {
+        val saved = desktopPreferences.save(value)
+        if (saved) viewModelScope.launch(kotlinx.coroutines.Dispatchers.Default) { WidgetUpdateCoordinator.refresh(getApplication()) }
+        return saved
+    }
+
+    val hubState: StateFlow<HubRepositoryState> = combine(repository.state, deviceAliases, desktopOptions) { state, _, options ->
         val url = state.connectionUrl
         val snapshot = state.snapshot
-        if (url != null && snapshot != null) state.copy(snapshot = deviceAliasStore.displaySnapshot(url, snapshot)) else state
+        if (url != null && snapshot != null) state.copy(snapshot = presentSnapshot(deviceAliasStore.displaySnapshot(url, snapshot), options)) else state
     }.stateIn(viewModelScope, SharingStarted.Eagerly, repository.state.value.let { state ->
         val url = state.connectionUrl
         val snapshot = state.snapshot

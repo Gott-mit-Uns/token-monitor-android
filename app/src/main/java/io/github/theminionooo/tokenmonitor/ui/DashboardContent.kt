@@ -123,6 +123,7 @@ internal fun DashboardContent(
     onOpenToolModels: (String) -> Unit = {},
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
+    desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
 ) {
     val snapshot = state.snapshot
     val showSessionTitles = LocalSessionTitles.current
@@ -131,7 +132,7 @@ internal fun DashboardContent(
         return
     }
     // Aggregating a rolling range walks the whole daily history; do it once per Hub event, not per recomposition.
-    val usage = remember(snapshot, period) { period.usage(snapshot) }
+    val usage = remember(snapshot, period, desktopOptions) { visibleUsage(period.usage(snapshot), desktopOptions) }
     val homeActivity = remember(snapshot) {
         val history = homeActivityPoints(snapshot)
         history to buildActivityHeatmap(history)
@@ -189,6 +190,8 @@ internal fun DashboardContent(
                 tokens = usage.clients,
                 costs = usage.clientCosts,
                 cacheReads = usage.clientCacheReads,
+                cacheWrites = usage.clientCacheWrites,
+                history = io.github.theminionooo.tokenmonitor.domain.usageHistory(snapshot),
                 outputs = usage.clientOutputs,
                 unclassified = usage.clientUnclassifiedTokens,
                 onToolSelected = onOpenToolModels,
@@ -201,6 +204,8 @@ internal fun DashboardContent(
                 tokens = modelUsage.models,
                 costs = modelUsage.modelCosts,
                 cacheReads = modelUsage.modelCacheReads,
+                cacheWrites = modelUsage.modelCacheWrites,
+                history = if (modelFilter == null) io.github.theminionooo.tokenmonitor.domain.usageHistory(snapshot) else emptyList(),
                 outputs = modelUsage.modelOutputs,
                 unclassified = modelUsage.modelUnclassifiedTokens,
                 emptyMessage = if (modelFilter != null) "No tool-to-model breakdown was supplied for this period." else "No model activity is available for this period.",
@@ -225,6 +230,9 @@ internal fun TotalPanel(usage: UsagePeriod, compact: Boolean, home: Boolean = tr
     val cost = rememberRollingValue(usage.costUsd)
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
         Text(tr("TOTAL TOKENS"), color = Muted, style = MaterialTheme.typography.labelMedium)
+        if (!home) Box(Modifier.fillMaxWidth().padding(top = 5.dp)) {
+            CompleteValue(formatTokens(tokens), styleOverride = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium))
+        } else {
         Text(
             formatTokenTotal(tokens, home, compact, LocalHomeChineseUnits.current),
             color = Ink,
@@ -232,6 +240,7 @@ internal fun TotalPanel(usage: UsagePeriod, compact: Boolean, home: Boolean = tr
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 5.dp),
         )
+        }
         Text(formatMoney(cost), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
     }
 }

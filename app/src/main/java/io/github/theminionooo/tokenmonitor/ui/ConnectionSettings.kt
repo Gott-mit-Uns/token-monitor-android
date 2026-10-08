@@ -110,6 +110,8 @@ internal fun ConnectionScreen(
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
     onRepairHomeAddress: (String) -> Unit = {},
     onAllowLocalNetwork: () -> Unit = {},
+    desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
+    onSaveDesktopOptions: (io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions) -> Boolean = { false },
 ) {
     val hasConnection = state.hasConnection
     var hubUrl by rememberSaveable(state.connectionUrl) { mutableStateOf(state.connectionUrl.orEmpty()) }
@@ -171,6 +173,9 @@ internal fun ConnectionScreen(
                 Text(tr("2. In the desktop app, open Settings → Multi-device Sync and choose Host Hub."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 Text(tr("3. Type the address that starts with 100. and the shared secret from the desktop app into the fields above. Just the numbers are enough."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 Text(tr("The v${BuildConfig.UPSTREAM_VERSION} desktop app does not generate a pairing QR code."), color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 16.sp)
+            }
+            SettingsGroup("桌面端显示功能", summary = "币种 · 模型别名 · 显示 · 导出") {
+                DesktopSettingsPanel(state.snapshot, desktopOptions, onSaveDesktopOptions)
             }
             val currentTheme = displayOptions.themeCode?.let(InterfaceTheme::fromCode) ?: InterfaceTheme.Default
             val themeId = InterfaceTheme.idOf(currentTheme)

@@ -70,7 +70,7 @@ class LocalizationAndAliasesTest {
         val store = DeviceAliasStore(context)
         store.save(hub, first.id, "")
         var display by mutableStateOf(store.displaySnapshot(hub, raw))
-        val originalNames = raw.stats.devices.associate { it.id to it.hostname }
+        val originalNames = raw.stats.devices.associate { it.id to it.id.ifBlank { it.hostname } }
         try {
             compose.setContent {
                 CompositionLocalProvider(LocalContext provides localizedContext(context), LocalPalette provides Palette.from(InterfaceTheme.Default)) {
@@ -101,7 +101,7 @@ class LocalizationAndAliasesTest {
             compose.onAllNodesWithContentDescription(uiText(context, "Rename device") + ":", substring = true)[0].performClick()
             compose.onNodeWithText("恢复原名").performClick()
             assertNull(store.alias(hub, first.id))
-            compose.onNodeWithText(first.hostname).assertIsDisplayed()
+            compose.onNodeWithText(first.id.ifBlank { first.hostname }).assertIsDisplayed()
         } finally { store.save(hub, first.id, ""); store.close() }
     }
 }

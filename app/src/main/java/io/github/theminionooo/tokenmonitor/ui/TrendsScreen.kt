@@ -9,6 +9,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -114,7 +116,7 @@ private fun UsageOverview(snapshot: HubSnapshot) {
         "MESSAGES" to formatTokens(messages),
     )
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        stats.chunked(2).forEach { rowStats ->
+        stats.chunked(if (androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.5f) 1 else 2).forEach { rowStats ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 rowStats.forEach { (label, value) -> OverviewStat(label, value, Modifier.weight(1f)) }
                 if (rowStats.size == 1) Spacer(Modifier.weight(1f))
@@ -242,7 +244,9 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
 internal fun StackedTrendChart(trend: TrendPresentation, height: androidx.compose.ui.unit.Dp) {
     val reveal = rememberChartReveal(Triple(trend.start, trend.end, trend.series))
     val palette = LocalPalette.current
-    Canvas(modifier = Modifier.fillMaxWidth().height(height).semantics { contentDescription = trendChartDescription(trend, false) }) {
+    var selectedOffset by rememberSaveable(trend.start.toString(), trend.end.toString()) { mutableStateOf<Int?>(null) }
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Canvas(modifier = Modifier.fillMaxWidth().height(height).pointerInput(trend) { detectTapGestures { point -> selectedOffset = ((point.x / size.width) * trend.calendarDays).toInt().coerceIn(0, (trend.calendarDays - 1).toInt()) } }.semantics { contentDescription = trendChartDescription(trend, false) }) {
         if (trend.days.isEmpty()) return@Canvas
         val maximum = max(1f, trend.days.maxOf { it.tokens }.toFloat()) / reveal.coerceAtLeast(0.001f)
         val slot = size.width / trend.calendarDays
@@ -267,6 +271,21 @@ internal fun StackedTrendChart(trend: TrendPresentation, height: androidx.compos
             }
         }
     }
+    selectedOffset?.let { offset ->
+        val date = trend.start.plusDays(offset.toLong())
+        val day = trend.days.firstOrNull { it.date == date }
+        Text(date.toString(), color = Muted, style = MaterialTheme.typography.labelSmall)
+        if (day == null) Text(tr("该日期没有记录，不能视为零用量"), color = Muted, style = MaterialTheme.typography.bodySmall)
+        else {
+            CompleteValue(formatTokens(day.tokens) + " Token")
+            CompleteValue(formatMoney(day.costUsd), false)
+            day.segments.forEach { (series, count) ->
+                Text("${series.name ?: tr("Unclassified")}：${formatTokens(count)}", color = Muted, style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+    }
+
 }
 
 @Composable
@@ -274,7 +293,9 @@ internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose
     val reveal = rememberChartReveal(trend.start to trend.end)
     val palette = LocalPalette.current
     val candles = remember(trend) { trendCandles(trend) }
-    Canvas(modifier = Modifier.fillMaxWidth().height(height).alpha(reveal).semantics { contentDescription = trendChartDescription(trend, true) }) {
+    var selectedOffset by rememberSaveable(trend.start.toString(), trend.end.toString()) { mutableStateOf<Int?>(null) }
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Canvas(modifier = Modifier.fillMaxWidth().height(height).alpha(reveal).pointerInput(trend) { detectTapGestures { point -> selectedOffset = ((point.x / size.width) * trend.calendarDays).toInt().coerceIn(0, (trend.calendarDays - 1).toInt()) } }.semantics { contentDescription = trendChartDescription(trend, true) }) {
         if (trend.days.isEmpty()) return@Canvas
         val maximum = max(1f, trend.days.maxOf { it.tokens }.toFloat())
         val dayWidth = size.width / trend.calendarDays
@@ -295,6 +316,23 @@ internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose
             drawRect(color, topLeft = Offset(x - bodyWidth / 2f, top), size = Size(bodyWidth, bodyHeight))
         }
     }
+    selectedOffset?.let { offset ->
+        val date = trend.start.plusDays(offset.toLong())
+        val day = trend.days.firstOrNull { it.date == date }
+        Text(date.toString(), color = Muted, style = MaterialTheme.typography.labelSmall)
+        if (day == null) Text(tr("该日期没有记录，不能视为零用量"), color = Muted, style = MaterialTheme.typography.bodySmall)
+        else {
+            CompleteValue(formatTokens(day.tokens) + " Token")
+            CompleteValue(formatMoney(day.costUsd), false)
+            candles.firstOrNull { date >= it.first && date <= it.last }?.let { candle ->
+                Text("${candle.first} — ${candle.last}", color = Muted, style = MaterialTheme.typography.labelSmall)
+                CompleteValue(desktopText("首日 ${formatTokens(candle.open)} · 末日 ${formatTokens(candle.close)}", "First ${formatTokens(candle.open)} · Last ${formatTokens(candle.close)}"))
+                CompleteValue(desktopText("最高 ${formatTokens(candle.high)} · 最低 ${formatTokens(candle.low)}", "High ${formatTokens(candle.high)} · Low ${formatTokens(candle.low)}"))
+            }
+        }
+    }
+    }
+
 }
 
 private fun trendSeriesColor(palette: Palette, index: Int): Color =

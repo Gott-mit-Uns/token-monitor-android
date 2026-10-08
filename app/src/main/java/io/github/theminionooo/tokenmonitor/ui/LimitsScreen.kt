@@ -141,20 +141,20 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
             UpstreamToolMark(account.provider, Blue, size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, softWrap = true)
                 val email = account.accountEmail.takeIf { displayOptions.showAccountEmails }.orEmpty()
                 val source = account.sourceDeviceId.takeIf { displayOptions.showLimitSource && it.isNotBlank() }?.let { tr("Source ${deviceNames[it] ?: it.displayName()}") }
                 val updated = account.updatedAt.relativeAge(LocalNow.current).takeIf { it.isNotBlank() }?.let { tr("Updated $it") }
                 val meta = listOf(account.productLabel, account.accountName, account.plan, email, source, updated).filterNotNull().filter { it.isNotBlank() }.joinToString(" · ")
-                if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, softWrap = true)
             }
             if (account.windows.isEmpty()) {
                 Spacer(Modifier.width(10.dp))
-                Text(tr(limitStatusLabel(account.status)), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                Text(tr(limitStatusLabel(account.status)), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
         }
         if (account.windows.isNotEmpty()) {
-            account.windows.chunked(2).forEach { windows ->
+            account.windows.chunked(if (androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.5f) 1 else 2).forEach { windows ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     windows.forEach { window ->
                         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -168,18 +168,18 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
                                     usedPercent?.let { "${formatPercent(it)} used" }
                                 })
                                     ?: window.remaining?.let { formatWindowAmount(it, window.currency) }
-                                    ?: "Available"
+                                    ?: desktopText("额度数据未知", "Limit amount unknown")
                                 Text(tr(display), color = Ink, style = MaterialTheme.typography.labelSmall)
                             }
                             val meterPercent = if (displayOptions.limitBarMetric == LimitBarMetric.Remaining) remaining else usedPercent
                             val meter = (meterPercent ?: 0.0).coerceIn(0.0, 100.0).toFloat() / 100f
                             val risk = ((usedPercent ?: 0.0).coerceIn(0.0, 100.0) / 100.0).toFloat()
                             if (window.showMeter != false && meterPercent != null) UsageBar(meter, quotaColor(risk))
-                            if (window.detail.isNotBlank()) Text(window.detail, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                            formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
+                            if (window.detail.isNotBlank()) Text(window.detail, color = Muted, style = MaterialTheme.typography.labelSmall, softWrap = true)
+                            formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall) }
                         }
                     }
-                    if (windows.size == 1) Spacer(Modifier.weight(1f))
+                    if (windows.size == 1 && androidx.compose.ui.platform.LocalDensity.current.fontScale < 1.5f) Spacer(Modifier.weight(1f))
                 }
             }
         }

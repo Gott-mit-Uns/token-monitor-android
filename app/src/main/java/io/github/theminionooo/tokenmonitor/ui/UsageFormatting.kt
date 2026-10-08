@@ -53,16 +53,16 @@ internal fun formatHomeTokens(tokens: Long, chinese: Boolean): String {
     return value.stripTrailingZeros().toPlainString() + if (divisor == 100_000_000L) "亿" else "万"
 }
 
-internal fun formatMoney(value: Double): String = currencyFormat.format(value)
+internal fun formatMoney(value: Double): String = convertedCost(value, io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences.active)
 
 internal fun formatSubscriptionAmount(amountMinor: Long, currency: String): String = if (currency == "USD") {
-    formatMoney(amountMinor / 100.0)
+    currencyFormat.format(amountMinor / 100.0)
 } else {
     "$currency ${wholeNumberFormat.format(amountMinor / 100.0)}"
 }
 
 internal fun formatWindowAmount(value: Double, currency: String): String = when {
-    currency.equals("USD", ignoreCase = true) -> formatMoney(value)
+    currency.equals("USD", ignoreCase = true) -> currencyFormat.format(value)
     currency.isNotBlank() -> "$currency ${wholeNumberFormat.format(value)}"
     else -> wholeNumberFormat.format(value)
 }
