@@ -1,3 +1,5 @@
+> Historical comparison for hub.1–hub.3. hub.4 withdraws these desktop extensions; see [current scope](hub4-rollback.md).
+
 # 已有功能与桌面 0.68 的区别
 
 桌面依据：Javis603/token-monitor `v0.68.0`，提交 `5d2db368d8313415763860d594de00e46a663418`。

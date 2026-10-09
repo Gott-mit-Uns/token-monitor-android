@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 function walk(dir) {
   return fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => {
-    if (['.git','node_modules','build','.gradle','.kotlin','.idea'].includes(e.name)) return [];
+    if (['.git','node_modules','build','.gradle','.kotlin','.idea','dist'].includes(e.name)) return [];
     const p = path.join(dir,e.name);
     return e.isDirectory() ? walk(p) : p.endsWith('.md') ? [p] : [];
   });

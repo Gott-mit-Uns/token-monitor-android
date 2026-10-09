@@ -58,7 +58,7 @@ class ForkReadmeShowcaseTest {
             clientModels = mapOf("codex" to mapOf("gpt-6.1-sol" to 25200000L), "hermes" to mapOf("claude-sonnet-4-6" to 12400000L), "dsh" to mapOf("deepseek-v4-flash" to 7980000L)))
         val seed = base.stats.devices.first()
         val devices = listOf(Triple("Mac Mini", "darwin", 19200000L), Triple("NAS DXP4800", "linux", 11900000L), Triple("Windows Mini", "win32", 8500000L), Triple("NAS DH4300plus", "linux", 5980000L)).mapIndexed { i, (name, platform, tokens) ->
-            seed.copy(id = "readme-device-$i", hostname = name, platform = platform, osName = when (platform) { "darwin" -> "macOS"; "win32" -> "Windows"; else -> "UGOS" }, stale = false,
+            seed.copy(id = name, hostname = "original-host-$i", platform = platform, osName = when (platform) { "darwin" -> "macOS"; "win32" -> "Windows"; else -> "UGOS" }, stale = false,
                 periods = mapOf("today" to usage.copy(totalTokens = tokens, costUsd = 18.75 * tokens / usage.totalTokens)))
         }
         val codex = base.stats.limits.providers.first().copy(provider = "codex", accountName = "", accountEmail = "", windows = listOf(
@@ -66,9 +66,8 @@ class ForkReadmeShowcaseTest {
             io.github.theminionooo.tokenmonitor.domain.LimitWindow("weekly", "Weekly", 66.0, 34.0, null, "2026-09-13T12:00:00Z", "percent", "", "", true)))
         val deepseek = codex.copy(provider = "deepseek", plan = "", windows = listOf(
             io.github.theminionooo.tokenmonitor.domain.LimitWindow("balance", "Balance", null, null, 28.37, "", "balance", "CNY", "", false)))
-        val raw = base.copy(stats = base.stats.copy(devices = devices.map { it.copy(id = it.hostname.ifBlank { it.id }) }, periods = mapOf("today" to usage), limits = base.stats.limits.copy(providers = listOf(codex, deepseek))))
-        val originalNames = raw.stats.devices.associate { it.id to it.hostname }
-        val state = HubRepositoryState(hasConnection = true, snapshot = hubNamedSnapshot(raw), streamActive = true)
+        val raw = base.copy(stats = base.stats.copy(devices = devices, periods = mapOf("today" to usage), limits = base.stats.limits.copy(providers = listOf(codex, deepseek))))
+        val state = HubRepositoryState(hasConnection = true, snapshot = io.github.theminionooo.tokenmonitor.fork.hubNamedSnapshot(raw), streamActive = true)
         var destination by mutableStateOf(if (appearance) DashboardDestination.Settings else DashboardDestination.Home)
         var options by mutableStateOf(DisplayOptions(themeCode = (if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian).code, colorfulToolMarks = false, visibleHomeModules = listOf("Limits", "Tools", "Devices", "Models")))
         val palette = Palette.from(if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian)
@@ -82,7 +81,7 @@ class ForkReadmeShowcaseTest {
                     Box(Modifier.size(393.dp, 1000.dp).background(Brush.linearGradient(colorStops = arrayOf(0f to palette.gradientTop, 0.38f to palette.shell, 1f to palette.gradientBottom))).testTag("showcase")) {
                         DashboardScaffold(state = state, destination = destination, form = ConnectionFormState(), displayOptions = options, serviceStatus = ServiceStatusState(),
                     onChoose = { destination = it }, onRefresh = {}, onSaveConnection = { _, _, _, _ -> },
-                    originalDeviceNames = originalNames, onRenameDevice = null,
+                    originalDeviceNames = emptyMap(), onRenameDevice = null,
                     onColorfulToolMarksChange = {}, onCompactTokenTotalChange = {}, onReduceMotionChange = {}, onTextScaleChange = { options = options.copy(textScale = it) },
                     onIconScaleChange = { options = options.copy(iconScale = it) },
                     onHomeChineseUnitsChange = { options = options.copy(homeChineseUnits = it) },
@@ -94,6 +93,11 @@ class ForkReadmeShowcaseTest {
                     }
                 }
             }
+        }
+        // API 36 may return from setContent before the Activity registers its Compose root.
+        // Wait for the real showcase hierarchy before the first navigation action.
+        compose.waitUntil(timeoutMillis = 10_000) {
+            runCatching { compose.onAllNodesWithTag("showcase").fetchSemanticsNodes().isNotEmpty() }.getOrDefault(false)
         }
         fun capture(name: String) {
             compose.mainClock.advanceTimeBy(1000)

@@ -232,6 +232,32 @@ class WidgetDeckDesignTest {
         }
     }
 
+    @Test fun unpricedShowcaseKeepsTheCardAndAccessibleCosts() {
+        val original = showcaseSnapshot()
+        val today = original.today.copy(unpricedTokens = 400,
+            clientUnpricedTokens = mapOf("codex" to 400), modelUnpricedTokens = mapOf("gpt-5.6-sol" to 400))
+        val snapshot = original.copy(stats = original.stats.copy(periods = original.stats.periods + ("today" to today)))
+        val data = prepareWidgetDeck(snapshot, WidgetSession(enabled = true, connected = true, expiresAt = showcaseNow + 3_600_000), now = showcaseNow)
+        instrumentation.runOnMainSync {
+            for (page in listOf(WidgetDeckPage.Overview, WidgetDeckPage.Breakdown, WidgetDeckPage.Activity)) {
+                val size = SizeF(320f, 180f)
+                val view = WidgetDeckRenderer.render(context, page, data, InterfaceTheme.Default, size).apply(context, FrameLayout(context))
+                layout(view, size)
+                val image = view.findViewById<ImageView>(R.id.swipe_page_bitmap)
+                assertTrue("$page must describe incomplete prices", image.contentDescription.contains("unpriced"))
+                capture(view, "widget-unpriced-${page.name.lowercase()}.png")
+            }
+            val usageView = io.github.theminionooo.tokenmonitor.widget.UsageWidgetProvider.render(
+                context, snapshot, InterfaceTheme.Default, io.github.theminionooo.tokenmonitor.widget.WidgetLayout.Large,
+                size = SizeF(360f, 400f),
+            ).apply(context, FrameLayout(context))
+            layout(usageView, SizeF(360f, 400f))
+            assertTrue(usageView.findViewById<TextView>(R.id.widget_cost).contentDescription.contains("400 unpriced"))
+            assertTrue(usageView.findViewById<TextView>(R.id.widget_chart_total).contentDescription.contains("unpriced"))
+            capture(usageView, "usage-widget-unpriced.png")
+        }
+    }
+
     @Test fun v054AndSavedEmptyOfflineAndStaleStatesRemainTruthful() {
         val old = snapshot("v0.54.0")
         assertTrue(!old.today.throughputAvailable)

@@ -1,0 +1,6 @@
+<resources>
+    <string name="ui_android068_known_cost">已知费用</string>
+    <string name="ui_android068_dots">Dots · 仅观测用量</string>
+    <string name="ui_android068_coverage">Dots 只包含电脑连接期间采集到的用量，并非完整历史。</string>
+    <string name="ui_android068_missing">%1$s Token 未定价；费用色阶只表示已知小计，可切换 Token 查看全部用量。</string>
+</resources>

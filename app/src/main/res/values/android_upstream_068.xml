@@ -1,0 +1,6 @@
+<resources>
+    <string name="ui_android068_known_cost">Known cost</string>
+    <string name="ui_android068_dots">Dots · observed only</string>
+    <string name="ui_android068_coverage">Dots usage covers observations while the desktop was connected, not complete history.</string>
+    <string name="ui_android068_missing">%1$s tokens have no reported price. Cost shading uses known subtotals; choose Tokens to see all usage.</string>
+</resources>

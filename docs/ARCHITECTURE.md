@@ -223,4 +223,4 @@ missing history observations are shown as gaps.
 
 ## Maintenance boundary
 
-Android upstream is the primary implementation source. Desktop source verifies Hub contracts only. `upstream.json` records both independently; local display preferences live in the fork codec with legacy keys. Shared history, trend and widget-data algorithms are checked against the reviewed Android commit. Integration remains selective; custom UI differences have not all been isolated. See [maintenance policy](UPSTREAM_SYNC.md).
+Android upstream is the primary implementation source. Desktop source verifies Hub contracts only. `upstream.json` records both independently; local display preferences retain the pre-extension DisplayPreferences keys. Shared history, trend and widget-data algorithms are checked against the reviewed Android commit. hub.4 restores fork0.67 hub.2 and applies Android0.68 release changes; withdrawn desktop extensions are no longer loaded. Custom UI differences still need review. See [maintenance policy](UPSTREAM_SYNC.md).

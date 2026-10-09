@@ -43,7 +43,7 @@ internal fun UsageComparisonPanel(history: List<HistoryPoint>) {
         Text(tr("${formatTokens(comparison.current.sumOf { it.tokens })} vs ${formatTokens(comparison.previous.sumOf { it.tokens })} tokens"), color = Ink)
         if (comparison.complete) {
             Text(tr("${signedTokens(comparison.tokenDelta)} tokens${comparison.percentChange?.let { " · %+.1f%%".format(java.util.Locale.US, it) }.orEmpty()}"), color = Accent)
-            Text(tr("Estimated cost: ${formatUsageCost(comparison.current.sumOf { it.costUsd }, comparison.current.sumOf { it.unpricedTokens }, compact = true)} vs ${formatUsageCost(comparison.previous.sumOf { it.costUsd }, comparison.previous.sumOf { it.unpricedTokens }, compact = true)}"), color = Muted, style = MaterialTheme.typography.bodySmall)
+            Text(tr("Estimated cost: ${formatMoney(comparison.current.sumOf { it.costUsd })} vs ${formatMoney(comparison.previous.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.bodySmall)
             comparison.drivers(byModel = true).filter { it.second != 0L }.take(3).forEach { (name, delta) ->
                 Text(tr("$name: ${signedTokens(delta)} tokens"), color = Ink, style = MaterialTheme.typography.bodySmall)
             }
@@ -134,10 +134,10 @@ private fun ExplorerRow(name: String, value: String, onClick: () -> Unit) {
 internal fun UsagePeriod.modelsForTool(tool: String): UsagePeriod = UsagePeriod(
     totalTokens = clients[tool] ?: 0,
     costUsd = clientCosts[tool] ?: 0.0,
-    models = clientModels[tool].orEmpty(),
-    modelCosts = clientModelCosts[tool].orEmpty(),
     unpricedTokens = clientUnpricedTokens[tool] ?: 0,
     modelUnpricedTokens = clientModelUnpricedTokens[tool].orEmpty(),
+    models = clientModels[tool].orEmpty(),
+    modelCosts = clientModelCosts[tool].orEmpty(),
 )
 
 @Composable

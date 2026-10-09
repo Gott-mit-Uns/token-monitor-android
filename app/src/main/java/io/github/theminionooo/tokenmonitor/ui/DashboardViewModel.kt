@@ -21,7 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
@@ -57,29 +57,13 @@ internal data class HubDiscoveryState(
 
 internal class DashboardViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = HubRepositoryPool.acquire(application)
-    val rawExportSnapshot get() = repository.state.value.snapshot
-    val originalDeviceNames: Map<String, String>
-        get() = repository.state.value.snapshot?.stats?.devices?.associate { it.id to it.id.ifBlank { it.hostname } }.orEmpty()
-
     private val displayPreferences = DisplayPreferences(application)
     private val serviceStatusClient = ServiceStatusClient()
 
-    private val desktopPreferences = io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences(application)
-    val desktopOptions = desktopPreferences.options
-    fun saveDesktopOptions(value: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions): Boolean {
-        val saved = desktopPreferences.save(value)
-        if (saved) viewModelScope.launch(kotlinx.coroutines.Dispatchers.Default) { WidgetUpdateCoordinator.refresh(getApplication()) }
-        return saved
-    }
-
-    val hubState: StateFlow<HubRepositoryState> = combine(repository.state, desktopOptions) { state, options ->
-        val url = state.connectionUrl
-        val snapshot = state.snapshot
-        if (url != null && snapshot != null) state.copy(snapshot = presentSnapshot(hubNamedSnapshot(snapshot), options)) else state
+    val hubState: StateFlow<HubRepositoryState> = repository.state.map { state ->
+        state.snapshot?.let { state.copy(snapshot = io.github.theminionooo.tokenmonitor.fork.hubNamedSnapshot(it)) } ?: state
     }.stateIn(viewModelScope, SharingStarted.Eagerly, repository.state.value.let { state ->
-        val url = state.connectionUrl
-        val snapshot = state.snapshot
-        if (url != null && snapshot != null) state.copy(snapshot = hubNamedSnapshot(snapshot)) else state
+        state.snapshot?.let { state.copy(snapshot = io.github.theminionooo.tokenmonitor.fork.hubNamedSnapshot(it)) } ?: state
     })
     private val _destination = MutableStateFlow(
         if (repository.state.value.hasConnection) DashboardDestination.Home else DashboardDestination.Settings,

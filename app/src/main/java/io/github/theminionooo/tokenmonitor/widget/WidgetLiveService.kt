@@ -67,7 +67,7 @@ internal fun widgetNotificationContent(
     val connected = session.connected && snapshot?.fromCache != true && session.note == null
     val clock = DateTimeFormatter.ofPattern("HH:mm", locale).withZone(zoneId)
     val headline = snapshot?.let {
-        val totals = "${widgetTokens(it.today.totalTokens)} tokens · ${formatUsageCost(it.today.costUsd, it.today.unpricedTokens, compact = true)}"
+        val totals = "${widgetTokens(it.today.totalTokens)} tokens · ${formatUsageCost(it.today.costUsd, it.today.unpricedTokens)}"
         val day = snapshotDate(it, zoneId)
         when {
             !connected -> "Saved · $totals"

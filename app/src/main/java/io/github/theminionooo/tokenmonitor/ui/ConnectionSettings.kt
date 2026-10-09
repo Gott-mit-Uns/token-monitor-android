@@ -2,7 +2,6 @@ package io.github.theminionooo.tokenmonitor.ui
 
 import io.github.theminionooo.tokenmonitor.localization.tr
 import io.github.theminionooo.tokenmonitor.localization.localizedText
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -112,9 +110,6 @@ internal fun ConnectionScreen(
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
     onRepairHomeAddress: (String) -> Unit = {},
     onAllowLocalNetwork: () -> Unit = {},
-    desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
-    onSaveDesktopOptions: (io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions) -> Boolean = { false },
-    rawExportSnapshot: io.github.theminionooo.tokenmonitor.domain.HubSnapshot? = null,
 ) {
     val hasConnection = state.hasConnection
     var hubUrl by rememberSaveable(state.connectionUrl) { mutableStateOf(state.connectionUrl.orEmpty()) }
@@ -156,10 +151,9 @@ internal fun ConnectionScreen(
         return
     }
     val openSection = rememberSaveable { mutableStateOf<String?>(null) }
-    val settingsScroll = rememberScrollState()
-    CompositionLocalProvider(LocalOpenSettingsSection provides openSection, LocalSettingsScroll provides settingsScroll) {
+    CompositionLocalProvider(LocalOpenSettingsSection provides openSection) {
         Column(
-            modifier = modifier.fillMaxSize().verticalScroll(settingsScroll).padding(horizontal = 14.dp, vertical = 8.dp),
+            modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             val route = when {
@@ -177,9 +171,6 @@ internal fun ConnectionScreen(
                 Text(tr("2. In the desktop app, open Settings → Multi-device Sync and choose Host Hub."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 Text(tr("3. Type the address that starts with 100. and the shared secret from the desktop app into the fields above. Just the numbers are enough."), color = Ink, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
                 Text(tr("The v${BuildConfig.UPSTREAM_VERSION} desktop app does not generate a pairing QR code."), color = Muted, style = MaterialTheme.typography.labelSmall, lineHeight = 16.sp)
-            }
-            SettingsGroup("桌面端显示功能", summary = "币种 · 模型别名 · 显示 · 导出") {
-                DesktopSettingsPanel(state.snapshot, desktopOptions, rawExportSnapshot ?: state.snapshot, onSaveDesktopOptions)
             }
             val currentTheme = displayOptions.themeCode?.let(InterfaceTheme::fromCode) ?: InterfaceTheme.Default
             val themeId = InterfaceTheme.idOf(currentTheme)
@@ -329,8 +320,8 @@ internal fun ConnectionScreen(
             }
             SettingsGroup("Compatibility", summary = "Desktop v${BuildConfig.UPSTREAM_VERSION}") {
                 StatusLine("Android app", BuildConfig.VERSION_NAME)
-                StatusLine(desktopText("安卓上游基线", "Android upstream baseline"), BuildConfig.ANDROID_BASE_TAG)
-                StatusLine(desktopText("已验证 Hub 兼容", "Verified Hub compatibility"), "Token Monitor v${BuildConfig.UPSTREAM_VERSION}")
+                StatusLine(if (uiLocale().language == "zh") "安卓上游基线" else "Android upstream baseline", BuildConfig.ANDROID_BASE_TAG)
+                StatusLine(if (uiLocale().language == "zh") "已验证 Hub 兼容" else "Verified Hub compatibility", "Token Monitor v${BuildConfig.UPSTREAM_VERSION}")
                 Text(tr("Protocol changes are reviewed against versioned fixtures before this baseline moves forward."), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
             }
             SettingsGroup("App updates", summary = "${BuildConfig.VERSION_NAME} r${BuildConfig.VERSION_CODE % 1000}") {
@@ -530,14 +521,12 @@ private fun SettingsOrderRow(
     onCheckedChange: (Boolean) -> Unit,
     onMove: (Int) -> Unit,
 ) {
-    var measuredHeight by remember { mutableStateOf<Float?>(null) }
-    Row(modifier = Modifier.fillMaxWidth().onSizeChanged { measuredHeight = it.height.toFloat() }.heightIn(min = 48.dp), verticalAlignment = Alignment.CenterVertically) {
-        DragOrderHandle(tr(label), checked, measuredHeight, onMove)
+    Row(modifier = Modifier.fillMaxWidth().height(42.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(tr(label), color = if (checked) Ink else Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-        IconButton(onClick = { onMove(-1) }, enabled = checked, modifier = Modifier.size(48.dp)) {
+        IconButton(onClick = { onMove(-1) }, enabled = checked, modifier = Modifier.size(30.dp)) {
             Icon(Icons.Outlined.KeyboardArrowUp, contentDescription = localizedText("Move $label up"), tint = if (checked) Muted else Muted.copy(alpha = 0.35f), modifier = Modifier.size(16.dp))
         }
-        IconButton(onClick = { onMove(1) }, enabled = checked, modifier = Modifier.size(48.dp)) {
+        IconButton(onClick = { onMove(1) }, enabled = checked, modifier = Modifier.size(30.dp)) {
             Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = localizedText("Move $label down"), tint = if (checked) Muted else Muted.copy(alpha = 0.35f), modifier = Modifier.size(16.dp))
         }
         if (allowDisable) {

@@ -177,7 +177,7 @@ open class UsageWidgetProvider : AppWidgetProvider() {
                     HubProtocolParser.decodeSnapshot(wire.health, wire.stats, wire.devices, wire.history, wire.subscriptions, wire.capturedAt, true)
                 }.getOrNull()
             }
-            val snapshot = listOfNotNull(session.snapshot, cached).maxByOrNull { it.capturedAt }?.let { io.github.theminionooo.tokenmonitor.ui.presentSnapshot(it, io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences(context).options.value) }
+            val snapshot = listOfNotNull(session.snapshot, cached).maxByOrNull { it.capturedAt }?.let { io.github.theminionooo.tokenmonitor.fork.hubNamedSnapshot(it) }
             val display = DisplayPreferences(context).options.value
             val systemDark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
             val theme = resolveInterfaceTheme(display.themeCode, display.followSystemTheme, systemDark)
@@ -262,7 +262,7 @@ open class UsageWidgetProvider : AppWidgetProvider() {
             val history = usageHistory(snapshot)
             val today = history.firstOrNull { it.label.take(10) == date?.toString() }
             val cost = formatUsageCost(snapshot.today.costUsd, snapshot.today.unpricedTokens, compact = true)
-            views.setContentDescription(R.id.widget_cost, if (snapshot.today.unpricedTokens > 0) formatUsageCost(snapshot.today.costUsd, snapshot.today.unpricedTokens) else null)
+            views.setContentDescription(R.id.widget_cost, if (snapshot.today.unpricedTokens > 0) widgetText(context, formatUsageCost(snapshot.today.costUsd, snapshot.today.unpricedTokens)) else null)
             views.setTextViewText(R.id.widget_cost, widgetText(context, when {
                 narrow -> if (today != null && today.messages > 0) "$cost · ${formatCompactTokens(today.messages)} msgs" else "$cost est. cost"
                 layout == WidgetLayout.Wide -> "$cost · $longDate · $savedAt"
@@ -433,7 +433,8 @@ open class UsageWidgetProvider : AppWidgetProvider() {
                     views.setTextColor(R.id.widget_chart_title, ink)
                     views.setTextViewText(R.id.widget_chart_total, "${formatCompactTokens(weekPoints.sumOf { it.tokens })} · ${formatUsageCost(weekPoints.sumOf { it.costUsd }, weekPoints.sumOf { it.unpricedTokens }, compact = true)}")
                     views.setTextColor(R.id.widget_chart_total, muted)
-                    views.setContentDescription(R.id.widget_chart_total, if (weekPoints.any { it.unpricedTokens > 0 }) formatUsageCost(weekPoints.sumOf { it.costUsd }, weekPoints.sumOf { it.unpricedTokens }) else null)
+                    views.setContentDescription(R.id.widget_chart_total, if (weekPoints.any { it.unpricedTokens > 0 })
+                        "${formatTokens(weekPoints.sumOf { it.tokens })} tokens, ${formatUsageCost(weekPoints.sumOf { it.costUsd }, weekPoints.sumOf { it.unpricedTokens })} estimated cost" else null)
                     val barsDp = if (layout == WidgetLayout.Large) largeChartBarsDp(heightDp, blocks) else overviewChartBarsDp(heightDp, rows)
                     // Measure the configured layout: each XML dimension rounds independently,
                     // and quota rows can leave less space than the old fixed-dp estimate.

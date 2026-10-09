@@ -123,7 +123,6 @@ internal fun DashboardContent(
     onOpenToolModels: (String) -> Unit = {},
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
-    desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
 ) {
     val snapshot = state.snapshot
     val showSessionTitles = LocalSessionTitles.current
@@ -132,10 +131,10 @@ internal fun DashboardContent(
         return
     }
     // Aggregating a rolling range walks the whole daily history; do it once per Hub event, not per recomposition.
-    val usage = remember(snapshot, period, desktopOptions) { visibleUsage(period.usage(snapshot), desktopOptions) }
-    val homeActivity = remember(snapshot, desktopOptions.homeActivityMetric) {
+    val usage = remember(snapshot, period) { period.usage(snapshot) }
+    val homeActivity = remember(snapshot) {
         val history = homeActivityPoints(snapshot)
-        history to buildActivityHeatmap(history, metric = when (desktopOptions.homeActivityMetric) { "tokens" -> ActivityMetric.Tokens; "cost" -> ActivityMetric.Cost; else -> ActivityMetric.Automatic })
+        history to buildActivityHeatmap(history)
     }
     BackHandler(destination == DashboardDestination.Models && modelFilter != null) {
         onChoose(DashboardDestination.Tools)
@@ -167,9 +166,6 @@ internal fun DashboardContent(
         verticalArrangement = Arrangement.spacedBy(if (destination in listOf(DashboardDestination.Models, DashboardDestination.Projects, DashboardDestination.Tools)) 4.dp else 10.dp),
     ) {
         item { TotalPanel(if (destination == DashboardDestination.Models) modelUsage else usage, destination == DashboardDestination.Home && displayOptions.compactTokenTotal, home = destination == DashboardDestination.Home) }
-        if (usage.unpricedTokens > 0) item {
-            Text(desktopText("${formatTokens(usage.unpricedTokens)} Token 缺少价格，费用仅含已知小计", "${formatTokens(usage.unpricedTokens)} tokens lack pricing; costs show the known subtotal"), color = Orange, style = MaterialTheme.typography.bodySmall)
-        }
         if (destination == DashboardDestination.Models && filteredTool != null) item {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -193,10 +189,7 @@ internal fun DashboardContent(
                 tokens = usage.clients,
                 costs = usage.clientCosts,
                 unpriced = usage.clientUnpricedTokens,
-                options = desktopOptions,
                 cacheReads = usage.clientCacheReads,
-                cacheWrites = usage.clientCacheWrites,
-                history = io.github.theminionooo.tokenmonitor.domain.usageHistory(snapshot),
                 outputs = usage.clientOutputs,
                 unclassified = usage.clientUnclassifiedTokens,
                 onToolSelected = onOpenToolModels,
@@ -209,10 +202,7 @@ internal fun DashboardContent(
                 tokens = modelUsage.models,
                 costs = modelUsage.modelCosts,
                 unpriced = modelUsage.modelUnpricedTokens,
-                options = desktopOptions,
                 cacheReads = modelUsage.modelCacheReads,
-                cacheWrites = modelUsage.modelCacheWrites,
-                history = if (modelFilter == null) io.github.theminionooo.tokenmonitor.domain.usageHistory(snapshot) else emptyList(),
                 outputs = modelUsage.modelOutputs,
                 unclassified = modelUsage.modelUnclassifiedTokens,
                 emptyMessage = if (modelFilter != null) "No tool-to-model breakdown was supplied for this period." else "No model activity is available for this period.",
@@ -237,9 +227,6 @@ internal fun TotalPanel(usage: UsagePeriod, compact: Boolean, home: Boolean = tr
     val cost = rememberRollingValue(usage.costUsd)
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
         Text(tr("TOTAL TOKENS"), color = Muted, style = MaterialTheme.typography.labelMedium)
-        if (!home) Box(Modifier.fillMaxWidth().padding(top = 5.dp)) {
-            CompleteValue(formatTokens(tokens), styleOverride = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Medium))
-        } else {
         Text(
             formatTokenTotal(tokens, home, compact, LocalHomeChineseUnits.current),
             color = Ink,
@@ -247,8 +234,7 @@ internal fun TotalPanel(usage: UsagePeriod, compact: Boolean, home: Boolean = tr
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 5.dp),
         )
-        }
-        Text(formatMoney(cost), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
+        Text(formatUsageCost(cost, usage.unpricedTokens), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
     }
 }
 

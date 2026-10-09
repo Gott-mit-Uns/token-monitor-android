@@ -53,25 +53,25 @@ internal fun formatHomeTokens(tokens: Long, chinese: Boolean): String {
     return value.stripTrailingZeros().toPlainString() + if (divisor == 100_000_000L) "亿" else "万"
 }
 
-internal fun formatMoney(value: Double): String = convertedCost(value, io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences.active)
+internal fun formatMoney(value: Double): String = currencyFormat.format(value)
 
-/** Preserve known subtotals without treating absent catalog prices as free usage. */
+/** A missing catalog price is not a zero rate. Keep the known subtotal explicit. */
 internal fun formatUsageCost(value: Double, unpricedTokens: Long = 0, compact: Boolean = false): String {
     if (unpricedTokens <= 0) return formatMoney(value)
     val known = if (value > 0) formatMoney(value) else "—"
     if (compact) return if (value > 0) "$known + ?" else "— (?)"
-    val missing = desktopText("${formatTokens(unpricedTokens)} Token 未定价", "${formatTokens(unpricedTokens)} unpriced tokens")
+    val missing = if (uiLocale().language == "zh") "${formatTokens(unpricedTokens)} Token 未定价" else "${formatTokens(unpricedTokens)} unpriced"
     return if (value > 0) "$known + $missing" else "— ($missing)"
 }
 
 internal fun formatSubscriptionAmount(amountMinor: Long, currency: String): String = if (currency == "USD") {
-    currencyFormat.format(amountMinor / 100.0)
+    formatMoney(amountMinor / 100.0)
 } else {
     "$currency ${wholeNumberFormat.format(amountMinor / 100.0)}"
 }
 
 internal fun formatWindowAmount(value: Double, currency: String): String = when {
-    currency.equals("USD", ignoreCase = true) -> currencyFormat.format(value)
+    currency.equals("USD", ignoreCase = true) -> formatMoney(value)
     currency.isNotBlank() -> "$currency ${wholeNumberFormat.format(value)}"
     else -> wholeNumberFormat.format(value)
 }

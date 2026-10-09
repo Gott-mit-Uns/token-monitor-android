@@ -116,30 +116,19 @@ internal fun LazyListScope.breakdownItems(
     rankingMetric: RankingMetric,
     modelRows: Boolean = false,
     onToolSelected: ((String) -> Unit)? = null,
-    cacheWrites: Map<String, Long> = emptyMap(),
-    history: List<HistoryPoint> = emptyList(),
     unpriced: Map<String, Long> = emptyMap(),
-    options: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
 ) {
     if (tokens.isEmpty()) {
         item { MutedCopy(emptyMessage, modifier = Modifier.padding(vertical = 12.dp)) }
     } else {
         val maximum = tokens.values.maxOrNull()?.coerceAtLeast(1L) ?: 1L
-        items(rankedUsageNames(tokens, costs, rankingMetric == RankingMetric.Cost, modelRows, options), key = { it }) { name ->
-            val count = tokens.getValue(name)
+        items(tokens.entries.sortedByDescending { (name, count) -> if (rankingMetric == RankingMetric.Cost) costs[name] ?: 0.0 else count.toDouble() }, key = { it.key }) { (name, count) ->
             DesktopUsageRow(
                 name = name,
                 totalTokens = count,
-                unpricedTokens = unpriced[name] ?: 0,
-                detail = costs[name]?.let(::formatMoney).orEmpty(),
+                detail = if (name in costs || (unpriced[name] ?: 0) > 0) formatUsageCost(costs[name] ?: 0.0, unpriced[name] ?: 0) else "",
                 ratio = count.toFloat() / maximum,
                 cacheReadTokens = cacheReads[name] ?: 0L,
-                cacheWriteTokens = cacheWrites[name] ?: 0L,
-                rowHistory = history.mapNotNull { point ->
-                    (if (modelRows) point.perModel else point.perClient)[name]?.let {
-                        point.copy(tokens = it.tokens, costUsd = it.costUsd)
-                    }
-                },
                 outputTokens = outputs[name] ?: 0L,
                 unclassifiedTokens = unclassified[name] ?: 0L,
                 modelRow = modelRows,
@@ -160,59 +149,41 @@ internal fun DesktopUsageRow(
     unclassifiedTokens: Long,
     modelRow: Boolean,
     onToolSelected: ((String) -> Unit)? = null,
-    cacheWriteTokens: Long = 0L,
-    rowHistory: List<HistoryPoint> = emptyList(),
-    unpricedTokens: Long = 0,
 ) {
-    val hasBreakdown = cacheReadTokens > 0 || cacheWriteTokens > 0 || outputTokens > 0 || unclassifiedTokens > 0
-    val hasDetails = hasBreakdown || rowHistory.isNotEmpty() || unpricedTokens > 0
+    val hasBreakdown = cacheReadTokens > 0 || outputTokens > 0 || unclassifiedTokens > 0
     var expanded by rememberSaveable(name) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
-    val rowModifier = (if (onToolSelected != null) {
+    val rowModifier = if (onToolSelected != null) {
         Modifier.fillMaxWidth().clickable(onClickLabel = localizedText("Models used through $name")) { onToolSelected(name) }.padding(vertical = 2.dp)
-    } else if (hasDetails) {
+    } else if (hasBreakdown) {
         Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 2.dp)
     } else {
         Modifier.fillMaxWidth().padding(vertical = 2.dp)
     }
-    ).heightIn(min = 48.dp)
     Column(modifier = rowModifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        if (unpricedTokens > 0) Text(desktopText("${formatTokens(unpricedTokens)} Token 缺少价格", "${formatTokens(unpricedTokens)} tokens lack pricing"), color = Orange, style = MaterialTheme.typography.labelSmall)
-        AlignedUsageIdentity(formatTokens(totalTokens), detail) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             if (modelRow) ModelMark(name, accentFor(name), size = LocalContentIconSize.current)
             else UpstreamToolMark(name, accentFor(name), size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
-            Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-        }
-        if (hasDetails && onToolSelected != null) androidx.compose.material3.TextButton(onClick = { expanded = !expanded }) {
-            Text(tr(if (expanded) "收起 Token 明细" else "Token 明细"))
+            Text(name.displayName(), color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                if (detail.isNotBlank()) Text(tr(detail), color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
         }
         UsageBar(ratio, accentFor(name))
         AnimatedVisibility(
-            visible = expanded && hasDetails,
+            visible = expanded && hasBreakdown,
             enter = fadeIn(tween(if (motionEnabled) 160 else 0)) + expandVertically(tween(if (motionEnabled) 240 else 0, easing = DesktopEaseOut)),
             exit = fadeOut(tween(if (motionEnabled) 100 else 0)) + shrinkVertically(tween(if (motionEnabled) 180 else 0, easing = DesktopEaseOut)),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                if (hasBreakdown) {
-                    TokenComponentBreakdown(
-                        totalTokens = totalTokens,
-                        cacheReadTokens = cacheReadTokens,
-                        cacheWriteTokens = cacheWriteTokens,
-                        outputTokens = outputTokens,
-                        unclassifiedTokens = unclassifiedTokens,
-                    )
-                }
-                if (rowHistory.isNotEmpty()) {
-                    Text(tr("历史记录 · 最近 7 个已记录日"), color = Muted, style = MaterialTheme.typography.labelSmall)
-                    rowHistory.sortedBy { it.label }.takeLast(7).forEach { point ->
-                        AlignedUsageIdentity(formatTokens(point.tokens), formatMoney(point.costUsd)) {
-                            Text(point.label.take(10), color = Muted, style = MaterialTheme.typography.bodySmall)
-                        }
-                    }
-                }
-            }
-
+            TokenComponentBreakdown(
+                totalTokens = totalTokens,
+                cacheReadTokens = cacheReadTokens,
+                outputTokens = outputTokens,
+                unclassifiedTokens = unclassifiedTokens,
+            )
         }
         HorizontalDivider(color = Line)
     }
@@ -224,23 +195,27 @@ internal fun TokenComponentBreakdown(
     cacheReadTokens: Long,
     outputTokens: Long,
     unclassifiedTokens: Long,
-    cacheWriteTokens: Long = 0L,
 ) {
-    val components = tokenComponents(totalTokens, cacheReadTokens, cacheWriteTokens, outputTokens, unclassifiedTokens)
-    val (cacheRead, cacheMiss, cacheWrite, output, unclassified) = components
-    val hit = components.hitPercent
-    val miss = components.missPercent
+    val unclassified = unclassifiedTokens.coerceIn(0L, totalTokens)
+    val classified = totalTokens - unclassified
+    val cacheRead = cacheReadTokens.coerceIn(0L, classified)
+    val output = outputTokens.coerceIn(0L, classified - cacheRead)
+    val cacheMiss = (classified - cacheRead - output).coerceAtLeast(0L)
+    val input = cacheRead + cacheMiss
+    val hit = if (input > 0) cacheRead.toDouble() / input * 100.0 else 0.0
+    val miss = if (input > 0) 100.0 - hit else 0.0
     val rows = buildList {
         add(Triple("Input (Cache Hit)", cacheRead, hit))
         add(Triple("Input (Cache Miss)", cacheMiss, miss))
-        if (cacheWrite > 0) add(Triple(desktopText("其中缓存写入", "Of which cache write"), cacheWrite, null))
         add(Triple("Output", output, null))
         if (unclassified > 0) add(Triple("Unclassified", unclassified, null))
     }
     Column(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp, end = 2.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
         rows.forEach { (label, value, percent) ->
-            AlignedUsageIdentity(formatTokens(value), percent?.let(::formatPercent).orEmpty()) {
-                Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall)
+            Row {
+                Text(tr(label), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                percent?.let { Text(formatPercent(it), color = Muted, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(end = 12.dp)) }
+                Text(formatTokens(value), color = Ink, style = MaterialTheme.typography.bodySmall)
             }
         }
     }

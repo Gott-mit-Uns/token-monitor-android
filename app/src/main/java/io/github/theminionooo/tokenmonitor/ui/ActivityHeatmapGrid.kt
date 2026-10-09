@@ -115,7 +115,6 @@ import kotlin.math.roundToLong
 internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<HistoryPoint>, home: Boolean = false) {
     val scroll = rememberScrollState()
     val density = LocalDensity.current
-    val interfaceFont = LocalDesktopOptions.current.interfaceFont
     val palette = LocalPalette.current
     val haptic = LocalHapticFeedback.current
     val motionEnabled = LocalInteractionMotion.current
@@ -127,11 +126,11 @@ internal fun ActivityHeatmapGrid(activity: ActivityHeatmap, history: List<Histor
     val previousDay = selectable.lastOrNull { selected != null && it.date < selected.date }
     val nextDay = selectable.firstOrNull { selected != null && it.date > selected.date }
     var detailDate by rememberSaveable { mutableStateOf<String?>(null) }
-    val monthPaint = remember(density, palette, interfaceFont) {
+    val monthPaint = remember(density, palette) {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = palette.muted.copy(alpha = 0.5f).toArgb()
-            textSize = with(density) { 9.sp.toPx() }
-            typeface = if (interfaceFont == "system") Typeface.SANS_SERIF else Typeface.MONOSPACE
+            textSize = with(density) { 9.dp.toPx() }
+            typeface = Typeface.MONOSPACE
         }
     }
     LaunchedEffect(activity.weeks) { scroll.scrollTo(scroll.maxValue) }

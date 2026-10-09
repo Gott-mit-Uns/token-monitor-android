@@ -1,7 +1,7 @@
 package io.github.theminionooo.tokenmonitor.data.protocol
 
 /**
- * Wire DTOs for the v0.67.0 Hub protocol. They deliberately have defaults because
+ * Wire DTOs for the v0.68.0 Hub protocol. They deliberately have defaults because
  * the Hub may add fields or an older Hub may omit optional fields.
  */
 internal data class HubHealthDto(
@@ -76,10 +76,9 @@ internal data class HubSessionDto(
     val timedOutputTokens: Long = 0,
     val timedDurationMs: Long = 0,
     val promptCache: HubPromptCacheDto? = null,
+    val unpricedTokens: Long = 0,
     val usageSource: String = "",
     val usageCoverage: String = "",
-    val unpricedTokens: Long = 0,
-    val modelTokens: Map<String, Long> = emptyMap(),
 )
 
 internal data class HubPromptCacheDto(val observedAt: String, val ttlSeconds: Long)
@@ -99,7 +98,6 @@ internal data class HubDeviceDto(
     val history: HubHistoryDto = HubHistoryDto(),
     val trackedClients: List<String> = emptyList(),
     val periods: Map<String, HubPeriodDto> = emptyMap(),
-    val agentVersion: String = "",
 )
 
 internal data class HubLimitWindowDto(
@@ -190,13 +188,6 @@ internal data class HubSubscriptionDto(
     val startDate: String = "",
     val interval: String = "month",
     val autoRenew: Boolean = true,
-    val kind: String = "subscription",
-    val intervalCount: Int = 1,
-    val nextRenewalOverride: String = "",
-    val endDate: String = "",
-    val note: String = "",
-    val updatedAt: String = "",
-    val topUps: List<io.github.theminionooo.tokenmonitor.domain.SubscriptionTopUp> = emptyList(),
 )
 
 internal data class HubSubscriptionsDto(

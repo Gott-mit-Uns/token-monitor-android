@@ -9,8 +9,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -62,7 +60,7 @@ internal fun LazyListScope.trendItems(snapshot: HubSnapshot) {
     if (snapshot.history.monthly.isNotEmpty()) {
         item { Text(tr("MONTHLY HISTORY"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
         items(snapshot.history.monthly.takeLast(12).reversed(), key = { it.label }) { point ->
-            DesktopDetailRow(point.label, "", formatTokens(point.tokens), formatUsageCost(point.costUsd, point.unpricedTokens, compact = true), Blue)
+            DesktopDetailRow(point.label, "", formatTokens(point.tokens), formatUsageCost(point.costUsd, point.unpricedTokens), Blue)
         }
     }
 }
@@ -101,13 +99,14 @@ private fun UsageOverview(snapshot: HubSnapshot) {
     val active = history.filter { it.tokens > 0 }
     val totalTokens = history.sumOf { it.tokens }
     val totalCost = history.sumOf { it.costUsd }
+    val unpricedTokens = history.sumOf { it.unpricedTokens }
     val messages = history.sumOf { it.messages }
     val activeTime = history.sumOf { it.activeTimeMs }
     val peak = history.maxOfOrNull { it.tokens } ?: 0L
     val topModel = history.flatMap { it.perModel.entries }.groupingBy { it.key }.fold(0L) { sum, entry -> sum + entry.value.tokens }.maxByOrNull { it.value }?.key.orEmpty()
     val stats = listOf(
         "TOTAL TOKENS" to formatTokens(totalTokens),
-        (if (history.any { it.unpricedTokens > 0 }) desktopText("已知费用", "KNOWN COST") else "TOTAL COST") to formatUsageCost(totalCost, history.sumOf { it.unpricedTokens }, compact = true),
+        (if (unpricedTokens > 0) "KNOWN COST" else "TOTAL COST") to formatUsageCost(totalCost, unpricedTokens, compact = true),
         "ACTIVE DAYS" to active.size.toString(),
         "CURRENT STREAK" to currentStreak(history).toString(),
         "ACTIVE TIME" to formatActiveDuration(activeTime),
@@ -116,13 +115,15 @@ private fun UsageOverview(snapshot: HubSnapshot) {
         "MESSAGES" to formatTokens(messages),
     )
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        stats.chunked(if (androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.5f) 1 else 2).forEach { rowStats ->
+        stats.chunked(2).forEach { rowStats ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 rowStats.forEach { (label, value) -> OverviewStat(label, value, Modifier.weight(1f)) }
                 if (rowStats.size == 1) Spacer(Modifier.weight(1f))
             }
         }
-        if (history.any { it.unpricedTokens > 0 }) Text(desktopText("${formatTokens(history.sumOf { it.unpricedTokens })} Token 未定价；费用色阶只表示已知小计。", "${formatTokens(history.sumOf { it.unpricedTokens })} unpriced tokens; cost shading represents known subtotals only."), color = Orange, style = MaterialTheme.typography.bodySmall)
+        if (unpricedTokens > 0) {
+            MutedCopy("${formatTokens(unpricedTokens)} tokens have no reported price. Cost shading uses known subtotals; choose Tokens to see all usage.")
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(tr("TOKEN ACTIVITY"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             ChoiceGroup(
@@ -245,9 +246,7 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
 internal fun StackedTrendChart(trend: TrendPresentation, height: androidx.compose.ui.unit.Dp) {
     val reveal = rememberChartReveal(Triple(trend.start, trend.end, trend.series))
     val palette = LocalPalette.current
-    var selectedOffset by rememberSaveable(trend.start.toString(), trend.end.toString()) { mutableStateOf<Int?>(null) }
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-    Canvas(modifier = Modifier.fillMaxWidth().height(height).pointerInput(trend) { detectTapGestures { point -> selectedOffset = ((point.x / size.width) * trend.calendarDays).toInt().coerceIn(0, (trend.calendarDays - 1).toInt()) } }.semantics { contentDescription = trendChartDescription(trend, false) }) {
+    Canvas(modifier = Modifier.fillMaxWidth().height(height).semantics { contentDescription = trendChartDescription(trend, false) }) {
         if (trend.days.isEmpty()) return@Canvas
         val maximum = max(1f, trend.days.maxOf { it.tokens }.toFloat()) / reveal.coerceAtLeast(0.001f)
         val slot = size.width / trend.calendarDays
@@ -272,21 +271,6 @@ internal fun StackedTrendChart(trend: TrendPresentation, height: androidx.compos
             }
         }
     }
-    selectedOffset?.let { offset ->
-        val date = trend.start.plusDays(offset.toLong())
-        val day = trend.days.firstOrNull { it.date == date }
-        Text(date.toString(), color = Muted, style = MaterialTheme.typography.labelSmall)
-        if (day == null) Text(tr("该日期没有记录，不能视为零用量"), color = Muted, style = MaterialTheme.typography.bodySmall)
-        else {
-            CompleteValue(formatTokens(day.tokens) + " Token")
-            CompleteValue(formatUsageCost(day.costUsd, day.unpricedTokens, compact = true), false)
-            day.segments.forEach { (series, count) ->
-                Text("${series.name ?: tr("Unclassified")}：${formatTokens(count)}", color = Muted, style = MaterialTheme.typography.bodySmall)
-            }
-        }
-    }
-    }
-
 }
 
 @Composable
@@ -294,9 +278,7 @@ internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose
     val reveal = rememberChartReveal(trend.start to trend.end)
     val palette = LocalPalette.current
     val candles = remember(trend) { trendCandles(trend) }
-    var selectedOffset by rememberSaveable(trend.start.toString(), trend.end.toString()) { mutableStateOf<Int?>(null) }
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-    Canvas(modifier = Modifier.fillMaxWidth().height(height).alpha(reveal).pointerInput(trend) { detectTapGestures { point -> selectedOffset = ((point.x / size.width) * trend.calendarDays).toInt().coerceIn(0, (trend.calendarDays - 1).toInt()) } }.semantics { contentDescription = trendChartDescription(trend, true) }) {
+    Canvas(modifier = Modifier.fillMaxWidth().height(height).alpha(reveal).semantics { contentDescription = trendChartDescription(trend, true) }) {
         if (trend.days.isEmpty()) return@Canvas
         val maximum = max(1f, trend.days.maxOf { it.tokens }.toFloat())
         val dayWidth = size.width / trend.calendarDays
@@ -317,23 +299,6 @@ internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose
             drawRect(color, topLeft = Offset(x - bodyWidth / 2f, top), size = Size(bodyWidth, bodyHeight))
         }
     }
-    selectedOffset?.let { offset ->
-        val date = trend.start.plusDays(offset.toLong())
-        val day = trend.days.firstOrNull { it.date == date }
-        Text(date.toString(), color = Muted, style = MaterialTheme.typography.labelSmall)
-        if (day == null) Text(tr("该日期没有记录，不能视为零用量"), color = Muted, style = MaterialTheme.typography.bodySmall)
-        else {
-            CompleteValue(formatTokens(day.tokens) + " Token")
-            CompleteValue(formatUsageCost(day.costUsd, day.unpricedTokens, compact = true), false)
-            candles.firstOrNull { date >= it.first && date <= it.last }?.let { candle ->
-                Text("${candle.first} — ${candle.last}", color = Muted, style = MaterialTheme.typography.labelSmall)
-                CompleteValue(desktopText("首日 ${formatTokens(candle.open)} · 末日 ${formatTokens(candle.close)}", "First ${formatTokens(candle.open)} · Last ${formatTokens(candle.close)}"))
-                CompleteValue(desktopText("最高 ${formatTokens(candle.high)} · 最低 ${formatTokens(candle.low)}", "High ${formatTokens(candle.high)} · Low ${formatTokens(candle.low)}"))
-            }
-        }
-    }
-    }
-
 }
 
 private fun trendSeriesColor(palette: Palette, index: Int): Color =

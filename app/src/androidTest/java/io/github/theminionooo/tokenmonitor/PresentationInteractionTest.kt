@@ -23,6 +23,34 @@ import java.time.LocalDate
 class PresentationInteractionTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun unpricedCostsAndObservedSessionsRemainExplicit() {
+        val instrumentation = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+        val wire = instrumentation.context.assets.open("protocol/v0.68.0/stats.json").bufferedReader().use { it.readText() }
+        val snapshot = HubSnapshot(stats = io.github.theminionooo.tokenmonitor.data.protocol.HubProtocolParser.decodeStats(wire))
+        var destination by mutableStateOf(DashboardDestination.Tools)
+        val palette = Palette.from(InterfaceTheme.Default)
+        compose.setContent { MaterialTheme(colorScheme = tokenMonitorColors(palette), typography = tokenMonitorTypography(1)) {
+            CompositionLocalProvider(LocalPalette provides palette, LocalInteractionMotion provides false) {
+                DashboardContent(Modifier.fillMaxSize().background(palette.shell), HubRepositoryState(snapshot = snapshot), destination,
+                    DashboardPeriod.Today, {}, {}, false, ServiceStatusState(), DisplayOptions(), {})
+            }
+        } }
+        fun capture(name: String) {
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            instrumentation.targetContext.openFileOutput(name, 0).use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+        }
+        compose.onAllNodesWithText("$1.25 + 400 unpriced").assertCountEquals(2)
+        compose.onAllNodesWithText("$1.25 + 400 unpriced")[1].assertIsDisplayed()
+        capture("unpriced-tools.png")
+        compose.runOnIdle { destination = DashboardDestination.Models }
+        compose.onNodeWithText("— (400 unpriced)").assertIsDisplayed()
+        capture("unpriced-models.png")
+        compose.runOnIdle { destination = DashboardDestination.Sessions }
+        compose.onNodeWithText("Dots · observed only").assertIsDisplayed()
+        compose.onNodeWithText("— (400 unpriced)").assertIsDisplayed()
+        capture("unpriced-sessions.png")
+    }
+
     @Test fun mimoProductsRemainSeparateAndWalletIsNotAQuota() {
         val instrumentation = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
         val wire = instrumentation.context.assets.open("protocol/v0.67.0/stats.json").bufferedReader().use { it.readText() }

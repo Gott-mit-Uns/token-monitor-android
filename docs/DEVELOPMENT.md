@@ -180,4 +180,4 @@ Release signing and publishing are documented in [Releasing](RELEASING.md).
 Android permits only one active UiAutomation connection. Stop interactive CLI
 inspection before running instrumentation tests.
 
-Local presentation extensions use `fork/PresentationPreferencesCodec.kt`, retaining legacy storage keys. Run `node tools/check-maintenance.mjs` to check shared upstream algorithms and source pins; see [maintenance policy](UPSTREAM_SYNC.md).
+Local presentation uses the existing `DisplayPreferences` keys; hub.4 removes the desktop extensions and their codec. Run `node tools/check-maintenance.mjs` to check shared upstream algorithms and source pins; see [maintenance policy](UPSTREAM_SYNC.md).

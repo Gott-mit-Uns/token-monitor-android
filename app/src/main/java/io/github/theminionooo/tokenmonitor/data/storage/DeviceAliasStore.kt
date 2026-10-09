@@ -29,6 +29,6 @@ internal class DeviceAliasStore(context: Context) {
     fun displaySnapshot(hubUrl: String, snapshot: HubSnapshot): HubSnapshot =
         snapshot.copy(stats = snapshot.stats.copy(devices = displayDevices(hubUrl, snapshot.stats.devices)))
     fun displayDevices(hubUrl: String, devices: List<DeviceUsage>) = devices.map { device ->
-        device.copy(hostname = alias(hubUrl, device.id) ?: device.id.ifBlank { device.hostname.ifBlank { "device" } })
+        alias(hubUrl, device.id)?.let { device.copy(hostname = it) } ?: device
     }
 }

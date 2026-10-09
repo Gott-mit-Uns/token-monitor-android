@@ -119,11 +119,6 @@ internal fun LazyListScope.limitItems(snapshot: HubSnapshot, displayOptions: Dis
     if (snapshot.subscriptions.entries.isNotEmpty()) {
         item { Text(tr("SUBSCRIPTIONS"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
         items(snapshot.subscriptions.entries, key = { it.id }) { subscription -> SubscriptionRow(subscription) }
-        snapshot.subscriptions.entries.map { it.provider }.distinct().forEach { provider -> item {
-            providerValueMultiple(snapshot, provider, LocalDesktopOptions.current)?.let { multiple ->
-                Text(desktopText("${provider.providerLabel()} 本月 API 等价费用／月均订阅费：${String.format(java.util.Locale.US, "%.2f", multiple)} 倍（提供方合计，非单账户）", "${provider.providerLabel()} monthly API-equivalent cost / monthly subscription: ${String.format(java.util.Locale.US, "%.2f", multiple)}× (provider total, not per account)"), color = Muted, style = MaterialTheme.typography.bodySmall)
-            }
-        } }
     }
 }
 
@@ -146,20 +141,20 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
             UpstreamToolMark(account.provider, Blue, size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, softWrap = true)
+                Text(if (account.provider.isBlank()) tr("Provider") else account.provider.providerLabel(), color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 val email = account.accountEmail.takeIf { displayOptions.showAccountEmails }.orEmpty()
                 val source = account.sourceDeviceId.takeIf { displayOptions.showLimitSource && it.isNotBlank() }?.let { tr("Source ${deviceNames[it] ?: it.displayName()}") }
                 val updated = account.updatedAt.relativeAge(LocalNow.current).takeIf { it.isNotBlank() }?.let { tr("Updated $it") }
                 val meta = listOf(account.productLabel, account.accountName, account.plan, email, source, updated).filterNotNull().filter { it.isNotBlank() }.joinToString(" · ")
-                if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, softWrap = true)
+                if (meta.isNotBlank()) Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             if (account.windows.isEmpty()) {
                 Spacer(Modifier.width(10.dp))
-                Text(tr(limitStatusLabel(account.status)), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr(limitStatusLabel(account.status)), color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1)
             }
         }
         if (account.windows.isNotEmpty()) {
-            account.windows.chunked(if (androidx.compose.ui.platform.LocalDensity.current.fontScale >= 1.5f) 1 else 2).forEach { windows ->
+            account.windows.chunked(2).forEach { windows ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     windows.forEach { window ->
                         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -173,18 +168,18 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
                                     usedPercent?.let { "${formatPercent(it)} used" }
                                 })
                                     ?: window.remaining?.let { formatWindowAmount(it, window.currency) }
-                                    ?: desktopText("额度数据未知", "Limit amount unknown")
+                                    ?: "Available"
                                 Text(tr(display), color = Ink, style = MaterialTheme.typography.labelSmall)
                             }
                             val meterPercent = if (displayOptions.limitBarMetric == LimitBarMetric.Remaining) remaining else usedPercent
                             val meter = (meterPercent ?: 0.0).coerceIn(0.0, 100.0).toFloat() / 100f
                             val risk = ((usedPercent ?: 0.0).coerceIn(0.0, 100.0) / 100.0).toFloat()
                             if (window.showMeter != false && meterPercent != null) UsageBar(meter, quotaColor(risk))
-                            if (window.detail.isNotBlank()) Text(window.detail, color = Muted, style = MaterialTheme.typography.labelSmall, softWrap = true)
-                            formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall) }
+                            if (window.detail.isNotBlank()) Text(window.detail, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                            formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
                         }
                     }
-                    if (windows.size == 1 && androidx.compose.ui.platform.LocalDensity.current.fontScale < 1.5f) Spacer(Modifier.weight(1f))
+                    if (windows.size == 1) Spacer(Modifier.weight(1f))
                 }
             }
         }
@@ -203,24 +198,12 @@ internal fun LimitAccountRow(account: LimitAccount, displayOptions: DisplayOptio
 
 @Composable
 internal fun SubscriptionRow(subscription: Subscription) {
-    var expanded by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    Column(Modifier.fillMaxWidth().clickable { expanded = !expanded }) {
-        DesktopDetailRow(
-            label = subscription.provider.providerLabel(),
-            subtitle = subscription.planName.ifBlank { tr("Subscription") },
-            value = formatSubscriptionAmount(if (subscription.kind == "topup") subscription.topUps.sumOf { it.amountMinor } else subscription.amountMinor, subscription.currency),
-            detail = if (subscription.kind == "topup") desktopText("充值", "Top-ups") else "${subscription.intervalCount} × ${subscription.interval.displayName()}",
-            color = Purple, upstreamName = subscription.provider,
-        )
-        if (expanded) Column(Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            if (subscription.startDate.isNotBlank()) Text(desktopText("开始：${subscription.startDate}", "Starts: ${subscription.startDate}"), color = Muted, style = MaterialTheme.typography.bodySmall)
-            if (subscription.endDate.isNotBlank()) Text(desktopText("结束：${subscription.endDate}", "Ends: ${subscription.endDate}"), color = Muted, style = MaterialTheme.typography.bodySmall)
-            subscriptionRenewal(subscription).takeIf { it.isNotBlank() }?.let { renewal -> Text(desktopText("下次续费：$renewal", "Next renewal: $renewal"), color = Muted, style = MaterialTheme.typography.bodySmall) }
-            subscriptionDays(subscription)?.let { days -> Text(if (subscription.kind == "topup") desktopText("自首次充值起 $days 天", "$days days since first top-up") else desktopText("已订阅 $days 天", "Subscribed for $days days"), color = Muted, style = MaterialTheme.typography.bodySmall) }
-            if (subscription.kind != "topup") Text(if (subscription.autoRenew) desktopText("自动续费", "Auto-renewal enabled") else desktopText("不自动续费", "Auto-renewal disabled"), color = Muted, style = MaterialTheme.typography.bodySmall)
-            subscription.topUps.forEach { top -> Text("${top.date} · ${formatSubscriptionAmount(top.amountMinor, subscription.currency)}", color = Ink, style = MaterialTheme.typography.bodySmall) }
-            if (subscription.note.isNotBlank()) Text(subscription.note, color = Muted, style = MaterialTheme.typography.bodySmall)
-            if (subscription.updatedAt.isNotBlank()) Text(desktopText("更新：${subscription.updatedAt.shortTime()}", "Updated: ${subscription.updatedAt.shortTime()}"), color = Muted, style = MaterialTheme.typography.bodySmall)
-        }
-    }
+    DesktopDetailRow(
+        label = subscription.provider.providerLabel(),
+        subtitle = subscription.planName.ifBlank { tr("Subscription") },
+        value = formatSubscriptionAmount(subscription.amountMinor, subscription.currency),
+        detail = subscription.interval.displayName(),
+        color = Purple,
+        upstreamName = subscription.provider,
+    )
 }

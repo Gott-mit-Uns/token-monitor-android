@@ -1,365 +1,245 @@
 {
-  "updatedAt": "2026-10-06T12:00:00.000Z",
+  "updatedAt": "2026-10-08T12:00:00.000Z",
   "periods": {
     "today": {
-      "capabilities": {
-        "tokenComponents": true,
-        "throughput": true
-      },
-      "totalTokens": 220000,
-      "costUsd": 2.47,
-      "cacheReadTokens": 140000,
-      "cacheWriteTokens": 32000,
-      "outputTokens": 28000,
-      "unclassifiedTokens": 20000,
+      "totalTokens": 1000,
+      "costUsd": 1.25,
+      "unpricedTokens": 400,
       "clients": {
-        "mcode": 50000,
-        "claude": 100000,
-        "codex": 70000
+        "codex": 700,
+        "claude": 300
       },
       "clientCosts": {
-        "mcode": 0.22,
-        "claude": 0.85,
-        "codex": 1.4
+        "codex": 1.25,
+        "claude": 0
       },
       "models": {
-        "minimax-m2.5": 50000,
-        "claude-sonnet-4-5": 100000,
-        "gpt-6-sol": 70000
+        "gpt-5": 300,
+        "unpriced-model": 400,
+        "claude-sonnet-4-5": 300
       },
       "modelCosts": {
-        "minimax-m2.5": 0.22,
-        "claude-sonnet-4-5": 0.85,
-        "gpt-6-sol": 1.4
+        "gpt-5": 1.25,
+        "unpriced-model": 0,
+        "claude-sonnet-4-5": 0
       },
       "clientModels": {
-        "mcode": {
-          "minimax-m2.5": 50000
+        "codex": {
+          "gpt-5": 300,
+          "unpriced-model": 400
         },
         "claude": {
-          "claude-sonnet-4-5": 100000
-        },
+          "claude-sonnet-4-5": 300
+        }
+      },
+      "clientModelCosts": {
         "codex": {
-          "gpt-6-sol": 70000
+          "gpt-5": 1.25,
+          "unpriced-model": 0
+        },
+        "claude": {
+          "claude-sonnet-4-5": 0
         }
       },
-      "clientCacheReads": {
-        "mcode": 30000,
-        "claude": 60000,
-        "codex": 50000
-      },
-      "clientCacheWrites": {
-        "mcode": 7000,
-        "claude": 20000,
-        "codex": 5000
-      },
-      "clientOutputs": {
-        "mcode": 8000,
-        "claude": 10000,
-        "codex": 10000
-      },
-      "clientUnclassifiedTokens": {
-        "mcode": 5000,
-        "claude": 10000,
-        "codex": 5000
-      },
-      "sessions": {
-        "mcode:sample-mcode": {
-          "sessionId": "sample-mcode",
-          "client": "mcode",
-          "projectLabel": "Example Project",
-          "totalTokens": 50000,
-          "costUsd": 0.22,
-          "models": {
-            "minimax-m2.5": 50000
-          },
-          "inputTokens": 5000,
-          "cacheReadTokens": 30000,
-          "cacheWriteTokens": 7000,
-          "outputTokens": 8000,
-          "lastUsedAt": "2026-10-06T11:59:00.000Z",
-          "turnEnded": true
-        },
-        "claude:sample-claude": {
-          "sessionId": "sample-claude",
-          "client": "claude",
-          "totalTokens": 100000,
-          "costUsd": 0.85,
-          "models": {
-            "claude-sonnet-4-5": 100000
-          },
-          "inputTokens": 10000,
-          "cacheReadTokens": 60000,
-          "cacheWriteTokens": 20000,
-          "outputTokens": 10000,
-          "lastUsedAt": "2026-10-06T11:58:00.000Z",
-          "turnEnded": true
-        },
-        "codex:sample-codex": {
-          "sessionId": "sample-codex",
-          "client": "codex",
-          "totalTokens": 70000,
-          "costUsd": 1.4,
-          "models": {
-            "gpt-6-sol": 70000
-          },
-          "inputTokens": 5000,
-          "cacheReadTokens": 50000,
-          "cacheWriteTokens": 5000,
-          "outputTokens": 10000,
-          "timedOutputTokens": 8000,
-          "timedDurationMs": 100000,
-          "lastUsedAt": "2026-10-06T11:59:00.000Z",
-          "turnEnded": false,
-          "promptCache": {
-            "observedAt": "2026-10-06T11:59:00.000Z",
-            "ttlSeconds": 300
-          }
-        }
-      },
-      "unpricedTokens": 5000,
       "clientUnpricedTokens": {
-        "codex": 5000
+        "codex": 400
       },
       "modelUnpricedTokens": {
-        "gpt-6-sol": 5000
+        "unpriced-model": 400
       },
       "clientModelUnpricedTokens": {
         "codex": {
-          "gpt-6-sol": 5000
+          "unpriced-model": 400
+        }
+      },
+      "sessions": {
+        "codex:dots-example": {
+          "sessionId": "dots-example",
+          "client": "codex",
+          "totalTokens": 400,
+          "costUsd": 0,
+          "unpricedTokens": 400,
+          "models": {
+                "unpriced-model": 400
+              },
+          "usageSource": "codex-dots-local",
+          "usageCoverage": "observed-only",
+          "lastUsedAt": "2026-10-08T12:00:00.000Z"
+        }
+      },
+      "projects": {
+        "example": {
+          "projectId": "example",
+          "label": "Synthetic project",
+          "totalTokens": 1000,
+          "costUsd": 1.25,
+          "unpricedTokens": 400,
+          "sessionCount": 1,
+          "clients": {
+            "codex": 700,
+            "claude": 300
+          }
         }
       }
     },
     "month": {
-      "capabilities": {
-        "tokenComponents": true,
-        "throughput": true
-      },
-      "totalTokens": 220000,
-      "costUsd": 2.47,
-      "cacheReadTokens": 140000,
-      "cacheWriteTokens": 32000,
-      "outputTokens": 28000,
-      "unclassifiedTokens": 20000,
+      "totalTokens": 1000,
+      "costUsd": 1.25,
+      "unpricedTokens": 400,
       "clients": {
-        "mcode": 50000,
-        "claude": 100000,
-        "codex": 70000
+        "codex": 700,
+        "claude": 300
       },
       "clientCosts": {
-        "mcode": 0.22,
-        "claude": 0.85,
-        "codex": 1.4
+        "codex": 1.25,
+        "claude": 0
       },
       "models": {
-        "minimax-m2.5": 50000,
-        "claude-sonnet-4-5": 100000,
-        "gpt-6-sol": 70000
+        "gpt-5": 300,
+        "unpriced-model": 400,
+        "claude-sonnet-4-5": 300
       },
       "modelCosts": {
-        "minimax-m2.5": 0.22,
-        "claude-sonnet-4-5": 0.85,
-        "gpt-6-sol": 1.4
+        "gpt-5": 1.25,
+        "unpriced-model": 0,
+        "claude-sonnet-4-5": 0
       },
       "clientModels": {
-        "mcode": {
-          "minimax-m2.5": 50000
+        "codex": {
+          "gpt-5": 300,
+          "unpriced-model": 400
         },
         "claude": {
-          "claude-sonnet-4-5": 100000
-        },
-        "codex": {
-          "gpt-6-sol": 70000
+          "claude-sonnet-4-5": 300
         }
       },
-      "clientCacheReads": {
-        "mcode": 30000,
-        "claude": 60000,
-        "codex": 50000
+      "clientModelCosts": {
+        "codex": {
+          "gpt-5": 1.25,
+          "unpriced-model": 0
+        },
+        "claude": {
+          "claude-sonnet-4-5": 0
+        }
       },
-      "clientCacheWrites": {
-        "mcode": 7000,
-        "claude": 20000,
-        "codex": 5000
+      "clientUnpricedTokens": {
+        "codex": 400
       },
-      "clientOutputs": {
-        "mcode": 8000,
-        "claude": 10000,
-        "codex": 10000
+      "modelUnpricedTokens": {
+        "unpriced-model": 400
       },
-      "clientUnclassifiedTokens": {
-        "mcode": 5000,
-        "claude": 10000,
-        "codex": 5000
+      "clientModelUnpricedTokens": {
+        "codex": {
+          "unpriced-model": 400
+        }
       },
       "sessions": {
-        "mcode:sample-mcode": {
-          "sessionId": "sample-mcode",
-          "client": "mcode",
-          "projectLabel": "Example Project",
-          "totalTokens": 50000,
-          "costUsd": 0.22,
-          "models": {
-            "minimax-m2.5": 50000
-          },
-          "inputTokens": 5000,
-          "cacheReadTokens": 30000,
-          "cacheWriteTokens": 7000,
-          "outputTokens": 8000,
-          "lastUsedAt": "2026-10-06T11:59:00.000Z",
-          "turnEnded": true
-        },
-        "claude:sample-claude": {
-          "sessionId": "sample-claude",
-          "client": "claude",
-          "totalTokens": 100000,
-          "costUsd": 0.85,
-          "models": {
-            "claude-sonnet-4-5": 100000
-          },
-          "inputTokens": 10000,
-          "cacheReadTokens": 60000,
-          "cacheWriteTokens": 20000,
-          "outputTokens": 10000,
-          "lastUsedAt": "2026-10-06T11:58:00.000Z",
-          "turnEnded": true
-        },
-        "codex:sample-codex": {
-          "sessionId": "sample-codex",
+        "codex:dots-example": {
+          "sessionId": "dots-example",
           "client": "codex",
-          "totalTokens": 70000,
-          "costUsd": 1.4,
+          "totalTokens": 400,
+          "costUsd": 0,
+          "unpricedTokens": 400,
           "models": {
-            "gpt-6-sol": 70000
-          },
-          "inputTokens": 5000,
-          "cacheReadTokens": 50000,
-          "cacheWriteTokens": 5000,
-          "outputTokens": 10000,
-          "timedOutputTokens": 8000,
-          "timedDurationMs": 100000,
-          "lastUsedAt": "2026-10-06T11:59:00.000Z",
-          "turnEnded": false,
-          "promptCache": {
-            "observedAt": "2026-10-06T11:59:00.000Z",
-            "ttlSeconds": 300
+                "unpriced-model": 400
+              },
+          "usageSource": "codex-dots-local",
+          "usageCoverage": "observed-only",
+          "lastUsedAt": "2026-10-08T12:00:00.000Z"
+        }
+      },
+      "projects": {
+        "example": {
+          "projectId": "example",
+          "label": "Synthetic project",
+          "totalTokens": 1000,
+          "costUsd": 1.25,
+          "unpricedTokens": 400,
+          "sessionCount": 1,
+          "clients": {
+            "codex": 700,
+            "claude": 300
           }
         }
       }
     },
     "allTime": {
-      "capabilities": {
-        "tokenComponents": true,
-        "throughput": true
-      },
-      "totalTokens": 220000,
-      "costUsd": 2.47,
-      "cacheReadTokens": 140000,
-      "cacheWriteTokens": 32000,
-      "outputTokens": 28000,
-      "unclassifiedTokens": 20000,
+      "totalTokens": 1000,
+      "costUsd": 1.25,
+      "unpricedTokens": 400,
       "clients": {
-        "mcode": 50000,
-        "claude": 100000,
-        "codex": 70000
+        "codex": 700,
+        "claude": 300
       },
       "clientCosts": {
-        "mcode": 0.22,
-        "claude": 0.85,
-        "codex": 1.4
+        "codex": 1.25,
+        "claude": 0
       },
       "models": {
-        "minimax-m2.5": 50000,
-        "claude-sonnet-4-5": 100000,
-        "gpt-6-sol": 70000
+        "gpt-5": 300,
+        "unpriced-model": 400,
+        "claude-sonnet-4-5": 300
       },
       "modelCosts": {
-        "minimax-m2.5": 0.22,
-        "claude-sonnet-4-5": 0.85,
-        "gpt-6-sol": 1.4
+        "gpt-5": 1.25,
+        "unpriced-model": 0,
+        "claude-sonnet-4-5": 0
       },
       "clientModels": {
-        "mcode": {
-          "minimax-m2.5": 50000
+        "codex": {
+          "gpt-5": 300,
+          "unpriced-model": 400
         },
         "claude": {
-          "claude-sonnet-4-5": 100000
-        },
-        "codex": {
-          "gpt-6-sol": 70000
+          "claude-sonnet-4-5": 300
         }
       },
-      "clientCacheReads": {
-        "mcode": 30000,
-        "claude": 60000,
-        "codex": 50000
+      "clientModelCosts": {
+        "codex": {
+          "gpt-5": 1.25,
+          "unpriced-model": 0
+        },
+        "claude": {
+          "claude-sonnet-4-5": 0
+        }
       },
-      "clientCacheWrites": {
-        "mcode": 7000,
-        "claude": 20000,
-        "codex": 5000
+      "clientUnpricedTokens": {
+        "codex": 400
       },
-      "clientOutputs": {
-        "mcode": 8000,
-        "claude": 10000,
-        "codex": 10000
+      "modelUnpricedTokens": {
+        "unpriced-model": 400
       },
-      "clientUnclassifiedTokens": {
-        "mcode": 5000,
-        "claude": 10000,
-        "codex": 5000
+      "clientModelUnpricedTokens": {
+        "codex": {
+          "unpriced-model": 400
+        }
       },
       "sessions": {
-        "mcode:sample-mcode": {
-          "sessionId": "sample-mcode",
-          "client": "mcode",
-          "projectLabel": "Example Project",
-          "totalTokens": 50000,
-          "costUsd": 0.22,
-          "models": {
-            "minimax-m2.5": 50000
-          },
-          "inputTokens": 5000,
-          "cacheReadTokens": 30000,
-          "cacheWriteTokens": 7000,
-          "outputTokens": 8000,
-          "lastUsedAt": "2026-10-06T11:59:00.000Z",
-          "turnEnded": true
-        },
-        "claude:sample-claude": {
-          "sessionId": "sample-claude",
-          "client": "claude",
-          "totalTokens": 100000,
-          "costUsd": 0.85,
-          "models": {
-            "claude-sonnet-4-5": 100000
-          },
-          "inputTokens": 10000,
-          "cacheReadTokens": 60000,
-          "cacheWriteTokens": 20000,
-          "outputTokens": 10000,
-          "lastUsedAt": "2026-10-06T11:58:00.000Z",
-          "turnEnded": true
-        },
-        "codex:sample-codex": {
-          "sessionId": "sample-codex",
+        "codex:dots-example": {
+          "sessionId": "dots-example",
           "client": "codex",
-          "totalTokens": 70000,
-          "costUsd": 1.4,
+          "totalTokens": 400,
+          "costUsd": 0,
+          "unpricedTokens": 400,
           "models": {
-            "gpt-6-sol": 70000
-          },
-          "inputTokens": 5000,
-          "cacheReadTokens": 50000,
-          "cacheWriteTokens": 5000,
-          "outputTokens": 10000,
-          "timedOutputTokens": 8000,
-          "timedDurationMs": 100000,
-          "lastUsedAt": "2026-10-06T11:59:00.000Z",
-          "turnEnded": false,
-          "promptCache": {
-            "observedAt": "2026-10-06T11:59:00.000Z",
-            "ttlSeconds": 300
+                "unpriced-model": 400
+              },
+          "usageSource": "codex-dots-local",
+          "usageCoverage": "observed-only",
+          "lastUsedAt": "2026-10-08T12:00:00.000Z"
+        }
+      },
+      "projects": {
+        "example": {
+          "projectId": "example",
+          "label": "Synthetic project",
+          "totalTokens": 1000,
+          "costUsd": 1.25,
+          "unpricedTokens": 400,
+          "sessionCount": 1,
+          "clients": {
+            "codex": 700,
+            "claude": 300
           }
         }
       }
@@ -368,254 +248,331 @@
   "devices": [
     {
       "deviceId": "sample-desktop",
-      "hostname": "Example Desktop",
-      "platform": "win32",
-      "osName": "Windows",
-      "osVersion": "11",
-      "agentVersion": "0.67.0",
-      "agentRuntime": "electron",
-      "updatedAt": "2026-10-06T11:59:59.000Z",
-      "receivedAt": "2026-10-06T12:00:00.000Z",
-      "ageMs": 1000,
+      "hostname": "Synthetic desktop",
+      "platform": "linux",
+      "updatedAt": "2026-10-08T12:00:00.000Z",
+      "receivedAt": "2026-10-08T12:00:00.000Z",
       "stale": false,
       "trackedClients": [
         "codex",
-        "claude",
-        "mcode"
+        "claude"
       ],
-      "syncUploadIntervalMs": 30000,
       "historyAvailable": true,
+      "history": {
+        "daily": [
+          {
+            "date": "2026-10-08",
+            "tokens": 1000,
+            "cost": 1.25,
+            "unpricedTokens": 400,
+            "perClient": {
+              "codex": {
+                "tokens": 700,
+                "cost": 1.25,
+                "unpricedTokens": 400
+              },
+              "claude": {
+                "tokens": 300,
+                "cost": 0
+              }
+            },
+            "perModel": {
+              "gpt-5": {
+                "tokens": 300,
+                "cost": 1.25
+              },
+              "unpriced-model": {
+                "tokens": 400,
+                "cost": 0,
+                "unpricedTokens": 400
+              },
+              "claude-sonnet-4-5": {
+                "tokens": 300,
+                "cost": 0
+              }
+            }
+          }
+        ],
+        "monthly": [
+          {
+            "tokens": 1000,
+            "cost": 1.25,
+            "unpricedTokens": 400,
+            "perClient": {
+              "codex": {
+                "tokens": 700,
+                "cost": 1.25,
+                "unpricedTokens": 400
+              },
+              "claude": {
+                "tokens": 300,
+                "cost": 0
+              }
+            },
+            "perModel": {
+              "gpt-5": {
+                "tokens": 300,
+                "cost": 1.25
+              },
+              "unpriced-model": {
+                "tokens": 400,
+                "cost": 0,
+                "unpricedTokens": 400
+              },
+              "claude-sonnet-4-5": {
+                "tokens": 300,
+                "cost": 0
+              }
+            },
+            "month": "2026-10"
+          }
+        ],
+        "summary": {
+          "totalTokens": 1000,
+          "totalCost": 1.25,
+          "unpricedTokens": 400
+        }
+      },
       "periods": {
         "today": {
-          "capabilities": {
-            "tokenComponents": true,
-            "throughput": true
-          },
-          "totalTokens": 220000,
-          "costUsd": 2.47,
-          "cacheReadTokens": 140000,
-          "cacheWriteTokens": 32000,
-          "outputTokens": 28000,
-          "unclassifiedTokens": 20000,
+          "totalTokens": 1000,
+          "costUsd": 1.25,
+          "unpricedTokens": 400,
           "clients": {
-            "mcode": 50000,
-            "claude": 100000,
-            "codex": 70000
+            "codex": 700,
+            "claude": 300
           },
           "clientCosts": {
-            "mcode": 0.22,
-            "claude": 0.85,
-            "codex": 1.4
+            "codex": 1.25,
+            "claude": 0
           },
           "models": {
-            "minimax-m2.5": 50000,
-            "claude-sonnet-4-5": 100000,
-            "gpt-6-sol": 70000
+            "gpt-5": 300,
+            "unpriced-model": 400,
+            "claude-sonnet-4-5": 300
           },
           "modelCosts": {
-            "minimax-m2.5": 0.22,
-            "claude-sonnet-4-5": 0.85,
-            "gpt-6-sol": 1.4
+            "gpt-5": 1.25,
+            "unpriced-model": 0,
+            "claude-sonnet-4-5": 0
           },
           "clientModels": {
-            "mcode": {
-              "minimax-m2.5": 50000
+            "codex": {
+              "gpt-5": 300,
+              "unpriced-model": 400
             },
             "claude": {
-              "claude-sonnet-4-5": 100000
-            },
-            "codex": {
-              "gpt-6-sol": 70000
+              "claude-sonnet-4-5": 300
             }
           },
-          "clientCacheReads": {
-            "mcode": 30000,
-            "claude": 60000,
-            "codex": 50000
+          "clientModelCosts": {
+            "codex": {
+              "gpt-5": 1.25,
+              "unpriced-model": 0
+            },
+            "claude": {
+              "claude-sonnet-4-5": 0
+            }
           },
-          "clientCacheWrites": {
-            "mcode": 7000,
-            "claude": 20000,
-            "codex": 5000
+          "clientUnpricedTokens": {
+            "codex": 400
           },
-          "clientOutputs": {
-            "mcode": 8000,
-            "claude": 10000,
-            "codex": 10000
+          "modelUnpricedTokens": {
+            "unpriced-model": 400
           },
-          "clientUnclassifiedTokens": {
-            "mcode": 5000,
-            "claude": 10000,
-            "codex": 5000
+          "clientModelUnpricedTokens": {
+            "codex": {
+              "unpriced-model": 400
+            }
           },
           "sessions": {
-            "mcode:sample-mcode": {
-              "sessionId": "sample-mcode",
-              "client": "mcode",
-              "projectLabel": "Example Project",
-              "totalTokens": 50000,
-              "costUsd": 0.22,
-              "models": {
-                "minimax-m2.5": 50000
-              },
-              "inputTokens": 5000,
-              "cacheReadTokens": 30000,
-              "cacheWriteTokens": 7000,
-              "outputTokens": 8000,
-              "lastUsedAt": "2026-10-06T11:59:00.000Z",
-              "turnEnded": true
-            },
-            "claude:sample-claude": {
-              "sessionId": "sample-claude",
-              "client": "claude",
-              "totalTokens": 100000,
-              "costUsd": 0.85,
-              "models": {
-                "claude-sonnet-4-5": 100000
-              },
-              "inputTokens": 10000,
-              "cacheReadTokens": 60000,
-              "cacheWriteTokens": 20000,
-              "outputTokens": 10000,
-              "lastUsedAt": "2026-10-06T11:58:00.000Z",
-              "turnEnded": true
-            },
-            "codex:sample-codex": {
-              "sessionId": "sample-codex",
+            "codex:dots-example": {
+              "sessionId": "dots-example",
               "client": "codex",
-              "totalTokens": 70000,
-              "costUsd": 1.4,
+              "totalTokens": 400,
+              "costUsd": 0,
+              "unpricedTokens": 400,
               "models": {
-                "gpt-6-sol": 70000
+                "unpriced-model": 400
               },
-              "inputTokens": 5000,
-              "cacheReadTokens": 50000,
-              "cacheWriteTokens": 5000,
-              "outputTokens": 10000,
-              "timedOutputTokens": 8000,
-              "timedDurationMs": 100000,
-              "lastUsedAt": "2026-10-06T11:59:00.000Z",
-              "turnEnded": false,
-              "promptCache": {
-                "observedAt": "2026-10-06T11:59:00.000Z",
-                "ttlSeconds": 300
+              "usageSource": "codex-dots-local",
+              "usageCoverage": "observed-only",
+              "lastUsedAt": "2026-10-08T12:00:00.000Z"
+            }
+          },
+          "projects": {
+            "example": {
+              "projectId": "example",
+              "label": "Synthetic project",
+              "totalTokens": 1000,
+              "costUsd": 1.25,
+              "unpricedTokens": 400,
+              "sessionCount": 1,
+              "clients": {
+                "codex": 700,
+                "claude": 300
               }
             }
           }
         },
         "month": {
-          "capabilities": {
-            "tokenComponents": true,
-            "throughput": true
-          },
-          "totalTokens": 220000,
-          "costUsd": 2.47,
-          "cacheReadTokens": 140000,
-          "cacheWriteTokens": 32000,
-          "outputTokens": 28000,
-          "unclassifiedTokens": 20000,
+          "totalTokens": 1000,
+          "costUsd": 1.25,
+          "unpricedTokens": 400,
           "clients": {
-            "mcode": 50000,
-            "claude": 100000,
-            "codex": 70000
+            "codex": 700,
+            "claude": 300
           },
           "clientCosts": {
-            "mcode": 0.22,
-            "claude": 0.85,
-            "codex": 1.4
+            "codex": 1.25,
+            "claude": 0
           },
           "models": {
-            "minimax-m2.5": 50000,
-            "claude-sonnet-4-5": 100000,
-            "gpt-6-sol": 70000
+            "gpt-5": 300,
+            "unpriced-model": 400,
+            "claude-sonnet-4-5": 300
           },
           "modelCosts": {
-            "minimax-m2.5": 0.22,
-            "claude-sonnet-4-5": 0.85,
-            "gpt-6-sol": 1.4
+            "gpt-5": 1.25,
+            "unpriced-model": 0,
+            "claude-sonnet-4-5": 0
           },
           "clientModels": {
-            "mcode": {
-              "minimax-m2.5": 50000
+            "codex": {
+              "gpt-5": 300,
+              "unpriced-model": 400
             },
             "claude": {
-              "claude-sonnet-4-5": 100000
-            },
-            "codex": {
-              "gpt-6-sol": 70000
+              "claude-sonnet-4-5": 300
             }
           },
-          "clientCacheReads": {
-            "mcode": 30000,
-            "claude": 60000,
-            "codex": 50000
+          "clientModelCosts": {
+            "codex": {
+              "gpt-5": 1.25,
+              "unpriced-model": 0
+            },
+            "claude": {
+              "claude-sonnet-4-5": 0
+            }
           },
-          "clientCacheWrites": {
-            "mcode": 7000,
-            "claude": 20000,
-            "codex": 5000
+          "clientUnpricedTokens": {
+            "codex": 400
           },
-          "clientOutputs": {
-            "mcode": 8000,
-            "claude": 10000,
-            "codex": 10000
+          "modelUnpricedTokens": {
+            "unpriced-model": 400
           },
-          "clientUnclassifiedTokens": {
-            "mcode": 5000,
-            "claude": 10000,
-            "codex": 5000
+          "clientModelUnpricedTokens": {
+            "codex": {
+              "unpriced-model": 400
+            }
           },
           "sessions": {
-            "mcode:sample-mcode": {
-              "sessionId": "sample-mcode",
-              "client": "mcode",
-              "projectLabel": "Example Project",
-              "totalTokens": 50000,
-              "costUsd": 0.22,
-              "models": {
-                "minimax-m2.5": 50000
-              },
-              "inputTokens": 5000,
-              "cacheReadTokens": 30000,
-              "cacheWriteTokens": 7000,
-              "outputTokens": 8000,
-              "lastUsedAt": "2026-10-06T11:59:00.000Z",
-              "turnEnded": true
-            },
-            "claude:sample-claude": {
-              "sessionId": "sample-claude",
-              "client": "claude",
-              "totalTokens": 100000,
-              "costUsd": 0.85,
-              "models": {
-                "claude-sonnet-4-5": 100000
-              },
-              "inputTokens": 10000,
-              "cacheReadTokens": 60000,
-              "cacheWriteTokens": 20000,
-              "outputTokens": 10000,
-              "lastUsedAt": "2026-10-06T11:58:00.000Z",
-              "turnEnded": true
-            },
-            "codex:sample-codex": {
-              "sessionId": "sample-codex",
+            "codex:dots-example": {
+              "sessionId": "dots-example",
               "client": "codex",
-              "totalTokens": 70000,
-              "costUsd": 1.4,
+              "totalTokens": 400,
+              "costUsd": 0,
+              "unpricedTokens": 400,
               "models": {
-                "gpt-6-sol": 70000
+                "unpriced-model": 400
               },
-              "inputTokens": 5000,
-              "cacheReadTokens": 50000,
-              "cacheWriteTokens": 5000,
-              "outputTokens": 10000,
-              "timedOutputTokens": 8000,
-              "timedDurationMs": 100000,
-              "lastUsedAt": "2026-10-06T11:59:00.000Z",
-              "turnEnded": false,
-              "promptCache": {
-                "observedAt": "2026-10-06T11:59:00.000Z",
-                "ttlSeconds": 300
+              "usageSource": "codex-dots-local",
+              "usageCoverage": "observed-only",
+              "lastUsedAt": "2026-10-08T12:00:00.000Z"
+            }
+          },
+          "projects": {
+            "example": {
+              "projectId": "example",
+              "label": "Synthetic project",
+              "totalTokens": 1000,
+              "costUsd": 1.25,
+              "unpricedTokens": 400,
+              "sessionCount": 1,
+              "clients": {
+                "codex": 700,
+                "claude": 300
+              }
+            }
+          }
+        },
+        "allTime": {
+          "totalTokens": 1000,
+          "costUsd": 1.25,
+          "unpricedTokens": 400,
+          "clients": {
+            "codex": 700,
+            "claude": 300
+          },
+          "clientCosts": {
+            "codex": 1.25,
+            "claude": 0
+          },
+          "models": {
+            "gpt-5": 300,
+            "unpriced-model": 400,
+            "claude-sonnet-4-5": 300
+          },
+          "modelCosts": {
+            "gpt-5": 1.25,
+            "unpriced-model": 0,
+            "claude-sonnet-4-5": 0
+          },
+          "clientModels": {
+            "codex": {
+              "gpt-5": 300,
+              "unpriced-model": 400
+            },
+            "claude": {
+              "claude-sonnet-4-5": 300
+            }
+          },
+          "clientModelCosts": {
+            "codex": {
+              "gpt-5": 1.25,
+              "unpriced-model": 0
+            },
+            "claude": {
+              "claude-sonnet-4-5": 0
+            }
+          },
+          "clientUnpricedTokens": {
+            "codex": 400
+          },
+          "modelUnpricedTokens": {
+            "unpriced-model": 400
+          },
+          "clientModelUnpricedTokens": {
+            "codex": {
+              "unpriced-model": 400
+            }
+          },
+          "sessions": {
+            "codex:dots-example": {
+              "sessionId": "dots-example",
+              "client": "codex",
+              "totalTokens": 400,
+              "costUsd": 0,
+              "unpricedTokens": 400,
+              "models": {
+                "unpriced-model": 400
+              },
+              "usageSource": "codex-dots-local",
+              "usageCoverage": "observed-only",
+              "lastUsedAt": "2026-10-08T12:00:00.000Z"
+            }
+          },
+          "projects": {
+            "example": {
+              "projectId": "example",
+              "label": "Synthetic project",
+              "totalTokens": 1000,
+              "costUsd": 1.25,
+              "unpricedTokens": 400,
+              "sessionCount": 1,
+              "clients": {
+                "codex": 700,
+                "claude": 300
               }
             }
           }
@@ -623,122 +580,83 @@
       }
     }
   ],
-  "limits": {
-    "updatedAt": "2026-10-06T12:00:00.000Z",
-    "providers": [
-      {
-        "provider": "mimo",
-        "accountKey": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "accountName": "Example account",
-        "accountLabel": "Console",
-        "planLabel": "Pay-as-you-go",
-        "status": "ok",
-        "balance": {
-          "currency": "CNY",
-          "amount": 42,
-          "todaySpend": 0,
-          "weekSpend": 4,
-          "monthSpend": 12,
-          "allTimeSpend": 24,
-          "trackingSince": "2026-10-01"
-        },
-        "windows": [
-          {
-            "kind": "billing",
-            "label": "Balance",
-            "metric": "credits",
-            "currency": "CNY",
-            "remaining": 42,
-            "showMeter": false
-          }
-        ]
-      },
-      {
-        "provider": "mimo",
-        "accountKey": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "accountName": "Example account",
-        "accountLabel": "Desktop Membership",
-        "planLabel": "Pro",
-        "status": "ok",
-        "windows": [
-          {
-            "kind": "weekly",
-            "usedPercent": 25,
-            "remainingPercent": 75,
-            "resetsAt": "2026-10-13T12:00:00.000Z"
-          }
-        ]
-      }
-    ]
-  },
   "historyPreview": {
     "daily": [
       {
-        "date": "2026-10-06",
-        "tokens": 220000,
-        "cost": 2.47,
-        "cacheReadTokens": 140000,
-        "cacheWriteTokens": 32000,
-        "outputTokens": 28000,
-        "unclassifiedTokens": 20000,
+        "date": "2026-10-08",
+        "tokens": 1000,
+        "cost": 1.25,
+        "unpricedTokens": 400,
         "perClient": {
-          "mcode": {
-            "tokens": 50000,
-            "cost": 0.22,
-            "cacheReadTokens": 30000,
-            "cacheWriteTokens": 7000,
-            "outputTokens": 8000,
-            "unclassifiedTokens": 5000
+          "codex": {
+            "tokens": 700,
+            "cost": 1.25,
+            "unpricedTokens": 400
           },
           "claude": {
-            "tokens": 100000,
-            "cost": 0.85,
-            "cacheReadTokens": 60000,
-            "cacheWriteTokens": 20000,
-            "outputTokens": 10000,
-            "unclassifiedTokens": 10000
-          },
-          "codex": {
-            "tokens": 70000,
-            "cost": 1.4,
-            "cacheReadTokens": 50000,
-            "cacheWriteTokens": 5000,
-            "outputTokens": 10000,
-            "unclassifiedTokens": 5000
+            "tokens": 300,
+            "cost": 0
           }
         },
         "perModel": {
-          "minimax-m2.5": {
-            "tokens": 50000,
-            "cost": 0.22,
-            "cacheReadTokens": 30000,
-            "cacheWriteTokens": 7000,
-            "outputTokens": 8000,
-            "unclassifiedTokens": 5000
+          "gpt-5": {
+            "tokens": 300,
+            "cost": 1.25
+          },
+          "unpriced-model": {
+            "tokens": 400,
+            "cost": 0,
+            "unpricedTokens": 400
           },
           "claude-sonnet-4-5": {
-            "tokens": 100000,
-            "cost": 0.85,
-            "cacheReadTokens": 60000,
-            "cacheWriteTokens": 20000,
-            "outputTokens": 10000,
-            "unclassifiedTokens": 10000
-          },
-          "gpt-6-sol": {
-            "tokens": 70000,
-            "cost": 1.4,
-            "cacheReadTokens": 50000,
-            "cacheWriteTokens": 5000,
-            "outputTokens": 10000,
-            "unclassifiedTokens": 5000
+            "tokens": 300,
+            "cost": 0
           }
         }
       }
-    ]
+    ],
+    "monthly": [
+      {
+        "tokens": 1000,
+        "cost": 1.25,
+        "unpricedTokens": 400,
+        "perClient": {
+          "codex": {
+            "tokens": 700,
+            "cost": 1.25,
+            "unpricedTokens": 400
+          },
+          "claude": {
+            "tokens": 300,
+            "cost": 0
+          }
+        },
+        "perModel": {
+          "gpt-5": {
+            "tokens": 300,
+            "cost": 1.25
+          },
+          "unpriced-model": {
+            "tokens": 400,
+            "cost": 0,
+            "unpricedTokens": 400
+          },
+          "claude-sonnet-4-5": {
+            "tokens": 300,
+            "cost": 0
+          }
+        },
+        "month": "2026-10"
+      }
+    ],
+    "summary": {
+      "totalTokens": 1000,
+      "totalCost": 1.25,
+      "unpricedTokens": 400
+    }
   },
-  "staleAfterMs": 300000,
-  "syncSettingsRevisions": {
-    "modelAliases": 2,
-    "customPricing": 1
+  "limits": {
+    "updatedAt": "2026-10-08T12:00:00.000Z",
+    "providers": []
   }
 }

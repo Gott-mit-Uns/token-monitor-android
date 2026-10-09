@@ -40,4 +40,4 @@ python3 tools/check-code-provenance.py
 
 生成的 APK 位于 `app/build/outputs/apk/`。正式交付需核对签名、版本、SHA-256 和覆盖安装，并在 Release 中注明实机未验证部分。
 
-维护检查：`node --test tools/check-upstream.test.mjs` 和 `node tools/check-maintenance.mjs`。后者要求本地Git存在已审阅安卓提交；CI按固定提交读取源码作文本比较，不执行其代码。桌面Hub契约单独使用 `desktopCompatibility` 的固定提交。
+维护检查：`node --test tools/check-upstream.test.mjs` 和 `node tools/check-maintenance.mjs`。后者要求本地Git存在已审阅安卓提交和恢复基础v0.67.0-hub.2提交；CI按固定提交读取源码作文本比较，不执行其代码。桌面Hub契约单独使用 `desktopCompatibility` 的固定提交。

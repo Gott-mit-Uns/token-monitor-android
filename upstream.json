@@ -5,7 +5,7 @@
     "version": "0.68.0 r1",
     "tag": "android-v0.68.0-r1",
     "commit": "bf348606a41e468b534bf097dfd3501f186e9601",
-    "integration": "selective",
+    "integration": "delta-on-fork-0.67-hub.2",
     "originalBaseCommit": "65e6b04d35fbe9e75c72e3a1f3db2c0f3b500010"
   },
   "desktopCompatibility": {
@@ -14,5 +14,10 @@
     "tag": "v0.68.0",
     "commit": "5d2db368d8313415763860d594de00e46a663418",
     "protocolFixture": "app/src/test/resources/protocol/v0.68.0"
+  },
+  "forkBase": {
+    "tag": "v0.67.0-hub.2",
+    "commit": "1bfd0de63e2ac0ae6a559b26b5dc32d45046294e",
+    "scope": "restore pre-desktop extensions; apply Android0.68 release delta; preserve Hub name fix"
   }
 }

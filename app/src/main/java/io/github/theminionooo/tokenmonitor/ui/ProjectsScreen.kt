@@ -127,20 +127,24 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
         ).padding(vertical = 2.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        AlignedUsageIdentity(formatTokens(project.totalTokens), formatUsageCost(project.costUsd, project.unpricedTokens, compact = true)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             StatusDot(Purple, size = 10.dp)
             Spacer(Modifier.width(8.dp))
-            Column(Modifier.weight(1f)) {
-                Text(project.label.ifBlank { project.id }, color = Ink, style = MaterialTheme.typography.bodyMedium)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(project.label.ifBlank { project.id }, color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 val meta = when {
                     project.clients.isNotEmpty() -> project.clients.keys.joinToString { it.displayName() }
                     project.sessionCount > 0 -> "${project.sessionCount} sessions"
                     else -> "Project total"
                 }
-                Text(tr(meta), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(meta, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(project.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                Text(formatUsageCost(project.costUsd, project.unpricedTokens), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
         }
-        if (project.unpricedTokens > 0) Text(desktopText("${formatTokens(project.unpricedTokens)} Token 未定价，费用仅含已知小计", "${formatTokens(project.unpricedTokens)} unpriced tokens; known subtotal only"), color = Orange, style = MaterialTheme.typography.labelSmall)
         UsageBar(ratio, Purple)
         AnimatedVisibility(
             visible = expanded,
@@ -190,19 +194,38 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
         modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        AlignedUsageIdentity(formatTokens(session.totalTokens), formatUsageCost(session.costUsd, session.unpricedTokens, compact = true)) {
-            val model = session.modelNames.firstOrNull { it.isNotBlank() }
-            if (model != null) ModelMark(model, accentFor(model), size = LocalContentIconSize.current)
-            else UpstreamToolMark(session.client, accentFor(session.client), size = LocalContentIconSize.current)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            UpstreamToolMark(session.client, accentFor(session.client), size = LocalContentIconSize.current)
             Spacer(Modifier.width(8.dp))
-            Column(Modifier.weight(1f)) {
-                Text(title, color = Ink, style = MaterialTheme.typography.bodyMedium)
-                Text(tr(listOf(tr(activityLabel), meta).filter { it.isNotBlank() }.joinToString(" · ")), color = Muted, style = MaterialTheme.typography.labelSmall)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, color = Ink, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (activityLabel.isNotBlank()) {
+                        StatusDot(activityColor, size = 6.dp)
+                        Spacer(Modifier.width(5.dp))
+                    }
+                    Text(tr(listOf(tr(activityLabel), meta).filter { it.isNotBlank() }.joinToString(" · ")),
+                        color = Muted,
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
-            Icon(Icons.Outlined.KeyboardArrowDown, contentDescription = localizedText(if (expanded) "Collapse session details" else "Expand session details"), tint = Muted, modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)))
+
+            Spacer(Modifier.width(10.dp))
+            Column(horizontalAlignment = Alignment.End) {
+                Text(formatTokens(session.totalTokens), color = Ink, style = MaterialTheme.typography.bodySmall)
+                Text(formatUsageCost(session.costUsd, session.unpricedTokens), color = Muted, style = MaterialTheme.typography.labelSmall)
+            }
+            Spacer(Modifier.width(4.dp))
+            Icon(
+                imageVector = Icons.Outlined.KeyboardArrowDown,
+                contentDescription = localizedText(if (expanded) "Collapse session details" else "Expand session details"),
+                tint = Muted,
+                modifier = Modifier.size(16.dp).rotate(rememberChevronRotation(expanded)),
+            )
         }
-        if (session.usageCoverage == "observed-only") Text(desktopText("仅包含采集端观测用量，并非完整账户用量", "Collector-observed usage only; not complete account usage"), color = Orange, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
-        if (session.unpricedTokens > 0) Text(desktopText("${formatTokens(session.unpricedTokens)} Token 缺少价格", "${formatTokens(session.unpricedTokens)} tokens lack pricing"), color = Orange, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
         UsageBar(ratio, accentFor(session.client))
         sessionMetricLabels(session, now).takeIf { it.isNotBlank() }?.let {
             Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
@@ -214,10 +237,10 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 else -> Muted
             }
             Row(modifier = Modifier.fillMaxWidth().padding(start = LocalContentIconSize.current + 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(tr(if (LocalDesktopOptions.current.contextRemaining) "${reading.percentLeft}% left" else "Context ${reading.percentUsed}% used"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("Context ${reading.percentUsed}% used"), color = Muted, style = MaterialTheme.typography.labelSmall)
                 Text(tr("${reading.percentLeft}% left"), color = contextColor, style = MaterialTheme.typography.labelSmall)
             }
-            UsageBar((if (LocalDesktopOptions.current.contextRemaining) reading.percentLeft else reading.percentUsed) / 100f, contextColor)
+            UsageBar(reading.percentUsed / 100f, contextColor)
         }
         AnimatedVisibility(
             visible = expanded,
@@ -228,14 +251,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
                 if (session.projectLabel.isNotBlank()) DetailLine("Project", session.projectLabel)
                 if (session.startedAt.isNotBlank()) DetailLine("Started", session.startedAt.shortTime())
                 if (session.modelNames.isNotEmpty()) DetailLine("Models", session.modelNames.joinToString { it.displayName() })
-                session.modelTokens.forEach { (model, tokens) -> DetailLine(model, formatTokens(tokens) + if (session.totalTokens > 0) " · ${formatPercent(tokens.toDouble() / session.totalTokens * 100)}" else "") }
                 DetailLine("Session", session.id)
-                if (session.inputTokens + session.outputTokens + session.cacheReadTokens + session.cacheWriteTokens > 0) {
-                    DetailLine("输入 Token", formatTokens(session.inputTokens))
-                    DetailLine("Output", formatTokens(session.outputTokens))
-                    DetailLine("缓存读取", formatTokens(session.cacheReadTokens))
-                    DetailLine("缓存写入", formatTokens(session.cacheWriteTokens))
-                }
                 Text(tr("Prompt and reply text stays on the desktop and is not synchronized by the v${BuildConfig.UPSTREAM_VERSION} Hub."),
                     color = Muted,
                     style = MaterialTheme.typography.labelSmall,

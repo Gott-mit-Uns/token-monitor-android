@@ -24,6 +24,7 @@ jobs:
       - name: Verify Android source and local extension boundaries
         run: |
           git fetch --no-tags --depth=1 https://github.com/The-Minion-oOo/token-monitor-android.git bf348606a41e468b534bf097dfd3501f186e9601
+          git fetch --no-tags --depth=1 origin 1bfd0de63e2ac0ae6a559b26b5dc32d45046294e
           node tools/check-maintenance.mjs
           node --test tools/check-upstream.test.mjs
       - name: Test, lint, and build

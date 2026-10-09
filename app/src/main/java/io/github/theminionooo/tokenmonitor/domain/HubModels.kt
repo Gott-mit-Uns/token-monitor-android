@@ -83,10 +83,8 @@ data class SessionUsage(
     val timedOutputTokens: Long = 0,
     val timedDurationMs: Long = 0,
     val promptCache: PromptCache? = null,
-    val usageSource: String = "",
-    val usageCoverage: String = "",
     val unpricedTokens: Long = 0,
-    val modelTokens: Map<String, Long> = emptyMap(),
+    val dotsObservedOnly: Boolean = false,
 )
 
 /** A provider-specific estimate, not a guaranteed server-side expiry. */
@@ -107,7 +105,6 @@ data class DeviceUsage(
     val history: HubHistory,
     val trackedClients: List<String>,
     val periods: Map<String, UsagePeriod>,
-    val agentVersion: String = "",
 )
 
 data class LimitWindow(
@@ -193,13 +190,6 @@ data class Subscription(
     val startDate: String,
     val interval: String,
     val autoRenew: Boolean,
-    val kind: String = "subscription",
-    val intervalCount: Int = 1,
-    val nextRenewalOverride: String = "",
-    val endDate: String = "",
-    val note: String = "",
-    val updatedAt: String = "",
-    val topUps: List<SubscriptionTopUp> = emptyList(),
 )
 
 data class HubSubscriptions(
@@ -230,5 +220,3 @@ data class HubSnapshot(
     val month: UsagePeriod get() = stats.periods["month"] ?: UsagePeriod()
     val allTime: UsagePeriod get() = stats.periods["allTime"] ?: UsagePeriod()
 }
-
-data class SubscriptionTopUp(val id: String, val date: String, val amountMinor: Long)

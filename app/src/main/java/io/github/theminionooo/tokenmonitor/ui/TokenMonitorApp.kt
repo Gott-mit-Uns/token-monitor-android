@@ -131,7 +131,6 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
     val destination by viewModel.destination.collectAsState()
     val form by viewModel.connectionForm.collectAsState()
     val displayOptions by viewModel.displayOptions.collectAsState()
-    val desktopOptions by viewModel.desktopOptions.collectAsState()
     val serviceStatus by viewModel.serviceStatus.collectAsState()
     val discovery by viewModel.discovery.collectAsState()
     val uriHandler = LocalUriHandler.current
@@ -147,7 +146,7 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
         viewModel.navigateBack()
     }
 
-    val typography = remember(displayOptions.textScale, desktopOptions.interfaceFont, desktopOptions.displayFont) { tokenMonitorTypography(displayOptions.textScale.step, desktopOptions.interfaceFont, desktopOptions.displayFont) }
+    val typography = remember(displayOptions.textScale) { tokenMonitorTypography(displayOptions.textScale.step) }
     val systemDark = androidx.compose.foundation.isSystemInDarkTheme()
     val palette = remember(displayOptions.themeCode, displayOptions.followSystemTheme, systemDark) {
         Palette.from(resolveInterfaceTheme(displayOptions.themeCode, displayOptions.followSystemTheme, systemDark))
@@ -165,7 +164,6 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
     }
     MaterialTheme(colorScheme = remember(palette) { tokenMonitorColors(palette) }, typography = typography) {
         CompositionLocalProvider(
-            LocalDesktopOptions provides desktopOptions,
             LocalPalette provides palette,
             LocalColorfulToolMarks provides displayOptions.colorfulToolMarks,
             LocalToolIcons provides displayOptions.showToolIcons,
@@ -192,8 +190,6 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     state = repositoryState,
                     destination = destination,
                     form = form,
-                    desktopOptions = desktopOptions,
-                    onSaveDesktopOptions = viewModel::saveDesktopOptions,
                     displayOptions = displayOptions,
                     serviceStatus = serviceStatus,
                     onChoose = viewModel::choose,
@@ -230,9 +226,8 @@ private fun TokenMonitorLocalizedApp(viewModel: DashboardViewModel) {
                     onFindHomeHub = { withLocalNetworkAccess(true, viewModel::findHomeHub) },
                     onRepairHomeAddress = { address -> withLocalNetworkAccess(true) { viewModel.repairHomeAddress(address) } },
                     onAllowLocalNetwork = { withLocalNetworkAccess(true, viewModel::onResume) },
-                    originalDeviceNames = viewModel.originalDeviceNames,
+                    originalDeviceNames = emptyMap(),
                     onRenameDevice = null,
-                    rawExportSnapshot = viewModel.rawExportSnapshot,
                 )
             }
         }
@@ -274,9 +269,6 @@ internal fun DashboardScaffold(
     onIconScaleChange: (IconScale) -> Unit = {},
     onHomeChineseUnitsChange: (Boolean) -> Unit = {},
     onShowSessionTitlesChange: (Boolean) -> Unit = {},
-    desktopOptions: io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions = io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions(),
-    onSaveDesktopOptions: (io.github.theminionooo.tokenmonitor.data.storage.DesktopOptions) -> Boolean = { false },
-    rawExportSnapshot: io.github.theminionooo.tokenmonitor.domain.HubSnapshot? = null,
     originalDeviceNames: Map<String, String> = emptyMap(),
     onRenameDevice: ((String, String) -> String?)? = null,
     onRepairHomeAddress: (String) -> Unit = {},
@@ -337,9 +329,6 @@ internal fun DashboardScaffold(
                 modifier = Modifier.padding(padding),
                 state = state,
                 form = form,
-                desktopOptions = desktopOptions,
-                rawExportSnapshot = rawExportSnapshot,
-                onSaveDesktopOptions = onSaveDesktopOptions,
                 displayOptions = displayOptions,
                 onSaveConnection = onSaveConnection,
                 onColorfulToolMarksChange = onColorfulToolMarksChange,
@@ -374,7 +363,6 @@ internal fun DashboardScaffold(
                 modifier = Modifier.padding(padding),
                 state = state,
                 destination = visibleDestination,
-                desktopOptions = desktopOptions,
                 period = period,
                 onChoose = chooseDestination,
                 onRefresh = onRefresh,

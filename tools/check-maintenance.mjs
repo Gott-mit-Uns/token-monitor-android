@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,9 +15,16 @@ assert.equal(properties.tokenMonitorUpstreamTag,metadata.desktopCompatibility.ta
 assert.equal(properties.tokenMonitorUpstreamCommit,metadata.desktopCompatibility.commit);
 assert.equal(properties.tokenMonitorUpstreamVersion,metadata.desktopCompatibility.version);
 const prefix = 'app/src/main/java/io/github/theminionooo/tokenmonitor/';
-const shared = ['domain/UsageHistory.kt','ui/TrendPresentation.kt','widget/WidgetDeckData.kt'];
+const shared = ['data/protocol/HubDtos.kt','data/protocol/HubProtocolParser.kt','domain/HubModels.kt','domain/UsageHistory.kt','ui/TrendPresentation.kt','widget/WidgetDeckData.kt'];
 function upstream(file) { return execFileSync('git',['show',`${metadata.androidUpstream.commit}:${prefix}${file}`],{cwd:root,encoding:'utf8'}); }
 for (const file of shared) assert.equal(readFileSync(resolve(root,prefix+file),'utf8'),upstream(file),`Shared upstream core drift: ${file}; review the change rather than cloning a second implementation`);
-function period(source) { const start=source.indexOf('    private fun HubPeriodDto.toDomain()'),end=source.indexOf('    private fun HubProjectDto.toDomain()'); assert.ok(start>=0 && end>start,'Period conversion boundary must be explicitly reviewed'); return source.slice(start,end); }
-assert.equal(period(readFileSync(resolve(root,prefix+'data/protocol/HubProtocolParser.kt'),'utf8')),period(upstream('data/protocol/HubProtocolParser.kt')),'Period conversion must use the reviewed Android upstream implementation');
-console.log('Separate source/compatibility pins match; 3 shared files and period conversion match reviewed Android upstream.');
+const removed = ['data/storage/DesktopPreferences.kt','fork/PresentationPreferencesCodec.kt','ui/DesktopSettingsPanel.kt','ui/DesktopPresentation.kt','ui/LiveTokenRate.kt','ui/DragOrderHandle.kt','ui/SubscriptionPresentation.kt','ui/UsageExport.kt'];
+for (const file of removed) assert.equal(existsSync(resolve(root,prefix+file)),false,`Withdrawn desktop extension returned: ${file}`);
+const base=metadata.forkBase;
+assert.equal(base.tag,'v0.67.0-hub.2');
+assert.match(base.commit,/^[a-f0-9]{40}$/);
+for (const file of ['data/storage/DisplayPreferences.kt','data/storage/SecureConnectionStore.kt','data/storage/SnapshotCache.kt','data/network/HubAddressValidator.kt']) {
+    const original=execFileSync('git',['show',`${base.commit}:${prefix}${file}`],{cwd:root,encoding:'utf8'});
+    assert.equal(readFileSync(resolve(root,prefix+file),'utf8'),original,`Preserved settings/security/cache/address core drift: ${file}`);
+}
+console.log('6 shared core files match Android upstream; withdrawn desktop extensions are absent; base display settings, security, cache and Hub addresses preserved.');

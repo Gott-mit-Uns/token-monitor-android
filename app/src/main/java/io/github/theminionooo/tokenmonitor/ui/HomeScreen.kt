@@ -118,16 +118,16 @@ internal fun LazyListScope.homeItems(
     displayOptions.visibleHomeModules.forEach { module ->
         when (module) {
             "Limits" -> item { DesktopModule("LIMITS", DashboardDestination.Limits, onChoose) { HomeLimits(snapshot.stats.limits.providers, displayOptions) } }
-            "Tools" -> item { DesktopModule("TOOLS", DashboardDestination.Tools, onChoose) { HomeBreakdown(usage.clients, usage.clientCosts, displayOptions.rankingMetric, denominator = usage.totalTokens) } }
+            "Tools" -> item { DesktopModule("TOOLS", DashboardDestination.Tools, onChoose) { HomeBreakdown(usage.clients, usage.clientCosts, displayOptions.rankingMetric, unpriced = usage.clientUnpricedTokens) } }
             "Devices" -> item { DesktopModule("DEVICES", DashboardDestination.Devices, onChoose) { HomeDevices(snapshot.stats.devices, period = period, aggregateUsage = usage) } }
-            "Models" -> item { DesktopModule("MODELS", DashboardDestination.Models, onChoose) { HomeBreakdown(usage.models, usage.modelCosts, displayOptions.rankingMetric, modelRows = true, denominator = usage.totalTokens) } }
+            "Models" -> item { DesktopModule("MODELS", DashboardDestination.Models, onChoose) { HomeBreakdown(usage.models, usage.modelCosts, displayOptions.rankingMetric, modelRows = true, unpriced = usage.modelUnpricedTokens) } }
             "Sessions" -> item { HomeSessionsModule(snapshot, onChoose) }
             "Activity" -> item {
                 DesktopModule(
                     title = "ACTIVITY",
                     destination = DashboardDestination.Trends,
                     onChoose = onChoose,
-                    meta = "${if (LocalDesktopOptions.current.homeActiveDays == "all") history.count { it.tokens > 0 } else activity.activeDays} active days",
+                    meta = "${activity.activeDays} active day${if (activity.activeDays == 1) "" else "s"}",
                 ) {
                     HomeActivity(activity, history)
                 }
@@ -165,19 +165,15 @@ internal fun DesktopModule(
 
 @Composable
 internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOptions) {
-    val options = LocalDesktopOptions.current
     val visible = prioritizeAvailableLimits(accounts
-        .filter { account -> quotaAccountKey(account) !in options.hiddenAccounts && account.windows.any { quotaWindowKey(account, it) !in options.hiddenQuotaWindows && (it.remainingPercent != null || it.usedPercent != null || it.remaining != null) } })
-    val ordered = visible.sortedWith(compareBy<LimitAccount>(
-        { if (quotaAccountKey(it) in options.pinnedAccounts) 0 else 1 },
-        { options.accountOrder.indexOf(quotaAccountKey(it)).takeIf { index -> index >= 0 } ?: Int.MAX_VALUE },
-    ))
-    if (ordered.isEmpty()) {
+        .filter { account -> account.windows.any { it.remainingPercent != null || it.usedPercent != null || it.remaining != null } })
+        .take(3)
+    if (visible.isEmpty()) {
         MutedCopy("No account limits available")
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
-        ordered.forEach { account ->
+        visible.forEach { account ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 UpstreamToolMark(account.provider, Blue, size = HomeContentIconSize)
                 Spacer(Modifier.width(8.dp))
@@ -191,14 +187,11 @@ internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOpt
             if (account.windows.isEmpty()) {
                 MutedCopy("No quota windows reported", modifier = Modifier.padding(start = HomeContentIndent))
             } else {
-                Column(modifier = Modifier.padding(start = HomeContentIndent), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    val columns = if (LocalDensity.current.fontScale < 1.5f && androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp >= 360) 2 else 1
-                    account.windows.filter { quotaWindowKey(account, it) !in options.hiddenQuotaWindows }.chunked(columns).forEach { windows ->
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        windows.forEach { window ->
+                Row(modifier = Modifier.padding(start = HomeContentIndent), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    account.windows.take(2).forEach { window ->
                         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(windowTitle(window, account.windows), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f))
+                                Text(windowTitle(window, account.windows), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 val remainingPercent = window.remainingPercent ?: window.usedPercent?.let { 100.0 - it.coerceIn(0.0, 100.0) }
                                 val amount = remainingPercent?.let { "${formatPercent(it)} left" }
                                     ?: window.remaining?.let { formatWindowAmount(it, window.currency) }
@@ -212,9 +205,7 @@ internal fun HomeLimits(accounts: List<LimitAccount>, displayOptions: DisplayOpt
                                 }
                                 Text(tr(amount), color = if (tone != Success) tone else Ink, style = MaterialTheme.typography.labelSmall)
                             }
-                            formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall) }
-                        }
-                    }
+                            formatBoundary(window.resetsAt, window.boundaryKind, LocalNow.current).takeIf { it.isNotBlank() }?.let { Text(it, color = Muted, style = MaterialTheme.typography.labelSmall, maxLines = 1) }
                         }
                     }
                 }
@@ -229,20 +220,19 @@ internal fun HomeBreakdown(
     costs: Map<String, Double>,
     rankingMetric: RankingMetric,
     modelRows: Boolean = false,
-    denominator: Long = tokens.values.sum(),
+    unpriced: Map<String, Long> = emptyMap(),
 ) {
     if (tokens.isEmpty()) {
         MutedCopy("No activity for this period")
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        val total = denominator.coerceAtLeast(1L)
-        rankedUsageNames(tokens, costs, rankingMetric == RankingMetric.Cost, modelRows, LocalDesktopOptions.current).take(5).forEach { name ->
-            val count = tokens.getValue(name)
+        val total = tokens.values.sum().coerceAtLeast(1L)
+        tokens.entries.sortedByDescending { (name, count) -> if (rankingMetric == RankingMetric.Cost) costs[name] ?: 0.0 else count.toDouble() }.take(5).forEach { (name, count) ->
             HomeListRow(
                 name = name,
                 primary = "${formatHomeTokens(count, LocalHomeChineseUnits.current)}  ${formatPercent(count.toDouble() / total * 100.0)}",
-                secondary = costs[name]?.let(::formatMoney).orEmpty(),
+                secondary = if (name in costs || (unpriced[name] ?: 0) > 0) formatUsageCost(costs[name] ?: 0.0, unpriced[name] ?: 0, compact = true) else "",
                 upstreamName = name,
                 modelRow = modelRows,
             )

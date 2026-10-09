@@ -249,7 +249,6 @@ internal fun DeviceUsageRow(
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 if (compactDeviceSystem(operatingSystem) != operatingSystem) Text(operatingSystem, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
-                if (device.agentVersion.isNotBlank()) Text(desktopText("采集端版本：${device.agentVersion}", "Agent version: ${device.agentVersion}"), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
                 val total = usage.totalTokens.coerceAtLeast(1L)
                 usage.clients.entries.sortedByDescending { it.value }.forEach { (client, tokens) ->
                     Row(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalAlignment = Alignment.CenterVertically) {
