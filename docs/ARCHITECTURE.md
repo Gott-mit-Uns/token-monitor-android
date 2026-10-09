@@ -201,7 +201,7 @@ deterministically and unit-tested. The Compose layer only draws the cells.
 
 The dashboard and service acquire a main-thread reference-counted repository. A
 visible dashboard uses the Hub's SSE stream for immediate updates. Widget Live uses
-one authenticated `/api/stats` read every 30 seconds after its initial snapshot,
+one authenticated `/api/stats` read every 60 seconds after its initial snapshot,
 avoiding a full stream frame for every desktop ingest. Opening or closing the
 dashboard switches delivery modes without running both. Turning Live off releases
 the widget lease; changing pairing or disconnecting first cancels the session.

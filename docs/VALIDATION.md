@@ -1,5 +1,19 @@
 # Validation
 
+## Fork v0.68.0-hub.4 — 2026-10-09
+
+The fork restores its v0.67.0-hub.2 functional baseline and integrates Android
+upstream 0.68.0 r1. Current evidence is in the [hub.4 release notes](releases/v0.68.0-hub.4.md)
+and its attached validation.json: 187 JVM tests, lint and maintenance checks,
+43 unique related instrumentation tests on each of API 31 and API 36, plus
+signed hub.3-to-hub.4 overwrite installation on API 31. API 36 needed Compose
+test-root synchronization and successful retries. Physical phones, launchers,
+the user's authenticated NAS Hub, real credential migration and Android 17
+remain unverified.
+
+The following sections are retained upstream historical evidence. Their phone,
+launcher and network results do not establish validation of this fork release.
+
 ## v0.65.0 r1 release — 2026-10-02
 
 Desktop v0.65.0 is pinned to released tag commit
