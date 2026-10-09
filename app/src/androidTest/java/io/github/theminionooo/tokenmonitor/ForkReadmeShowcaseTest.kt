@@ -57,7 +57,7 @@ class ForkReadmeShowcaseTest {
             models = models, modelCosts = mapOf("gpt-6.1-sol" to 12.6, "claude-sonnet-4-6" to 4.65, "deepseek-v4-flash" to 1.5),
             clientModels = mapOf("codex" to mapOf("gpt-6.1-sol" to 25200000L), "hermes" to mapOf("claude-sonnet-4-6" to 12400000L), "dsh" to mapOf("deepseek-v4-flash" to 7980000L)))
         val seed = base.stats.devices.first()
-        val devices = listOf(Triple("Mac Mini", "darwin", 19200000L), Triple("NAS DXP4800", "linux", 11900000L), Triple("Windows Mini", "win32", 8500000L), Triple("NAS DH4300plus", "linux", 5980000L)).mapIndexed { i, (name, platform, tokens) ->
+        val devices = listOf(Triple("NAS DH4300plus", "linux", 0L), Triple("Mac Mini", "darwin", 19200000L), Triple("NAS DXP4800", "linux", 11900000L), Triple("Windows Mini", "win32", 14480000L)).mapIndexed { i, (name, platform, tokens) ->
             seed.copy(id = name, hostname = "original-host-$i", platform = platform, osName = when (platform) { "darwin" -> "macOS"; "win32" -> "Windows"; else -> "UGOS" }, stale = false,
                 periods = mapOf("today" to usage.copy(totalTokens = tokens, costUsd = 18.75 * tokens / usage.totalTokens)))
         }
@@ -135,7 +135,11 @@ class ForkReadmeShowcaseTest {
         } else {
             compose.onNodeWithText("DeepSeek Harness").assertIsDisplayed()
             compose.onNodeWithText("Hermes Agent").assertIsDisplayed()
-            compose.onNodeWithText("NAS DH4300plus").assertIsDisplayed()
+            compose.onNodeWithText("NAS DH4300plus").assertDoesNotExist()
+            // The clickable module merges descendants; compare the actual text nodes.
+            val windows = compose.onNodeWithText("Windows Mini", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            val nas = compose.onNodeWithText("NAS DXP4800", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            check(windows.top < nas.top)
             capture(if (light) "light" else "dark")
         }
     }

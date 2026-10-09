@@ -1,5 +1,21 @@
 # Validation
 
+## Fork v0.68.0-hub.5 — 2026-10-09
+
+This UI-only revision replaces the inset bitmap launcher icon with full-bleed
+adaptive layers, ranks Home devices by selected-period tokens and hides zero
+usage there, and compacts the full Devices list into two summary rows at normal
+font size. 192 JVM tests passed with no skips. API 31 and API 36 each passed the
+35 related tests, then 15 final layout/icon/preference checks, including actual
+16/20/24dp measurements at font scale 1.0/1.5/2.0. Source-boundary checks still
+match the reviewed upstream core and baseline storage. The hub.4-to-hub.5 signed
+overwrite and cold launch passed on API 31. Exact final screenshot results and
+limits are attached to the [hub.5 release](releases/v0.68.0-hub.5.md).
+
+Launcher rendering used Android's native AOSP mask, not a HyperOS3 launcher.
+Xiaomi phone/theme behavior, authenticated personal NAS Hub and Android 17
+remain unverified. No Hub, collector, credential or polling changes were made.
+
 ## Fork v0.68.0-hub.4 — 2026-10-09
 
 The fork restores its v0.67.0-hub.2 functional baseline and integrates Android

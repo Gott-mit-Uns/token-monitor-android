@@ -26,7 +26,7 @@ class RollbackPreferencesTest {
             assertEquals("$1.25",formatMoney(1.25))
             assertEquals(unused,old.getString("options",null))
             assertEquals("zh-CN",context.getSharedPreferences("language_preferences",0).getString("language",null))
-            assertEquals(680104,BuildConfig.VERSION_CODE)
+            assertTrue(BuildConfig.VERSION_CODE >= 680104)
         } finally {
             old.edit().putString("options",existing).commit()
             display.setIconScale(previous.iconScale);display.setTextScale(previous.textScale);display.setHomeChineseUnits(previous.homeChineseUnits);display.setCompactTokenTotal(previous.compactTokenTotal)

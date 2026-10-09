@@ -80,6 +80,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -131,6 +132,7 @@ internal fun LazyListScope.deviceItems(devices: List<DeviceUsage>, period: Dashb
                 onRename = onRename,
                 maximumTokenText = formatTokens(values.values.maxOrNull() ?: 0),
                 maximumCostText = formatMoney(devices.maxOfOrNull { period.usage(it).costUsd } ?: 0.0),
+                syncPeers = devices,
             )
         }
     }
@@ -147,6 +149,7 @@ internal fun DeviceUsageRow(
     onRename: ((String, String) -> String?)? = null,
     maximumTokenText: String = "999,999,999",
     maximumCostText: String = "",
+    syncPeers: List<DeviceUsage> = listOf(device),
 ) {
     var renaming by remember { mutableStateOf(false) }
     var aliasInput by remember { mutableStateOf("") }
@@ -168,14 +171,12 @@ internal fun DeviceUsageRow(
             } },
         )
     }
-    val expandable = usage.clients.isNotEmpty() || usage.models.isNotEmpty() || device.trackedClients.isNotEmpty() || compactDeviceSystem(operatingSystem) != operatingSystem
+    // Full identity and OS metadata remain available when a compact label is ellipsized.
     var expanded by rememberSaveable(device.id) { mutableStateOf(false) }
     val motionEnabled = LocalInteractionMotion.current
     val tone = if (device.stale) Muted else Blue
     Column(
-        modifier = Modifier.fillMaxWidth().then(
-            if (expandable) Modifier.clickable { expanded = !expanded } else Modifier,
-        ).padding(vertical = 4.dp),
+        modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         val name = device.hostname.ifBlank { device.id }
@@ -204,39 +205,58 @@ internal fun DeviceUsageRow(
                 Text(value, color = color, style = style.copy(fontSize = style.fontSize * factor), maxLines = 1)
             }
         }
-        BoxWithConstraints(Modifier.fillMaxWidth()) {
-            val stacked = density.fontScale >= 1.5f || maxWidth < 320.dp ||
-                maxWidth < indent + statsWidth + 48.dp + 108.dp
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    DevicePlatformMark(device.platform, if (device.stale) Muted else Ink, size = LocalContentIconSize.current)
-                    Spacer(Modifier.width(8.dp))
-                    Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
-                        Text(name, color = Ink, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+        val now = LocalNow.current
+        val age = device.updatedAt.relativeAge(now)
+        val status = tr(if (device.stale) "Data stale" else if (age.isBlank()) "Update time unknown" else "Synced")
+        val time = age.ifBlank { "—" }
+        val labelStyle = MaterialTheme.typography.labelSmall
+        val peerLabels = syncPeers.flatMap { peer ->
+            val peerAge = peer.updatedAt.relativeAge(now)
+            listOf(localizedText(if (peer.stale) "Data stale" else if (peerAge.isBlank()) "Update time unknown" else "Synced"), peerAge.ifBlank { "—" })
+        }
+        val metadataWidth = with(density) { peerLabels.maxOfOrNull { measurer.measure(it, labelStyle).size.width }?.toDp() ?: 0.dp }
+        Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("device-summary-${device.id}"), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(LocalContentIconSize.current).testTag("device-icon-${device.id}")) {
+                DevicePlatformMark(device.platform, if (device.stale) Muted else Ink, size = LocalContentIconSize.current)
+            }
+            Spacer(Modifier.width(8.dp))
+            BoxWithConstraints(Modifier.weight(1f)) {
+                val numberWidth = statsWidth.coerceAtMost(maxWidth * 0.46f)
+                val nameWidth = maxWidth - numberWidth - metadataWidth - 16.dp - if (onRename != null) 48.dp else 0.dp
+                val inlineMetadata = density.fontScale < 1.5f && nameWidth >= 88.dp
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(name, color = Ink, style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f).testTag("device-name-${device.id}"),
+                            maxLines = if (inlineMetadata) 1 else Int.MAX_VALUE, overflow = TextOverflow.Ellipsis)
                         renameButton()
-                    }
-                    if (!stacked) Text(tokenText, color = Ink, style = numberStyle,
-                        modifier = Modifier.width(statsWidth), textAlign = androidx.compose.ui.text.style.TextAlign.End, maxLines = 1)
-                }
-                Row(Modifier.padding(start = indent), verticalAlignment = Alignment.Top) {
-                    Text(compactDeviceSystem(operatingSystem), color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.weight(1f))
-                    if (!stacked) {
                         Spacer(Modifier.width(8.dp))
-                        Text(costText, color = Muted, style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.width(statsWidth), textAlign = androidx.compose.ui.text.style.TextAlign.End, maxLines = 1)
+                        if (inlineMetadata) {
+                            Text(status, color = Muted, style = labelStyle,
+                                modifier = Modifier.width(metadataWidth).testTag("device-status-${device.id}"),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.End, maxLines = 1)
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        completeNumber(tokenText, numberStyle, Ink, Modifier.width(numberWidth).testTag("device-tokens-${device.id}"))
                     }
-                }
-                val age = device.updatedAt.relativeAge(LocalNow.current)
-                val syncText = if (device.stale) {
-                    "${tr("Data stale")} · ${if (age.isBlank()) tr("Update time unknown") else "${tr("Last updated")} ${tr(age)}"}"
-                } else if (age.isBlank()) tr("Update time unknown") else "${tr("Synced")} · ${tr(age)}"
-                Text(syncText, color = if (device.stale) tone else Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
-                if (device.hostname != originalName) Text(tr("Hub original name: ${originalName.ifBlank { device.id }}"), color = Muted,
-                    style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
-                if (stacked) {
-                    Column(Modifier.fillMaxWidth().padding(start = indent), horizontalAlignment = Alignment.End) {
-                        completeNumber(tokenText, numberStyle, Ink, Modifier.fillMaxWidth())
-                        completeNumber(costText, MaterialTheme.typography.labelSmall, Muted, Modifier.fillMaxWidth())
+                    Row(verticalAlignment = Alignment.Top) {
+                        if (inlineMetadata) {
+                            Text(compactDeviceSystem(operatingSystem), color = Muted, style = labelStyle,
+                                modifier = Modifier.weight(1f).testTag("device-system-${device.id}"), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Spacer(Modifier.width(8.dp))
+                            Text(time, color = Muted, style = labelStyle,
+                                modifier = Modifier.width(metadataWidth).testTag("device-age-${device.id}"),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.End, maxLines = 1)
+                        } else {
+                            // Keep the same two logical rows; large text can wrap metadata naturally.
+                            Column(Modifier.weight(1f)) {
+                                Text(compactDeviceSystem(operatingSystem), color = Muted, style = labelStyle, modifier = Modifier.testTag("device-system-${device.id}"))
+                                Text(if (age.isBlank()) status else "$status · $time", color = Muted, style = labelStyle,
+                                    modifier = Modifier.testTag("device-status-${device.id}"))
+                            }
+                        }
+                        Spacer(Modifier.width(8.dp))
+                        completeNumber(costText, labelStyle, Muted, Modifier.width(numberWidth).testTag("device-cost-${device.id}"))
                     }
                 }
             }
@@ -248,7 +268,10 @@ internal fun DeviceUsageRow(
             exit = fadeOut(tween(if (motionEnabled) 100 else 0)) + shrinkVertically(tween(if (motionEnabled) 180 else 0, easing = DesktopEaseOut)),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                if (compactDeviceSystem(operatingSystem) != operatingSystem) Text(operatingSystem, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp))
+                Text("${tr("Device name")}: $name", color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
+                Text(operatingSystem, color = Muted, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
+                if (device.hostname != originalName) Text(tr("Hub original name: ${originalName.ifBlank { device.id }}"), color = Muted,
+                    style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = indent))
                 val total = usage.totalTokens.coerceAtLeast(1L)
                 usage.clients.entries.sortedByDescending { it.value }.forEach { (client, tokens) ->
                     Row(modifier = Modifier.padding(start = LocalContentIconSize.current + 8.dp), verticalAlignment = Alignment.CenterVertically) {

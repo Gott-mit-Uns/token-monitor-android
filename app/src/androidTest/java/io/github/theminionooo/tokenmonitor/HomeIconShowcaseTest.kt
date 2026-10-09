@@ -71,7 +71,7 @@ class HomeIconShowcaseTest {
                         DesktopModule("LIMITS", DashboardDestination.Limits, {}) { HomeLimits(snapshot.stats.limits.providers, DisplayOptions()) }
                         DesktopModule("TOOLS", DashboardDestination.Tools, {}) { HomeBreakdown(usage.clients, usage.clientCosts, RankingMetric.Tokens) }
                         DesktopModule("MODELS", DashboardDestination.Models, {}) { HomeBreakdown(usage.models, usage.modelCosts, RankingMetric.Tokens, modelRows = true) }
-                        DesktopModule("DEVICES", DashboardDestination.Devices, {}) { HomeDevices(devices, DashboardPeriod.Today, usage) }
+                        DesktopModule("DEVICES", DashboardDestination.Devices, {}) { HomeDevices(devices, DashboardPeriod.Today) }
                         HomeSessionsModule(snapshot, {})
                     }
                 }
@@ -86,7 +86,7 @@ class HomeIconShowcaseTest {
         save("top")
         compose.onNodeWithText("家中 NAS DXP4800").performScrollTo().assertIsDisplayed()
         val before = InstrumentationRegistry.getArguments().getString("iconBefore") == "true"
-        if (!before) compose.onNodeWithText("备份 NAS DH4300plus").performScrollTo().assertIsDisplayed()
+        if (!before) compose.onNodeWithText("备份 NAS DH4300plus").assertDoesNotExist()
         save("devices")
         compose.onNodeWithText("检查 NAS 的媒体服务").performScrollTo().assertIsDisplayed()
         save("sessions")

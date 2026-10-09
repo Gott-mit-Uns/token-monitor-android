@@ -119,7 +119,7 @@ internal fun LazyListScope.homeItems(
         when (module) {
             "Limits" -> item { DesktopModule("LIMITS", DashboardDestination.Limits, onChoose) { HomeLimits(snapshot.stats.limits.providers, displayOptions) } }
             "Tools" -> item { DesktopModule("TOOLS", DashboardDestination.Tools, onChoose) { HomeBreakdown(usage.clients, usage.clientCosts, displayOptions.rankingMetric, unpriced = usage.clientUnpricedTokens) } }
-            "Devices" -> item { DesktopModule("DEVICES", DashboardDestination.Devices, onChoose) { HomeDevices(snapshot.stats.devices, period = period, aggregateUsage = usage) } }
+            "Devices" -> item { DesktopModule("DEVICES", DashboardDestination.Devices, onChoose) { HomeDevices(snapshot.stats.devices, period = period) } }
             "Models" -> item { DesktopModule("MODELS", DashboardDestination.Models, onChoose) { HomeBreakdown(usage.models, usage.modelCosts, displayOptions.rankingMetric, modelRows = true, unpriced = usage.modelUnpricedTokens) } }
             "Sessions" -> item { HomeSessionsModule(snapshot, onChoose) }
             "Activity" -> item {
@@ -241,19 +241,21 @@ internal fun HomeBreakdown(
 }
 
 @Composable
-internal fun HomeDevices(devices: List<DeviceUsage>, period: DashboardPeriod, aggregateUsage: UsagePeriod) {
+internal fun HomeDevices(devices: List<DeviceUsage>, period: DashboardPeriod) {
     if (devices.isEmpty()) {
         MutedCopy("No devices have checked in")
         return
     }
+    val active = activeHomeDevices(devices, period)
+    if (active.isEmpty()) {
+        MutedCopy("No activity for this period")
+        return
+    }
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        devices.forEach { device ->
-            val deviceUsage = period.usage(device)
-            val deviceTokens = deviceUsage.totalTokens.takeIf { it > 0 }
-                ?: if (devices.size == 1) aggregateUsage.totalTokens else 0L
+        active.forEach { (device, deviceUsage) ->
             HomeListRow(
                 name = device.hostname.ifBlank { device.id },
-                primary = if (device.stale) localizedText("Stale") else formatHomeTokens(deviceTokens, LocalHomeChineseUnits.current),
+                primary = formatHomeTokens(deviceUsage.totalTokens, LocalHomeChineseUnits.current),
                 secondary = listOf(device.osName, localizedText(if (device.stale) "Stale" else "Synced")).filter { it.isNotBlank() }.joinToString(" · "),
                 color = if (device.stale) Muted else Ink,
                 devicePlatform = device.platform,

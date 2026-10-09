@@ -89,10 +89,11 @@ class DeviceLayoutShowcaseTest {
         val deepseek = codex.copy(provider = "deepseek", plan = "", windows = listOf(
             io.github.theminionooo.tokenmonitor.domain.LimitWindow("balance", "Balance", null, null, 28.37, "", "balance", "CNY", "", false)))
         val raw = base.copy(stats = base.stats.copy(devices = devices, periods = mapOf("today" to usage.copy(totalTokens = 92137469L, costUsd = 14.57)), limits = base.stats.limits.copy(providers = listOf(codex, deepseek))))
-        val originalNames = raw.stats.devices.associate { it.id to if (it.platform == "linux") "nas-original-${it.id}" else it.hostname }
         val state = HubRepositoryState(hasConnection = true, snapshot = io.github.theminionooo.tokenmonitor.fork.hubNamedSnapshot(raw), streamActive = true)
         var destination by mutableStateOf(DashboardDestination.Devices)
-        var options by mutableStateOf(DisplayOptions(themeCode = (if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian).code, colorfulToolMarks = false, visibleHomeModules = listOf("Limits", "Tools", "Devices", "Models")))
+        var options by mutableStateOf(DisplayOptions(themeCode = (if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian).code,
+            iconScale = io.github.theminionooo.tokenmonitor.data.storage.IconScale.entries.single { it.dp == iconDp },
+            colorfulToolMarks = false, visibleHomeModules = listOf("Limits", "Tools", "Devices", "Models")))
         val palette = Palette.from(if (light) InterfaceTheme.Porcelain else InterfaceTheme.Obsidian)
         var captureWindow: android.view.Window? = null
         compose.setContent {
@@ -116,6 +117,9 @@ class DeviceLayoutShowcaseTest {
                     }
                 }
             }
+        }
+        compose.waitUntil(10_000) {
+            runCatching { compose.onAllNodesWithTag("showcase").fetchSemanticsNodes().isNotEmpty() }.getOrDefault(false)
         }
         fun capture(name: String) {
             compose.mainClock.advanceTimeBy(1000)
@@ -148,6 +152,8 @@ class DeviceLayoutShowcaseTest {
             compose.onNode(hasScrollToNodeAction()).performScrollToNode(hasText(device.hostname))
             compose.onNodeWithText(device.hostname).assertIsDisplayed()
             compose.onNodeWithText(formatTokens(device.periods.getValue("today").totalTokens)).assertExists()
+            val iconBounds = compose.onNodeWithTag("device-icon-${device.id}", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            org.junit.Assert.assertEquals(iconDp.toFloat(), iconBounds.width / context.resources.displayMetrics.density, 0.5f)
         }
         capture("${if (light) "light" else "dark"}-$fontScale-$iconDp-bottom")
     }
