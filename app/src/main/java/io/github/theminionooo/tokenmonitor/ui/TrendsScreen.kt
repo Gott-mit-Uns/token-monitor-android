@@ -62,7 +62,7 @@ internal fun LazyListScope.trendItems(snapshot: HubSnapshot) {
     if (snapshot.history.monthly.isNotEmpty()) {
         item { Text(tr("MONTHLY HISTORY"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp)) }
         items(snapshot.history.monthly.takeLast(12).reversed(), key = { it.label }) { point ->
-            DesktopDetailRow(point.label, "", formatTokens(point.tokens), formatMoney(point.costUsd), Blue)
+            DesktopDetailRow(point.label, "", formatTokens(point.tokens), formatUsageCost(point.costUsd, point.unpricedTokens, compact = true), Blue)
         }
     }
 }
@@ -107,7 +107,7 @@ private fun UsageOverview(snapshot: HubSnapshot) {
     val topModel = history.flatMap { it.perModel.entries }.groupingBy { it.key }.fold(0L) { sum, entry -> sum + entry.value.tokens }.maxByOrNull { it.value }?.key.orEmpty()
     val stats = listOf(
         "TOTAL TOKENS" to formatTokens(totalTokens),
-        "TOTAL COST" to formatMoney(totalCost),
+        (if (history.any { it.unpricedTokens > 0 }) desktopText("已知费用", "KNOWN COST") else "TOTAL COST") to formatUsageCost(totalCost, history.sumOf { it.unpricedTokens }, compact = true),
         "ACTIVE DAYS" to active.size.toString(),
         "CURRENT STREAK" to currentStreak(history).toString(),
         "ACTIVE TIME" to formatActiveDuration(activeTime),
@@ -122,6 +122,7 @@ private fun UsageOverview(snapshot: HubSnapshot) {
                 if (rowStats.size == 1) Spacer(Modifier.weight(1f))
             }
         }
+        if (history.any { it.unpricedTokens > 0 }) Text(desktopText("${formatTokens(history.sumOf { it.unpricedTokens })} Token 未定价；费用色阶只表示已知小计。", "${formatTokens(history.sumOf { it.unpricedTokens })} unpriced tokens; cost shading represents known subtotals only."), color = Orange, style = MaterialTheme.typography.bodySmall)
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(tr("TOKEN ACTIVITY"), color = Ink, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
             ChoiceGroup(
@@ -209,7 +210,7 @@ private fun TrendsPanel(history: List<HistoryPoint>) {
         Row(verticalAlignment = Alignment.Bottom) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(formatTokens(trend.totalTokens), color = Ink, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text(tr("${trend.days.size} recorded days · ${formatMoney(trend.days.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.labelSmall)
+                Text(tr("${trend.days.size} recorded days · ${formatUsageCost(trend.days.sumOf { it.costUsd }, trend.days.sumOf { it.unpricedTokens }, compact = true)}"), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
             Text(tr(if (group == TrendGroup.Tool) "BY TOOL" else "BY MODEL"), color = Muted, style = MaterialTheme.typography.labelSmall)
         }
@@ -278,7 +279,7 @@ internal fun StackedTrendChart(trend: TrendPresentation, height: androidx.compos
         if (day == null) Text(tr("该日期没有记录，不能视为零用量"), color = Muted, style = MaterialTheme.typography.bodySmall)
         else {
             CompleteValue(formatTokens(day.tokens) + " Token")
-            CompleteValue(formatMoney(day.costUsd), false)
+            CompleteValue(formatUsageCost(day.costUsd, day.unpricedTokens, compact = true), false)
             day.segments.forEach { (series, count) ->
                 Text("${series.name ?: tr("Unclassified")}：${formatTokens(count)}", color = Muted, style = MaterialTheme.typography.bodySmall)
             }
@@ -323,7 +324,7 @@ internal fun CandleTrendChart(trend: TrendPresentation, height: androidx.compose
         if (day == null) Text(tr("该日期没有记录，不能视为零用量"), color = Muted, style = MaterialTheme.typography.bodySmall)
         else {
             CompleteValue(formatTokens(day.tokens) + " Token")
-            CompleteValue(formatMoney(day.costUsd), false)
+            CompleteValue(formatUsageCost(day.costUsd, day.unpricedTokens, compact = true), false)
             candles.firstOrNull { date >= it.first && date <= it.last }?.let { candle ->
                 Text("${candle.first} — ${candle.last}", color = Muted, style = MaterialTheme.typography.labelSmall)
                 CompleteValue(desktopText("首日 ${formatTokens(candle.open)} · 末日 ${formatTokens(candle.close)}", "First ${formatTokens(candle.open)} · Last ${formatTokens(candle.close)}"))

@@ -9,7 +9,7 @@ fun mergeUsageHistory(saved: List<HistoryPoint>, incoming: List<HistoryPoint>): 
     val points = saved.associateBy { it.label }.toMutableMap()
     incoming.forEach { next ->
         val old = points[next.label]
-        points[next.label] = if (old != null && old.tokens == next.tokens && old.costUsd == next.costUsd) {
+        points[next.label] = if (old != null && old.tokens == next.tokens && old.costUsd == next.costUsd && old.unpricedTokens == next.unpricedTokens) {
             val keepComponents = old.tokenComponentsAvailable && !next.tokenComponentsAvailable
             next.copy(
                 cacheReadTokens = if (keepComponents) old.cacheReadTokens else next.cacheReadTokens,
@@ -42,13 +42,14 @@ fun usageHistory(snapshot: HubSnapshot): List<HistoryPoint> {
     val day = snapshotDate(snapshot) ?: return history.values.sortedBy { it.label }
     val period = snapshot.stats.periods["today"] ?: return history.values.sortedBy { it.label }
     val existing = history[day.toString()]
-    fun attribution(tokens: Map<String, Long>, costs: Map<String, Double>, reads: Map<String, Long>, outputs: Map<String, Long>, writes: Map<String, Long>, unknown: Map<String, Long>) =
-        tokens.mapValues { (key, value) -> HistoryAttribution(value, costs[key] ?: 0.0, reads[key] ?: 0, writes[key] ?: 0, outputs[key] ?: 0, unknown[key] ?: 0) }
+    fun attribution(tokens: Map<String, Long>, costs: Map<String, Double>, reads: Map<String, Long>, outputs: Map<String, Long>, writes: Map<String, Long>, unknown: Map<String, Long>, unpriced: Map<String, Long>) =
+        tokens.mapValues { (key, value) -> HistoryAttribution(value, costs[key] ?: 0.0, reads[key] ?: 0, writes[key] ?: 0, outputs[key] ?: 0, unknown[key] ?: 0, unpriced[key] ?: 0) }
     history[day.toString()] = HistoryPoint(
         label = day.toString(), tokens = period.totalTokens, costUsd = period.costUsd,
         messages = existing?.messages ?: 0, activeTimeMs = existing?.activeTimeMs ?: 0,
-        perClient = attribution(period.clients, period.clientCosts, period.clientCacheReads, period.clientOutputs, period.clientCacheWrites, period.clientUnclassifiedTokens),
-        perModel = attribution(period.models, period.modelCosts, period.modelCacheReads, period.modelOutputs, period.modelCacheWrites, period.modelUnclassifiedTokens),
+        perClient = attribution(period.clients, period.clientCosts, period.clientCacheReads, period.clientOutputs, period.clientCacheWrites, period.clientUnclassifiedTokens, period.clientUnpricedTokens),
+        perModel = attribution(period.models, period.modelCosts, period.modelCacheReads, period.modelOutputs, period.modelCacheWrites, period.modelUnclassifiedTokens, period.modelUnpricedTokens),
+        unpricedTokens = period.unpricedTokens,
     )
     return history.values.sortedBy { it.label }
 }

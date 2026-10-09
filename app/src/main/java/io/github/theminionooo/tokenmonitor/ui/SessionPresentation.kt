@@ -58,7 +58,11 @@ internal fun sessionPromptCacheMinutes(session: SessionUsage, now: Long): Int? {
     return if (remaining > 0) ((remaining + 59_999) / 60_000).toInt() else null
 }
 
+internal fun isDotsObservedOnly(session: SessionUsage): Boolean =
+    session.client == "codex" && session.usageSource == "codex-dots-local" && session.usageCoverage == "observed-only"
+
 internal fun sessionMetricLabels(session: SessionUsage, now: Long): String = buildList {
+    if (isDotsObservedOnly(session)) add(desktopText("Dots · 仅观测用量", "Dots · observed only"))
     sessionCacheHitPercent(session)?.let { percent ->
         val value = if (percent > 0 && percent < 1) "<1" else percent.roundToInt().toString()
         add(localizedText("Cache hit $value%"))

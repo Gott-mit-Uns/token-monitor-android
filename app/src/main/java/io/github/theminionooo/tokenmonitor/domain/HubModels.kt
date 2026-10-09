@@ -57,6 +57,7 @@ data class ProjectUsage(
     val costUsd: Double,
     val sessionCount: Int,
     val clients: Map<String, Long>,
+    val unpricedTokens: Long = 0,
 )
 
 data class SessionUsage(

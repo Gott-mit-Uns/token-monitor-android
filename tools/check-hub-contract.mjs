@@ -18,17 +18,20 @@ async function isolatedContract(source, output, upstream) {
     const { createHub } = require("./src/hub/server.js");
     const now = new Date().toISOString();
     const day = now.slice(0, 10);
-    const period = { totalTokens: 1234, costUsd: 0.42, clients: { mcode: 1234 },
+    const period = { totalTokens: 1234, costUsd: 0.42, unpricedTokens: 321, clients: { mcode: 1234 },
+        clientUnpricedTokens: { mcode: 321 }, modelUnpricedTokens: { "minimax-m2.5": 321 },
+        clientModelUnpricedTokens: { mcode: { "minimax-m2.5": 321 } },
+        projects: { synthetic: { projectId: "synthetic", label: "Synthetic project", totalTokens: 1234, costUsd: 0.42, unpricedTokens: 321 } },
         sessions: { "mcode:contract-session": { sessionId: "contract-session", client: "mcode",
-            title: "Synthetic shared title", totalTokens: 1234, prompt: "NEVER_EXPORT_PROMPT", messages: ["NEVER_EXPORT_MESSAGES"] } },
+            title: "Synthetic shared title", totalTokens: 1234, unpricedTokens: 321, costUsd: 0.42, prompt: "NEVER_EXPORT_PROMPT", messages: ["NEVER_EXPORT_MESSAGES"] } },
         clientCosts: { mcode: 0.42 }, models: { "minimax-m2.5": 1234 },
         modelCosts: { "minimax-m2.5": 0.42 }, clientModels: { mcode: { "minimax-m2.5": 1234 } } };
     const device = { deviceId: "contract-desktop", hostname: "Synthetic desktop", platform: "linux",
         agentVersion: upstream.version, updatedAt: now, trackedClients: ["mcode"],
         periods: { today: period, month: period, allTime: period }, historyAvailable: true,
-        history: { daily: [{ date: day, tokens: 1234, cost: 0.42,
-            perClient: { mcode: { tokens: 1234, cost: 0.42 } },
-            perModel: { "minimax-m2.5": { tokens: 1234, cost: 0.42 } } }], monthly: [] } };
+        history: { daily: [{ date: day, tokens: 1234, cost: 0.42, unpricedTokens: 321,
+            perClient: { mcode: { tokens: 1234, cost: 0.42, unpricedTokens: 321 } },
+            perModel: { "minimax-m2.5": { tokens: 1234, cost: 0.42, unpricedTokens: 321 } } }], monthly: [] } };
     const secret = "isolated-contract-secret";
     const hub = createHub({ port: 0, host: "127.0.0.1", secret, dataFile: join(source, "synthetic-data.json"), broadcastDelayMs: 5,
         logger: { error: error => { throw error; } } });
@@ -60,6 +63,8 @@ async function isolatedContract(source, output, upstream) {
         assert.equal(responses["health.json"].secretRequired, true);
         assert.equal(responses["stats.json"].periods.today.totalTokens, 1234);
         assert.equal(responses["stats.json"].periods.today.clients.mcode, 1234);
+        assert.equal(responses["stats.json"].periods.today.unpricedTokens, 321);
+        assert.equal(responses["stats.json"].periods.today.clientModelUnpricedTokens.mcode["minimax-m2.5"], 321);
         assert.ok(!JSON.stringify(responses["stats.json"]).includes("Synthetic shared title"), "Titles must be absent by default");
         assert.ok(!JSON.stringify(responses["stats.json"]).includes("NEVER_EXPORT"), "Conversation content must never cross the Hub");
         assert.ok(responses["stats.json"].syncSettingsRevisions, "Shared settings revisions must remain additive");
@@ -112,6 +117,16 @@ async function isolatedContract(source, output, upstream) {
         titleHub.setSyncTitlePolicy(device.deviceId, false);
         responses["titles-revoked.json"] = titleHub.getStats();
         assert.ok(!JSON.stringify(responses["titles-revoked.json"]).includes("Synthetic shared title"), "Revocation must clear stored titles");
+        const dotsHub = createHub({ port: 0, host: "127.0.0.1", secret, dataFile: join(source, "synthetic-dots.json") });
+        const dotsPeriod = { totalTokens: 400, costUsd: 0, unpricedTokens: 400, clients: { codex: 400 },
+            clientUnpricedTokens: { codex: 400 }, models: { "unpriced-model": 400 },
+            modelUnpricedTokens: { "unpriced-model": 400 },
+            sessions: { dots: { sessionId: "dots", client: "codex", totalTokens: 400, unpricedTokens: 400,
+                usageSource: "codex-dots-local", usageCoverage: "observed-only", codexLocalSessionKeys: ["NEVER_EXPORT_LOCAL_KEY"] } } };
+        dotsHub.ingest({ ...device, periods: { today: dotsPeriod } });
+        responses["dots.json"] = dotsHub.getStats();
+        assert.equal(Object.values(responses["dots.json"].periods.today.sessions)[0].usageCoverage, "observed-only");
+        assert.ok(!JSON.stringify(responses["dots.json"]).includes("NEVER_EXPORT_LOCAL_KEY"));
         responses["contract.json"] = { upstream, generatedAt: new Date().toISOString(), synthetic: true,
             expectedTodayTokens: 1234, expectedUpdatedTokens: 1235 };
         await mkdir(output, { recursive: true });

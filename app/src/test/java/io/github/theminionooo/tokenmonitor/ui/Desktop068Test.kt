@@ -8,7 +8,7 @@ import kotlinx.serialization.json.*
 
 class Desktop068Test {
     @Test fun observedCodexAndUnpricedCountsAreExplicit() {
-        val stats = HubProtocolParser.decodeStats("""{"periods":{"today":{"totalTokens":100,"costUsd":0,"unpricedTokens":30,"clientUnpricedTokens":{"codex":30},"modelUnpricedTokens":{"unknown":30},"clientModelUnpricedTokens":{"codex":{"unknown":30}},"sessions":{"s":{"client":"codex","totalTokens":100,"models":{"unknown":100},"unpricedTokens":30,"usageSource":"codex-dots-local","usageCoverage":"observed-only"}}}}}""")
+        val stats = HubProtocolParser.decodeStats("""{"periods":{"today":{"totalTokens":100,"costUsd":0,"unpricedTokens":30,"clients":{"codex":100},"models":{"unknown":100},"clientModels":{"codex":{"unknown":100}},"clientUnpricedTokens":{"codex":30},"modelUnpricedTokens":{"unknown":30},"clientModelUnpricedTokens":{"codex":{"unknown":30}},"sessions":{"s":{"client":"codex","totalTokens":100,"models":{"unknown":100},"unpricedTokens":30,"usageSource":"codex-dots-local","usageCoverage":"observed-only"}}}}}""")
         val period = stats.periods.getValue("today")
         assertEquals(30L, period.unpricedTokens)
         assertEquals(30L, period.modelsForTool("codex").modelUnpricedTokens["unknown"])

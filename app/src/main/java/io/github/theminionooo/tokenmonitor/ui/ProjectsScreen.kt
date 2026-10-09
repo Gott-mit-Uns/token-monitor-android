@@ -127,7 +127,7 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
         ).padding(vertical = 2.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        AlignedUsageIdentity(formatTokens(project.totalTokens), formatMoney(project.costUsd)) {
+        AlignedUsageIdentity(formatTokens(project.totalTokens), formatUsageCost(project.costUsd, project.unpricedTokens, compact = true)) {
             StatusDot(Purple, size = 10.dp)
             Spacer(Modifier.width(8.dp))
             Column(Modifier.weight(1f)) {
@@ -140,6 +140,7 @@ internal fun ProjectUsageRow(project: ProjectUsage, ratio: Float) {
                 Text(tr(meta), color = Muted, style = MaterialTheme.typography.labelSmall)
             }
         }
+        if (project.unpricedTokens > 0) Text(desktopText("${formatTokens(project.unpricedTokens)} Token 未定价，费用仅含已知小计", "${formatTokens(project.unpricedTokens)} unpriced tokens; known subtotal only"), color = Orange, style = MaterialTheme.typography.labelSmall)
         UsageBar(ratio, Purple)
         AnimatedVisibility(
             visible = expanded,
@@ -189,7 +190,7 @@ internal fun SessionUsageRow(session: SessionUsage, title: String, meta: String,
         modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded }.padding(vertical = 4.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        AlignedUsageIdentity(formatTokens(session.totalTokens), formatMoney(session.costUsd)) {
+        AlignedUsageIdentity(formatTokens(session.totalTokens), formatUsageCost(session.costUsd, session.unpricedTokens, compact = true)) {
             val model = session.modelNames.firstOrNull { it.isNotBlank() }
             if (model != null) ModelMark(model, accentFor(model), size = LocalContentIconSize.current)
             else UpstreamToolMark(session.client, accentFor(session.client), size = LocalContentIconSize.current)

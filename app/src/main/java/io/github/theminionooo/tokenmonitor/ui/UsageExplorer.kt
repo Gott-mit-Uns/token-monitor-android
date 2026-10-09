@@ -43,7 +43,7 @@ internal fun UsageComparisonPanel(history: List<HistoryPoint>) {
         Text(tr("${formatTokens(comparison.current.sumOf { it.tokens })} vs ${formatTokens(comparison.previous.sumOf { it.tokens })} tokens"), color = Ink)
         if (comparison.complete) {
             Text(tr("${signedTokens(comparison.tokenDelta)} tokens${comparison.percentChange?.let { " · %+.1f%%".format(java.util.Locale.US, it) }.orEmpty()}"), color = Accent)
-            Text(tr("Estimated cost: ${formatMoney(comparison.current.sumOf { it.costUsd })} vs ${formatMoney(comparison.previous.sumOf { it.costUsd })}"), color = Muted, style = MaterialTheme.typography.bodySmall)
+            Text(tr("Estimated cost: ${formatUsageCost(comparison.current.sumOf { it.costUsd }, comparison.current.sumOf { it.unpricedTokens }, compact = true)} vs ${formatUsageCost(comparison.previous.sumOf { it.costUsd }, comparison.previous.sumOf { it.unpricedTokens }, compact = true)}"), color = Muted, style = MaterialTheme.typography.bodySmall)
             comparison.drivers(byModel = true).filter { it.second != 0L }.take(3).forEach { (name, delta) ->
                 Text(tr("$name: ${signedTokens(delta)} tokens"), color = Ink, style = MaterialTheme.typography.bodySmall)
             }
@@ -89,7 +89,7 @@ internal fun DayUsageDialog(date: String, history: List<HistoryPoint>, onDismiss
     var selected by rememberSaveable { mutableStateOf<String?>(null) }
     if (selected == null) UsageDetailDialog(date, onDismiss) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(tr(if (point == null) "No observation was supplied for this date." else "${formatTokens(point.tokens)} tokens · ${formatMoney(point.costUsd)} estimated"), color = Ink)
+            Text(tr(if (point == null) "No observation was supplied for this date." else "${formatTokens(point.tokens)} tokens · ${formatUsageCost(point.costUsd, point.unpricedTokens, compact = true)} estimated"), color = Ink)
             ChoiceGroup(listOf("MODELS" to "model", "TOOLS" to "tool"), if (models) "model" else "tool", { models = it == "model" })
             val entries = (if (models) point?.perModel else point?.perClient).orEmpty().entries.sortedByDescending { it.value.tokens }
             LazyColumn(Modifier.heightIn(max = 320.dp)) {
@@ -113,7 +113,7 @@ private fun SeriesUsageDialog(name: String, models: Boolean, history: List<Histo
                 items(points.reversed(), key = { it.first }) { (date, value) ->
                     Column(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                         Text(date, color = Ink, fontWeight = FontWeight.SemiBold)
-                        Text(tr("${formatTokens(value.tokens)} tokens · ${formatMoney(value.costUsd)}"), color = Muted)
+                        Text(tr("${formatTokens(value.tokens)} tokens · ${formatUsageCost(value.costUsd, value.unpricedTokens, compact = true)}"), color = Muted)
                         UsageBar(value.tokens.toFloat() / points.maxOf { it.second.tokens }.coerceAtLeast(1), Blue)
                     }
                 }

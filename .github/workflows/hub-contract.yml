@@ -1,0 +1,47 @@
+name: Released Hub contract
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Require reviewed main
+        run: test "$GITHUB_REF" = "refs/heads/main"
+      # This code is executed only after review/merge or explicit dispatch on main.
+      # Keep the literal pin in agreement with upstream.json; never execute a PR-selected ref.
+      - uses: actions/checkout@v7
+        with:
+          repository: Javis603/token-monitor
+          ref: 5d2db368d8313415763860d594de00e46a663418
+          path: upstream-contract-source
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Exercise the released Hub with isolated synthetic data
+        run: >-
+          node tools/check-hub-contract.mjs --upstream-repo upstream-contract-source
+          --approved-commit 5d2db368d8313415763860d594de00e46a663418
+      - name: Parse actual Hub responses in Android's compatibility tests
+        env:
+          TOKEN_MONITOR_CONTRACT_DIR: ${{ github.workspace }}/app/build/hub-contract
+        run: ./gradlew :app:testDebugUnitTest --rerun-tasks --no-daemon --console=plain
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: released-hub-contract
+          path: |
+            app/build/hub-contract/
+            app/build/reports/tests/
+          retention-days: 14

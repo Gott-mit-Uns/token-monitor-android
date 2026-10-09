@@ -184,7 +184,7 @@ internal fun DeviceUsageRow(
         val measurer = rememberTextMeasurer()
         val numberStyle = MaterialTheme.typography.bodySmall
         val tokenText = formatTokens(usage.totalTokens)
-        val costText = formatMoney(usage.costUsd)
+        val costText = formatUsageCost(usage.costUsd, usage.unpricedTokens, compact = true)
         val statsWidth = with(density) {
             maxOf(measurer.measure(tokenText, numberStyle).size.width,
                 measurer.measure(costText, numberStyle).size.width,

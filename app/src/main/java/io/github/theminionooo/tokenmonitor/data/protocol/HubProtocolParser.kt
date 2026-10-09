@@ -193,6 +193,7 @@ object HubProtocolParser {
         costUsd = double("costUsd") ?: 0.0,
         sessionCount = (long("sessionCount") ?: 0).toIntSafely(),
         clients = longMap("clients"),
+        unpricedTokens = long("unpricedTokens") ?: 0,
     )
 
     private fun JsonObject.toSessionDto(key: String) = HubSessionDto(
@@ -398,9 +399,11 @@ object HubProtocolParser {
         modelOutputs = modelOutputs,
         modelUnclassifiedTokens = modelUnclassifiedTokens,
         unpricedTokens = unpricedTokens,
-        clientUnpricedTokens = clientUnpricedTokens,
-        modelUnpricedTokens = modelUnpricedTokens,
-        clientModelUnpricedTokens = clientModelUnpricedTokens,
+        clientUnpricedTokens = boundedUnpricedMap(clientUnpricedTokens, clients, unpricedTokens),
+        modelUnpricedTokens = boundedUnpricedMap(modelUnpricedTokens, models, unpricedTokens),
+        clientModelUnpricedTokens = clientModelUnpricedTokens.mapValues { (client, counts) ->
+            boundedUnpricedMap(counts, clientModels[client].orEmpty(), boundedUnpricedMap(clientUnpricedTokens, clients, unpricedTokens)[client] ?: 0)
+        },
         projects = projects.map { it.toDomain() },
         sessions = sessions.map { it.toDomain() },
     )
@@ -412,6 +415,7 @@ object HubProtocolParser {
         costUsd = costUsd.coerceAtLeast(0.0),
         sessionCount = sessionCount.coerceAtLeast(0),
         clients = clients,
+        unpricedTokens = unpricedTokens.coerceIn(0, totalTokens.coerceAtLeast(0)),
     )
 
     private fun HubSessionDto.toDomain() = SessionUsage(
@@ -541,6 +545,15 @@ object HubProtocolParser {
         kind = kind, intervalCount = intervalCount, nextRenewalOverride = nextRenewalOverride,
         endDate = endDate, note = note, updatedAt = updatedAt, topUps = topUps,
     )
+
+    private fun boundedUnpricedMap(counts: Map<String, Long>, tokens: Map<String, Long>, total: Long): Map<String, Long> {
+        var remaining = total.coerceAtLeast(0)
+        return counts.mapNotNull { (key, count) ->
+            val bounded = count.coerceIn(0, (tokens[key] ?: 0).coerceAtLeast(0)).coerceAtMost(remaining)
+            remaining -= bounded
+            if (bounded > 0) key to bounded else null
+        }.toMap()
+    }
 
     private fun JsonObject.objectField(name: String): JsonObject? = this[name].objectOrNull()
 

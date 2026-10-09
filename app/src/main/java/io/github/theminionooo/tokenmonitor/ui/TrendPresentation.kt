@@ -14,6 +14,7 @@ internal data class TrendDay(
     val costUsd: Double,
     val segments: Map<TrendSeries, Long>,
     val inconsistentAttribution: Boolean,
+    val unpricedTokens: Long = 0,
 )
 
 internal data class TrendPresentation(
@@ -52,7 +53,7 @@ internal fun prepareTrends(
             .filterValues { it.tokens > 0 }.mapKeys { TrendSeries(it.key) }.mapValues { it.value.tokens }.toMutableMap()
         val remainder = if (inconsistent) total else total - assigned
         if (remainder > 0) parts[TrendSeries(null)] = remainder
-        TrendDay(LocalDate.parse(point.label.take(10)), total, point.costUsd, parts, inconsistent)
+        TrendDay(LocalDate.parse(point.label.take(10)), total, point.costUsd, parts, inconsistent, point.unpricedTokens)
     }
     val ranked = rawDays.flatMap { it.segments.entries }.filter { it.key.name != null }
         .groupBy { it.key }.entries.sortedByDescending { (_, entries) -> entries.sumOf { it.value } }.map { it.key }

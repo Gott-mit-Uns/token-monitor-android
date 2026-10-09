@@ -8,5 +8,11 @@
     "repository": "The-Minion-oOo/token-monitor-android",
     "commit": "65e6b04",
     "version": "0.67.0 r1"
+  },
+  "androidCompatibilityPatch": {
+    "repository": "The-Minion-oOo/token-monitor-android",
+    "tag": "android-v0.68.0-r1",
+    "commit": "bf348606a41e468b534bf097dfd3501f186e9601",
+    "scope": "unpriced usage, Dots label, history and widgets; keep local presentation"
   }
 }

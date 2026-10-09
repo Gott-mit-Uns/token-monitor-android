@@ -55,6 +55,15 @@ internal fun formatHomeTokens(tokens: Long, chinese: Boolean): String {
 
 internal fun formatMoney(value: Double): String = convertedCost(value, io.github.theminionooo.tokenmonitor.data.storage.DesktopPreferences.active)
 
+/** Preserve known subtotals without treating absent catalog prices as free usage. */
+internal fun formatUsageCost(value: Double, unpricedTokens: Long = 0, compact: Boolean = false): String {
+    if (unpricedTokens <= 0) return formatMoney(value)
+    val known = if (value > 0) formatMoney(value) else "—"
+    if (compact) return if (value > 0) "$known + ?" else "— (?)"
+    val missing = desktopText("${formatTokens(unpricedTokens)} Token 未定价", "${formatTokens(unpricedTokens)} unpriced tokens")
+    return if (value > 0) "$known + $missing" else "— ($missing)"
+}
+
 internal fun formatSubscriptionAmount(amountMinor: Long, currency: String): String = if (currency == "USD") {
     currencyFormat.format(amountMinor / 100.0)
 } else {

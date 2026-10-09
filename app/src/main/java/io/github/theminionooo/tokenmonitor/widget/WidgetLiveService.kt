@@ -21,7 +21,7 @@ import io.github.theminionooo.tokenmonitor.MainActivity
 import io.github.theminionooo.tokenmonitor.domain.HubSnapshot
 import io.github.theminionooo.tokenmonitor.domain.snapshotDate
 import io.github.theminionooo.tokenmonitor.ui.formatCompactTokens
-import io.github.theminionooo.tokenmonitor.ui.formatMoney
+import io.github.theminionooo.tokenmonitor.ui.formatUsageCost
 import io.github.theminionooo.tokenmonitor.ui.formatBoundary
 import io.github.theminionooo.tokenmonitor.ui.formatDuration
 import io.github.theminionooo.tokenmonitor.ui.providerLabel
@@ -67,7 +67,7 @@ internal fun widgetNotificationContent(
     val connected = session.connected && snapshot?.fromCache != true && session.note == null
     val clock = DateTimeFormatter.ofPattern("HH:mm", locale).withZone(zoneId)
     val headline = snapshot?.let {
-        val totals = "${widgetTokens(it.today.totalTokens)} tokens · ${formatMoney(it.today.costUsd)}"
+        val totals = "${widgetTokens(it.today.totalTokens)} tokens · ${formatUsageCost(it.today.costUsd, it.today.unpricedTokens, compact = true)}"
         val day = snapshotDate(it, zoneId)
         when {
             !connected -> "Saved · $totals"

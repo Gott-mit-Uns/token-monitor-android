@@ -82,7 +82,7 @@ private fun desktopExportJson(source: HubSnapshot): String {
         put("modelCacheReads", counts(p.modelCacheReads)); put("modelCacheWrites", counts(p.modelCacheWrites)); put("modelOutputs", counts(p.modelOutputs)); put("modelUnclassifiedTokens", counts(p.modelUnclassifiedTokens)); put("modelUnpricedTokens", counts(p.modelUnpricedTokens))
         put("clientModelUnpricedTokens", buildJsonObject { p.clientModelUnpricedTokens.forEach { (k, v) -> put(k, counts(v)) } })
         put("projects", buildJsonObject { p.projects.forEach { project -> put(project.id, buildJsonObject {
-            put("projectId", project.id); put("totalTokens", project.totalTokens); put("costUsd", project.costUsd); put("sessionCount", project.sessionCount); put("clients", counts(project.clients))
+            put("unpricedTokens", project.unpricedTokens); put("projectId", project.id); put("totalTokens", project.totalTokens); put("costUsd", project.costUsd); put("sessionCount", project.sessionCount); put("clients", counts(project.clients))
         }) } })
         put("sessions", buildJsonObject { p.sessions.forEach { session -> put(session.id, buildJsonObject {
             put("sessionId", session.id); put("client", session.client); put("totalTokens", session.totalTokens); put("costUsd", session.costUsd)

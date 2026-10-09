@@ -50,6 +50,7 @@ internal data class HubProjectDto(
     val costUsd: Double = 0.0,
     val sessionCount: Int = 0,
     val clients: Map<String, Long> = emptyMap(),
+    val unpricedTokens: Long = 0,
 )
 
 internal data class HubSessionDto(

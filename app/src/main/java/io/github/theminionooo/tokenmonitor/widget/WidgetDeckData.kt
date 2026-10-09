@@ -24,6 +24,7 @@ internal data class WidgetDeckUsageRow(
     val tokens: Long,
     val costUsd: Double,
     val share: Double,
+    val unpricedTokens: Long = 0,
 )
 
 internal data class WidgetDeckLimitRow(
@@ -100,11 +101,11 @@ internal fun prepareWidgetDeck(
     }
     val today = history.lastOrNull { it.label.take(10) == date.toString() }
     val period = snapshot?.today
-    fun rows(tokens: Map<String, Long>, costs: Map<String, Double>, limit: Int): List<WidgetDeckUsageRow> {
+    fun rows(tokens: Map<String, Long>, costs: Map<String, Double>, unpriced: Map<String, Long>, limit: Int): List<WidgetDeckUsageRow> {
         val total = tokens.values.sum().toDouble()
         if (total <= 0) return emptyList()
         return tokens.entries.sortedByDescending { it.value }.take(limit).map { (name, value) ->
-            WidgetDeckUsageRow(name, value, costs[name] ?: 0.0, value / total)
+            WidgetDeckUsageRow(name, value, costs[name] ?: 0.0, value / total, unpriced[name] ?: 0)
         }
     }
     val limitsByProvider = snapshot?.stats?.limits?.providers.orEmpty().map { account ->
@@ -134,8 +135,8 @@ internal fun prepareWidgetDeck(
         date = date,
         history = history,
         stats = widgetStats(history, date).take(3),
-        tools = period?.let { rows(it.clients, it.clientCosts, 3) }.orEmpty(),
-        models = period?.let { rows(it.models, it.modelCosts, 4) }.orEmpty(),
+        tools = period?.let { rows(it.clients, it.clientCosts, it.clientUnpricedTokens, 3) }.orEmpty(),
+        models = period?.let { rows(it.models, it.modelCosts, it.modelUnpricedTokens, 4) }.orEmpty(),
         limits = limits,
         limitGroups = limitGroups,
         week = week,
