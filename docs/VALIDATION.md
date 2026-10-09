@@ -16,6 +16,11 @@ Launcher rendering used Android's native AOSP mask, not a HyperOS3 launcher.
 Xiaomi phone/theme behavior, authenticated personal NAS Hub and Android 17
 remain unverified. No Hub, collector, credential or polling changes were made.
 
+An additional 360x640dp gallery retest passed all four cases after making the
+position assertion scroll to the device module before reading clipped bounds.
+This test-only correction addresses shorter CI screens; production app code
+and the published APK remain unchanged.
+
 ## Fork v0.68.0-hub.4 — 2026-10-09
 
 The fork restores its v0.67.0-hub.2 functional baseline and integrates Android

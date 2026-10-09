@@ -136,10 +136,14 @@ class ForkReadmeShowcaseTest {
             compose.onNodeWithText("DeepSeek Harness").assertIsDisplayed()
             compose.onNodeWithText("Hermes Agent").assertIsDisplayed()
             compose.onNodeWithText("NAS DH4300plus").assertDoesNotExist()
+            // Short CI screens can clip the lower row to a zero-sized bounds rectangle.
+            val list = compose.onNode(hasScrollToNodeAction())
+            list.performScrollToNode(hasText("NAS DXP4800"))
             // The clickable module merges descendants; compare the actual text nodes.
             val windows = compose.onNodeWithText("Windows Mini", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
             val nas = compose.onNodeWithText("NAS DXP4800", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
-            check(windows.top < nas.top)
+            check(windows.height > 0 && nas.height > 0 && windows.top < nas.top)
+            list.performScrollToIndex(0)
             capture(if (light) "light" else "dark")
         }
     }
