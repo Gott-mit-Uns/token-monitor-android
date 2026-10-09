@@ -1,4 +1,4 @@
-name: Upstream release check
+name: Android upstream release review
 
 on:
   workflow_dispatch:
@@ -14,16 +14,15 @@ jobs:
       - uses: actions/checkout@v7
       - id: upstream
         name: Compare verified and latest releases
-        shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: ./tools/check-upstream.ps1
+        run: node tools/check-upstream.mjs
       - name: Open compatibility review issue
         if: steps.upstream.outputs.update_available == 'true'
         uses: actions/github-script@v9
         with:
           script: |
-            const title = `Review Token Monitor ${process.env.LATEST_TAG}`;
+            const title = `Review Android Token Monitor ${process.env.LATEST_TAG}`;
             const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -35,7 +34,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 title,
-                body: `The verified desktop baseline is ${process.env.CURRENT_TAG}. Review ${process.env.RELEASE_URL} and follow docs/UPSTREAM_SYNC.md before changing compatibility metadata.`
+                body: `The reviewed Android upstream release is ${process.env.CURRENT_TAG}. Review ${process.env.RELEASE_URL} and follow docs/UPSTREAM_SYNC.md before changing compatibility metadata.`
               });
             }
         env:

@@ -1,18 +1,18 @@
 {
-  "repository": "Javis603/token-monitor",
-  "version": "0.68.0",
-  "tag": "v0.68.0",
-  "commit": "5d2db368d8313415763860d594de00e46a663418",
-  "protocolFixture": "app/src/test/resources/protocol/v0.68.0",
-  "androidBase": {
+  "schemaVersion": 2,
+  "androidUpstream": {
     "repository": "The-Minion-oOo/token-monitor-android",
-    "commit": "65e6b04",
-    "version": "0.67.0 r1"
-  },
-  "androidCompatibilityPatch": {
-    "repository": "The-Minion-oOo/token-monitor-android",
+    "version": "0.68.0 r1",
     "tag": "android-v0.68.0-r1",
     "commit": "bf348606a41e468b534bf097dfd3501f186e9601",
-    "scope": "unpriced usage, Dots label, history and widgets; keep local presentation"
+    "integration": "selective",
+    "originalBaseCommit": "65e6b04d35fbe9e75c72e3a1f3db2c0f3b500010"
+  },
+  "desktopCompatibility": {
+    "repository": "Javis603/token-monitor",
+    "version": "0.68.0",
+    "tag": "v0.68.0",
+    "commit": "5d2db368d8313415763860d594de00e46a663418",
+    "protocolFixture": "app/src/test/resources/protocol/v0.68.0"
   }
 }

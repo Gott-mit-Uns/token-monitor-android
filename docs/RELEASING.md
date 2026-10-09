@@ -1,84 +1,13 @@
-# Releasing
+# 本分支发布流程
 
-## Versioning
+安卓已审阅版本决定主版本，本地修复使用后缀，例如 `v0.68.0-hub.3`、versionCode `680103`。桌面／Hub兼容版本单独记录，不因桌面发布就提高应用版本。来源与整合方式见 [维护流程](UPSTREAM_SYNC.md)。
 
-The visible Android version matches the verified desktop Token Monitor version.
-Android-only releases keep `versionName` and increment the final three digits of
-`versionCode` and the GitHub tag revision.
+发布前更新 `gradle.properties`、README和发布说明；`upstream.json` 只在来源审阅或协议验证完成后更新。运行本地偏好、统计和协议测试、lint、共享核心与版本检查，以及受影响的设备测试。Hub合约用固定提交的隔离合成数据，不连接真实NAS。
 
-```text
-versionName: v0.65.0
-versionCode: 650001
-release tag: android-v0.65.0-r1
-```
+沿用原应用ID和既有固定签名。签名材料保持在源码之外；Mac使用 [构建说明](../BUILDING.md) 中的安全签名入口。禁止把密钥、凭据、真实Hub响应或个人数据放入源码包或公开日志。
 
-A newly verified desktop version updates the visible version and starts its
-Android revision at 1. Keep `gradle.properties`, `upstream.json`, README, and
-protocol fixtures aligned.
+先用签名APK验证覆盖安装、版本信息和启动。模拟器只能证明模拟器范围；真实手机／启动器、已认证NAS、Android17和电量表现按实际证据记录，不把未测项描述为通过。
 
-## Release checks
+源码与版本标签推送后创建GitHub草稿Release，上传APK、源码、校验值和验证记录；涉及视觉改动时附合成数据截图。核对上传文件的SHA-256与本地一致后发布，保留旧Release。当前没有自动签名发布工作流，也不提供安卓上游的自动更新清单；本分支下载签名APK覆盖安装。
 
-Before publishing:
-
-- Bump version metadata and add concise notes under `docs/releases/`.
-- Update README compatibility and widget marketing from production captures;
-  do not replace the established hero for a widget-only release.
-- Run JVM tests, lint, debug assembly, and release assembly.
-- Wait for Android checks and Android interaction checks on the exact `main`
-  commit being released.
-- Exercise affected dashboard and widget behavior on the emulator.
-- Install the signed candidate over the previous release on a phone and confirm
-  pairing and preferences survive.
-- For networking, lifecycle, or widget changes, check Tailscale, Wi-Fi fallback,
-  offline resume, Live/Stop/expiry, and the affected widget sizes on the phone.
-- Confirm the working tree contains no keystore, passwords, private addresses,
-  personal data, captures, or raw Hub responses.
-- Perform an independent read-only review of the release diff and fix validated
-  findings.
-
-Record what was actually checked in [Validation](VALIDATION.md). Do not describe
-emulator results as phone coverage or design safeguards as measured battery life.
-
-## Signing
-
-Release builds read four environment variables:
-
-```text
-ANDROID_KEYSTORE_FILE
-ANDROID_KEYSTORE_PASSWORD
-ANDROID_KEY_ALIAS
-ANDROID_KEY_PASSWORD
-```
-
-The keystore and passwords stay outside the repository. Keep an encrypted backup
-of the keystore and record the certificate SHA-256 fingerprint separately; losing
-the key prevents future APKs from updating installed copies.
-
-Verify a local APK with Android build tools:
-
-```powershell
-$buildTools = Get-ChildItem "$env:LOCALAPPDATA\Android\Sdk\build-tools" | Sort-Object Name | Select-Object -Last 1
-& "$($buildTools.FullName)\apksigner.bat" verify --print-certs app\build\outputs\apk\release\app-release.apk
-```
-
-## Publishing
-
-The manually triggered **Android release** workflow runs JVM tests and lint,
-builds and verifies the signed APK, creates its SHA-256 file and the
-`token-monitor-android-update.json` asset, then opens a draft
-GitHub release. It reads the release body from
-`docs/releases/android-v<version>-r<revision>.md` and refuses to overwrite an
-existing tag. The workflow requires the four signing secrets to be configured
-in the public repository; do not copy a private keystore into the repository.
-If the workflow is unavailable, sign locally with the same release key and
-create a draft with the APK, checksum, and matching update manifest. Check the
-uploaded asset hashes before publication.
-
-Check that the manifest's version code, APK name, size, and hash match the
-uploaded APK. Review the draft, install its exact APK on the phone, then publish
-it. Release notes should state what changed, compatibility, and any important update action;
-link to [Install and update](INSTALL.md) instead of repeating the full procedure.
-
-Batch related work and publish when the APK is worth reinstalling. Documentation,
-marketing-image placement, and other non-app changes do not need a new Android
-revision.
+审阅摘要、测试结果与限制写入 `docs/releases/`，具体证据写入发布附件 `validation.json`。仅文档修订不必发布新APK；包含运行时修复时提高versionCode。

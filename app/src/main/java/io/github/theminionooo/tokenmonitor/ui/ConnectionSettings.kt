@@ -329,7 +329,8 @@ internal fun ConnectionScreen(
             }
             SettingsGroup("Compatibility", summary = "Desktop v${BuildConfig.UPSTREAM_VERSION}") {
                 StatusLine("Android app", BuildConfig.VERSION_NAME)
-                StatusLine("Desktop baseline", "Token Monitor v${BuildConfig.UPSTREAM_VERSION}")
+                StatusLine(desktopText("安卓上游基线", "Android upstream baseline"), BuildConfig.ANDROID_BASE_TAG)
+                StatusLine(desktopText("已验证 Hub 兼容", "Verified Hub compatibility"), "Token Monitor v${BuildConfig.UPSTREAM_VERSION}")
                 Text(tr("Protocol changes are reviewed against versioned fixtures before this baseline moves forward."), color = Muted, style = MaterialTheme.typography.bodySmall, lineHeight = 18.sp)
             }
             SettingsGroup("App updates", summary = "${BuildConfig.VERSION_NAME} r${BuildConfig.VERSION_CODE % 1000}") {

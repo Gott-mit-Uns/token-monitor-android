@@ -144,7 +144,9 @@ if (workerSource) {
     const upstream = JSON.parse(await readFile(join(workerSource, "contract-upstream.json"), "utf8"));
     await isolatedContract(workerSource, resolve(option("--output")), upstream);
 } else {
-    const upstream = JSON.parse(await readFile(join(root, "upstream.json"), "utf8"));
+    const metadata = JSON.parse(await readFile(join(root, "upstream.json"), "utf8"));
+    const upstream = metadata.desktopCompatibility;
+    assert.ok(upstream, "Desktop compatibility pin is required separately from Android source");
     const approved = option("--approved-commit");
     assert.equal(approved, upstream.commit, "Explicit --approved-commit must match the reviewed released upstream commit");
     assert.match(approved, /^[a-f0-9]{40}$/);

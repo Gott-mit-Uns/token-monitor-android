@@ -2,11 +2,13 @@
 
 本项目基于 [The-Minion-oOo/token-monitor-android](https://github.com/The-Minion-oOo/token-monitor-android)，提供中文界面及本分支的显示与 Hub 兼容改进。感谢原作者做出了与桌面 Token Monitor 风格非常接近的安卓客户端。
 
-**0.68 起，本分支直接跟进 [Javis603/token-monitor 桌面端](https://github.com/Javis603/token-monitor) 的功能与界面，不再等待安卓上游发布相同版本。** 这表示更新依据改变，代码仍保留安卓上游基础；并非完全重写或取消原作者贡献。0.67 及以前的版本沿安卓上游更新。
+**本分支以安卓上游为主要代码基线，桌面端用于核对 Hub 协议和统计含义。** 0.68 的 hub.1／hub.2 曾直接补充桌面查看功能；从 hub.3 起收敛为“优先跟进安卓修复和系统适配，保留必要本地改进”，不再逐版本复刻桌面。已有功能继续保留，源码仍继承安卓上游并保留原作者贡献。
 
-本分支版本：`v0.68.0-hub.2`，`versionCode 680102`。保持原应用 ID 和固定签名，可覆盖安装本分支旧版本。
+当前已审阅安卓上游为 `android-v0.68.0-r1`，采用选择性整合；原始基础为0.67，未声称完整合并所有上游提交。已验证桌面／Hub为 `v0.68.0`，两者分别记录。
 
-[下载已发布 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [Hub 连接说明](HUB.md) · [构建说明](BUILDING.md) · [0.68 改进与差异](docs/reviews/desktop-068-current.md)
+本分支版本：`v0.68.0-hub.3`，`versionCode 680103`。保持原应用 ID 和固定签名，可覆盖安装本分支旧版本。
+
+[下载已发布 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [Hub 连接说明](HUB.md) · [构建说明](BUILDING.md) · [维护流程](docs/UPSTREAM_SYNC.md) · [hub.2 审阅与整理](docs/reviews/hub2-maintenance-review.md) · [现有功能差异](docs/reviews/desktop-068-current.md)
 
 ## 使用方式
 
@@ -52,7 +54,7 @@
 
 ## 代码来源与许可
 
-本项目继续大量使用安卓上游的基础实现。按同路径 Kotlin 生产代码的非空、非注释行比较，当前文本保留比例约 **77.5%**；该数字不是作者贡献或版权归属比例，资源与构建继承也不在其中。[核对方法与基准](docs/reviews/upstream-code-retention.md)。
+本项目继续大量使用安卓上游的基础实现，保留原作者署名与MIT许可。文本保留统计仅作为审阅记录，不用它判定作者贡献或宣称完全重写；资源与构建继承也不包含在统计中。[核对方法与基准](docs/reviews/upstream-code-retention.md)。
 
 保留安卓上游的 MIT 署名与许可；桌面端对齐逻辑和素材来源见 [第三方声明](THIRD_PARTY_NOTICES.md)。服务名称和标识属于各自权利人，展示不代表官方合作或认可。
 

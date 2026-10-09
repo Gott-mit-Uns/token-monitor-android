@@ -1,7 +1,7 @@
-# 桌面 0.68 与安卓本分支的区别
+# 已有功能与桌面 0.68 的区别
 
 桌面依据：Javis603/token-monitor `v0.68.0`，提交 `5d2db368d8313415763860d594de00e46a663418`。
-安卓基础：The-Minion-oOo/token-monitor-android 0.67.0 r1。
+安卓原始基础：The-Minion-oOo/token-monitor-android 0.67.0 r1；已审阅并选择性整合0.68.0 r1。hub.3 起以安卓上游维护为主，本页记录已有差异，不是逐项复刻路线。
 
 ## 本轮已对齐
 

@@ -1,3 +1,5 @@
+> Historical upstream reference for 0.66. Current fork functionality and deliberate differences are recorded in [current comparison](reviews/desktop-068-current.md). This historical table is not a promise to replicate future desktop releases.
+
 # Desktop parity for v0.66.0
 
 The Android release is fixture-verified against desktop Token Monitor v0.66.0. It mirrors

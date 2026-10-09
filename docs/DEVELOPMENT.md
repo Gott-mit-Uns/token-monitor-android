@@ -160,8 +160,9 @@ ViewModel pass-through, and the control and collapsed summary in Settings.
   pushes to `main`.
 - **Android interaction checks:** API 36 emulator suite on app pull requests and
   app changes merged to `main`.
-- **Upstream release check:** weekly comparison with the desktop release in
-  `upstream.json`; it opens an issue and never merges changes automatically.
+- **Android upstream release review:** manually compares the stable Android release with
+  `androidUpstream` in `upstream.json`; it opens a review issue and never merges
+  or publishes automatically. Desktop compatibility is a separate pin.
 - **Dependabot:** weekly Gradle and GitHub Actions updates.
 
 Release signing and publishing are documented in [Releasing](RELEASING.md).
@@ -178,3 +179,5 @@ Release signing and publishing are documented in [Releasing](RELEASING.md).
 
 Android permits only one active UiAutomation connection. Stop interactive CLI
 inspection before running instrumentation tests.
+
+Local presentation extensions use `fork/PresentationPreferencesCodec.kt`, retaining legacy storage keys. Run `node tools/check-maintenance.mjs` to check shared upstream algorithms and source pins; see [maintenance policy](UPSTREAM_SYNC.md).

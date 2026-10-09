@@ -3,24 +3,22 @@
 ## Product boundary
 
 Token Monitor for Android is a lightweight, read-only window into one or more
-desktop Token Monitor Hubs. It presents totals, limits, tools, models, devices,
+Token Monitor Hubs hosted on a NAS or computer. It presents totals, limits, tools, models, devices,
 projects, sessions, subscriptions, service status, and history without becoming
 another collector or a remote-control client.
 
-The desktop remains the source of truth. Pairing uses a private Tailscale address
-and Hub secret, with an explicitly enabled home Wi-Fi address as an optional
-fallback. There is no Token Monitor relay or supported public-Hub path.
+The Hub remains the source of truth. The fork accepts an authenticated HTTPS reverse-proxy domain, Tailscale or a private LAN address. Home Wi-Fi can be configured as an optional fallback to the same Hub. Credentials stay in encrypted local storage, outside URLs, backups, logs and widgets. Android never writes shared Hub data.
 
 ## Responsibility split
 
 Desktop Token Monitor discovers local tools, parses their files, estimates
 cost, checks provider limits, and aggregates device history. The Android app
-does none of that. It reads the desktop Hub over a private network and presents
+does none of that. It reads the configured Hub and presents
 the synchronized result. This keeps the phone light and avoids duplicating the
 desktop's adapters for dozens of tools.
 
 ```text
-Desktop collectors → Token Monitor Hub → Tailscale or home Wi-Fi → HubRepository → HubSnapshot → Compose views
+Computer/NAS collectors → Token Monitor Hub → HTTPS, Tailscale or home Wi-Fi → HubRepository → HubSnapshot → Compose views
 ```
 
 ## Layers
@@ -222,3 +220,7 @@ new data changes it; app Reduce Motion switches to a static TextView. This is no
 the Compose per-digit renderer. No intermediate token values or animation timer
 are sent through AppWidgetManager. Resizing adds quota rows and a seven-day chart;
 missing history observations are shown as gaps.
+
+## Maintenance boundary
+
+Android upstream is the primary implementation source. Desktop source verifies Hub contracts only. `upstream.json` records both independently; local display preferences live in the fork codec with legacy keys. Shared history, trend and widget-data algorithms are checked against the reviewed Android commit. Integration remains selective; custom UI differences have not all been isolated. See [maintenance policy](UPSTREAM_SYNC.md).

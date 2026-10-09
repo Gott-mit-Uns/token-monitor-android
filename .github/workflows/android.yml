@@ -21,6 +21,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Check documentation links
         run: node tools/check-docs.mjs
+      - name: Verify Android source and local extension boundaries
+        run: |
+          git fetch --no-tags --depth=1 https://github.com/The-Minion-oOo/token-monitor-android.git bf348606a41e468b534bf097dfd3501f186e9601
+          node tools/check-maintenance.mjs
+          node --test tools/check-upstream.test.mjs
       - name: Test, lint, and build
         run: ./gradlew :app:testDebugUnitTest lint :app:assembleDebug --no-daemon --console=plain
       - uses: actions/upload-artifact@v7

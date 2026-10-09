@@ -377,36 +377,41 @@ object HubProtocolParser {
         staleAfterMs = staleAfterMs,
     )
 
-    private fun HubPeriodDto.toDomain() = UsagePeriod(
-        throughputAvailable = throughputAvailable,
-        timedTokens = timedTokens,
-        timedOutputTokens = timedOutputTokens,
-        timedDurationMs = timedDurationMs,
-        totalTokens = totalTokens.coerceAtLeast(0),
-        costUsd = costUsd.coerceAtLeast(0.0),
-        clients = clients,
-        clientCosts = clientCosts,
-        models = models,
-        modelCosts = modelCosts,
-        clientModels = clientModels,
-        clientModelCosts = clientModelCosts,
-        clientCacheReads = clientCacheReads,
-        clientCacheWrites = clientCacheWrites,
-        clientOutputs = clientOutputs,
-        clientUnclassifiedTokens = clientUnclassifiedTokens,
-        modelCacheReads = modelCacheReads,
-        modelCacheWrites = modelCacheWrites,
-        modelOutputs = modelOutputs,
-        modelUnclassifiedTokens = modelUnclassifiedTokens,
-        unpricedTokens = unpricedTokens,
-        clientUnpricedTokens = boundedUnpricedMap(clientUnpricedTokens, clients, unpricedTokens),
-        modelUnpricedTokens = boundedUnpricedMap(modelUnpricedTokens, models, unpricedTokens),
-        clientModelUnpricedTokens = clientModelUnpricedTokens.mapValues { (client, counts) ->
-            boundedUnpricedMap(counts, clientModels[client].orEmpty(), boundedUnpricedMap(clientUnpricedTokens, clients, unpricedTokens)[client] ?: 0)
-        },
-        projects = projects.map { it.toDomain() },
-        sessions = sessions.map { it.toDomain() },
-    )
+    private fun HubPeriodDto.toDomain(): UsagePeriod {
+        val missing = unpricedTokens.coerceIn(0, totalTokens.coerceAtLeast(0))
+        val byClient = boundedUnpricedMap(clientUnpricedTokens, clients, missing)
+        return UsagePeriod(
+            throughputAvailable = throughputAvailable,
+            timedTokens = timedTokens,
+            timedOutputTokens = timedOutputTokens,
+            timedDurationMs = timedDurationMs,
+            totalTokens = totalTokens.coerceAtLeast(0),
+            costUsd = costUsd.coerceAtLeast(0.0),
+            clients = clients,
+            clientCosts = clientCosts,
+            models = models,
+            modelCosts = modelCosts,
+            clientModels = clientModels,
+            clientModelCosts = clientModelCosts,
+            clientCacheReads = clientCacheReads,
+            clientCacheWrites = clientCacheWrites,
+            clientOutputs = clientOutputs,
+            clientUnclassifiedTokens = clientUnclassifiedTokens,
+            modelCacheReads = modelCacheReads,
+            modelCacheWrites = modelCacheWrites,
+            modelOutputs = modelOutputs,
+            modelUnclassifiedTokens = modelUnclassifiedTokens,
+            projects = projects.map { it.toDomain() },
+            sessions = sessions.map { it.toDomain() },
+            unpricedTokens = missing,
+            clientUnpricedTokens = byClient,
+            modelUnpricedTokens = boundedUnpricedMap(modelUnpricedTokens, models, missing),
+            clientModelUnpricedTokens = clientModelUnpricedTokens.mapValues { (client, counts) ->
+                boundedUnpricedMap(counts, clientModels[client].orEmpty(),
+                    byClient[client] ?: 0)
+            },
+        )
+    }
 
     private fun HubProjectDto.toDomain() = ProjectUsage(
         id = id,

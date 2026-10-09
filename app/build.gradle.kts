@@ -5,6 +5,7 @@ plugins {
 
 val appVersionCode = providers.gradleProperty("tokenMonitorVersionCode").get().toInt()
 val appVersionName = providers.gradleProperty("tokenMonitorVersionName").get()
+val androidBaseTag = providers.gradleProperty("tokenMonitorAndroidBaseTag").get()
 val upstreamVersion = providers.gradleProperty("tokenMonitorUpstreamVersion").get()
 val upstreamTag = providers.gradleProperty("tokenMonitorUpstreamTag").get()
 val upstreamCommit = providers.gradleProperty("tokenMonitorUpstreamCommit").get()
@@ -29,6 +30,7 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
+        buildConfigField("String", "ANDROID_BASE_TAG", "\"$androidBaseTag\"")
         buildConfigField("String", "UPSTREAM_VERSION", "\"$upstreamVersion\"")
         buildConfigField("String", "UPSTREAM_TAG", "\"$upstreamTag\"")
         buildConfigField("String", "UPSTREAM_COMMIT", "\"$upstreamCommit\"")
