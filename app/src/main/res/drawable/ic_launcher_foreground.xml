@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The existing notification Sigma, centered at 48 x 54dp inside the 66dp safe area.
-     No pre-rounded tile, bitmap padding, outline or launcher shadow is baked in. -->
+<!-- Restore the pre-hub.5 logo's visual size (about 33 x 38dp), centered in
+     the 108dp adaptive layer. Keep the full-bleed background separate so the
+     previous bitmap's dark outer ring and pre-rounded tile do not return. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#FFFFFFFF"
-        android:pathData="M30,27H78V36H45L63,54L45,72H78V81H30V72L48,54L30,36Z" />
+    <group android:scaleX="2.1" android:scaleY="2.1"
+        android:translateX="28.8" android:translateY="28.8">
+        <path android:fillColor="#FFFFFFFF"
+            android:pathData="M4,3H20V6H9L15,12L9,18H20V21H4V18L10,12L4,6Z" />
+    </group>
 </vector>

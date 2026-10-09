@@ -1,5 +1,21 @@
 # Validation
 
+## Fork v0.68.0-hub.6 — 2026-10-09
+
+This revision only reduces the launcher Sigma from hub.5's 48x54dp to
+33.6x37.8dp, matching the pre-hub.5 bitmap's measured ~32.6x38.0dp visual
+size. The full-bleed blue background and monochrome layer remain. The
+application's content-icon preferences and device layouts are unchanged.
+Native launcher tests passed on API 31 and API 36 (one case each), checking
+size, centering and no dark outer ring. Preview/test assembly, lint (zero
+errors), the signed release build and source-boundary checks passed. The
+complete statistics suite was not rerun for this vector-only sizing change.
+
+See the [hub.6 release notes](releases/v0.68.0-hub.6.md) and attached
+validation.json for the APK, overwrite-install result and exact evidence.
+Rendering uses Android's native AOSP mask. HyperOS3 hardware, authenticated
+personal NAS Hub and Android 17 remain unverified.
+
 ## Fork v0.68.0-hub.5 — 2026-10-09
 
 This UI-only revision replaces the inset bitmap launcher icon with full-bleed

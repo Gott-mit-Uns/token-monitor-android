@@ -22,7 +22,13 @@ class LauncherIconTest {
         val occupied = (0 until 108).flatMap { y -> (0 until 108).filter { x -> Color.alpha(foreground.getPixel(x, y)) > 0 }.map { x -> x to y } }
         assertTrue(occupied.isNotEmpty())
         assertTrue(occupied.all { (x, y) -> x in 21..86 && y in 21..86 })
-        assertTrue(occupied.maxOf { it.first } - occupied.minOf { it.first } + 1 >= 48)
+        // Match the original inset bitmap's ~33 x 38dp white glyph, not hub.5's
+        // enlarged 48 x 54dp glyph. Raster edges may occupy an extra pixel.
+        val left = occupied.minOf { it.first }; val right = occupied.maxOf { it.first }
+        val top = occupied.minOf { it.second }; val bottom = occupied.maxOf { it.second }
+        assertTrue("Logo width should match the original size", right - left + 1 in 33..35)
+        assertTrue("Logo height should match the original size", bottom - top + 1 in 38..40)
+        assertTrue("Logo must remain centered", (left + right) / 2f in 53f..54f && (top + bottom) / 2f in 53f..54f)
         val masked = Bitmap.createBitmap(144, 144, Bitmap.Config.ARGB_8888)
         icon.setBounds(0, 0, 144, 144); icon.draw(Canvas(masked))
         for ((x, y) in listOf(72 to 7, 72 to 136, 7 to 72, 136 to 72)) {

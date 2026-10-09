@@ -2,7 +2,7 @@
 
 基于 [The-Minion-oOo/token-monitor-android](https://github.com/The-Minion-oOo/token-monitor-android) 的安卓客户端，保留中文与个人显示改进。感谢原作者实现了与桌面 Token Monitor 风格接近的轻量查看界面。
 
-**当前版本 `v0.68.0-hub.5`，versionCode `680105`。** 功能基础仍为本分支 **0.67 hub.2** 加安卓上游 **0.68.0 r1**；本版优化启动图标和设备显示，继续暂停直接复刻桌面扩展。应用ID和固定签名不变，可覆盖之前的hub版本，无需卸载。
+**当前版本 `v0.68.0-hub.6`，versionCode `680106`。** 功能基础仍为本分支 **0.67 hub.2** 加安卓上游 **0.68.0 r1**；本版按反馈恢复启动图标中央Σ的原有大小，保留hub.5的设备显示改进，继续暂停直接复刻桌面扩展。应用ID和固定签名不变，可覆盖之前的hub版本，无需卸载。
 
 [下载 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [安装说明](docs/INSTALL.md) · [Hub连接](HUB.md) · [更新维护](docs/UPSTREAM_SYNC.md) · [构建说明](BUILDING.md)
 
@@ -14,7 +14,7 @@
 - 主页万／亿或K／M／B切换；“简写Token总量”独立控制主页顶部。二级Token显示完整整数。
 - 主页不显示趋势，保留独立趋势页；保留设备二级页的紧凑对齐与大字体适配。
 - 主页设备按当前周期Token用量降序排列，隐藏零用量；设备二级页保留完整设备列表，常规字体下用两行展示名称／系统、同步状态／时间和Token／费用。
-- 启动图标采用独立的蓝色背景和Σ矢量前景，去除深色外圈与重复圆角留白；支持系统主题图标。HyperOS3真机启动器效果仍待确认。
+- 启动图标采用独立的蓝色背景和Σ矢量前景，中央Σ恢复为原来约33×38dp的视觉大小，保留去除深色外圈的调整；支持系统主题图标。HyperOS3真机启动器效果仍待确认。
 - 设备名称跟随Hub，不重新在手机改名。旧安卓别名记录不再影响显示。
 - NAS／电脑Hub支持HTTPS反代域名、Tailscale和局域网。安卓只读，不采集、不上传设备、不编辑共享数据。
 - 凭据采用Keystore支持的加密存储并排除备份；离线保留最后有效快照。
@@ -36,12 +36,12 @@
 
 截图由安卓实际组件使用合成数据渲染，不含真实地址、凭据或用量。主页示意使用加长视口，普通手机可滚动查看；示例DH4300plus今日用量为零，因此不在主页显示。
 
-[两行设备页预览](docs/images/hub5/devices-after-dark.png) · [启动图标48／64dp预览](docs/images/hub5/launcher-icon.png)
+[两行设备页预览](docs/images/hub5/devices-after-dark.png) · [恢复比例后的启动图标48／64dp预览](docs/images/hub6/launcher-icon.png)
 
 ## 版本与来源
 
 当前安卓来源为 `android-v0.68.0-r1`；Hub协议验证使用桌面0.68固定源码。来源分别记录在 `upstream.json`。后续只跟进安卓稳定发布；桌面版本变化不触发逐项复刻。
 
-[功能恢复范围](docs/reviews/hub4-rollback.md) · [本版发布说明](docs/releases/v0.68.0-hub.5.md)。旧Release保留。真机／启动器、已认证NASHub、Android17未验证；验证范围和校验值随Release提供。
+[功能恢复范围](docs/reviews/hub4-rollback.md) · [本版发布说明](docs/releases/v0.68.0-hub.6.md)。旧Release保留。真机／启动器、已认证NASHub、Android17未验证；验证范围和校验值随Release提供。
 
 本项目继续大量使用安卓上游代码，保留原作者署名及MIT许可。第三方标识的来源见 [许可与素材说明](THIRD_PARTY_NOTICES.md)。
