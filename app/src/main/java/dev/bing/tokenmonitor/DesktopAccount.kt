@@ -82,10 +82,10 @@ internal fun DesktopAccount(windows:List<Limit>,compact:Boolean=false,showAccoun
             }
         }
         if(expanded) {
-            Text(account,style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("limit-expanded-account-${first.presentation.recordIndex ?: accountIndex}"))
+            Text(account,style=quotaTextStyle(11),modifier=Modifier.testTag("limit-expanded-account-${first.presentation.recordIndex ?: accountIndex}"))
             projected.filter {it.details.isNotEmpty()}.forEach {row->
-                Text(LimitDisplay.text(row.label,display.maskEmails),style=MaterialTheme.typography.labelLarge)
-                row.details.forEach {cells->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {cells.forEach {Text(LimitDisplay.text(it,display.maskEmails),Modifier.weight(1f),style=MaterialTheme.typography.bodySmall)}}}
+                Text(LimitDisplay.text(row.label,display.maskEmails),style=quotaTextStyle(11,bold=true))
+                row.details.forEach {cells->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {cells.forEach {Text(LimitDisplay.text(it,display.maskEmails),Modifier.weight(1f),style=quotaTextStyle(10))}}}
             }
             val raw=(record["windows"] as? JsonArray).orEmpty()
             windows.filterIndexed {index,w->w.kind!=null && (raw.getOrNull(index) as? JsonObject)?.let {LimitPreferences.windowItem(first.provider,it)} !in hidden}.forEach {LimitWindow(it)}

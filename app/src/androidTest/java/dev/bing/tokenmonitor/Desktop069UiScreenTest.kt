@@ -102,7 +102,7 @@ class Desktop069UiScreenTest {
             complete(strings.getString(R.string.desktop_reference_version,"0.69.0"))
             complete(strings.getString(R.string.desktop_parity_partial))
             complete(strings.getString(R.string.hub_version_unknown))
-            compose.onNodeWithTag("about-android-version").assertTextContains("0.2.52-dev (61)",substring=true)
+            compose.onNodeWithTag("about-android-version").assertTextContains("0.2.53 (62)",substring=true)
             saveVisualEvidence(compose.activity,compose.onRoot(),"desktop069-about-${theme}-${lang.name}.png")
         }
     }
