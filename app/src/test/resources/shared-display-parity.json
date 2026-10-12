@@ -1,0 +1,1438 @@
+{
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418; pure pricing/subscription functions",
+  "labels": {
+    "cacheRead": {
+      "en": "Input (cache hit)",
+      "zh": "输入(命中缓存)"
+    },
+    "input": {
+      "en": "Input (cache miss)",
+      "zh": "输入(未命中缓存)"
+    },
+    "output": {
+      "en": "Output",
+      "zh": "输出"
+    },
+    "cacheWrite": {
+      "en": "Cache write",
+      "zh": "缓存写入"
+    },
+    "cacheWrite1h": {
+      "en": "Cache write (1 hour)",
+      "zh": "缓存写入（1 小时）"
+    }
+  },
+  "prices": [
+    {
+      "raw": "{\"modelId\":\"standard\",\"inputPerM\":2.5,\"outputPerM\":15,\"cacheReadPerM\":0,\"cacheWrite1hPerM\":3.75}",
+      "fields": {
+        "inputPerM": "2.5",
+        "outputPerM": "15",
+        "cacheReadPerM": "0",
+        "cacheWrite1hPerM": "3.75"
+      },
+      "meta": {
+        "en": "Input (cache hit) $0 · Input (cache miss) $2.5 · Output $15 · Cache write (1 hour) $3.75 / 1M",
+        "zh": "输入(命中缓存) $0 · 输入(未命中缓存) $2.5 · 输出 $15 · 缓存写入（1 小时） $3.75 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"zero\",\"inputPerM\":0,\"outputPerM\":0}",
+      "fields": {
+        "inputPerM": "0",
+        "outputPerM": "0"
+      },
+      "meta": {
+        "en": "Input (cache miss) $0 · Output $0 / 1M",
+        "zh": "输入(未命中缓存) $0 · 输出 $0 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"precision\",\"inputPerM\":1.23456789,\"cacheReadPerM\":0.01,\"cacheWritePerM\":2.75,\"cacheWrite1hPerM\":3.125}",
+      "fields": {
+        "inputPerM": "1.23456789",
+        "cacheReadPerM": "0.01",
+        "cacheWritePerM": "2.75",
+        "cacheWrite1hPerM": "3.125"
+      },
+      "meta": {
+        "en": "Input (cache hit) $0.01 · Input (cache miss) $1.23456789 · Cache write $2.75 · Cache write (1 hour) $3.125 / 1M",
+        "zh": "输入(命中缓存) $0.01 · 输入(未命中缓存) $1.23456789 · 缓存写入 $2.75 · 缓存写入（1 小时） $3.125 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"tiny\",\"inputPerM\":0.0000001}",
+      "fields": {
+        "inputPerM": "1e-7"
+      },
+      "meta": {
+        "en": "Input (cache miss) $1e-7 / 1M",
+        "zh": "输入(未命中缓存) $1e-7 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"small\",\"inputPerM\":0.000001}",
+      "fields": {
+        "inputPerM": "0.000001"
+      },
+      "meta": {
+        "en": "Input (cache miss) $0.000001 / 1M",
+        "zh": "输入(未命中缓存) $0.000001 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"large\",\"inputPerM\":100000000000000000000}",
+      "fields": {
+        "inputPerM": "100000000000000000000"
+      },
+      "meta": {
+        "en": "Input (cache miss) $100000000000000000000 / 1M",
+        "zh": "输入(未命中缓存) $100000000000000000000 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"scientific\",\"inputPerM\":1e21}",
+      "fields": {
+        "inputPerM": "1e+21"
+      },
+      "meta": {
+        "en": "Input (cache miss) $1e+21 / 1M",
+        "zh": "输入(未命中缓存) $1e+21 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"roundtrip\",\"inputPerM\":1e23}",
+      "fields": {
+        "inputPerM": "1e+23"
+      },
+      "meta": {
+        "en": "Input (cache miss) $1e+23 / 1M",
+        "zh": "输入(未命中缓存) $1e+23 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"subnormal\",\"inputPerM\":5e-324}",
+      "fields": {
+        "inputPerM": "5e-324"
+      },
+      "meta": {
+        "en": "Input (cache miss) $5e-324 / 1M",
+        "zh": "输入(未命中缓存) $5e-324 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"underflow\",\"inputPerM\":1e-400}",
+      "fields": {
+        "inputPerM": "0"
+      },
+      "meta": {
+        "en": "Input (cache miss) $0 / 1M",
+        "zh": "输入(未命中缓存) $0 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"negative-zero\",\"inputPerM\":-0}",
+      "fields": {
+        "inputPerM": "0"
+      },
+      "meta": {
+        "en": "Input (cache miss) $0 / 1M",
+        "zh": "输入(未命中缓存) $0 / 1M"
+      }
+    },
+    {
+      "raw": "{\"modelId\":\"nullable\",\"inputPerM\":1,\"outputPerM\":null,\"cacheReadPerM\":\"\"}",
+      "fields": {
+        "inputPerM": "1"
+      },
+      "meta": {
+        "en": "Input (cache miss) $1 / 1M",
+        "zh": "输入(未命中缓存) $1 / 1M"
+      }
+    }
+  ],
+  "subscriptions": [
+    {
+      "input": {
+        "id": "public-0",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-02-28",
+      "expected": {
+        "renewal": "2026-02-28",
+        "coverage": "2026-02-28",
+        "stop": "",
+        "recorded": 40,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 28,
+          "months": false
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-1",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-03-01",
+      "expected": {
+        "renewal": "2026-03-31",
+        "coverage": "2026-03-31",
+        "stop": "",
+        "recorded": 40,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 1,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-2",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 180,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-3",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": false,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-02-27",
+      "expected": {
+        "renewal": "",
+        "coverage": "2026-02-28",
+        "stop": "2026-02-28",
+        "recorded": 20,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 27,
+          "months": false
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-4",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": false,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-02-28",
+      "expected": {
+        "renewal": "",
+        "coverage": "2026-02-28",
+        "stop": "2026-02-28",
+        "recorded": 20,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 28,
+          "months": false
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-5",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "year",
+        "intervalCount": 1,
+        "startDate": "2024-02-29",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2027-02-28",
+        "coverage": "2027-02-28",
+        "stop": "",
+        "recorded": 60,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 31,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-6",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "year",
+        "intervalCount": 1,
+        "startDate": "2024-02-29",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2027-03-01",
+      "expected": {
+        "renewal": "2028-02-29",
+        "coverage": "2028-02-29",
+        "stop": "",
+        "recorded": 80,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 36,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-7",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 3,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 60,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-8",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "year",
+        "intervalCount": 2,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2028-01-31",
+        "coverage": "2028-01-31",
+        "stop": "",
+        "recorded": 20,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-9",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": "2026-10-12",
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-12",
+        "coverage": "2026-10-12",
+        "stop": "",
+        "recorded": 180,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-10",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": "2026-10-09",
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 180,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-11",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": "2026-11-15",
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-11-15",
+        "stop": "2026-11-15",
+        "recorded": 180,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-12",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": "2026-09-30",
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-09-30",
+        "stop": "2026-09-30",
+        "recorded": 160,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 7,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-13",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-11-01",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-11-01",
+        "coverage": "2026-11-01",
+        "stop": "",
+        "recorded": 0,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": null
+      }
+    },
+    {
+      "input": {
+        "id": "public-14",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-10-01",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-11-01",
+        "coverage": "2026-11-01",
+        "stop": "",
+        "recorded": 20,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 9,
+          "months": false
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-15",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-10-10",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-10",
+        "coverage": "2026-10-10",
+        "stop": "",
+        "recorded": 20,
+        "month": 0,
+        "amount": "$20.00",
+        "elapsed": {
+          "value": 0,
+          "months": false
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-16",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 1015,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 91.35,
+        "month": 0,
+        "amount": "$10.15",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-17",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 1015,
+        "currency": "TWD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 91.35,
+        "month": 0,
+        "amount": "NT$10.15",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-18",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 1015,
+        "currency": "HKD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 91.35,
+        "month": 0,
+        "amount": "HK$10.15",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-19",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 1015,
+        "currency": "CNY",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 91.35,
+        "month": 0,
+        "amount": "¥10.15",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-20",
+        "provider": "codex",
+        "kind": "subscription",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 9007199254740901,
+        "currency": "USD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "2026-10-31",
+        "coverage": "2026-10-31",
+        "stop": "",
+        "recorded": 810647932926681.1,
+        "month": 0,
+        "amount": "$90071992547409.02",
+        "elapsed": {
+          "value": 8,
+          "months": true
+        }
+      }
+    },
+    {
+      "input": {
+        "id": "public-21",
+        "provider": "openrouter",
+        "kind": "topup",
+        "binding": {
+          "profileName": "Public account",
+          "accountKey": "",
+          "accountEmail": ""
+        },
+        "planName": "Public plan",
+        "amountMinor": 2000,
+        "currency": "HKD",
+        "interval": "month",
+        "intervalCount": 1,
+        "startDate": "2026-01-31",
+        "topUps": [
+          {
+            "id": "top_1791575716156_gqo4",
+            "date": "2026-10-12",
+            "amountMinor": 300
+          },
+          {
+            "id": "top_1791575716156_1zkt",
+            "date": "2026-10-01",
+            "amountMinor": 200
+          },
+          {
+            "id": "top_1791575716156_4g7u",
+            "date": "2026-09-30",
+            "amountMinor": 101
+          }
+        ],
+        "autoRenew": true,
+        "nextRenewalOverride": null,
+        "endDate": null,
+        "note": "",
+        "updatedAt": "2026-10-10T00:00:00Z"
+      },
+      "today": "2026-10-10",
+      "expected": {
+        "renewal": "",
+        "coverage": "",
+        "stop": "",
+        "recorded": 3.01,
+        "month": 5,
+        "amount": "HK$20.00",
+        "elapsed": null
+      }
+    }
+  ],
+  "monthly": [
+    {
+      "input": [
+        {
+          "id": "public-2",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 20
+    },
+    {
+      "input": [
+        {
+          "id": "public-4",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": false,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-2",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 20
+    },
+    {
+      "input": [
+        {
+          "id": "public-5",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "year",
+          "intervalCount": 1,
+          "startDate": "2024-02-29",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-7",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 3,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-8",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "year",
+          "intervalCount": 2,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 9.166666666666668
+    },
+    {
+      "input": [
+        {
+          "id": "public-16",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-17",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "TWD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-18",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "HKD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-19",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "CNY",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 13.266151332327803
+    },
+    {
+      "input": [
+        {
+          "id": "public-16",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-17",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "TWD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-18",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "HKD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        },
+        {
+          "id": "public-19",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 1015,
+          "currency": "CNY",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {
+        "TWD": 30,
+        "HKD": 7,
+        "CNY": 7
+      },
+      "today": "2026-10-10",
+      "expected": 13.388333333333332
+    },
+    {
+      "input": [
+        {
+          "id": "public-12",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": "2026-09-30",
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 0
+    },
+    {
+      "input": [
+        {
+          "id": "public-13",
+          "provider": "codex",
+          "kind": "subscription",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "USD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-11-01",
+          "topUps": [],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 20
+    },
+    {
+      "input": [
+        {
+          "id": "public-21",
+          "provider": "openrouter",
+          "kind": "topup",
+          "binding": {
+            "profileName": "Public account",
+            "accountKey": "",
+            "accountEmail": ""
+          },
+          "planName": "Public plan",
+          "amountMinor": 2000,
+          "currency": "HKD",
+          "interval": "month",
+          "intervalCount": 1,
+          "startDate": "2026-01-31",
+          "topUps": [
+            {
+              "id": "top_1791575716156_gqo4",
+              "date": "2026-10-12",
+              "amountMinor": 300
+            },
+            {
+              "id": "top_1791575716156_1zkt",
+              "date": "2026-10-01",
+              "amountMinor": 200
+            },
+            {
+              "id": "top_1791575716156_4g7u",
+              "date": "2026-09-30",
+              "amountMinor": 101
+            }
+          ],
+          "autoRenew": true,
+          "nextRenewalOverride": null,
+          "endDate": null,
+          "note": "",
+          "updatedAt": "2026-10-10T00:00:00Z"
+        }
+      ],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 0.6410256410256411
+    },
+    {
+      "input": [],
+      "rates": {},
+      "today": "2026-10-10",
+      "expected": 0
+    }
+  ]
+}

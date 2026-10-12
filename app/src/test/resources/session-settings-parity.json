@@ -1,0 +1,567 @@
+{
+  "guards": [
+    {
+      "id": "home",
+      "hidden": [
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "limits",
+      "hidden": [
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "tools",
+      "hidden": [
+        "home",
+        "limits",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "models",
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "projects",
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "sessions",
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "devices",
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "trends"
+      ],
+      "count": 1
+    },
+    {
+      "id": "trends",
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices"
+      ],
+      "count": 1
+    }
+  ],
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418/app.js renderSessionSettingsList",
+  "cases": [
+    {
+      "locale": "en",
+      "titleValue": null,
+      "metric": "used",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": null,
+      "metric": "remaining",
+      "enabled": true,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": null,
+      "metric": "invalid",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": true,
+      "metric": "used",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": true,
+      "metric": "remaining",
+      "enabled": true,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": true,
+      "metric": "invalid",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": false,
+      "metric": "used",
+      "enabled": false,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": true
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": false,
+      "metric": "remaining",
+      "enabled": false,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": true
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": false,
+      "metric": "invalid",
+      "enabled": false,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": true
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": "invalid",
+      "metric": "used",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": "invalid",
+      "metric": "remaining",
+      "enabled": true,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "en",
+      "titleValue": "invalid",
+      "metric": "invalid",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "Show session titles",
+      "note": "Hide session titles across all views.",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": null,
+      "metric": "used",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": null,
+      "metric": "remaining",
+      "enabled": true,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": null,
+      "metric": "invalid",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": true,
+      "metric": "used",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": true,
+      "metric": "remaining",
+      "enabled": true,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": true,
+      "metric": "invalid",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": false,
+      "metric": "used",
+      "enabled": false,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": true
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": false,
+      "metric": "remaining",
+      "enabled": false,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": true
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": false,
+      "metric": "invalid",
+      "enabled": false,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": true
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": "invalid",
+      "metric": "used",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": "invalid",
+      "metric": "remaining",
+      "enabled": true,
+      "selected": "remaining",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "used"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    },
+    {
+      "locale": "zh-CN",
+      "titleValue": "invalid",
+      "metric": "invalid",
+      "enabled": true,
+      "selected": "used",
+      "writes": [
+        {
+          "sessionTitlesEnabled": false
+        },
+        {
+          "sessionContextMetric": "remaining"
+        }
+      ],
+      "unchanged": true,
+      "label": "显示会话标题",
+      "note": "在所有界面隐藏会话标题。",
+      "fontSize": "11px"
+    }
+  ]
+}

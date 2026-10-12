@@ -1,0 +1,2294 @@
+{
+  "reference": "v0.68.0 original stats alias projection, session fallback, updateRowLive and CSS",
+  "fallback": [
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "off",
+      "metric": "tokens",
+      "rows": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "off",
+      "metric": "cost",
+      "rows": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "metric": "tokens",
+      "rows": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "metric": "cost",
+      "rows": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "metric": "tokens",
+      "rows": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "metric": "cost",
+      "rows": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "off",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "vendor/shared",
+          "tokens": 800,
+          "cost": 1,
+          "barValue": 800,
+          "unpriced": 0
+        },
+        {
+          "id": "other",
+          "tokens": 200,
+          "cost": 20,
+          "barValue": 200,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "off",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "other",
+          "tokens": 200,
+          "cost": 20,
+          "barValue": 20,
+          "unpriced": 0
+        },
+        {
+          "id": "vendor/shared",
+          "tokens": 800,
+          "cost": 1,
+          "barValue": 1,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "vendor/shared",
+          "tokens": 800,
+          "cost": 1,
+          "barValue": 800,
+          "unpriced": 0
+        },
+        {
+          "id": "other",
+          "tokens": 200,
+          "cost": 20,
+          "barValue": 200,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "other",
+          "tokens": 200,
+          "cost": 20,
+          "barValue": 20,
+          "unpriced": 0
+        },
+        {
+          "id": "vendor/shared",
+          "tokens": 800,
+          "cost": 1,
+          "barValue": 1,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "shared",
+          "tokens": 800,
+          "cost": 1,
+          "barValue": 800,
+          "unpriced": 0
+        },
+        {
+          "id": "other",
+          "tokens": 200,
+          "cost": 20,
+          "barValue": 200,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "other",
+          "tokens": 200,
+          "cost": 20,
+          "barValue": 20,
+          "unpriced": 0
+        },
+        {
+          "id": "shared",
+          "tokens": 800,
+          "cost": 1,
+          "barValue": 1,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "off",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 21,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "off",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 21,
+          "barValue": 21,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "duplicates",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 21,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "duplicates",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 21,
+          "barValue": 21,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "prefix",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 21,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "prefix",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 21,
+          "barValue": 21,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "off",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "vendor/shared",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "off",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "vendor/shared",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "shared",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "shared",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "shared",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "shared",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "off",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "off",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "duplicates",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "duplicates",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "prefix",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "prefix",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "Public model",
+          "tokens": 1000,
+          "cost": 0,
+          "barValue": 1000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "off",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "a",
+          "tokens": 6000,
+          "cost": 0,
+          "barValue": 6000,
+          "unpriced": 0
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        },
+        {
+          "id": "b",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "off",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "a",
+          "tokens": 6000,
+          "cost": 0,
+          "barValue": 6000,
+          "unpriced": 0
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        },
+        {
+          "id": "b",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "duplicates",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "a",
+          "tokens": 6000,
+          "cost": 0,
+          "barValue": 6000,
+          "unpriced": 0
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        },
+        {
+          "id": "b",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "duplicates",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "a",
+          "tokens": 6000,
+          "cost": 0,
+          "barValue": 6000,
+          "unpriced": 0
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        },
+        {
+          "id": "b",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "prefix",
+      "metric": "tokens",
+      "rows": [
+        {
+          "id": "a",
+          "tokens": 6000,
+          "cost": 0,
+          "barValue": 6000,
+          "unpriced": 0
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        },
+        {
+          "id": "b",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "prefix",
+      "metric": "cost",
+      "rows": [
+        {
+          "id": "a",
+          "tokens": 6000,
+          "cost": 0,
+          "barValue": 6000,
+          "unpriced": 0
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        },
+        {
+          "id": "b",
+          "tokens": 2000,
+          "cost": 0,
+          "barValue": 2000,
+          "unpriced": 0
+        }
+      ]
+    }
+  ],
+  "aliasCases": [
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "off",
+      "models": {},
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "models": {},
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "models": {},
+            "sessions": {}
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "models": {},
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "off",
+      "models": {
+        "vendor/shared": 800,
+        "other": 200
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "models": {
+        "vendor/shared": 800,
+        "other": 200
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "other": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "other": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "other": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "models": {
+        "shared": 800,
+        "other": 200
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "off",
+      "models": {
+        "Public model": 1000
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "duplicates",
+      "models": {
+        "Public model": 1000
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "costUsd": 21,
+            "models": {
+              "vendor/shared": 800,
+              "shared": 200
+            },
+            "modelCosts": {
+              "vendor/shared": 1,
+              "shared": 20
+            },
+            "modelOutputs": {
+              "vendor/shared": 600,
+              "shared": 100
+            },
+            "tokenComponentsAvailable": true
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "prefix",
+      "models": {
+        "Public model": 1000
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "off",
+      "models": {
+        "vendor/shared": 1000
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "duplicates",
+      "models": {
+        "shared": 1000
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 1000
+            }
+          }
+        },
+        "devices": [
+          {
+            "deviceId": "public",
+            "periods": {
+              "today": {
+                "modelCosts": {
+                  "shared": 0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "aliases": {},
+      "grouping": "prefix",
+      "models": {
+        "shared": 1000
+      },
+      "sessions": []
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "off",
+      "models": {
+        "Public model": 1000
+      },
+      "sessions": [
+        {
+          "id": "public",
+          "models": {
+            "Public model": 1000
+          },
+          "label": "Public model",
+          "shares": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "duplicates",
+      "models": {
+        "Public model": 1000
+      },
+      "sessions": [
+        {
+          "id": "public",
+          "models": {
+            "Public model": 1000
+          },
+          "label": "Public model",
+          "shares": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "models": {
+              "vendor/shared": 700,
+              "shared": 300
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 1000,
+                "models": {
+                  "vendor/shared": 700,
+                  "shared": 300
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "Public model",
+        "shared": "Public model"
+      },
+      "grouping": "prefix",
+      "models": {
+        "Public model": 1000
+      },
+      "sessions": [
+        {
+          "id": "public",
+          "models": {
+            "Public model": 1000
+          },
+          "label": "Public model",
+          "shares": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "off",
+      "models": {
+        "a": 6000,
+        "b": 2000
+      },
+      "sessions": [
+        {
+          "id": "public",
+          "models": {
+            "shared": 6000,
+            "b": 2000
+          },
+          "label": "2 models",
+          "shares": [
+            [
+              "shared",
+              "6000",
+              "60%"
+            ],
+            [
+              "b",
+              "2000",
+              "20%"
+            ],
+            [
+              "__fixture_unclassified__",
+              "2000",
+              "20%"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "duplicates",
+      "models": {
+        "a": 6000,
+        "b": 2000
+      },
+      "sessions": [
+        {
+          "id": "public",
+          "models": {
+            "shared": 6000,
+            "b": 2000
+          },
+          "label": "2 models",
+          "shares": [
+            [
+              "shared",
+              "6000",
+              "60%"
+            ],
+            [
+              "b",
+              "2000",
+              "20%"
+            ],
+            [
+              "__fixture_unclassified__",
+              "2000",
+              "20%"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "periods": {
+          "today": {
+            "totalTokens": 10000,
+            "models": {
+              "a": 6000,
+              "b": 2000
+            },
+            "sessions": {
+              "public": {
+                "client": "codex",
+                "totalTokens": 10000,
+                "models": {
+                  "vendor/shared": 5999,
+                  "shared": 1,
+                  "b": 2000
+                },
+                "lastUsedAt": "2026-10-10T00:00:00Z"
+              }
+            }
+          }
+        },
+        "nativeProjects": {
+          "today": {
+            "public": {
+              "model": "shared",
+              "modelCosts": {
+                "b": 0
+              }
+            }
+          }
+        },
+        "historyPreview": {
+          "daily": [],
+          "summary": {
+            "favoriteModel": "shared"
+          }
+        }
+      },
+      "aliases": {
+        "vendor/shared": "shared"
+      },
+      "grouping": "prefix",
+      "models": {
+        "a": 6000,
+        "b": 2000
+      },
+      "sessions": [
+        {
+          "id": "public",
+          "models": {
+            "shared": 6000,
+            "b": 2000
+          },
+          "label": "2 models",
+          "shares": [
+            [
+              "shared",
+              "6000",
+              "60%"
+            ],
+            [
+              "b",
+              "2000",
+              "20%"
+            ],
+            [
+              "__fixture_unclassified__",
+              "2000",
+              "20%"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "sequences": [
+    [
+      {
+        "at": 100,
+        "state": "running",
+        "pulse": false,
+        "active": true
+      },
+      {
+        "at": 100,
+        "state": "running",
+        "pulse": false,
+        "active": true
+      },
+      {
+        "at": 101,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      },
+      {
+        "at": 101,
+        "state": "idle",
+        "pulse": false,
+        "active": false
+      },
+      {
+        "at": 102,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      },
+      {
+        "at": 0,
+        "state": "running",
+        "pulse": false,
+        "active": true
+      },
+      {
+        "at": 103,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      }
+    ],
+    [
+      {
+        "at": 0,
+        "state": "running",
+        "pulse": false,
+        "active": true
+      },
+      {
+        "at": -1,
+        "state": "running",
+        "pulse": false,
+        "active": true
+      },
+      {
+        "at": 100,
+        "state": "idle",
+        "pulse": false,
+        "active": false
+      },
+      {
+        "at": 101,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      },
+      {
+        "at": 50,
+        "state": "running",
+        "pulse": false,
+        "active": true
+      },
+      {
+        "at": 51,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      }
+    ],
+    [
+      {
+        "at": 100,
+        "state": "idle",
+        "pulse": false,
+        "active": false
+      },
+      {
+        "at": 101,
+        "state": "idle",
+        "pulse": false,
+        "active": false
+      },
+      {
+        "at": 102,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      },
+      {
+        "at": 102,
+        "state": "ended",
+        "pulse": false,
+        "active": false
+      },
+      {
+        "at": 103,
+        "state": "ended",
+        "pulse": false,
+        "active": false
+      },
+      {
+        "at": 104,
+        "state": "running",
+        "pulse": true,
+        "active": true
+      }
+    ]
+  ],
+  "frames": [
+    {
+      "ms": 0,
+      "blur": 3,
+      "opacity": 0.45,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.45) 0px 0px 3px 0px"
+    },
+    {
+      "ms": 60,
+      "blur": 4.57701,
+      "opacity": 0.565,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.565) 0px 0px 4.57701px 0px"
+    },
+    {
+      "ms": 150,
+      "blur": 6.62889,
+      "opacity": 0.71,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.71) 0px 0px 6.62889px 0px"
+    },
+    {
+      "ms": 300,
+      "blur": 9.16851,
+      "opacity": 0.89,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.89) 0px 0px 9.16851px 0px"
+    },
+    {
+      "ms": 420,
+      "blur": 10,
+      "opacity": 0.95,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.95) 0px 0px 10px 0px"
+    },
+    {
+      "ms": 600,
+      "blur": 7.89026,
+      "opacity": 0.808,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.808) 0px 0px 7.89026px 0px"
+    },
+    {
+      "ms": 900,
+      "blur": 5.20415,
+      "opacity": 0.627,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.627) 0px 0px 5.20415px 0px"
+    },
+    {
+      "ms": 1200,
+      "blur": 4,
+      "opacity": 0.55,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.55) 0px 0px 4px 0px"
+    },
+    {
+      "ms": 1300,
+      "blur": 4,
+      "opacity": 0.55,
+      "shadow": "rgb(16, 21, 30) 0px 0px 0px 1.5px, rgba(183, 234, 212, 0.55) 0px 0px 4px 0px"
+    }
+  ]
+}

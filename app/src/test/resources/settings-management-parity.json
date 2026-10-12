@@ -1,0 +1,850 @@
+{
+  "referenceCommit": "5d2db368d8313415763860d594de00e46a663418",
+  "sourceFunctions": [
+    "renderHomeLimitProviderList",
+    "limitProviderUsageItemsList",
+    "renderHomeLimitModule",
+    "visibilityIcon",
+    "createPreferenceOrderHandle",
+    "resetViewDisplayOrder",
+    "showAllViews"
+  ],
+  "catalog": [
+    {
+      "id": "claude",
+      "label": "Claude",
+      "settingsLabel": "Claude Code"
+    },
+    {
+      "id": "codex",
+      "label": "Codex"
+    },
+    {
+      "id": "opencode",
+      "label": "OpenCode"
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor"
+    },
+    {
+      "id": "antigravity",
+      "label": "Antigravity"
+    },
+    {
+      "id": "cline",
+      "label": "Cline"
+    },
+    {
+      "id": "factory",
+      "label": "Factory Droid"
+    },
+    {
+      "id": "kimi",
+      "label": "Kimi"
+    },
+    {
+      "id": "grok",
+      "label": "Grok"
+    },
+    {
+      "id": "copilot",
+      "label": "GitHub Copilot"
+    },
+    {
+      "id": "zed",
+      "label": "Zed"
+    },
+    {
+      "id": "commandcode",
+      "label": "Command Code"
+    },
+    {
+      "id": "mimo",
+      "label": "Xiaomi MiMo"
+    },
+    {
+      "id": "zai",
+      "label": "GLM",
+      "settingsLabel": "Z.ai / GLM"
+    },
+    {
+      "id": "zaiteam",
+      "label": "GLM Team"
+    },
+    {
+      "id": "kiro",
+      "label": "Kiro"
+    },
+    {
+      "id": "workbuddy",
+      "label": "WorkBuddy"
+    },
+    {
+      "id": "qoder",
+      "label": "Qoder"
+    },
+    {
+      "id": "deepseek",
+      "label": "DeepSeek"
+    },
+    {
+      "id": "devin",
+      "label": "Devin"
+    },
+    {
+      "id": "minimax",
+      "label": "Minimax"
+    },
+    {
+      "id": "typesafe",
+      "label": "TypeSafe"
+    },
+    {
+      "id": "openrouter",
+      "label": "OpenRouter"
+    },
+    {
+      "id": "volcengine",
+      "label": "Volcengine"
+    },
+    {
+      "id": "ollama",
+      "label": "Ollama"
+    },
+    {
+      "id": "trae",
+      "label": "Trae CN"
+    },
+    {
+      "id": "alibaba",
+      "label": "Alibaba Cloud"
+    },
+    {
+      "id": "stepfun",
+      "label": "StepFun"
+    },
+    {
+      "id": "thirdparty",
+      "label": "Third-party APIs"
+    }
+  ],
+  "search": [
+    {
+      "query": "",
+      "ids": [
+        "claude",
+        "codex",
+        "opencode",
+        "cursor",
+        "antigravity",
+        "cline",
+        "factory",
+        "kimi",
+        "grok",
+        "copilot",
+        "zed",
+        "commandcode",
+        "mimo",
+        "zai",
+        "zaiteam",
+        "kiro",
+        "workbuddy",
+        "qoder",
+        "deepseek",
+        "devin",
+        "minimax",
+        "typesafe",
+        "openrouter",
+        "volcengine",
+        "ollama",
+        "trae",
+        "alibaba",
+        "stepfun",
+        "thirdparty"
+      ]
+    },
+    {
+      "query": "  CODEX  ",
+      "ids": [
+        "codex"
+      ]
+    },
+    {
+      "query": "Claude Code",
+      "ids": [
+        "claude"
+      ]
+    },
+    {
+      "query": "Z.ai / GLM",
+      "ids": [
+        "zai"
+      ]
+    },
+    {
+      "query": "GLM zai",
+      "ids": [
+        "zai"
+      ]
+    },
+    {
+      "query": "factory droid",
+      "ids": [
+        "factory"
+      ]
+    },
+    {
+      "query": "cod ex",
+      "ids": []
+    },
+    {
+      "query": "no-public-match",
+      "ids": []
+    }
+  ],
+  "reports": [
+    {
+      "locale": "en",
+      "headerBeforeViews": true,
+      "buttonTitles": [
+        "Reset order",
+        "Show all"
+      ],
+      "headerSize": "24px",
+      "mode": "text",
+      "highlight": true,
+      "names": true,
+      "namesDisabled": true,
+      "count": {
+        "min": "1",
+        "max": "12"
+      },
+      "providerNames": [
+        "Codex",
+        "Claude Code",
+        "Z.ai / GLM"
+      ],
+      "unavailable": "Public old (not reported now)",
+      "writes": [
+        {
+          "viewDisplayOrder": ""
+        },
+        {
+          "hiddenViews": ""
+        }
+      ],
+      "highlights": [
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": -1,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 0,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 19.999,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 20,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 49.999,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": -1,
+          "critical": true,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 0,
+          "critical": true,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 19.999,
+          "critical": true,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 20,
+          "critical": false,
+          "low": true,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 49.999,
+          "critical": false,
+          "low": true,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": -1,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 0,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 19.999,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 20,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 49.999,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": -1,
+          "critical": true,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 0,
+          "critical": true,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 19.999,
+          "critical": true,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 20,
+          "critical": false,
+          "low": true,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 49.999,
+          "critical": false,
+          "low": true,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": true
+        }
+      ]
+    },
+    {
+      "locale": "zh-CN",
+      "headerBeforeViews": true,
+      "buttonTitles": [
+        "重置排序",
+        "显示全部"
+      ],
+      "headerSize": "24px",
+      "mode": "text",
+      "highlight": true,
+      "names": true,
+      "namesDisabled": true,
+      "count": {
+        "min": "1",
+        "max": "12"
+      },
+      "providerNames": [
+        "Codex",
+        "Claude Code",
+        "Z.ai / GLM"
+      ],
+      "unavailable": "Public old（当前未报告）",
+      "writes": [
+        {
+          "viewDisplayOrder": ""
+        },
+        {
+          "hiddenViews": ""
+        }
+      ],
+      "highlights": [
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": -1,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 0,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 19.999,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 20,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 49.999,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": false,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": -1,
+          "critical": true,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 0,
+          "critical": true,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 19.999,
+          "critical": true,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 20,
+          "critical": false,
+          "low": true,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 49.999,
+          "critical": false,
+          "low": true,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "text",
+          "enabled": true,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": -1,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 0,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 19.999,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 20,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 49.999,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": false,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": null,
+          "critical": false,
+          "low": false,
+          "meter": false
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": -1,
+          "critical": true,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 0,
+          "critical": true,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 19.999,
+          "critical": true,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 20,
+          "critical": false,
+          "low": true,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 49.999,
+          "critical": false,
+          "low": true,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 50,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 100,
+          "critical": false,
+          "low": false,
+          "meter": true
+        },
+        {
+          "mode": "bars",
+          "enabled": true,
+          "remaining": 101,
+          "critical": false,
+          "low": false,
+          "meter": true
+        }
+      ]
+    }
+  ]
+}

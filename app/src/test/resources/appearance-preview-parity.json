@@ -1,0 +1,1894 @@
+{
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418/app.js; actual previewThemeColor/previewVendorColor",
+  "cases": [
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "accent": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "accent": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "accent": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "accent": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "chart": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "chart": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "chart": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "chart": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "bg": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "bg": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "bg": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "bg": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "text": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "text": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "text": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "text": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "muted": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "muted": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "muted": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "muted": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "codex": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "codex": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "codex": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "codex": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "claude": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "claude": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "claude": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "claude": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "droid": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "droid": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "droid": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "droid": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#FF0000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "default": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "default": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#ffffff",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "default": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": {
+        "default": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#abc",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "invalid",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#ff000000",
+      "base": {
+        "colors": {},
+        "vendors": {}
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#ff0000",
+        "bg": "#303438"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#12ab34",
+        "bg": "#303438"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#ffffff",
+        "bg": "#303438"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#000000",
+        "bg": "#303438"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "accent",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "chart": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "chart": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "chart": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "chart": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "chart",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "bg",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "text": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "text": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "text": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "text": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "text",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "muted": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "muted": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "muted": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "accent": "#112233",
+        "bg": "#303438",
+        "muted": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": false,
+      "key": "muted",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "codex",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "claude": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "claude": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "claude": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "claude": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "claude",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "droid": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "droid": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "droid": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "droid": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "droid",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#FF0000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "default": "#ff0000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": " #12ab34 ",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "default": "#12ab34"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#ffffff",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "default": "#ffffff"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": {
+        "codex": "#445566",
+        "default": "#000000"
+      },
+      "calls": 1
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#abc",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "invalid",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    },
+    {
+      "vendor": true,
+      "key": "default",
+      "input": "#ff000000",
+      "base": {
+        "colors": {
+          "accent": "#112233",
+          "bg": "#303438"
+        },
+        "vendors": {
+          "codex": "#445566"
+        }
+      },
+      "expected": null,
+      "calls": 0
+    }
+  ]
+}

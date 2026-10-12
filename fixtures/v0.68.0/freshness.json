@@ -1,0 +1,28 @@
+{
+  "type": "freshness",
+  "reason": "ingest",
+  "stats": {
+    "updatedAt": "2026-10-08T20:05:03.339Z",
+    "staleAfterMs": 600000,
+    "limits": {
+      "updatedAt": "2026-10-08T20:05:03.339Z"
+    },
+    "devices": [
+      {
+        "deviceId": "fixture-desktop",
+        "updatedAt": "2026-10-08T20:05:03.335Z",
+        "receivedAt": "2026-10-08T20:05:03.335Z",
+        "ageMs": 4,
+        "stale": false
+      },
+      {
+        "deviceId": "fixture-offline",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "receivedAt": "2026-10-08T20:05:03.337Z",
+        "ageMs": 2,
+        "stale": false
+      }
+    ]
+  },
+  "at": "2026-10-08T20:05:03.335Z"
+}

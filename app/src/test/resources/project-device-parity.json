@@ -1,0 +1,5364 @@
+{
+  "source": "v0.68.0 projectRows.js, projectKey.js, deviceBreakdown.js and homeOverview.js",
+  "projectCases": [
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 40
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 20
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 6.666666666666667
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 38.50%, gemini 41.50%, gemini 71.83%, claude 74.83%, claude 91.83%, <unknown> 94.83%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "one",
+          "name": "one",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "public",
+          "tokens": 500,
+          "cost": "2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 100
+            }
+          ],
+          "gradient": "gemini"
+        },
+        {
+          "id": "one",
+          "name": "one",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "   ",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "   ",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "public",
+          "tokens": 500,
+          "cost": "2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 100
+            }
+          ],
+          "gradient": "gemini"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 0,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 0,
+          "cost": "1",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 0
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 0
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 65.17%, claude 68.17%, claude 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 0,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 500,
+          "cost": "3",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 120
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 100
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 60
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 41.36%, gemini 44.36%, gemini 77.07%, claude 80.07%, claude 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": -1,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 0,
+          "cost": "1",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 0
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 0
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 65.17%, claude 68.17%, claude 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": -1,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 500,
+          "cost": "3",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 120
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 100
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 60
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 41.36%, gemini 44.36%, gemini 77.07%, claude 80.07%, claude 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 0,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "0",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 0,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "2",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 40
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 20
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 6.666666666666667
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 38.50%, gemini 41.50%, gemini 71.83%, claude 74.83%, claude 91.83%, <unknown> 94.83%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {},
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 1000,
+              "percent": 100
+            }
+          ],
+          "gradient": "<unknown>"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {},
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 1000,
+              "percent": 66.66666666666666
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            }
+          ],
+          "gradient": "linear-gradient(90deg, <unknown> 0%, <unknown> 65.17%, gemini 68.17%, gemini 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 1200
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 1200,
+              "percent": 120
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 1200
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 1200,
+              "percent": 80
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 69.09%, gemini 72.09%, gemini 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "": 200,
+              "codex": 200
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 200,
+              "percent": 20
+            }
+          ],
+          "gradient": "linear-gradient(90deg, <unknown> 0%, <unknown> 73.50%, codex 76.50%, codex 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "": 200,
+              "codex": 200
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 600,
+              "percent": 40
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 200,
+              "percent": 13.333333333333334
+            }
+          ],
+          "gradient": "linear-gradient(90deg, <unknown> 0%, <unknown> 44.65%, gemini 47.65%, gemini 83.12%, codex 86.12%, codex 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "unknown": 500
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "unknown",
+              "tokens": 500,
+              "percent": 50
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 500,
+              "percent": 50
+            }
+          ],
+          "gradient": "linear-gradient(90deg, <unknown> 0%, <unknown> 48.50%, <unknown> 51.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "unknown": 500
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "unknown",
+              "label": "unknown",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            }
+          ],
+          "gradient": "linear-gradient(90deg, <unknown> 0%, <unknown> 31.83%, gemini 34.83%, gemini 65.17%, <unknown> 68.17%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 2000
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 1000,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 2000
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 1000,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 40
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 20
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 6.666666666666667
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 38.50%, gemini 41.50%, gemini 71.83%, claude 74.83%, claude 91.83%, <unknown> 94.83%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": -1
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "Public",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": -1
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 40
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 20
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 6.666666666666667
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 38.50%, gemini 41.50%, gemini 71.83%, claude 74.83%, claude 91.83%, <unknown> 94.83%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "﻿Public﻿",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1000,
+          "cost": "1",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 60
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 30
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 10
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 58.50%, claude 61.50%, claude 88.50%, <unknown> 91.50%, <unknown> 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "one": {
+            "label": "﻿Public﻿",
+            "tokens": 1000,
+            "costUsd": 1,
+            "clients": {
+              "codex": 600,
+              "claude": 300
+            },
+            "unpricedTokens": 200
+          },
+          "two": {
+            "label": " public ",
+            "tokens": 500,
+            "costUsd": 2,
+            "clients": {
+              "gemini": 500
+            }
+          },
+          "other": {
+            "label": "Other",
+            "tokens": 5000,
+            "costUsd": 0.2,
+            "clients": {
+              "codex": 5000
+            }
+          }
+        },
+        "sessions": {
+          "fallback": {
+            "projectLabel": "Should not fallback",
+            "totalTokens": 123
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 1500,
+          "cost": "3",
+          "unpriced": 200,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 600,
+              "percent": 40
+            },
+            {
+              "id": "gemini",
+              "label": "Gemini CLI",
+              "tokens": 500,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 300,
+              "percent": 20
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 6.666666666666667
+            }
+          ],
+          "gradient": "linear-gradient(90deg, codex 0%, codex 38.50%, gemini 41.50%, gemini 71.83%, claude 74.83%, claude 91.83%, <unknown> 94.83%, <unknown> 100%)"
+        },
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 5000,
+          "cost": "0.2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 5000,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "a": {
+            "label": "Café",
+            "tokens": 100,
+            "costUsd": 1
+          },
+          "b": {
+            "label": "CAFÉ",
+            "tokens": 200,
+            "costUsd": 2
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "café",
+          "name": "CAFÉ",
+          "tokens": 300,
+          "cost": "3",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 300,
+              "percent": 100
+            }
+          ],
+          "gradient": "<unknown>"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "bad": null
+        },
+        "sessions": {
+          "s": {
+            "projectLabel": "Must not fallback",
+            "totalTokens": 100
+          }
+        }
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "sessions": {
+          "s": {
+            "projectLabel": " Public ",
+            "totalTokens": 100,
+            "costUsd": 0.5,
+            "client": "codex"
+          },
+          "s2": {
+            "projectLabel": "PUBLIC",
+            "totalTokens": 200,
+            "costUsd": 0.2,
+            "client": "claude"
+          },
+          "s3": {
+            "projectLabel": "Other",
+            "totalTokens": 1,
+            "costUsd": 2,
+            "client": "codex"
+          },
+          "s4": {
+            "totalTokens": 5000
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "other",
+          "name": "Other",
+          "tokens": 1,
+          "cost": "2",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 1,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        },
+        {
+          "id": "public",
+          "name": "PUBLIC",
+          "tokens": 300,
+          "cost": "0.7",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "claude",
+              "label": "Claude Code",
+              "tokens": 200,
+              "percent": 66.66666666666666
+            },
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 100,
+              "percent": 33.33333333333333
+            }
+          ],
+          "gradient": "linear-gradient(90deg, claude 0%, claude 65.17%, codex 68.17%, codex 100%)"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {},
+        "sessions": {
+          "s": {
+            "projectLabel": "Public",
+            "totalTokens": 100,
+            "client": "codex"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "public",
+          "name": "Public",
+          "tokens": 100,
+          "cost": "0",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "codex",
+              "label": "Codex",
+              "tokens": 100,
+              "percent": 100
+            }
+          ],
+          "gradient": "codex"
+        }
+      ]
+    },
+    {
+      "input": {
+        "projects": {
+          "a": {
+            "label": "Zulu",
+            "tokens": 100,
+            "costUsd": 1
+          },
+          "b": {
+            "label": "Alpha",
+            "tokens": 100,
+            "costUsd": 1
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "alpha",
+          "name": "Alpha",
+          "tokens": 100,
+          "cost": "1",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 100
+            }
+          ],
+          "gradient": "<unknown>"
+        },
+        {
+          "id": "zulu",
+          "name": "Zulu",
+          "tokens": 100,
+          "cost": "1",
+          "unpriced": 0,
+          "clients": [
+            {
+              "id": "unknown",
+              "label": "Unknown tool",
+              "tokens": 100,
+              "percent": 100
+            }
+          ],
+          "gradient": "<unknown>"
+        }
+      ]
+    }
+  ],
+  "deviceCases": [
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {},
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {},
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 50
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 50,
+          "percent": 0,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 50
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 50,
+          "percent": 0,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 500,
+              "claude": 400
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 500,
+          "percent": 0,
+          "models": []
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "tokens": 400,
+          "percent": 0,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 500,
+              "claude": 400
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 500,
+          "percent": 0,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "tokens": 400,
+          "percent": 0,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 1200
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 1200,
+          "percent": 0,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 1200
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 1200,
+          "percent": 0,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 0,
+              "claude": -3
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 0,
+            "clients": {
+              "codex": 0,
+              "claude": -3
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {},
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 100,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {},
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 100,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 50
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 50,
+          "percent": 50,
+          "models": []
+        },
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 50,
+          "percent": 50,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 50
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 50,
+          "percent": 50,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        },
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 50,
+          "percent": 50,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 500,
+              "claude": 400
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 500,
+          "percent": 500,
+          "models": []
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "tokens": 400,
+          "percent": 400,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 500,
+              "claude": 400
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 500,
+          "percent": 500,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "tokens": 400,
+          "percent": 400,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 1200
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 1200,
+          "percent": 1200,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 1200
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 1200,
+          "percent": 1200,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 0,
+              "claude": -3
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 100,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 100,
+            "clients": {
+              "codex": 0,
+              "claude": -3
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 100,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {},
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 1000,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {},
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 1000,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 50
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 950,
+          "percent": 95,
+          "models": []
+        },
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 50,
+          "percent": 5,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 50
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 950,
+          "percent": 95,
+          "models": []
+        },
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 50,
+          "percent": 5,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 500,
+              "claude": 400
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 500,
+          "percent": 50,
+          "models": []
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "tokens": 400,
+          "percent": 40,
+          "models": []
+        },
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 100,
+          "percent": 10,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 500,
+              "claude": 400
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 500,
+          "percent": 50,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "tokens": 400,
+          "percent": 40,
+          "models": []
+        },
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 100,
+          "percent": 10,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 1200
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 1200,
+          "percent": 120,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 1200
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "codex",
+          "label": "Codex",
+          "tokens": 1200,
+          "percent": 120,
+          "models": [
+            {
+              "name": "public-alpha",
+              "tokens": 30
+            },
+            {
+              "name": "public-beta",
+              "tokens": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 0,
+              "claude": -3
+            },
+            "clientModels": {}
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 1000,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    },
+    {
+      "input": {
+        "deviceId": "public",
+        "periods": {
+          "today": {
+            "totalTokens": 1000,
+            "clients": {
+              "codex": 0,
+              "claude": -3
+            },
+            "clientModels": {
+              "codex": {
+                "public-alpha": 30,
+                "public-beta": 20,
+                "zero": 0
+              }
+            }
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "__unattributed",
+          "label": "Unclassified",
+          "tokens": 1000,
+          "percent": 100,
+          "models": []
+        }
+      ]
+    }
+  ],
+  "homeCases": [
+    {
+      "input": [],
+      "local": "",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "",
+      "cap": 4,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "",
+      "cap": 10,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "public:0",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "public:0",
+      "cap": 4,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "public:0",
+      "cap": 10,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "public:1",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "public:1",
+      "cap": 4,
+      "expected": []
+    },
+    {
+      "input": [],
+      "local": "public:1",
+      "cap": 10,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": true,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": true,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": true,
+          "isStale": true
+        },
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": true,
+          "isStale": true
+        },
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": true,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": true,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:5",
+          "name": "Display 5",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:5",
+          "name": "Display 5",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:6",
+          "name": "public:6",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": true,
+          "isStale": true
+        },
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:5",
+          "name": "Display 5",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:0",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": true,
+          "isStale": true
+        },
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:5",
+          "name": "Display 5",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:6",
+          "name": "public:6",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 0,
+      "expected": []
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 4,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": true,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:5",
+          "name": "Display 5",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "deviceId": "public:0",
+          "displayName": "",
+          "hostname": "Host 0",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:1",
+          "displayName": "Display 1",
+          "hostname": "Host 1",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:2",
+          "displayName": "",
+          "hostname": "Host 2",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:3",
+          "displayName": "Display 3",
+          "hostname": "Host 3",
+          "platform": "darwin-arm64",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:4",
+          "displayName": "",
+          "hostname": "Host 4",
+          "platform": "linux",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 0
+            }
+          }
+        },
+        {
+          "deviceId": "public:5",
+          "displayName": "Display 5",
+          "hostname": "Host 5",
+          "platform": "darwin-arm64",
+          "stale": false,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        },
+        {
+          "deviceId": "public:6",
+          "displayName": "",
+          "hostname": "Host 6",
+          "platform": "linux",
+          "stale": true,
+          "periods": {
+            "today": {
+              "totalTokens": 1000
+            }
+          }
+        }
+      ],
+      "local": "public:1",
+      "cap": 10,
+      "expected": [
+        {
+          "key": "public:1",
+          "name": "Display 1",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": true,
+          "isStale": false
+        },
+        {
+          "key": "public:2",
+          "name": "public:2",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:5",
+          "name": "Display 5",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": false
+        },
+        {
+          "key": "public:0",
+          "name": "public:0",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:3",
+          "name": "Display 3",
+          "value": 1000,
+          "platform": "darwin-arm64",
+          "isLocal": false,
+          "isStale": true
+        },
+        {
+          "key": "public:6",
+          "name": "public:6",
+          "value": 1000,
+          "platform": "linux",
+          "isLocal": false,
+          "isStale": true
+        }
+      ]
+    }
+  ],
+  "platforms": [
+    {
+      "platform": "darwin-arm64",
+      "os": [],
+      "expected": "macOS"
+    },
+    {
+      "platform": "darwin-arm64",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "darwin-arm64",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": "macOS"
+    },
+    {
+      "platform": "win32-x64",
+      "os": [],
+      "expected": "Windows"
+    },
+    {
+      "platform": "win32-x64",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "win32-x64",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": "Windows"
+    },
+    {
+      "platform": "linux-x64",
+      "os": [],
+      "expected": "Linux"
+    },
+    {
+      "platform": "linux-x64",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "linux-x64",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": "Linux"
+    },
+    {
+      "platform": "freebsd",
+      "os": [],
+      "expected": "freebsd"
+    },
+    {
+      "platform": "freebsd",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "freebsd",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": "freebsd"
+    },
+    {
+      "platform": "openbsd",
+      "os": [],
+      "expected": "openbsd"
+    },
+    {
+      "platform": "openbsd",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "openbsd",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": "openbsd"
+    },
+    {
+      "platform": "android",
+      "os": [],
+      "expected": "android"
+    },
+    {
+      "platform": "android",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "android",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": "android"
+    },
+    {
+      "platform": "",
+      "os": [],
+      "expected": ""
+    },
+    {
+      "platform": "",
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": "",
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": ""
+    },
+    {
+      "platform": null,
+      "os": [],
+      "expected": ""
+    },
+    {
+      "platform": null,
+      "os": [
+        "Public OS",
+        "1.2"
+      ],
+      "expected": "Public OS 1.2"
+    },
+    {
+      "platform": null,
+      "os": [
+        " ",
+        " "
+      ],
+      "expected": ""
+    }
+  ],
+  "incomplete": [
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 0,
+          "month": 0
+        }
+      },
+      "period": "today",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 1,
+          "month": 1
+        }
+      },
+      "period": "today",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 5,
+          "month": 5
+        }
+      },
+      "period": "today",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 0,
+          "month": 0
+        }
+      },
+      "period": "today",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 1,
+          "month": 1
+        }
+      },
+      "period": "today",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 5,
+          "month": 5
+        }
+      },
+      "period": "today",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 0,
+          "month": 0
+        }
+      },
+      "period": "month",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 1,
+          "month": 1
+        }
+      },
+      "period": "month",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 5,
+          "month": 5
+        }
+      },
+      "period": "month",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 0,
+          "month": 0
+        }
+      },
+      "period": "month",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 1,
+          "month": 1
+        }
+      },
+      "period": "month",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 5,
+          "month": 5
+        }
+      },
+      "period": "month",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 0,
+          "month": 0
+        }
+      },
+      "period": "allTime",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 1,
+          "month": 1
+        }
+      },
+      "period": "allTime",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": false,
+        "periodProjectsOmitted": {
+          "today": 5,
+          "month": 5
+        }
+      },
+      "period": "allTime",
+      "expected": false
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 0,
+          "month": 0
+        }
+      },
+      "period": "allTime",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 1,
+          "month": 1
+        }
+      },
+      "period": "allTime",
+      "expected": true
+    },
+    {
+      "input": {
+        "projectsIncomplete": true,
+        "periodProjectsOmitted": {
+          "today": 5,
+          "month": 5
+        }
+      },
+      "period": "allTime",
+      "expected": true
+    }
+  ],
+  "ages": [
+    {
+      "value": "2026-10-10T02:00:01.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "now",
+        "count": 0
+      },
+      "next": 1791597646000
+    },
+    {
+      "value": "2026-10-10T02:00:00.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "now",
+        "count": 0
+      },
+      "next": 1791597645000
+    },
+    {
+      "value": "2026-10-10T01:59:15.001Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "now",
+        "count": 0
+      },
+      "next": 1791597600001
+    },
+    {
+      "value": "2026-10-10T01:59:15.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "minutes",
+        "count": 1
+      },
+      "next": 1791597645000
+    },
+    {
+      "value": "2026-10-10T01:58:30.001Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "minutes",
+        "count": 1
+      },
+      "next": 1791597600001
+    },
+    {
+      "value": "2026-10-10T01:58:30.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "minutes",
+        "count": 2
+      },
+      "next": 1791597660000
+    },
+    {
+      "value": "2026-10-10T01:00:30.001Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "minutes",
+        "count": 59
+      },
+      "next": 1791597600001
+    },
+    {
+      "value": "2026-10-10T01:00:30.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "hours",
+        "count": 1
+      },
+      "next": 1791599400000
+    },
+    {
+      "value": "2026-10-10T00:30:30.001Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "hours",
+        "count": 1
+      },
+      "next": 1791597600001
+    },
+    {
+      "value": "2026-10-10T00:30:30.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "hours",
+        "count": 2
+      },
+      "next": 1791601200000
+    },
+    {
+      "value": "2026-10-09T02:30:30.001Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "hours",
+        "count": 23
+      },
+      "next": 1791597600001
+    },
+    {
+      "value": "2026-10-09T02:30:30.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "days",
+        "count": 1
+      },
+      "next": 1791640800000
+    },
+    {
+      "value": "2026-10-08T14:30:30.001Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "days",
+        "count": 1
+      },
+      "next": 1791597600001
+    },
+    {
+      "value": "2026-10-08T14:30:30.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "days",
+        "count": 2
+      },
+      "next": 1791684000000
+    },
+    {
+      "value": "2026-07-02T02:00:00.000Z",
+      "now": 1791597600000,
+      "expected": {
+        "unit": "days",
+        "count": 100
+      },
+      "next": 1791638970000
+    }
+  ]
+}

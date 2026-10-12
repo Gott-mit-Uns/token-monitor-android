@@ -1,0 +1,7 @@
+<!-- Desktop glyph; upstream and Lucide licenses in THIRD_PARTY_NOTICES.md. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="22.14" android:viewportHeight="21.22">
+<group android:translateX="-1.0" android:translateY="-1.35">
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.67" android:strokeLineCap="butt" android:strokeLineJoin="miter" android:pathData="M18.75 6.02A8.6 8.6 0 1 1 9.46 4.17"/>
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFFFF" android:strokeWidth="2.82" android:strokeLineCap="butt" android:strokeLineJoin="miter" android:pathData="M9.46 11.08V2.76H1"/>
+</group>
+</vector>

@@ -1,0 +1,2309 @@
+{
+  "source": "desktop v0.68.0 original tokenRatePerSecond/tokenBurnPerMinute and title formatting",
+  "cases": [
+    {
+      "period": {},
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {},
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 100,
+      "burn": 0,
+      "text": "≈ 100 tok/s"
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 100,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 100,
+      "burn": 0,
+      "text": "≈ 100 tok/s"
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 100,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 100,
+      "burn": 0,
+      "text": "≈ 100 tok/s"
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 100,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 100,
+      "burn": 0,
+      "text": "≈ 100 tok/s"
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 100,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 100,
+      "burn": 0,
+      "text": "≈ 100 tok/s"
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 100,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 100,
+      "burn": 0,
+      "text": "≈ 100 tok/s"
+    },
+    {
+      "period": {
+        "timedOutputTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 100,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 0
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": -1
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": -100,
+        "timedOutputTokens": -40,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000亿 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000亿 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000億 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1000000000000000,
+        "timedOutputTokens": 1000000000000000,
+        "timedDurationMs": 0.001
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000億 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": "100",
+        "timedOutputTokens": "40",
+        "timedDurationMs": "1000"
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": null,
+        "timedOutputTokens": null,
+        "timedDurationMs": null
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.49,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0.49,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 1 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 1 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 1 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 1 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 1 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 1 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 0.5,
+        "timedDurationMs": 1000
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0.5,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": "NaN",
+        "timedOutputTokens": "Infinity",
+        "timedDurationMs": "1e1000"
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 0,
+      "burn": 0,
+      "text": null
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6K tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 40 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 100,
+        "timedOutputTokens": 40,
+        "timedDurationMs": 1000,
+        "capabilities": {
+          "throughput": false
+        }
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 40,
+      "burn": 6000,
+      "text": "≈ 6000 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "en",
+      "units": "western",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "en",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-CN",
+      "units": "western",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000亿 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-CN",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000亿 tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-TW",
+      "units": "western",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 1000B tok/min"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "speed",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000億 tok/s"
+    },
+    {
+      "period": {
+        "timedTokens": 1e+308,
+        "timedOutputTokens": 1e+308,
+        "timedDurationMs": 1e-100
+      },
+      "locale": "zh-TW",
+      "units": "localized",
+      "mode": "burn",
+      "speed": 1000000000000,
+      "burn": 1000000000000,
+      "text": "≈ 10000億 tok/min"
+    }
+  ]
+}

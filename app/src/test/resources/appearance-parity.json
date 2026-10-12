@@ -1,0 +1,647 @@
+{
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418; pure themePresets/fontSettings",
+  "presets": [
+    {
+      "id": "default",
+      "colors": {
+        "accent": "#b7ead4",
+        "chart": "#73bdf5",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      }
+    },
+    {
+      "id": "obsidian",
+      "colors": {
+        "accent": "#e6e8ec",
+        "chart": "#73bdf5",
+        "bg": "#0b0c0e",
+        "text": "#eceef2",
+        "muted": "#8f949c"
+      }
+    },
+    {
+      "id": "porcelain",
+      "colors": {
+        "accent": "#2563eb",
+        "chart": "#73bdf5",
+        "bg": "#f6f7f9",
+        "text": "#1c1f26",
+        "muted": "#5b626d"
+      }
+    }
+  ],
+  "colors": [
+    {
+      "input": {},
+      "clean": {},
+      "palette": {
+        "accent": "#b7ead4",
+        "chart": "#73bdf5",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "code": "TM1-B7EAD4-303438-EEF5FB-A3ADBB",
+      "light": false,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "accent": "#b7ead4",
+        "chart": "#73bdf5",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "clean": {
+        "accent": "#b7ead4",
+        "chart": "#73bdf5",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "palette": {
+        "accent": "#b7ead4",
+        "chart": "#73bdf5",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "code": "TM1-B7EAD4-303438-EEF5FB-A3ADBB",
+      "light": false,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "accent": "#e6e8ec",
+        "chart": "#73bdf5",
+        "bg": "#0b0c0e",
+        "text": "#eceef2",
+        "muted": "#8f949c"
+      },
+      "clean": {
+        "accent": "#e6e8ec",
+        "chart": "#73bdf5",
+        "bg": "#0b0c0e",
+        "text": "#eceef2",
+        "muted": "#8f949c"
+      },
+      "palette": {
+        "accent": "#e6e8ec",
+        "chart": "#73bdf5",
+        "bg": "#0b0c0e",
+        "text": "#eceef2",
+        "muted": "#8f949c"
+      },
+      "code": "TM1-E6E8EC-0B0C0E-ECEEF2-8F949C",
+      "light": false,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "accent": "#2563eb",
+        "chart": "#73bdf5",
+        "bg": "#f6f7f9",
+        "text": "#1c1f26",
+        "muted": "#5b626d"
+      },
+      "clean": {
+        "accent": "#2563eb",
+        "chart": "#73bdf5",
+        "bg": "#f6f7f9",
+        "text": "#1c1f26",
+        "muted": "#5b626d"
+      },
+      "palette": {
+        "accent": "#2563eb",
+        "chart": "#73bdf5",
+        "bg": "#f6f7f9",
+        "text": "#1c1f26",
+        "muted": "#5b626d"
+      },
+      "code": "TM1-2563EB-F6F7F9-1C1F26-5B626D",
+      "light": true,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "chart": "#ff0000"
+      },
+      "clean": {
+        "chart": "#ff0000"
+      },
+      "palette": {
+        "accent": "#b7ead4",
+        "chart": "#ff0000",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "code": "TM2-B7EAD4-303438-EEF5FB-A3ADBB-FF0000",
+      "light": false,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": "255, 0, 0"
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": "255, 46, 46"
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": "255, 92, 92"
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": "255, 138, 138"
+        }
+      ]
+    },
+    {
+      "input": {
+        "chart": "#123456",
+        "accent": "#ABCDEF",
+        "bg": "#FFFFFF"
+      },
+      "clean": {
+        "chart": "#123456",
+        "accent": "#abcdef",
+        "bg": "#ffffff"
+      },
+      "palette": {
+        "accent": "#abcdef",
+        "chart": "#123456",
+        "bg": "#ffffff",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "code": "TM2-ABCDEF-FFFFFF-EEF5FB-A3ADBB-123456",
+      "light": true,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": "18, 52, 86"
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": "61, 89, 116"
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": "103, 125, 147"
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": "146, 162, 177"
+        }
+      ]
+    },
+    {
+      "input": {
+        "chart": "#000000"
+      },
+      "clean": {
+        "chart": "#000000"
+      },
+      "palette": {
+        "accent": "#b7ead4",
+        "chart": "#000000",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "code": "TM2-B7EAD4-303438-EEF5FB-A3ADBB-000000",
+      "light": false,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": "0, 0, 0"
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": "46, 46, 46"
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": "92, 92, 92"
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": "138, 138, 138"
+        }
+      ]
+    },
+    {
+      "input": {
+        "chart": "#73BDF5",
+        "bad": "#123456",
+        "bg": "bogus"
+      },
+      "clean": {
+        "chart": "#73bdf5"
+      },
+      "palette": {
+        "accent": "#b7ead4",
+        "chart": "#73bdf5",
+        "bg": "#303438",
+        "text": "#eef5fb",
+        "muted": "#a3adbb"
+      },
+      "code": "TM1-B7EAD4-303438-EEF5FB-A3ADBB",
+      "light": false,
+      "heat": [
+        {
+          "name": "--chart-heat-1-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-2-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-3-rgb",
+          "value": null
+        },
+        {
+          "name": "--chart-heat-4-rgb",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "codes": [
+    {
+      "input": "",
+      "expected": {
+        "ok": false,
+        "reason": "invalid"
+      }
+    },
+    {
+      "input": "TM1-B7EAD4-303438-EEF5FB-A3ADBB",
+      "expected": {
+        "ok": true,
+        "colors": {
+          "accent": "#b7ead4",
+          "bg": "#303438",
+          "text": "#eef5fb",
+          "muted": "#a3adbb"
+        },
+        "code": "TM1-B7EAD4-303438-EEF5FB-A3ADBB"
+      }
+    },
+    {
+      "input": "tm1-2563eb-f6f7f9-1c1f26-5b626d",
+      "expected": {
+        "ok": true,
+        "colors": {
+          "accent": "#2563eb",
+          "bg": "#f6f7f9",
+          "text": "#1c1f26",
+          "muted": "#5b626d"
+        },
+        "code": "TM1-2563EB-F6F7F9-1C1F26-5B626D"
+      }
+    },
+    {
+      "input": " TM2-ABCDEF-303438-EEF5FB-A3ADBB-FF0000 ",
+      "expected": {
+        "ok": true,
+        "colors": {
+          "accent": "#abcdef",
+          "bg": "#303438",
+          "text": "#eef5fb",
+          "muted": "#a3adbb",
+          "chart": "#ff0000"
+        },
+        "code": "TM2-ABCDEF-303438-EEF5FB-A3ADBB-FF0000"
+      }
+    },
+    {
+      "input": "TM3-AABBCC",
+      "expected": {
+        "ok": false,
+        "reason": "unsupportedVersion"
+      }
+    },
+    {
+      "input": "TM01-AAAAAA",
+      "expected": {
+        "ok": false,
+        "reason": "unsupportedVersion"
+      }
+    },
+    {
+      "input": "TM1-112233-445566-778899-AABBCC-123456",
+      "expected": {
+        "ok": false,
+        "reason": "invalid"
+      }
+    },
+    {
+      "input": "TM2-112233-445566-778899-AABBCC",
+      "expected": {
+        "ok": false,
+        "reason": "invalid"
+      }
+    },
+    {
+      "input": "TM1-GGGGGG-445566-778899-AABBCC",
+      "expected": {
+        "ok": false,
+        "reason": "invalid"
+      }
+    },
+    {
+      "input": "TM2-112233-445566-778899-AABBCC-000000",
+      "expected": {
+        "ok": true,
+        "colors": {
+          "accent": "#112233",
+          "bg": "#445566",
+          "text": "#778899",
+          "muted": "#aabbcc",
+          "chart": "#000000"
+        },
+        "code": "TM2-112233-445566-778899-AABBCC-000000"
+      }
+    }
+  ],
+  "fonts": [
+    {
+      "input": "",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": " ",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "Roboto",
+      "normalized": "Roboto",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": " serif ",
+      "normalized": "serif",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "\"Noto Sans CJK\", sans-serif",
+      "normalized": "\"Noto Sans CJK\", sans-serif",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "PingFang SC,  monospace",
+      "normalized": "PingFang SC, monospace",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "A\nB",
+      "normalized": "A B",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "A\tB",
+      "normalized": "A B",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "A B",
+      "normalized": "A B",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "A﻿B",
+      "normalized": "A B",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "A; color: red",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "<b>",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "{x}",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "a\u0000b",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "ab",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "normalized": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "interface": "custom",
+      "display": "custom"
+    },
+    {
+      "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "normalized": "",
+      "interface": "app",
+      "display": "follow"
+    },
+    {
+      "input": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace",
+      "normalized": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace",
+      "interface": "mono",
+      "display": "mono"
+    },
+    {
+      "input": "-apple-system, BlinkMacSystemFont, \"SF Pro Display\", \"Segoe UI\", sans-serif",
+      "normalized": "-apple-system, BlinkMacSystemFont, \"SF Pro Display\", \"Segoe UI\", sans-serif",
+      "interface": "custom",
+      "display": "app"
+    },
+    {
+      "input": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "normalized": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+      "interface": "system",
+      "display": "system"
+    }
+  ],
+  "sizes": [
+    {
+      "input": "standard",
+      "scale": 1
+    },
+    {
+      "input": "larger",
+      "scale": 1.1
+    },
+    {
+      "input": "largest",
+      "scale": 1.2
+    },
+    {
+      "input": "invalid",
+      "scale": 1
+    },
+    {
+      "input": "",
+      "scale": 1
+    }
+  ],
+  "fontPresets": [
+    {
+      "preset": "app",
+      "role": "interface",
+      "value": ""
+    },
+    {
+      "preset": "app",
+      "role": "display",
+      "value": "-apple-system, BlinkMacSystemFont, \"SF Pro Display\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "preset": "system",
+      "role": "interface",
+      "value": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    },
+    {
+      "preset": "system",
+      "role": "display",
+      "value": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    },
+    {
+      "preset": "mono",
+      "role": "interface",
+      "value": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"
+    },
+    {
+      "preset": "mono",
+      "role": "display",
+      "value": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"
+    },
+    {
+      "preset": "custom",
+      "role": "interface",
+      "value": "Noto Sans"
+    },
+    {
+      "preset": "custom",
+      "role": "display",
+      "value": "Noto Sans"
+    },
+    {
+      "preset": "follow",
+      "role": "interface",
+      "value": ""
+    },
+    {
+      "preset": "follow",
+      "role": "display",
+      "value": ""
+    },
+    {
+      "preset": "invalid",
+      "role": "interface",
+      "value": ""
+    },
+    {
+      "preset": "invalid",
+      "role": "display",
+      "value": ""
+    }
+  ]
+}

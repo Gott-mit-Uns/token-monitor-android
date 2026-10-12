@@ -1,0 +1,374 @@
+{
+  "updatedAt": "2026-10-08T20:05:03.339Z",
+  "periods": {
+    "today": {
+      "capabilities": {
+        "tokenComponents": true,
+        "throughput": false
+      },
+      "totalTokens": 5000000123,
+      "costUsd": 12.345,
+      "cacheReadTokens": 5000000000,
+      "cacheWriteTokens": 0,
+      "outputTokens": 123,
+      "unclassifiedTokens": 0,
+      "timedTokens": 0,
+      "timedOutputTokens": 0,
+      "timedDurationMs": 0,
+      "clients": {
+        "codex": 5000000123
+      },
+      "clientCosts": {},
+      "clientCacheReads": {},
+      "clientCacheWrites": {},
+      "clientOutputs": {},
+      "clientUnclassifiedTokens": {},
+      "models": {
+        "example-model": 5000000123
+      },
+      "modelCosts": {},
+      "modelCacheReads": {},
+      "modelCacheWrites": {},
+      "modelOutputs": {},
+      "modelUnclassifiedTokens": {},
+      "clientModels": {},
+      "clientModelCosts": {},
+      "projects": {},
+      "sessions": {}
+    },
+    "month": {
+      "capabilities": {
+        "tokenComponents": true,
+        "throughput": false
+      },
+      "totalTokens": 5000000123,
+      "costUsd": 12.345,
+      "cacheReadTokens": 5000000000,
+      "cacheWriteTokens": 0,
+      "outputTokens": 123,
+      "unclassifiedTokens": 0,
+      "timedTokens": 0,
+      "timedOutputTokens": 0,
+      "timedDurationMs": 0,
+      "clients": {
+        "codex": 5000000123
+      },
+      "clientCosts": {},
+      "clientCacheReads": {},
+      "clientCacheWrites": {},
+      "clientOutputs": {},
+      "clientUnclassifiedTokens": {},
+      "models": {
+        "example-model": 5000000123
+      },
+      "modelCosts": {},
+      "modelCacheReads": {},
+      "modelCacheWrites": {},
+      "modelOutputs": {},
+      "modelUnclassifiedTokens": {},
+      "clientModels": {},
+      "clientModelCosts": {},
+      "projects": {},
+      "sessions": {}
+    },
+    "allTime": {
+      "capabilities": {
+        "tokenComponents": true,
+        "throughput": false
+      },
+      "totalTokens": 5000000123,
+      "costUsd": 12.345,
+      "cacheReadTokens": 5000000000,
+      "cacheWriteTokens": 0,
+      "outputTokens": 123,
+      "unclassifiedTokens": 0,
+      "timedTokens": 0,
+      "timedOutputTokens": 0,
+      "timedDurationMs": 0,
+      "clients": {
+        "codex": 5000000123
+      },
+      "clientCosts": {},
+      "clientCacheReads": {},
+      "clientCacheWrites": {},
+      "clientOutputs": {},
+      "clientUnclassifiedTokens": {},
+      "models": {
+        "example-model": 5000000123
+      },
+      "modelCosts": {},
+      "modelCacheReads": {},
+      "modelCacheWrites": {},
+      "modelOutputs": {},
+      "modelUnclassifiedTokens": {},
+      "clientModels": {},
+      "clientModelCosts": {},
+      "projects": {},
+      "sessions": {}
+    }
+  },
+  "devices": [
+    {
+      "deviceId": "fixture-desktop",
+      "hostname": "Example Desktop",
+      "platform": "darwin-arm64",
+      "agentVersion": "",
+      "agentRuntime": "",
+      "updatedAt": "2026-10-08T20:05:03.335Z",
+      "receivedAt": "2026-10-08T20:05:03.335Z",
+      "ageMs": 4,
+      "stale": false,
+      "periods": {
+        "today": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": false
+          },
+          "totalTokens": 5000000123,
+          "costUsd": 12.345,
+          "cacheReadTokens": 5000000000,
+          "cacheWriteTokens": 0,
+          "outputTokens": 123,
+          "unclassifiedTokens": 0,
+          "timedTokens": 0,
+          "timedOutputTokens": 0,
+          "timedDurationMs": 0,
+          "clients": {
+            "codex": 5000000123
+          },
+          "clientCosts": {},
+          "clientCacheReads": {},
+          "clientCacheWrites": {},
+          "clientOutputs": {},
+          "clientUnclassifiedTokens": {},
+          "models": {
+            "example-model": 5000000123
+          },
+          "modelCosts": {},
+          "modelCacheReads": {},
+          "modelCacheWrites": {},
+          "modelOutputs": {},
+          "modelUnclassifiedTokens": {},
+          "clientModels": {},
+          "clientModelCosts": {},
+          "projects": {},
+          "sessions": {}
+        },
+        "month": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": false
+          },
+          "totalTokens": 5000000123,
+          "costUsd": 12.345,
+          "cacheReadTokens": 5000000000,
+          "cacheWriteTokens": 0,
+          "outputTokens": 123,
+          "unclassifiedTokens": 0,
+          "timedTokens": 0,
+          "timedOutputTokens": 0,
+          "timedDurationMs": 0,
+          "clients": {
+            "codex": 5000000123
+          },
+          "clientCosts": {},
+          "clientCacheReads": {},
+          "clientCacheWrites": {},
+          "clientOutputs": {},
+          "clientUnclassifiedTokens": {},
+          "models": {
+            "example-model": 5000000123
+          },
+          "modelCosts": {},
+          "modelCacheReads": {},
+          "modelCacheWrites": {},
+          "modelOutputs": {},
+          "modelUnclassifiedTokens": {},
+          "clientModels": {},
+          "clientModelCosts": {},
+          "projects": {},
+          "sessions": {}
+        },
+        "allTime": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": false
+          },
+          "totalTokens": 5000000123,
+          "costUsd": 12.345,
+          "cacheReadTokens": 5000000000,
+          "cacheWriteTokens": 0,
+          "outputTokens": 123,
+          "unclassifiedTokens": 0,
+          "timedTokens": 0,
+          "timedOutputTokens": 0,
+          "timedDurationMs": 0,
+          "clients": {
+            "codex": 5000000123
+          },
+          "clientCosts": {},
+          "clientCacheReads": {},
+          "clientCacheWrites": {},
+          "clientOutputs": {},
+          "clientUnclassifiedTokens": {},
+          "models": {
+            "example-model": 5000000123
+          },
+          "modelCosts": {},
+          "modelCacheReads": {},
+          "modelCacheWrites": {},
+          "modelOutputs": {},
+          "modelUnclassifiedTokens": {},
+          "clientModels": {},
+          "clientModelCosts": {},
+          "projects": {},
+          "sessions": {}
+        }
+      },
+      "limits": {
+        "updatedAt": null,
+        "refreshMs": 300000,
+        "providers": []
+      }
+    },
+    {
+      "deviceId": "fixture-offline",
+      "hostname": "Example Server",
+      "platform": "linux-x64",
+      "agentVersion": "",
+      "agentRuntime": "",
+      "updatedAt": "2020-01-01T00:00:00.000Z",
+      "receivedAt": "2026-10-08T20:05:03.337Z",
+      "ageMs": 2,
+      "stale": false,
+      "periods": {
+        "today": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": false
+          },
+          "totalTokens": 0,
+          "costUsd": 0,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0,
+          "outputTokens": 0,
+          "unclassifiedTokens": 0,
+          "timedTokens": 0,
+          "timedOutputTokens": 0,
+          "timedDurationMs": 0,
+          "clients": {},
+          "clientCosts": {},
+          "clientCacheReads": {},
+          "clientCacheWrites": {},
+          "clientOutputs": {},
+          "clientUnclassifiedTokens": {},
+          "models": {},
+          "modelCosts": {},
+          "modelCacheReads": {},
+          "modelCacheWrites": {},
+          "modelOutputs": {},
+          "modelUnclassifiedTokens": {},
+          "clientModels": {},
+          "clientModelCosts": {},
+          "projects": {},
+          "sessions": {}
+        },
+        "month": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": false
+          },
+          "totalTokens": 0,
+          "costUsd": 0,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0,
+          "outputTokens": 0,
+          "unclassifiedTokens": 0,
+          "timedTokens": 0,
+          "timedOutputTokens": 0,
+          "timedDurationMs": 0,
+          "clients": {},
+          "clientCosts": {},
+          "clientCacheReads": {},
+          "clientCacheWrites": {},
+          "clientOutputs": {},
+          "clientUnclassifiedTokens": {},
+          "models": {},
+          "modelCosts": {},
+          "modelCacheReads": {},
+          "modelCacheWrites": {},
+          "modelOutputs": {},
+          "modelUnclassifiedTokens": {},
+          "clientModels": {},
+          "clientModelCosts": {},
+          "projects": {},
+          "sessions": {}
+        },
+        "allTime": {
+          "capabilities": {
+            "tokenComponents": true,
+            "throughput": false
+          },
+          "totalTokens": 0,
+          "costUsd": 0,
+          "cacheReadTokens": 0,
+          "cacheWriteTokens": 0,
+          "outputTokens": 0,
+          "unclassifiedTokens": 0,
+          "timedTokens": 0,
+          "timedOutputTokens": 0,
+          "timedDurationMs": 0,
+          "clients": {},
+          "clientCosts": {},
+          "clientCacheReads": {},
+          "clientCacheWrites": {},
+          "clientOutputs": {},
+          "clientUnclassifiedTokens": {},
+          "models": {},
+          "modelCosts": {},
+          "modelCacheReads": {},
+          "modelCacheWrites": {},
+          "modelOutputs": {},
+          "modelUnclassifiedTokens": {},
+          "clientModels": {},
+          "clientModelCosts": {},
+          "projects": {},
+          "sessions": {}
+        }
+      },
+      "limits": {
+        "updatedAt": null,
+        "refreshMs": 300000,
+        "providers": []
+      }
+    }
+  ],
+  "projectsIncomplete": false,
+  "limits": {
+    "updatedAt": "2026-10-08T20:05:03.339Z",
+    "providers": []
+  },
+  "staleAfterMs": 600000,
+  "historyPreview": {
+    "daily": [],
+    "monthly": [],
+    "summary": {
+      "totalTokens": 0,
+      "totalCost": 0,
+      "activeDays": 0,
+      "currentStreak": 0,
+      "longestStreak": 0,
+      "peakDayTokens": 0,
+      "favoriteModel": "",
+      "messages": 0,
+      "activeTimeMs": 0
+    }
+  },
+  "historyRevision": "6d56fb5d8446c449",
+  "deviceHistoryRevision": "dd15302e9b39a702",
+  "subscriptionsUpdatedAt": "",
+  "syncSettingsRevisions": {
+    "modelAliases": 0,
+    "customPricing": 0
+  }
+}

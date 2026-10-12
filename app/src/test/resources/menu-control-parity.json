@@ -1,0 +1,5748 @@
+{
+  "source": "src/electron/renderer/selectControl.js",
+  "sha256": "f9dceae69b452309e9b29762172930b8d159639db1f93420f28a7057c94a56a7",
+  "navigation": [
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": -10,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": -1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": "last",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": 1,
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": 10,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": "last",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": -10,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": -1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": "last",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": 1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": 10,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": "last",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": -1,
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": 1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": 10,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": "last",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": -10,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": -1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": "last",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "direction": -10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "direction": -1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "direction": 1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "direction": 10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "direction": "first",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "direction": "last",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "direction": -10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "direction": -1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "direction": 1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "direction": 10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "direction": "first",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "direction": "last",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "direction": -10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "direction": -1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "direction": 1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "direction": 10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "direction": "first",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "direction": "last",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "direction": -10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "direction": -1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "direction": 1,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "direction": 10,
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "direction": "first",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "direction": "last",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "direction": -10,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "direction": -1,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "direction": 1,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "direction": 10,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "direction": "first",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "direction": "last",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "direction": -10,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "direction": -1,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "direction": 1,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "direction": 10,
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "direction": "first",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "direction": "last",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": "last",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": "last",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": "last",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": -10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": -1,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "direction": "last",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": 1,
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": 10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "direction": "last",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": -1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": 1,
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": 10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "direction": "last",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": -1,
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": 1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": 10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "direction": "last",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": -1,
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": 1,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": 10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "direction": "last",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": -10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": -1,
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": 1,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": 10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "direction": "last",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "direction": -10,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "direction": -1,
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "direction": 1,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "direction": 10,
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "direction": "first",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "direction": "last",
+      "expected": 4
+    }
+  ],
+  "typing": [
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "z",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "É",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "z",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "É",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "z",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "É",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "z",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "É",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "z",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "É",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "z",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        },
+        {
+          "label": "Beta 2",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "A",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "B",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "aa",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "bb",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "co",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "z",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": -1,
+      "text": "É",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "B",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "bb",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "co",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "z",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 0,
+      "text": "É",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "A",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "B",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "aa",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "bb",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "co",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "z",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 1,
+      "text": "É",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "A",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "aa",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "co",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "z",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": true
+        },
+        {
+          "label": "Beta",
+          "disabled": true
+        }
+      ],
+      "current": 2,
+      "text": "É",
+      "expected": 2
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "A",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "B",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "aa",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "bb",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "co",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "z",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": -1,
+      "text": "É",
+      "expected": -1
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "B",
+      "expected": 0
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "bb",
+      "expected": 0
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "co",
+      "expected": 0
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "z",
+      "expected": 0
+    },
+    {
+      "options": [],
+      "current": 0,
+      "text": "É",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "A",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "B",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "aa",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "bb",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "co",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "z",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "É",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "B",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "bb",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "co",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "z",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "É",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "A",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "B",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "aa",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "bb",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "co",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "z",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Only",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "É",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "A",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "aa",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "z",
+      "expected": -1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": -1,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "A",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "aa",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "z",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 0,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "z",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 1,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "z",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 2,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "z",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 3,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "A",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "aa",
+      "expected": 0
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "z",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 4,
+      "text": "É",
+      "expected": 4
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "A",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "B",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "aa",
+      "expected": 1
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "bb",
+      "expected": 2
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "co",
+      "expected": 3
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "z",
+      "expected": 5
+    },
+    {
+      "options": [
+        {
+          "label": "Alpha",
+          "disabled": false
+        },
+        {
+          "label": "Alpha 2",
+          "disabled": false
+        },
+        {
+          "label": "Beta",
+          "disabled": false
+        },
+        {
+          "label": "Core",
+          "disabled": false
+        },
+        {
+          "label": "Éclair",
+          "disabled": false
+        }
+      ],
+      "current": 5,
+      "text": "É",
+      "expected": 4
+    }
+  ],
+  "periodSource": "src/electron/renderer/fixedPeriodRanges.js",
+  "periodSha256": "64f5d44449bd1287364597e72d17fe086ad87f823434134a3a8181bee517f254",
+  "period": [
+    {
+      "current": -1,
+      "key": "ArrowUp",
+      "expected": 3
+    },
+    {
+      "current": -1,
+      "key": "ArrowDown",
+      "expected": 1
+    },
+    {
+      "current": -1,
+      "key": "Home",
+      "expected": 0
+    },
+    {
+      "current": -1,
+      "key": "End",
+      "expected": 3
+    },
+    {
+      "current": 0,
+      "key": "ArrowUp",
+      "expected": 3
+    },
+    {
+      "current": 0,
+      "key": "ArrowDown",
+      "expected": 1
+    },
+    {
+      "current": 0,
+      "key": "Home",
+      "expected": 0
+    },
+    {
+      "current": 0,
+      "key": "End",
+      "expected": 3
+    },
+    {
+      "current": 1,
+      "key": "ArrowUp",
+      "expected": 0
+    },
+    {
+      "current": 1,
+      "key": "ArrowDown",
+      "expected": 2
+    },
+    {
+      "current": 1,
+      "key": "Home",
+      "expected": 0
+    },
+    {
+      "current": 1,
+      "key": "End",
+      "expected": 3
+    },
+    {
+      "current": 2,
+      "key": "ArrowUp",
+      "expected": 1
+    },
+    {
+      "current": 2,
+      "key": "ArrowDown",
+      "expected": 3
+    },
+    {
+      "current": 2,
+      "key": "Home",
+      "expected": 0
+    },
+    {
+      "current": 2,
+      "key": "End",
+      "expected": 3
+    },
+    {
+      "current": 3,
+      "key": "ArrowUp",
+      "expected": 2
+    },
+    {
+      "current": 3,
+      "key": "ArrowDown",
+      "expected": 0
+    },
+    {
+      "current": 3,
+      "key": "Home",
+      "expected": 0
+    },
+    {
+      "current": 3,
+      "key": "End",
+      "expected": 3
+    },
+    {
+      "current": 4,
+      "key": "ArrowUp",
+      "expected": 2
+    },
+    {
+      "current": 4,
+      "key": "ArrowDown",
+      "expected": 0
+    },
+    {
+      "current": 4,
+      "key": "Home",
+      "expected": 0
+    },
+    {
+      "current": 4,
+      "key": "End",
+      "expected": 3
+    }
+  ]
+}

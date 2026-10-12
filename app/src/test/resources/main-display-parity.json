@@ -1,0 +1,4675 @@
+{
+  "source": "desktop v0.68.0 immutable original compactTokens/tokenRatePresentation/viewDisplayPreferences",
+  "sourceIds": [
+    "home",
+    "limits",
+    "tool",
+    "model",
+    "project",
+    "session",
+    "device",
+    "trends",
+    "status"
+  ],
+  "supportedIds": [
+    "home",
+    "limits",
+    "tools",
+    "models",
+    "projects",
+    "sessions",
+    "devices",
+    "trends"
+  ],
+  "scenarios": [
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 200,
+                "timedOutputTokens": 80,
+                "timedDurationMs": 2000,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 200,
+                    "timedOutputTokens": 80,
+                    "timedDurationMs": 2000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 800,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 120,
+                    "timedOutputTokens": 50,
+                    "timedDurationMs": 1200,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 200,
+                "timedOutputTokens": 80,
+                "timedDurationMs": 2000,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 200,
+                    "timedOutputTokens": 80,
+                    "timedDurationMs": 2000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 800,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8800,
+            "idle": false
+          }
+        },
+        {
+          "at": 1800,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 120,
+                    "timedOutputTokens": 50,
+                    "timedDurationMs": 1200,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 250,
+                "timedOutputTokens": 105,
+                "timedDurationMs": 2500,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 250,
+                    "timedOutputTokens": 105,
+                    "timedDurationMs": 2500,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 12000,
+            "sampledAt": 1800,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              },
+              {
+                "id": "b",
+                "name": "Public b",
+                "models": [
+                  {
+                    "model": "public-beta",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 2,
+            "revision": 2,
+            "expiresAt": 8800,
+            "idle": false
+          }
+        },
+        {
+          "at": 2000,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 120,
+                    "timedOutputTokens": 50,
+                    "timedDurationMs": 1200,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 250,
+                "timedOutputTokens": 105,
+                "timedDurationMs": 2500,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 250,
+                    "timedOutputTokens": 105,
+                    "timedDurationMs": 2500,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 12000,
+            "sampledAt": 1800,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              },
+              {
+                "id": "b",
+                "name": "Public b",
+                "models": [
+                  {
+                    "model": "public-beta",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 2,
+            "revision": 2,
+            "expiresAt": 8800,
+            "idle": false
+          }
+        },
+        {
+          "at": 8800,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 1800,
+            "devices": [
+              {
+                "id": "b",
+                "name": "Public b",
+                "models": [
+                  {
+                    "model": "public-beta",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 9800,
+            "idle": false
+          }
+        },
+        {
+          "at": 9800,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 1800,
+            "devices": [
+              {
+                "id": "b",
+                "name": "Public b",
+                "models": [
+                  {
+                    "model": "public-beta",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 181800,
+            "idle": true
+          }
+        },
+        {
+          "at": 181799,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 1800,
+            "devices": [
+              {
+                "id": "b",
+                "name": "Public b",
+                "models": [
+                  {
+                    "model": "public-beta",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 181800,
+            "idle": true
+          }
+        },
+        {
+          "at": 181800,
+          "entries": null,
+          "expected": null
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 101,
+                "timedOutputTokens": 41,
+                "timedDurationMs": 1001,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 1000,
+            "burn": 60000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 102,
+                "timedOutputTokens": 42,
+                "timedDurationMs": 1001,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 1000,
+            "burn": 60000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 300,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 103,
+                "timedOutputTokens": 43,
+                "timedDurationMs": 1002,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 1000,
+            "burn": 60000,
+            "sampledAt": 300,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8300,
+            "idle": false
+          }
+        },
+        {
+          "at": 301,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 1,
+                "timedOutputTokens": 1,
+                "timedDurationMs": 1,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 400,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 2,
+                "timedOutputTokens": 2,
+                "timedDurationMs": 2,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 1000,
+            "burn": 60000,
+            "sampledAt": 400,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 3,
+            "expiresAt": 8400,
+            "idle": false
+          }
+        },
+        {
+          "at": 500,
+          "entries": [],
+          "expected": {
+            "speed": 1000,
+            "burn": 60000,
+            "sampledAt": 400,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 3,
+            "expiresAt": 180400,
+            "idle": true
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {},
+                "capabilities": {
+                  "throughput": false
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 300,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 130,
+                "timedOutputTokens": 60,
+                "timedDurationMs": 1300,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 400,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 140,
+                "timedOutputTokens": 70,
+                "timedDurationMs": 1400,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 6000,
+            "sampledAt": 400,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8400,
+            "idle": false
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 120,
+                    "timedOutputTokens": 50,
+                    "timedDurationMs": 1200,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 140,
+                "timedOutputTokens": 60,
+                "timedDurationMs": 1400,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 140,
+                    "timedOutputTokens": 60,
+                    "timedDurationMs": 1400,
+                    "modelThroughput": {}
+                  },
+                  "public-retro": {
+                    "timedTokens": 80,
+                    "timedOutputTokens": 30,
+                    "timedDurationMs": 800,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 200,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8200,
+            "idle": false
+          }
+        },
+        {
+          "at": 300,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 160,
+                "timedOutputTokens": 70,
+                "timedDurationMs": 1600,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 150,
+                    "timedOutputTokens": 65,
+                    "timedDurationMs": 1500,
+                    "modelThroughput": {}
+                  },
+                  "public-beta": {
+                    "timedTokens": 10,
+                    "timedOutputTokens": 5,
+                    "timedDurationMs": 100,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 300,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 50,
+                    "burn": 6000
+                  },
+                  {
+                    "model": "public-beta",
+                    "speed": 50,
+                    "burn": 6000
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 3,
+            "expiresAt": 8300,
+            "idle": false
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": " a ",
+              "name": "Public  a ",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 200,
+                "timedOutputTokens": 80,
+                "timedDurationMs": 2000,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 200,
+                    "timedOutputTokens": 80,
+                    "timedDurationMs": 2000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "",
+              "name": "Public ",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public renamed",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            },
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 150,
+                "timedOutputTokens": 60,
+                "timedDurationMs": 1500,
+                "modelThroughput": {}
+              }
+            },
+            {
+              "id": "new",
+              "name": "Public new",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            },
+            {
+              "id": "new",
+              "name": "Public new",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 12000,
+            "sampledAt": 200,
+            "devices": [],
+            "deviceCount": 2,
+            "revision": 2,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 8100,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 200,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8200,
+            "idle": false
+          }
+        },
+        {
+          "at": 8200,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 200,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 180200,
+            "idle": true
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 200,
+                "timedOutputTokens": 80,
+                "timedDurationMs": 2000,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 200,
+                    "timedOutputTokens": 80,
+                    "timedDurationMs": 2000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 250,
+                "timedOutputTokens": 105,
+                "timedDurationMs": 2500,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 12000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 2,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 250,
+                "timedOutputTokens": 105,
+                "timedDurationMs": 2500,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 300,
+          "entries": [],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 180100,
+            "idle": true
+          }
+        },
+        {
+          "at": 8000,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 180100,
+            "idle": true
+          }
+        },
+        {
+          "at": 8100,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 180100,
+            "idle": true
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 1000,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 0,
+            "burn": 0,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 2000,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 0,
+            "burn": 6000,
+            "sampledAt": 200,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8200,
+            "idle": false
+          }
+        },
+        {
+          "at": 300,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 10,
+                "timedDurationMs": 2000,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 0,
+            "burn": 6000,
+            "sampledAt": 200,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8200,
+            "idle": false
+          }
+        },
+        {
+          "at": 400,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 10,
+                "timedDurationMs": 3000,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 0,
+            "burn": 0,
+            "sampledAt": 400,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 3,
+            "expiresAt": 8400,
+            "idle": false
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 130,
+                "timedOutputTokens": 60,
+                "timedDurationMs": 1300,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 300,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 140,
+                "timedOutputTokens": 70,
+                "timedDurationMs": 1400,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 6000,
+            "sampledAt": 300,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8300,
+            "idle": false
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 1000000000000000,
+                "timedOutputTokens": 100000000000000,
+                "timedDurationMs": 0.0001,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 1000000000000,
+            "burn": 1000000000000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 101,
+          "entries": null,
+          "expected": {
+            "speed": 1000000000000,
+            "burn": 1000000000000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 0.0001,
+                "timedOutputTokens": 0.00001,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 0.0001,
+                    "timedOutputTokens": 0.00001,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": {
+            "speed": 0.00001,
+            "burn": 0.006,
+            "sampledAt": 100,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 0.00001,
+                    "burn": 0.006
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 8100,
+          "entries": null,
+          "expected": {
+            "speed": 0.00001,
+            "burn": 0.006,
+            "sampledAt": 100,
+            "devices": [
+              {
+                "id": "a",
+                "name": "Public a",
+                "models": [
+                  {
+                    "model": "public-alpha",
+                    "speed": 0.00001,
+                    "burn": 0.006
+                  }
+                ]
+              }
+            ],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 180100,
+            "idle": true
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "reset": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 300,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 130,
+                "timedOutputTokens": 60,
+                "timedDurationMs": 1300,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 6000,
+            "sampledAt": 300,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 2,
+            "expiresAt": 8300,
+            "idle": false
+          }
+        }
+      ]
+    },
+    {
+      "events": [
+        {
+          "at": 0,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 100,
+                "timedOutputTokens": 40,
+                "timedDurationMs": 1000,
+                "modelThroughput": {
+                  "public-alpha": {
+                    "timedTokens": 100,
+                    "timedOutputTokens": 40,
+                    "timedDurationMs": 1000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 200,
+                "timedOutputTokens": 80,
+                "timedDurationMs": 2000,
+                "modelThroughput": {
+                  "public-beta": {
+                    "timedTokens": 200,
+                    "timedOutputTokens": 80,
+                    "timedDurationMs": 2000,
+                    "modelThroughput": {}
+                  }
+                }
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "at": 100,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 120,
+                "timedOutputTokens": 50,
+                "timedDurationMs": 1200,
+                "modelThroughput": {}
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 250,
+                "timedOutputTokens": 105,
+                "timedDurationMs": 2500,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 100,
+            "burn": 12000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 2,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 200,
+          "entries": [
+            {
+              "id": "a",
+              "name": "Public a",
+              "period": {
+                "timedTokens": 1,
+                "timedOutputTokens": 1,
+                "timedDurationMs": 1,
+                "modelThroughput": {}
+              }
+            },
+            {
+              "id": "b",
+              "name": "Public b",
+              "period": {
+                "timedTokens": 250,
+                "timedOutputTokens": 105,
+                "timedDurationMs": 2500,
+                "modelThroughput": {}
+              }
+            }
+          ],
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        },
+        {
+          "at": 300,
+          "entries": null,
+          "expected": {
+            "speed": 50,
+            "burn": 6000,
+            "sampledAt": 100,
+            "devices": [],
+            "deviceCount": 1,
+            "revision": 1,
+            "expiresAt": 8100,
+            "idle": false
+          }
+        }
+      ]
+    }
+  ],
+  "formats": [
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 9999,
+      "expected": "9999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 10000,
+      "expected": "1万",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999950,
+      "expected": "100万",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999999,
+      "expected": "100万",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "100万",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "1亿",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "1亿",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "10亿",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "10亿",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "50亿",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "90071992.5亿",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 9999,
+      "expected": "9999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 10000,
+      "expected": "1萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 999950,
+      "expected": "100萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 999999,
+      "expected": "100萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "100萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "1億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "1億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "10億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "10億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "50億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh-TW",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "90071992.5億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 9999,
+      "expected": "9999",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 10000,
+      "expected": "1萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 999950,
+      "expected": "100萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 999999,
+      "expected": "100萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "100萬",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "1億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "1億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "10億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "10億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "50億",
+      "threshold": 10000
+    },
+    {
+      "locale": "zh",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "90071992.5億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 9999,
+      "expected": "9999",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 10000,
+      "expected": "1万",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 999950,
+      "expected": "100万",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 999999,
+      "expected": "100万",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "100万",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "1億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "1億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "10億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "10億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "50億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ja",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "90071992.5億",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1000",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 9999,
+      "expected": "9999",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 10000,
+      "expected": "1만",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 999950,
+      "expected": "100만",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 999999,
+      "expected": "100만",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "100만",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "1억",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "1억",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "10억",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "10억",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "50억",
+      "threshold": 10000
+    },
+    {
+      "locale": "ko",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "90071992.5억",
+      "threshold": 10000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "western",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 0,
+      "expected": "0",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 1,
+      "expected": "1",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 999,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 999.49,
+      "expected": "999",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 1000,
+      "expected": "1K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 9999,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 10000,
+      "expected": "10K",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 999950,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 999999,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 1000000,
+      "expected": "1M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 99999999,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 100000000,
+      "expected": "100M",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 999950000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 1000000000,
+      "expected": "1B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 5000000123,
+      "expected": "5B",
+      "threshold": 1000
+    },
+    {
+      "locale": "pt-BR",
+      "units": "localized",
+      "value": 9007199254740991,
+      "expected": "9007199.3B",
+      "threshold": 1000
+    }
+  ],
+  "liveFormats": [
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0,
+      "expected": "0"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.0001,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.05,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.0999,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.1,
+      "expected": "0.1"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.15,
+      "expected": "0.2"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.94,
+      "expected": "0.9"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 0.95,
+      "expected": "1"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1.49,
+      "expected": "1"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1.5,
+      "expected": "2"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K"
+    },
+    {
+      "locale": "en",
+      "units": "western",
+      "value": 1000000000000,
+      "expected": "1000B"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0,
+      "expected": "0"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.0001,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.05,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.0999,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.1,
+      "expected": "0.1"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.15,
+      "expected": "0.2"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.94,
+      "expected": "0.9"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 0.95,
+      "expected": "1"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1.49,
+      "expected": "1"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1.5,
+      "expected": "2"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1K"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 10000,
+      "expected": "10K"
+    },
+    {
+      "locale": "en",
+      "units": "localized",
+      "value": 1000000000000,
+      "expected": "1000B"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0,
+      "expected": "0"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.0001,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.05,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.0999,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.1,
+      "expected": "0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.15,
+      "expected": "0.2"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.94,
+      "expected": "0.9"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 0.95,
+      "expected": "1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1.49,
+      "expected": "1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1.5,
+      "expected": "2"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 999.5,
+      "expected": "1K"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 10000,
+      "expected": "10K"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "western",
+      "value": 1000000000000,
+      "expected": "1000B"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0,
+      "expected": "0"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.0001,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.05,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.0999,
+      "expected": "<0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.1,
+      "expected": "0.1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.15,
+      "expected": "0.2"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.94,
+      "expected": "0.9"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 0.95,
+      "expected": "1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1.49,
+      "expected": "1"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1.5,
+      "expected": "2"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 999.5,
+      "expected": "1000"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 10000,
+      "expected": "1万"
+    },
+    {
+      "locale": "zh-CN",
+      "units": "localized",
+      "value": 1000000000000,
+      "expected": "10000亿"
+    }
+  ],
+  "viewCases": [
+    {
+      "order": [],
+      "hidden": [],
+      "normalized": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "home,limits,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [],
+      "hidden": [
+        "home"
+      ],
+      "normalized": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "home",
+      "visible": [
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "limits",
+      "move": "home,limits,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [],
+      "hidden": [
+        "limits",
+        "projects"
+      ],
+      "normalized": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "limits,projects",
+      "visible": [
+        "home",
+        "tools",
+        "models",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "home,limits,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [],
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "normalized": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "home,limits,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [],
+      "hidden": [
+        "subscriptions",
+        "pricing"
+      ],
+      "normalized": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "home,limits,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "limits"
+      ],
+      "hidden": [],
+      "normalized": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "limits,home,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "limits"
+      ],
+      "hidden": [
+        "home"
+      ],
+      "normalized": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "home",
+      "visible": [
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "limits",
+      "move": "limits,home,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "limits"
+      ],
+      "hidden": [
+        "limits",
+        "projects"
+      ],
+      "normalized": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "limits,projects",
+      "visible": [
+        "home",
+        "tools",
+        "models",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "limits,home,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "limits"
+      ],
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "normalized": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "limits,home,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "limits"
+      ],
+      "hidden": [
+        "subscriptions",
+        "pricing"
+      ],
+      "normalized": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "limits",
+        "home",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "limits,home,models,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "models",
+        "home",
+        "limits"
+      ],
+      "hidden": [],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "models",
+        "home",
+        "limits"
+      ],
+      "hidden": [
+        "home"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "home",
+      "visible": [
+        "models",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "models",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "models",
+        "home",
+        "limits"
+      ],
+      "hidden": [
+        "limits",
+        "projects"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "limits,projects",
+      "visible": [
+        "models",
+        "home",
+        "tools",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "models",
+        "home",
+        "limits"
+      ],
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "models",
+        "home",
+        "limits"
+      ],
+      "hidden": [
+        "subscriptions",
+        "pricing"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "unknown",
+        "MODELS",
+        "models"
+      ],
+      "hidden": [],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "unknown",
+        "MODELS",
+        "models"
+      ],
+      "hidden": [
+        "home"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "home",
+      "visible": [
+        "models",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "models",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "unknown",
+        "MODELS",
+        "models"
+      ],
+      "hidden": [
+        "limits",
+        "projects"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "limits,projects",
+      "visible": [
+        "models",
+        "home",
+        "tools",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "unknown",
+        "MODELS",
+        "models"
+      ],
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "unknown",
+        "MODELS",
+        "models"
+      ],
+      "hidden": [
+        "subscriptions",
+        "pricing"
+      ],
+      "normalized": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "models",
+        "home",
+        "limits",
+        "tools",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "models,home,limits,tools,projects,sessions,devices,trends"
+    },
+    {
+      "order": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hidden": [],
+      "normalized": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "preferred": "home",
+      "move": "trends,devices,sessions,models,projects,tools,limits,home"
+    },
+    {
+      "order": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hidden": [
+        "home"
+      ],
+      "normalized": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hiddenNormalized": "home",
+      "visible": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits"
+      ],
+      "preferred": "trends",
+      "move": "trends,devices,sessions,models,projects,tools,limits,home"
+    },
+    {
+      "order": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hidden": [
+        "limits",
+        "projects"
+      ],
+      "normalized": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hiddenNormalized": "limits,projects",
+      "visible": [
+        "trends",
+        "devices",
+        "sessions",
+        "models",
+        "tools",
+        "home"
+      ],
+      "preferred": "home",
+      "move": "trends,devices,sessions,models,projects,tools,limits,home"
+    },
+    {
+      "order": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "normalized": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "preferred": "home",
+      "move": "trends,devices,sessions,models,projects,tools,limits,home"
+    },
+    {
+      "order": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hidden": [
+        "subscriptions",
+        "pricing"
+      ],
+      "normalized": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "trends",
+        "devices",
+        "sessions",
+        "projects",
+        "models",
+        "tools",
+        "limits",
+        "home"
+      ],
+      "preferred": "home",
+      "move": "trends,devices,sessions,models,projects,tools,limits,home"
+    },
+    {
+      "order": [
+        "pricing",
+        "sessions",
+        "subscriptions",
+        "home"
+      ],
+      "hidden": [],
+      "normalized": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "sessions,home,limits,models,tools,projects,devices,trends"
+    },
+    {
+      "order": [
+        "pricing",
+        "sessions",
+        "subscriptions",
+        "home"
+      ],
+      "hidden": [
+        "home"
+      ],
+      "normalized": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "home",
+      "visible": [
+        "sessions",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "preferred": "sessions",
+      "move": "sessions,home,limits,models,tools,projects,devices,trends"
+    },
+    {
+      "order": [
+        "pricing",
+        "sessions",
+        "subscriptions",
+        "home"
+      ],
+      "hidden": [
+        "limits",
+        "projects"
+      ],
+      "normalized": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "limits,projects",
+      "visible": [
+        "sessions",
+        "home",
+        "tools",
+        "models",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "sessions,home,limits,models,tools,projects,devices,trends"
+    },
+    {
+      "order": [
+        "pricing",
+        "sessions",
+        "subscriptions",
+        "home"
+      ],
+      "hidden": [
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "sessions",
+        "devices",
+        "trends"
+      ],
+      "normalized": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "sessions,home,limits,models,tools,projects,devices,trends"
+    },
+    {
+      "order": [
+        "pricing",
+        "sessions",
+        "subscriptions",
+        "home"
+      ],
+      "hidden": [
+        "subscriptions",
+        "pricing"
+      ],
+      "normalized": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "hiddenNormalized": "",
+      "visible": [
+        "sessions",
+        "home",
+        "limits",
+        "tools",
+        "models",
+        "projects",
+        "devices",
+        "trends"
+      ],
+      "preferred": "home",
+      "move": "sessions,home,limits,models,tools,projects,devices,trends"
+    }
+  ]
+}

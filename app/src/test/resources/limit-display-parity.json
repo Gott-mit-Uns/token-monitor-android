@@ -1,0 +1,3178 @@
+{
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418; limits displayMode/windowText/balanceDisplay/accountIdentity/providerPresentation/usageAttributionRows",
+  "windowCases": [
+    {
+      "input": {
+        "provider": "codex",
+        "kind": "weekly",
+        "remainingPercent": 75,
+        "usedPercent": 99
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 75,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "codex",
+        "kind": "weekly",
+        "remainingPercent": 75,
+        "usedPercent": 99
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 25,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "claude",
+        "kind": "session",
+        "remainingPercent": 66.5
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 66.5,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "claude",
+        "kind": "session",
+        "remainingPercent": 66.5
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 33.5,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "cursor",
+        "kind": "billing",
+        "metric": "spend",
+        "used": 12.4,
+        "limit": 20,
+        "currency": "USD",
+        "remainingPercent": 38
+      },
+      "showUsed": false,
+      "output": {
+        "value": "$12.40 / $20.00",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 38,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "cursor",
+        "kind": "billing",
+        "metric": "spend",
+        "used": 12.4,
+        "limit": 20,
+        "currency": "USD",
+        "remainingPercent": 38
+      },
+      "showUsed": true,
+      "output": {
+        "value": "$12.40 / $20.00",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 62,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "cursor",
+        "kind": "billing",
+        "metric": "spend",
+        "used": 12.4,
+        "currency": "USD"
+      },
+      "showUsed": false,
+      "output": {
+        "value": "$12.40 spent",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "cursor",
+        "kind": "billing",
+        "metric": "spend",
+        "used": 12.4,
+        "currency": "USD"
+      },
+      "showUsed": true,
+      "output": {
+        "value": "$12.40 spent",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "commandcode",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 47.42,
+        "limit": 70,
+        "currency": "USD",
+        "remainingPercent": 68
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "$47.42 / $70.00",
+        "percentLeads": true
+      },
+      "percent": 68,
+      "creditsPercent": 68,
+      "creditsMoney": "$47.42"
+    },
+    {
+      "input": {
+        "provider": "commandcode",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 47.42,
+        "limit": 70,
+        "currency": "USD",
+        "remainingPercent": 68
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "$22.58 / $70.00",
+        "percentLeads": true
+      },
+      "percent": 32,
+      "creditsPercent": 68,
+      "creditsMoney": "$47.42"
+    },
+    {
+      "input": {
+        "provider": "commandcode",
+        "kind": "session",
+        "remaining": 13.9,
+        "limit": 14,
+        "currency": "USD",
+        "remainingPercent": 99
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 99,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "commandcode",
+        "kind": "session",
+        "remaining": 13.9,
+        "limit": 14,
+        "currency": "USD",
+        "remainingPercent": 99
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 1,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kiro",
+        "kind": "billing",
+        "used": 120,
+        "limit": 500,
+        "remainingPercent": 76
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "380/500",
+        "percentLeads": false
+      },
+      "percent": 76,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kiro",
+        "kind": "billing",
+        "used": 120,
+        "limit": 500,
+        "remainingPercent": 76
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "120/500",
+        "percentLeads": false
+      },
+      "percent": 24,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kiro",
+        "kind": "billing",
+        "used": 12.5,
+        "remaining": 3.2,
+        "currency": "USD",
+        "showMeter": false
+      },
+      "showUsed": false,
+      "output": {
+        "value": "12.5 credits · $3.20",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kiro",
+        "kind": "billing",
+        "used": 12.5,
+        "remaining": 3.2,
+        "currency": "USD",
+        "showMeter": false
+      },
+      "showUsed": true,
+      "output": {
+        "value": "12.5 credits · $3.20",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kiro",
+        "kind": "billing",
+        "used": 12.5,
+        "showMeter": false
+      },
+      "showUsed": false,
+      "output": {
+        "value": "12.5 credits",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kiro",
+        "kind": "billing",
+        "used": 12.5,
+        "showMeter": false
+      },
+      "showUsed": true,
+      "output": {
+        "value": "12.5 credits",
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "qoder",
+        "kind": "billing",
+        "used": 15.375,
+        "limit": 100,
+        "remainingPercent": 84.625
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "84.63/100",
+        "percentLeads": false
+      },
+      "percent": 84.625,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "qoder",
+        "kind": "billing",
+        "used": 15.375,
+        "limit": 100,
+        "remainingPercent": 84.625
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "15.38/100",
+        "percentLeads": false
+      },
+      "percent": 15.375,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "qoder",
+        "kind": "session",
+        "used": 20,
+        "limit": 100,
+        "remainingPercent": 80
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 80,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "qoder",
+        "kind": "session",
+        "used": 20,
+        "limit": 100,
+        "remainingPercent": 80
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 20,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zed",
+        "kind": "billing",
+        "limitId": "zed.edit-predictions",
+        "used": 25,
+        "limit": 100,
+        "remainingPercent": 75
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "75/100",
+        "percentLeads": false
+      },
+      "percent": 75,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zed",
+        "kind": "billing",
+        "limitId": "zed.edit-predictions",
+        "used": 25,
+        "limit": 100,
+        "remainingPercent": 75
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "25/100",
+        "percentLeads": false
+      },
+      "percent": 25,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zed",
+        "kind": "billing",
+        "used": 2.005,
+        "limit": 20,
+        "currency": "USD",
+        "remainingPercent": 90
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "$18.00 / $20.00",
+        "percentLeads": false
+      },
+      "percent": 90,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zed",
+        "kind": "billing",
+        "used": 2.005,
+        "limit": 20,
+        "currency": "USD",
+        "remainingPercent": 90
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "$2.00 / $20.00",
+        "percentLeads": false
+      },
+      "percent": 10,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zai",
+        "kind": "daily",
+        "remaining": 124000000,
+        "limit": 305000000,
+        "remainingPercent": 40.7
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "124000000 / 305000000",
+        "percentLeads": false
+      },
+      "percent": 40.7,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zai",
+        "kind": "daily",
+        "remaining": 124000000,
+        "limit": 305000000,
+        "remainingPercent": 40.7
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "181000000 / 305000000",
+        "percentLeads": false
+      },
+      "percent": 59.3,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zaiteam",
+        "kind": "billing",
+        "limitId": "pool",
+        "remaining": 120,
+        "limit": 500,
+        "remainingPercent": 24
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "120 / 500",
+        "percentLeads": false
+      },
+      "percent": 24,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zaiteam",
+        "kind": "billing",
+        "limitId": "pool",
+        "remaining": 120,
+        "limit": 500,
+        "remainingPercent": 24
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "380 / 500",
+        "percentLeads": false
+      },
+      "percent": 76,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zai",
+        "kind": "billing",
+        "remaining": 120,
+        "limit": 500,
+        "detail": "not a token pool"
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "zai",
+        "kind": "billing",
+        "remaining": 120,
+        "limit": 500,
+        "detail": "not a token pool"
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kimi",
+        "kind": "billing",
+        "remainingPercent": 82,
+        "detail": "Kimi 12% · Code 6%"
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "Kimi 12% · Code 6%",
+        "percentLeads": false
+      },
+      "percent": 82,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kimi",
+        "kind": "billing",
+        "remainingPercent": 82,
+        "detail": "Kimi 12% · Code 6%"
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "Kimi 12% · Code 6%",
+        "percentLeads": false
+      },
+      "percent": 18,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kimi",
+        "kind": "weekly",
+        "remainingPercent": 82,
+        "detail": "not a billing detail"
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 82,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "kimi",
+        "kind": "weekly",
+        "remainingPercent": 82,
+        "detail": "not a billing detail"
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 18,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "openrouter",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 680,
+        "currency": "CREDITS",
+        "balance": {
+          "amount": 680,
+          "monthSpend": 320
+        }
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 68,
+      "creditsMoney": "680.00"
+    },
+    {
+      "input": {
+        "provider": "openrouter",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 680,
+        "currency": "CREDITS",
+        "balance": {
+          "amount": 680,
+          "monthSpend": 320
+        }
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 68,
+      "creditsMoney": "680.00"
+    },
+    {
+      "input": {
+        "provider": "openrouter",
+        "kind": "balance",
+        "metric": "credits",
+        "remaining": 7.5,
+        "currency": "EUR"
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 100,
+      "creditsMoney": "EUR 7.50"
+    },
+    {
+      "input": {
+        "provider": "openrouter",
+        "kind": "balance",
+        "metric": "credits",
+        "remaining": 7.5,
+        "currency": "EUR"
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 100,
+      "creditsMoney": "EUR 7.50"
+    },
+    {
+      "input": {
+        "provider": "deepseek",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 102345.675,
+        "currency": "CNY",
+        "usedPercent": 10,
+        "remainingPercent": 70
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 70,
+      "creditsPercent": 90,
+      "creditsMoney": "¥102345.68"
+    },
+    {
+      "input": {
+        "provider": "deepseek",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 102345.675,
+        "currency": "CNY",
+        "usedPercent": 10,
+        "remainingPercent": 70
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": 30,
+      "creditsPercent": 90,
+      "creditsMoney": "¥102345.68"
+    },
+    {
+      "input": {
+        "provider": "thirdparty",
+        "kind": "billing",
+        "metric": "credits",
+        "currency": "USD",
+        "balance": {
+          "amount": 12,
+          "monthSpend": 3
+        }
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 80,
+      "creditsMoney": "$12.00"
+    },
+    {
+      "input": {
+        "provider": "thirdparty",
+        "kind": "billing",
+        "metric": "credits",
+        "currency": "USD",
+        "balance": {
+          "amount": 12,
+          "monthSpend": 3
+        }
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 80,
+      "creditsMoney": "$12.00"
+    },
+    {
+      "input": {
+        "provider": "thirdparty",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 0,
+        "currency": "USD",
+        "balance": {
+          "monthSpend": 0
+        }
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 0,
+      "creditsMoney": "$0.00"
+    },
+    {
+      "input": {
+        "provider": "thirdparty",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": 0,
+        "currency": "USD",
+        "balance": {
+          "monthSpend": 0
+        }
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 0,
+      "creditsMoney": "$0.00"
+    },
+    {
+      "input": {
+        "provider": "thirdparty",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": -2,
+        "currency": "USD"
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 0,
+      "creditsMoney": "$-2.00"
+    },
+    {
+      "input": {
+        "provider": "thirdparty",
+        "kind": "billing",
+        "metric": "credits",
+        "remaining": -2,
+        "currency": "USD"
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": 0,
+      "creditsMoney": "$-2.00"
+    },
+    {
+      "input": {
+        "provider": "openrouter",
+        "kind": "billing",
+        "metric": "credits",
+        "detail": "unlimited",
+        "showMeter": false
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "openrouter",
+        "kind": "billing",
+        "metric": "credits",
+        "detail": "unlimited",
+        "showMeter": false
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "unknown-provider",
+        "kind": "billing",
+        "remaining": 12.25,
+        "detail": "opaque supplied note"
+      },
+      "showUsed": false,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    },
+    {
+      "input": {
+        "provider": "unknown-provider",
+        "kind": "billing",
+        "remaining": 12.25,
+        "detail": "opaque supplied note"
+      },
+      "showUsed": true,
+      "output": {
+        "value": null,
+        "detail": "",
+        "percentLeads": false
+      },
+      "percent": null,
+      "creditsPercent": null,
+      "creditsMoney": null
+    }
+  ],
+  "accounts": [
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountEmail": "javis@example.com",
+          "accountLabel": "Plus",
+          "workspaceKind": "personal",
+          "accountKey": "email|private-account"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "javis@example.com"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountEmail": "javis@example.com",
+          "accountLabel": "Plus",
+          "workspaceKind": "personal",
+          "accountKey": "email|private-account"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "j***s@example.com"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountLabel": "Plus"
+        },
+        {
+          "provider": "codex",
+          "accountLabel": "Plus"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "Account 1",
+        "Account 2"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountLabel": "Plus"
+        },
+        {
+          "provider": "codex",
+          "accountLabel": "Plus"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "Account 1",
+        "Account 2"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountEmail": "javis@example.com",
+          "accountName": "Workspace",
+          "accountKey": "sha256:abcdef01"
+        },
+        {
+          "provider": "codex",
+          "accountEmail": "jonas@example.com",
+          "accountName": "Workspace",
+          "accountKey": "sha256:abcdef02"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "javis@example.com",
+        "jonas@example.com"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountEmail": "javis@example.com",
+          "accountName": "Workspace",
+          "accountKey": "sha256:abcdef01"
+        },
+        {
+          "provider": "codex",
+          "accountEmail": "jonas@example.com",
+          "accountName": "Workspace",
+          "accountKey": "sha256:abcdef02"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "j***s@example.com · Workspace · #abcdef01",
+        "j***s@example.com · Workspace · #abcdef02"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "claude",
+          "accountEmail": "javis@example.com",
+          "accountName": "Team A",
+          "accountKey": "javis@example.com|team-a"
+        },
+        {
+          "provider": "claude",
+          "accountEmail": "jonas@example.com",
+          "accountName": "Team B",
+          "accountKey": "jonas@example.com|team-b"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "javis@example.com",
+        "jonas@example.com"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "claude",
+          "accountEmail": "javis@example.com",
+          "accountName": "Team A",
+          "accountKey": "javis@example.com|team-a"
+        },
+        {
+          "provider": "claude",
+          "accountEmail": "jonas@example.com",
+          "accountName": "Team B",
+          "accountKey": "jonas@example.com|team-b"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "j***s@example.com · Team A",
+        "j***s@example.com · Team B"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "claude",
+          "accountEmail": "same@example.com",
+          "accountName": "Team",
+          "accountKey": "abc"
+        },
+        {
+          "provider": "claude",
+          "accountEmail": "same@example.com",
+          "accountName": "Team",
+          "accountKey": "abc"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "same@example.com · Team · #1",
+        "same@example.com · Team · #2"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "claude",
+          "accountEmail": "same@example.com",
+          "accountName": "Team",
+          "accountKey": "abc"
+        },
+        {
+          "provider": "claude",
+          "accountEmail": "same@example.com",
+          "accountName": "Team",
+          "accountKey": "abc"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "s***e@example.com · Team · #1",
+        "s***e@example.com · Team · #2"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountEmail": "one@example.com",
+          "workspaceLabel": "Research",
+          "accountKey": "one"
+        },
+        {
+          "provider": "codex",
+          "accountEmail": "one@example.com",
+          "workspaceLabel": "Personal",
+          "accountKey": "two"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "one@example.com · Research",
+        "one@example.com · Personal"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "codex",
+          "accountEmail": "one@example.com",
+          "workspaceLabel": "Research",
+          "accountKey": "one"
+        },
+        {
+          "provider": "codex",
+          "accountEmail": "one@example.com",
+          "workspaceLabel": "Personal",
+          "accountKey": "two"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "o***e@example.com · Research",
+        "o***e@example.com · Personal"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "opencode",
+          "accountLabel": "Go"
+        },
+        {
+          "provider": "opencode",
+          "accountLabel": "Work profile"
+        },
+        {
+          "provider": "opencode",
+          "accountName": "Custom",
+          "accountLabel": "Zen"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "Account 1",
+        "Work profile",
+        "Custom"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "opencode",
+          "accountLabel": "Go"
+        },
+        {
+          "provider": "opencode",
+          "accountLabel": "Work profile"
+        },
+        {
+          "provider": "opencode",
+          "accountName": "Custom",
+          "accountLabel": "Zen"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "Account 1",
+        "Work profile",
+        "Custom"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "openrouter",
+          "accountName": "environment"
+        },
+        {
+          "provider": "thirdparty",
+          "accountName": "Relay"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "Environment",
+        "Relay"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "openrouter",
+          "accountName": "environment"
+        },
+        {
+          "provider": "thirdparty",
+          "accountName": "Relay"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "Environment",
+        "Relay"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "volcengine",
+          "accountLabel": "Pro"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "Pro"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "volcengine",
+          "accountLabel": "Pro"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "Pro"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "mimo",
+          "accountEmail": "javis@example.com",
+          "accountLabel": "Console"
+        },
+        {
+          "provider": "mimo",
+          "accountEmail": "javis@example.com",
+          "accountLabel": "Desktop Membership"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "javis@example.com · Console",
+        "javis@example.com · Desktop Membership"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "mimo",
+          "accountEmail": "javis@example.com",
+          "accountLabel": "Console"
+        },
+        {
+          "provider": "mimo",
+          "accountEmail": "javis@example.com",
+          "accountLabel": "Desktop Membership"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "j***s@example.com · Console",
+        "j***s@example.com · Desktop Membership"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "mimo",
+          "accountLabel": "Legacy plan"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "Legacy plan"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "mimo",
+          "accountLabel": "Legacy plan"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "Legacy plan"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "cursor",
+          "accountEmail": "a@example.com",
+          "accountLabel": "a@example.com"
+        }
+      ],
+      "mask": false,
+      "output": [
+        "a@example.com"
+      ]
+    },
+    {
+      "input": [
+        {
+          "provider": "cursor",
+          "accountEmail": "a@example.com",
+          "accountLabel": "a@example.com"
+        }
+      ],
+      "mask": true,
+      "output": [
+        "a***@example.com"
+      ]
+    }
+  ],
+  "periods": [
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 100
+          }
+        }
+      },
+      "source": "codex"
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 100
+          },
+          "claude": {
+            "unknown": 0
+          }
+        }
+      },
+      "source": "codex"
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 100
+          },
+          "claude": {
+            "unknown": 1
+          }
+        }
+      },
+      "source": null
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 90
+          }
+        }
+      },
+      "source": null
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 100
+          },
+          "claude": {
+            "unknown": "bad"
+          }
+        }
+      },
+      "source": null
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 0
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 0
+          }
+        }
+      },
+      "source": null
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        }
+      },
+      "source": null
+    },
+    {
+      "input": {
+        "models": {
+          "unknown": 100
+        },
+        "clientModels": {
+          "codex": {
+            "unknown": 100
+          },
+          "claude": {
+            "unknown": -1
+          }
+        }
+      },
+      "source": null
+    }
+  ],
+  "sourceCases": [
+    {
+      "provider": "codex",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "RPC"
+    },
+    {
+      "provider": "codex",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "App"
+    },
+    {
+      "provider": "codex",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "codex",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "Managed"
+    },
+    {
+      "provider": "codex",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "RPC"
+    },
+    {
+      "provider": "codex",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "codex",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "codex",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "codex",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "codex",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "codex",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "codex",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "codex",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "codex",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "codex",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "codex",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "codex",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "codex",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "codex",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "codex",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "codex",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "API"
+    },
+    {
+      "provider": "codex",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "API"
+    },
+    {
+      "provider": "codex",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "API"
+    },
+    {
+      "provider": "codex",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "API"
+    },
+    {
+      "provider": "codex",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "API"
+    },
+    {
+      "provider": "codex",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "codex",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "codex",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "codex",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "codex",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "codex",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "codex",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "codex",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "codex",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "codex",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    },
+    {
+      "provider": "grok",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "grok",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "grok",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "grok",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "grok",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "grok",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "grok",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "grok",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "grok",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "grok",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "grok",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "grok",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "API"
+    },
+    {
+      "provider": "grok",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "API"
+    },
+    {
+      "provider": "grok",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "API"
+    },
+    {
+      "provider": "grok",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "API"
+    },
+    {
+      "provider": "grok",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "API"
+    },
+    {
+      "provider": "grok",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "grok",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "grok",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "grok",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "grok",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "grok",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "grok",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "grok",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "grok",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "grok",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    },
+    {
+      "provider": "volcengine",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "RPC"
+    },
+    {
+      "provider": "volcengine",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "RPC"
+    },
+    {
+      "provider": "volcengine",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "RPC"
+    },
+    {
+      "provider": "volcengine",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "RPC"
+    },
+    {
+      "provider": "volcengine",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "RPC"
+    },
+    {
+      "provider": "volcengine",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "volcengine",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "volcengine",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "volcengine",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "volcengine",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "volcengine",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "arkcli"
+    },
+    {
+      "provider": "volcengine",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "arkcli"
+    },
+    {
+      "provider": "volcengine",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "arkcli"
+    },
+    {
+      "provider": "volcengine",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "arkcli"
+    },
+    {
+      "provider": "volcengine",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "arkcli"
+    },
+    {
+      "provider": "volcengine",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "volcengine",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "volcengine",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "volcengine",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "volcengine",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "volcengine",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "API"
+    },
+    {
+      "provider": "volcengine",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "API"
+    },
+    {
+      "provider": "volcengine",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "API"
+    },
+    {
+      "provider": "volcengine",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "API"
+    },
+    {
+      "provider": "volcengine",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "API"
+    },
+    {
+      "provider": "volcengine",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "volcengine",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "volcengine",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "volcengine",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "volcengine",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "volcengine",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "volcengine",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "volcengine",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "volcengine",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "volcengine",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    },
+    {
+      "provider": "trae",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "RPC"
+    },
+    {
+      "provider": "trae",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "RPC"
+    },
+    {
+      "provider": "trae",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "RPC"
+    },
+    {
+      "provider": "trae",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "RPC"
+    },
+    {
+      "provider": "trae",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "RPC"
+    },
+    {
+      "provider": "trae",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "trae",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "trae",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "trae",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "trae",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "trae",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "trae",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "trae",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "trae",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "trae",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "trae",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "trae",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "trae",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "trae",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "trae",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "trae",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "trae",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "trae",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "trae",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "trae",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "trae",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    },
+    {
+      "provider": "claude",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "RPC"
+    },
+    {
+      "provider": "claude",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "RPC"
+    },
+    {
+      "provider": "claude",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "RPC"
+    },
+    {
+      "provider": "claude",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "RPC"
+    },
+    {
+      "provider": "claude",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "RPC"
+    },
+    {
+      "provider": "claude",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "claude",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "claude",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "claude",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "claude",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "claude",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "claude",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "claude",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "claude",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "claude",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "claude",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "claude",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "claude",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "claude",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "claude",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "claude",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "API"
+    },
+    {
+      "provider": "claude",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "API"
+    },
+    {
+      "provider": "claude",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "API"
+    },
+    {
+      "provider": "claude",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "API"
+    },
+    {
+      "provider": "claude",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "API"
+    },
+    {
+      "provider": "claude",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "claude",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "claude",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "claude",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "claude",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "claude",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "claude",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "claude",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "claude",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "claude",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    },
+    {
+      "provider": "opencode",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "RPC"
+    },
+    {
+      "provider": "opencode",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "RPC"
+    },
+    {
+      "provider": "opencode",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "RPC"
+    },
+    {
+      "provider": "opencode",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "RPC"
+    },
+    {
+      "provider": "opencode",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "RPC"
+    },
+    {
+      "provider": "opencode",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "opencode",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "opencode",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "opencode",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "opencode",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "opencode",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "opencode",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "opencode",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "opencode",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "opencode",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "opencode",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "opencode",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "opencode",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "opencode",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "opencode",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "opencode",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "API"
+    },
+    {
+      "provider": "opencode",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "API"
+    },
+    {
+      "provider": "opencode",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "API"
+    },
+    {
+      "provider": "opencode",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "API"
+    },
+    {
+      "provider": "opencode",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "API"
+    },
+    {
+      "provider": "opencode",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "opencode",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "opencode",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "opencode",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "opencode",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "opencode",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "opencode",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "opencode",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "opencode",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "opencode",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "rpc",
+      "sourceDetail": "",
+      "label": "RPC"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "rpc",
+      "sourceDetail": "app",
+      "label": "RPC"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "rpc",
+      "sourceDetail": "cli",
+      "label": "RPC"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "rpc",
+      "sourceDetail": "managed",
+      "label": "RPC"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "rpc",
+      "sourceDetail": "unknown",
+      "label": "RPC"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "oauth",
+      "sourceDetail": "",
+      "label": "OAuth"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "oauth",
+      "sourceDetail": "app",
+      "label": "OAuth"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "oauth",
+      "sourceDetail": "cli",
+      "label": "OAuth"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "oauth",
+      "sourceDetail": "managed",
+      "label": "OAuth"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "oauth",
+      "sourceDetail": "unknown",
+      "label": "OAuth"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "cli",
+      "sourceDetail": "",
+      "label": "CLI"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "cli",
+      "sourceDetail": "app",
+      "label": "CLI"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "cli",
+      "sourceDetail": "cli",
+      "label": "CLI"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "cli",
+      "sourceDetail": "managed",
+      "label": "CLI"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "cli",
+      "sourceDetail": "unknown",
+      "label": "CLI"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "web",
+      "sourceDetail": "",
+      "label": "Web"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "web",
+      "sourceDetail": "app",
+      "label": "Web"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "web",
+      "sourceDetail": "cli",
+      "label": "Web"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "web",
+      "sourceDetail": "managed",
+      "label": "Web"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "web",
+      "sourceDetail": "unknown",
+      "label": "Web"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "api",
+      "sourceDetail": "",
+      "label": "API"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "api",
+      "sourceDetail": "app",
+      "label": "API"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "api",
+      "sourceDetail": "cli",
+      "label": "API"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "api",
+      "sourceDetail": "managed",
+      "label": "API"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "api",
+      "sourceDetail": "unknown",
+      "label": "API"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "local",
+      "sourceDetail": "",
+      "label": "Local"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "local",
+      "sourceDetail": "app",
+      "label": "Local"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "local",
+      "sourceDetail": "cli",
+      "label": "Local"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "local",
+      "sourceDetail": "managed",
+      "label": "Local"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "local",
+      "sourceDetail": "unknown",
+      "label": "Local"
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "unknown",
+      "sourceDetail": "",
+      "label": ""
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "unknown",
+      "sourceDetail": "app",
+      "label": ""
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "unknown",
+      "sourceDetail": "cli",
+      "label": ""
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "unknown",
+      "sourceDetail": "managed",
+      "label": ""
+    },
+    {
+      "provider": "unknown-provider",
+      "source": "unknown",
+      "sourceDetail": "unknown",
+      "label": ""
+    }
+  ],
+  "compactInputs": [
+    {
+      "input": {
+        "provider": "codex",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Session",
+            "remainingPercent": 75
+          },
+          {
+            "kind": "weekly",
+            "label": "Weekly",
+            "remainingPercent": 65
+          },
+          {
+            "kind": "weekly",
+            "label": "Reserve",
+            "remainingPercent": 90,
+            "additional": true
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Session",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 5-hour",
+            "remainingPercent": 75
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini weekly",
+            "remainingPercent": 50
+          },
+          {
+            "kind": "session",
+            "label": "Claude 5-hour",
+            "remainingPercent": 55
+          },
+          {
+            "kind": "weekly",
+            "label": "Claude weekly",
+            "remainingPercent": 10
+          },
+          {
+            "kind": "session",
+            "label": "Other 5-hour",
+            "remainingPercent": 80
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Gemini 5-hour",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Claude weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 5-hour"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini weekly",
+            "remainingPercent": 50
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Gemini weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Unrecognized"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini weekly",
+            "remainingPercent": 50
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Unrecognized",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Gemini weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "zed",
+        "windows": [
+          {
+            "kind": "billing",
+            "label": "Edit predictions",
+            "limitId": "zed.edit-predictions",
+            "detail": "unlimited",
+            "resetDescription": "old note"
+          },
+          {
+            "kind": "billing",
+            "label": "Tokens"
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Edit predictions",
+          "value": "Unlimited",
+          "resetDescription": ""
+        },
+        {
+          "label": "Tokens",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "qoder",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Session"
+          },
+          {
+            "kind": "weekly",
+            "label": "Weekly"
+          },
+          {
+            "kind": "billing",
+            "label": "Monthly"
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Session",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Weekly",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Monthly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    }
+  ]
+}

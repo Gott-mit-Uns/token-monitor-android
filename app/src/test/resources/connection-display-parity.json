@@ -1,0 +1,61 @@
+{
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418/syncDevicePanel.connectionEndpoint",
+  "cases": [
+    {
+      "value": "https://public.example.invalid",
+      "expected": "public.example.invalid"
+    },
+    {
+      "value": "https://Example.COM:443/a?x=1#part",
+      "expected": "example.com"
+    },
+    {
+      "value": "http://public.example.invalid:80",
+      "expected": "public.example.invalid"
+    },
+    {
+      "value": "http://192.168.1.1:17321/api",
+      "expected": "192.168.1.1:17321"
+    },
+    {
+      "value": "https://public.example.invalid:8443/path",
+      "expected": "public.example.invalid:8443"
+    },
+    {
+      "value": "https://[::1]:17321",
+      "expected": "[::1]:17321"
+    },
+    {
+      "value": "https://[::1]:443",
+      "expected": "[::1]"
+    },
+    {
+      "value": " HTTP://PUBLIC.EXAMPLE.INVALID:17321/path ",
+      "expected": "public.example.invalid:17321"
+    },
+    {
+      "value": "http://user:public@public.example.invalid:17321/path",
+      "expected": "public.example.invalid:17321"
+    },
+    {
+      "value": "ftp://public.example.invalid",
+      "expected": null
+    },
+    {
+      "value": "",
+      "expected": null
+    },
+    {
+      "value": "not a url",
+      "expected": null
+    },
+    {
+      "value": "https://",
+      "expected": null
+    },
+    {
+      "value": "https://public.example.invalid:0",
+      "expected": "public.example.invalid:0"
+    }
+  ]
+}

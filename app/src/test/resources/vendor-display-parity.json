@@ -1,0 +1,1769 @@
+{
+  "source": "v0.68.0/5d2db368d8313415763860d594de00e46a663418; theme/vendor/charts/provider policy",
+  "ids": [
+    "claude",
+    "codex",
+    "opencode",
+    "hermes",
+    "openclaw",
+    "cursor",
+    "antigravity",
+    "cline",
+    "amp",
+    "droid",
+    "kimi",
+    "qwen",
+    "grok",
+    "copilot",
+    "pi",
+    "omp",
+    "zed",
+    "kilo",
+    "commandcode",
+    "mimo",
+    "muse",
+    "zcode",
+    "kiro",
+    "codebuddy",
+    "workbuddy",
+    "proma",
+    "qodercn",
+    "reasonix",
+    "dsh",
+    "cherrystudio",
+    "lmstudio",
+    "unsloth",
+    "devin",
+    "fx",
+    "mcode",
+    "openrouter",
+    "gemini",
+    "qoder",
+    "deepseek",
+    "xai",
+    "meta",
+    "mistral",
+    "moonshot",
+    "zai",
+    "zaiteam",
+    "cohere",
+    "xiaomi",
+    "minimax",
+    "doubao",
+    "hunyuan",
+    "volcengine",
+    "ollama",
+    "trae",
+    "alibaba",
+    "stepfun",
+    "nvidia",
+    "typesafe",
+    "thirdparty",
+    "default"
+  ],
+  "labels": {
+    "claude": "Claude Code",
+    "codex": "Codex",
+    "opencode": "OpenCode",
+    "hermes": "Hermes Agent",
+    "openclaw": "OpenClaw",
+    "cursor": "Cursor",
+    "antigravity": "Antigravity",
+    "cline": "Cline",
+    "amp": "Amp",
+    "droid": "Factory Droid",
+    "kimi": "Kimi",
+    "qwen": "Qwen",
+    "grok": "Grok Build",
+    "copilot": "GitHub Copilot",
+    "pi": "Pi",
+    "omp": "Oh My Pi",
+    "zed": "Zed",
+    "kilo": "Kilo",
+    "commandcode": "Command Code",
+    "mimo": "Xiaomi MiMo",
+    "muse": "Muse Code",
+    "zcode": "ZCode",
+    "kiro": "Kiro",
+    "codebuddy": "CodeBuddy",
+    "workbuddy": "WorkBuddy",
+    "proma": "Proma",
+    "qodercn": "Qoder CN",
+    "reasonix": "Reasonix",
+    "dsh": "DeepSeek Harness",
+    "cherrystudio": "Cherry Studio",
+    "lmstudio": "LM Studio",
+    "unsloth": "Unsloth",
+    "devin": "Devin",
+    "fx": "fx",
+    "mcode": "MiniMax Code",
+    "openrouter": "OpenRouter",
+    "gemini": "Gemini",
+    "qoder": "Qoder",
+    "deepseek": "DeepSeek",
+    "xai": "xAI",
+    "meta": "Meta",
+    "mistral": "Mistral",
+    "moonshot": "Moonshot",
+    "zai": "GLM",
+    "zaiteam": "GLM Team",
+    "cohere": "Cohere",
+    "xiaomi": "Xiaomi",
+    "minimax": "MiniMax",
+    "doubao": "Doubao",
+    "hunyuan": "Hunyuan",
+    "volcengine": "Volcengine",
+    "ollama": "Ollama",
+    "trae": "Trae CN",
+    "alibaba": "Alibaba Cloud",
+    "stepfun": "StepFun",
+    "nvidia": "NVIDIA",
+    "typesafe": "TypeSafe",
+    "thirdparty": "Third-party APIs",
+    "default": "Default"
+  },
+  "palettes": [
+    {
+      "input": {},
+      "clean": {},
+      "colors": {
+        "claude": "#cc7c5e",
+        "codex": "#49a3b0",
+        "opencode": "#000000",
+        "hermes": "#d4af37",
+        "openclaw": "#ff4d4d",
+        "cursor": "#000000",
+        "antigravity": "#4285f4",
+        "cline": "#9d4edd",
+        "amp": "#f34e3f",
+        "droid": "#000000",
+        "kimi": "#16191e",
+        "qwen": "#615ced",
+        "grok": "#000000",
+        "copilot": "#000000",
+        "pi": "#000000",
+        "omp": "#ed4abf",
+        "zed": "#4173e7",
+        "kilo": "#f8f676",
+        "commandcode": "#8c4edd",
+        "mimo": "#000000",
+        "muse": "#0866ff",
+        "zcode": "#000000",
+        "kiro": "#9046ff",
+        "codebuddy": "#6c4dff",
+        "workbuddy": "#0dc8a5",
+        "proma": "#000000",
+        "qodercn": "#2adb5c",
+        "reasonix": "#4d6bfe",
+        "dsh": "#4d6bfe",
+        "cherrystudio": "#ea5e5d",
+        "lmstudio": "#6c5ce7",
+        "unsloth": "#40b85a",
+        "devin": "#000000",
+        "fx": "#000000",
+        "mcode": "#f23f5d",
+        "openrouter": "#6566f1",
+        "gemini": "#4285f4",
+        "qoder": "#2adb5c",
+        "deepseek": "#4d6bfe",
+        "xai": "#000000",
+        "meta": "#1d65c1",
+        "mistral": "#fa520f",
+        "moonshot": "#16191e",
+        "zai": "#000000",
+        "zaiteam": "#000000",
+        "cohere": "#39594d",
+        "xiaomi": "#000000",
+        "minimax": "#f23f5d",
+        "doubao": "#1e37fc",
+        "hunyuan": "#0053e0",
+        "volcengine": "#006eff",
+        "ollama": "#888888",
+        "trae": "#32f08c",
+        "alibaba": "#615ced",
+        "stepfun": "#000000",
+        "nvidia": "#74b71b",
+        "typesafe": "#000000",
+        "thirdparty": "#8090a6",
+        "default": "#6ab4f0"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#000000"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#4285f4"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#000000"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#4d6bfe"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#74b71b"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#1d65c1"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#fa520f"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#615ced"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#16191e"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#000000"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#39594d"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#000000"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#f23f5d"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#1e37fc"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#000000"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#0053e0"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#000000"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#000000"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "id": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "id": "factory",
+          "color": "#000000"
+        },
+        {
+          "id": "droid",
+          "color": "#000000"
+        },
+        {
+          "id": "newapi",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "sub2api",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#6ab4f0"
+        }
+      ]
+    },
+    {
+      "input": {
+        "codex": "#ABCDEF",
+        "claude": " #ff0000 ",
+        "default": "#010203"
+      },
+      "clean": {
+        "codex": "#abcdef",
+        "claude": "#ff0000",
+        "default": "#010203"
+      },
+      "colors": {
+        "claude": "#ff0000",
+        "codex": "#abcdef",
+        "opencode": "#000000",
+        "hermes": "#d4af37",
+        "openclaw": "#ff4d4d",
+        "cursor": "#000000",
+        "antigravity": "#4285f4",
+        "cline": "#9d4edd",
+        "amp": "#f34e3f",
+        "droid": "#000000",
+        "kimi": "#16191e",
+        "qwen": "#615ced",
+        "grok": "#000000",
+        "copilot": "#000000",
+        "pi": "#000000",
+        "omp": "#ed4abf",
+        "zed": "#4173e7",
+        "kilo": "#f8f676",
+        "commandcode": "#8c4edd",
+        "mimo": "#000000",
+        "muse": "#0866ff",
+        "zcode": "#000000",
+        "kiro": "#9046ff",
+        "codebuddy": "#6c4dff",
+        "workbuddy": "#0dc8a5",
+        "proma": "#000000",
+        "qodercn": "#2adb5c",
+        "reasonix": "#4d6bfe",
+        "dsh": "#4d6bfe",
+        "cherrystudio": "#ea5e5d",
+        "lmstudio": "#6c5ce7",
+        "unsloth": "#40b85a",
+        "devin": "#000000",
+        "fx": "#000000",
+        "mcode": "#f23f5d",
+        "openrouter": "#6566f1",
+        "gemini": "#4285f4",
+        "qoder": "#2adb5c",
+        "deepseek": "#4d6bfe",
+        "xai": "#000000",
+        "meta": "#1d65c1",
+        "mistral": "#fa520f",
+        "moonshot": "#16191e",
+        "zai": "#000000",
+        "zaiteam": "#000000",
+        "cohere": "#39594d",
+        "xiaomi": "#000000",
+        "minimax": "#f23f5d",
+        "doubao": "#1e37fc",
+        "hunyuan": "#0053e0",
+        "volcengine": "#006eff",
+        "ollama": "#888888",
+        "trae": "#32f08c",
+        "alibaba": "#615ced",
+        "stepfun": "#000000",
+        "nvidia": "#74b71b",
+        "typesafe": "#000000",
+        "thirdparty": "#8090a6",
+        "default": "#010203"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#000000"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#ff0000"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#abcdef"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#4285f4"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#000000"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#4d6bfe"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#74b71b"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#1d65c1"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#fa520f"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#615ced"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#16191e"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#000000"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#39594d"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#000000"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#f23f5d"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#1e37fc"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#000000"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#0053e0"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#000000"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#000000"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#ff0000"
+        },
+        {
+          "id": "codex",
+          "color": "#abcdef"
+        },
+        {
+          "id": "factory",
+          "color": "#000000"
+        },
+        {
+          "id": "droid",
+          "color": "#000000"
+        },
+        {
+          "id": "newapi",
+          "color": "#010203"
+        },
+        {
+          "id": "sub2api",
+          "color": "#010203"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#010203"
+        }
+      ]
+    },
+    {
+      "input": {
+        "grok": "#000000"
+      },
+      "clean": {
+        "grok": "#000000"
+      },
+      "colors": {
+        "claude": "#cc7c5e",
+        "codex": "#49a3b0",
+        "opencode": "#000000",
+        "hermes": "#d4af37",
+        "openclaw": "#ff4d4d",
+        "cursor": "#000000",
+        "antigravity": "#4285f4",
+        "cline": "#9d4edd",
+        "amp": "#f34e3f",
+        "droid": "#000000",
+        "kimi": "#16191e",
+        "qwen": "#615ced",
+        "grok": "#000000",
+        "copilot": "#000000",
+        "pi": "#000000",
+        "omp": "#ed4abf",
+        "zed": "#4173e7",
+        "kilo": "#f8f676",
+        "commandcode": "#8c4edd",
+        "mimo": "#000000",
+        "muse": "#0866ff",
+        "zcode": "#000000",
+        "kiro": "#9046ff",
+        "codebuddy": "#6c4dff",
+        "workbuddy": "#0dc8a5",
+        "proma": "#000000",
+        "qodercn": "#2adb5c",
+        "reasonix": "#4d6bfe",
+        "dsh": "#4d6bfe",
+        "cherrystudio": "#ea5e5d",
+        "lmstudio": "#6c5ce7",
+        "unsloth": "#40b85a",
+        "devin": "#000000",
+        "fx": "#000000",
+        "mcode": "#f23f5d",
+        "openrouter": "#6566f1",
+        "gemini": "#4285f4",
+        "qoder": "#2adb5c",
+        "deepseek": "#4d6bfe",
+        "xai": "#000000",
+        "meta": "#1d65c1",
+        "mistral": "#fa520f",
+        "moonshot": "#16191e",
+        "zai": "#000000",
+        "zaiteam": "#000000",
+        "cohere": "#39594d",
+        "xiaomi": "#000000",
+        "minimax": "#f23f5d",
+        "doubao": "#1e37fc",
+        "hunyuan": "#0053e0",
+        "volcengine": "#006eff",
+        "ollama": "#888888",
+        "trae": "#32f08c",
+        "alibaba": "#615ced",
+        "stepfun": "#000000",
+        "nvidia": "#74b71b",
+        "typesafe": "#000000",
+        "thirdparty": "#8090a6",
+        "default": "#6ab4f0"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#000000"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#4285f4"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#000000"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#4d6bfe"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#74b71b"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#1d65c1"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#fa520f"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#615ced"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#16191e"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#000000"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#39594d"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#000000"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#f23f5d"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#1e37fc"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#000000"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#0053e0"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#000000"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#000000"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "id": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "id": "factory",
+          "color": "#000000"
+        },
+        {
+          "id": "droid",
+          "color": "#000000"
+        },
+        {
+          "id": "newapi",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "sub2api",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#6ab4f0"
+        }
+      ]
+    },
+    {
+      "input": {
+        "cursor": "#000",
+        "claude": "invalid",
+        "bad": "#123456"
+      },
+      "clean": {},
+      "colors": {
+        "claude": "#cc7c5e",
+        "codex": "#49a3b0",
+        "opencode": "#000000",
+        "hermes": "#d4af37",
+        "openclaw": "#ff4d4d",
+        "cursor": "#000000",
+        "antigravity": "#4285f4",
+        "cline": "#9d4edd",
+        "amp": "#f34e3f",
+        "droid": "#000000",
+        "kimi": "#16191e",
+        "qwen": "#615ced",
+        "grok": "#000000",
+        "copilot": "#000000",
+        "pi": "#000000",
+        "omp": "#ed4abf",
+        "zed": "#4173e7",
+        "kilo": "#f8f676",
+        "commandcode": "#8c4edd",
+        "mimo": "#000000",
+        "muse": "#0866ff",
+        "zcode": "#000000",
+        "kiro": "#9046ff",
+        "codebuddy": "#6c4dff",
+        "workbuddy": "#0dc8a5",
+        "proma": "#000000",
+        "qodercn": "#2adb5c",
+        "reasonix": "#4d6bfe",
+        "dsh": "#4d6bfe",
+        "cherrystudio": "#ea5e5d",
+        "lmstudio": "#6c5ce7",
+        "unsloth": "#40b85a",
+        "devin": "#000000",
+        "fx": "#000000",
+        "mcode": "#f23f5d",
+        "openrouter": "#6566f1",
+        "gemini": "#4285f4",
+        "qoder": "#2adb5c",
+        "deepseek": "#4d6bfe",
+        "xai": "#000000",
+        "meta": "#1d65c1",
+        "mistral": "#fa520f",
+        "moonshot": "#16191e",
+        "zai": "#000000",
+        "zaiteam": "#000000",
+        "cohere": "#39594d",
+        "xiaomi": "#000000",
+        "minimax": "#f23f5d",
+        "doubao": "#1e37fc",
+        "hunyuan": "#0053e0",
+        "volcengine": "#006eff",
+        "ollama": "#888888",
+        "trae": "#32f08c",
+        "alibaba": "#615ced",
+        "stepfun": "#000000",
+        "nvidia": "#74b71b",
+        "typesafe": "#000000",
+        "thirdparty": "#8090a6",
+        "default": "#6ab4f0"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#000000"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#4285f4"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#000000"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#4d6bfe"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#74b71b"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#1d65c1"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#fa520f"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#615ced"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#16191e"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#000000"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#39594d"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#000000"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#f23f5d"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#1e37fc"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#000000"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#0053e0"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#000000"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#000000"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "id": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "id": "factory",
+          "color": "#000000"
+        },
+        {
+          "id": "droid",
+          "color": "#000000"
+        },
+        {
+          "id": "newapi",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "sub2api",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#6ab4f0"
+        }
+      ]
+    },
+    {
+      "input": {
+        "default": "#fefefe"
+      },
+      "clean": {
+        "default": "#fefefe"
+      },
+      "colors": {
+        "claude": "#cc7c5e",
+        "codex": "#49a3b0",
+        "opencode": "#000000",
+        "hermes": "#d4af37",
+        "openclaw": "#ff4d4d",
+        "cursor": "#000000",
+        "antigravity": "#4285f4",
+        "cline": "#9d4edd",
+        "amp": "#f34e3f",
+        "droid": "#000000",
+        "kimi": "#16191e",
+        "qwen": "#615ced",
+        "grok": "#000000",
+        "copilot": "#000000",
+        "pi": "#000000",
+        "omp": "#ed4abf",
+        "zed": "#4173e7",
+        "kilo": "#f8f676",
+        "commandcode": "#8c4edd",
+        "mimo": "#000000",
+        "muse": "#0866ff",
+        "zcode": "#000000",
+        "kiro": "#9046ff",
+        "codebuddy": "#6c4dff",
+        "workbuddy": "#0dc8a5",
+        "proma": "#000000",
+        "qodercn": "#2adb5c",
+        "reasonix": "#4d6bfe",
+        "dsh": "#4d6bfe",
+        "cherrystudio": "#ea5e5d",
+        "lmstudio": "#6c5ce7",
+        "unsloth": "#40b85a",
+        "devin": "#000000",
+        "fx": "#000000",
+        "mcode": "#f23f5d",
+        "openrouter": "#6566f1",
+        "gemini": "#4285f4",
+        "qoder": "#2adb5c",
+        "deepseek": "#4d6bfe",
+        "xai": "#000000",
+        "meta": "#1d65c1",
+        "mistral": "#fa520f",
+        "moonshot": "#16191e",
+        "zai": "#000000",
+        "zaiteam": "#000000",
+        "cohere": "#39594d",
+        "xiaomi": "#000000",
+        "minimax": "#f23f5d",
+        "doubao": "#1e37fc",
+        "hunyuan": "#0053e0",
+        "volcengine": "#006eff",
+        "ollama": "#888888",
+        "trae": "#32f08c",
+        "alibaba": "#615ced",
+        "stepfun": "#000000",
+        "nvidia": "#74b71b",
+        "typesafe": "#000000",
+        "thirdparty": "#8090a6",
+        "default": "#fefefe"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#000000"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#4285f4"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#000000"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#4d6bfe"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#74b71b"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#1d65c1"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#fa520f"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#615ced"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#16191e"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#000000"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#39594d"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#000000"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#f23f5d"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#1e37fc"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#000000"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#0053e0"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#000000"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#000000"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "id": "codex",
+          "color": "#49a3b0"
+        },
+        {
+          "id": "factory",
+          "color": "#000000"
+        },
+        {
+          "id": "droid",
+          "color": "#000000"
+        },
+        {
+          "id": "newapi",
+          "color": "#fefefe"
+        },
+        {
+          "id": "sub2api",
+          "color": "#fefefe"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#fefefe"
+        }
+      ]
+    },
+    {
+      "input": {
+        "claude": "#123456",
+        "codex": "#123456",
+        "opencode": "#123456",
+        "hermes": "#123456",
+        "openclaw": "#123456",
+        "cursor": "#123456",
+        "antigravity": "#123456",
+        "cline": "#123456",
+        "amp": "#123456",
+        "droid": "#123456",
+        "kimi": "#123456",
+        "qwen": "#123456",
+        "grok": "#123456",
+        "copilot": "#123456",
+        "pi": "#123456",
+        "omp": "#123456",
+        "zed": "#123456",
+        "kilo": "#123456",
+        "commandcode": "#123456",
+        "mimo": "#123456",
+        "muse": "#123456",
+        "zcode": "#123456",
+        "kiro": "#123456",
+        "codebuddy": "#123456",
+        "workbuddy": "#123456",
+        "proma": "#123456",
+        "qodercn": "#123456",
+        "reasonix": "#123456",
+        "dsh": "#123456",
+        "cherrystudio": "#123456",
+        "lmstudio": "#123456",
+        "unsloth": "#123456",
+        "devin": "#123456",
+        "fx": "#123456",
+        "mcode": "#123456",
+        "openrouter": "#123456",
+        "gemini": "#123456",
+        "qoder": "#123456",
+        "deepseek": "#123456",
+        "xai": "#123456",
+        "meta": "#123456",
+        "mistral": "#123456",
+        "moonshot": "#123456",
+        "zai": "#123456",
+        "zaiteam": "#123456",
+        "cohere": "#123456",
+        "xiaomi": "#123456",
+        "minimax": "#123456",
+        "doubao": "#123456",
+        "hunyuan": "#123456",
+        "volcengine": "#123456",
+        "ollama": "#123456",
+        "trae": "#123456",
+        "alibaba": "#123456",
+        "stepfun": "#123456",
+        "nvidia": "#123456",
+        "typesafe": "#123456",
+        "thirdparty": "#123456",
+        "default": "#123456"
+      },
+      "clean": {
+        "claude": "#123456",
+        "codex": "#123456",
+        "opencode": "#123456",
+        "hermes": "#123456",
+        "openclaw": "#123456",
+        "cursor": "#123456",
+        "antigravity": "#123456",
+        "cline": "#123456",
+        "amp": "#123456",
+        "droid": "#123456",
+        "kimi": "#123456",
+        "qwen": "#123456",
+        "grok": "#123456",
+        "copilot": "#123456",
+        "pi": "#123456",
+        "omp": "#123456",
+        "zed": "#123456",
+        "kilo": "#123456",
+        "commandcode": "#123456",
+        "mimo": "#123456",
+        "muse": "#123456",
+        "zcode": "#123456",
+        "kiro": "#123456",
+        "codebuddy": "#123456",
+        "workbuddy": "#123456",
+        "proma": "#123456",
+        "qodercn": "#123456",
+        "reasonix": "#123456",
+        "dsh": "#123456",
+        "cherrystudio": "#123456",
+        "lmstudio": "#123456",
+        "unsloth": "#123456",
+        "devin": "#123456",
+        "fx": "#123456",
+        "mcode": "#123456",
+        "openrouter": "#123456",
+        "gemini": "#123456",
+        "qoder": "#123456",
+        "deepseek": "#123456",
+        "xai": "#123456",
+        "meta": "#123456",
+        "mistral": "#123456",
+        "moonshot": "#123456",
+        "zai": "#123456",
+        "zaiteam": "#123456",
+        "cohere": "#123456",
+        "xiaomi": "#123456",
+        "minimax": "#123456",
+        "doubao": "#123456",
+        "hunyuan": "#123456",
+        "volcengine": "#123456",
+        "ollama": "#123456",
+        "trae": "#123456",
+        "alibaba": "#123456",
+        "stepfun": "#123456",
+        "nvidia": "#123456",
+        "typesafe": "#123456",
+        "thirdparty": "#123456",
+        "default": "#123456"
+      },
+      "colors": {
+        "claude": "#123456",
+        "codex": "#123456",
+        "opencode": "#123456",
+        "hermes": "#123456",
+        "openclaw": "#123456",
+        "cursor": "#123456",
+        "antigravity": "#123456",
+        "cline": "#123456",
+        "amp": "#123456",
+        "droid": "#123456",
+        "kimi": "#123456",
+        "qwen": "#123456",
+        "grok": "#123456",
+        "copilot": "#123456",
+        "pi": "#123456",
+        "omp": "#123456",
+        "zed": "#123456",
+        "kilo": "#123456",
+        "commandcode": "#123456",
+        "mimo": "#123456",
+        "muse": "#123456",
+        "zcode": "#123456",
+        "kiro": "#123456",
+        "codebuddy": "#123456",
+        "workbuddy": "#123456",
+        "proma": "#123456",
+        "qodercn": "#123456",
+        "reasonix": "#123456",
+        "dsh": "#123456",
+        "cherrystudio": "#123456",
+        "lmstudio": "#123456",
+        "unsloth": "#123456",
+        "devin": "#123456",
+        "fx": "#123456",
+        "mcode": "#123456",
+        "openrouter": "#123456",
+        "gemini": "#123456",
+        "qoder": "#123456",
+        "deepseek": "#123456",
+        "xai": "#123456",
+        "meta": "#123456",
+        "mistral": "#123456",
+        "moonshot": "#123456",
+        "zai": "#123456",
+        "zaiteam": "#123456",
+        "cohere": "#123456",
+        "xiaomi": "#123456",
+        "minimax": "#123456",
+        "doubao": "#123456",
+        "hunyuan": "#123456",
+        "volcengine": "#123456",
+        "ollama": "#123456",
+        "trae": "#123456",
+        "alibaba": "#123456",
+        "stepfun": "#123456",
+        "nvidia": "#123456",
+        "typesafe": "#123456",
+        "thirdparty": "#123456",
+        "default": "#123456"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#123456"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#123456"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#123456"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#123456"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#123456"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#123456"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#123456"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#123456"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#123456"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#123456"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#123456"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#123456"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#123456"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#123456"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#123456"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#123456"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#123456"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#123456"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#123456"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#123456"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#123456"
+        },
+        {
+          "id": "codex",
+          "color": "#123456"
+        },
+        {
+          "id": "factory",
+          "color": "#123456"
+        },
+        {
+          "id": "droid",
+          "color": "#123456"
+        },
+        {
+          "id": "newapi",
+          "color": "#123456"
+        },
+        {
+          "id": "sub2api",
+          "color": "#123456"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#123456"
+        }
+      ]
+    },
+    {
+      "input": {
+        "droid": "#112233",
+        "codex": "#445566",
+        "gemini": "#abcdef"
+      },
+      "clean": {
+        "droid": "#112233",
+        "codex": "#445566",
+        "gemini": "#abcdef"
+      },
+      "colors": {
+        "claude": "#cc7c5e",
+        "codex": "#445566",
+        "opencode": "#000000",
+        "hermes": "#d4af37",
+        "openclaw": "#ff4d4d",
+        "cursor": "#000000",
+        "antigravity": "#4285f4",
+        "cline": "#9d4edd",
+        "amp": "#f34e3f",
+        "droid": "#112233",
+        "kimi": "#16191e",
+        "qwen": "#615ced",
+        "grok": "#000000",
+        "copilot": "#000000",
+        "pi": "#000000",
+        "omp": "#ed4abf",
+        "zed": "#4173e7",
+        "kilo": "#f8f676",
+        "commandcode": "#8c4edd",
+        "mimo": "#000000",
+        "muse": "#0866ff",
+        "zcode": "#000000",
+        "kiro": "#9046ff",
+        "codebuddy": "#6c4dff",
+        "workbuddy": "#0dc8a5",
+        "proma": "#000000",
+        "qodercn": "#2adb5c",
+        "reasonix": "#4d6bfe",
+        "dsh": "#4d6bfe",
+        "cherrystudio": "#ea5e5d",
+        "lmstudio": "#6c5ce7",
+        "unsloth": "#40b85a",
+        "devin": "#000000",
+        "fx": "#000000",
+        "mcode": "#f23f5d",
+        "openrouter": "#6566f1",
+        "gemini": "#abcdef",
+        "qoder": "#2adb5c",
+        "deepseek": "#4d6bfe",
+        "xai": "#000000",
+        "meta": "#1d65c1",
+        "mistral": "#fa520f",
+        "moonshot": "#16191e",
+        "zai": "#000000",
+        "zaiteam": "#000000",
+        "cohere": "#39594d",
+        "xiaomi": "#000000",
+        "minimax": "#f23f5d",
+        "doubao": "#1e37fc",
+        "hunyuan": "#0053e0",
+        "volcengine": "#006eff",
+        "ollama": "#888888",
+        "trae": "#32f08c",
+        "alibaba": "#615ced",
+        "stepfun": "#000000",
+        "nvidia": "#74b71b",
+        "typesafe": "#000000",
+        "thirdparty": "#8090a6",
+        "default": "#6ab4f0"
+      },
+      "models": [
+        {
+          "name": "auto",
+          "vendor": "cursor",
+          "color": "#000000"
+        },
+        {
+          "name": "claude-sonnet",
+          "vendor": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "name": "openai/gpt-5",
+          "vendor": "codex",
+          "color": "#445566"
+        },
+        {
+          "name": "gemini-pro",
+          "vendor": "gemini",
+          "color": "#abcdef"
+        },
+        {
+          "name": "grok-4",
+          "vendor": "xai",
+          "color": "#000000"
+        },
+        {
+          "name": "deepseek-v4",
+          "vendor": "deepseek",
+          "color": "#4d6bfe"
+        },
+        {
+          "name": "nemotron",
+          "vendor": "nvidia",
+          "color": "#74b71b"
+        },
+        {
+          "name": "llama",
+          "vendor": "meta",
+          "color": "#1d65c1"
+        },
+        {
+          "name": "codestral",
+          "vendor": "mistral",
+          "color": "#fa520f"
+        },
+        {
+          "name": "qwen-3",
+          "vendor": "qwen",
+          "color": "#615ced"
+        },
+        {
+          "name": "kimi-k3",
+          "vendor": "kimi",
+          "color": "#16191e"
+        },
+        {
+          "name": "glm-5",
+          "vendor": "zai",
+          "color": "#000000"
+        },
+        {
+          "name": "command-r",
+          "vendor": "cohere",
+          "color": "#39594d"
+        },
+        {
+          "name": "mimo",
+          "vendor": "xiaomi",
+          "color": "#000000"
+        },
+        {
+          "name": "minimax",
+          "vendor": "minimax",
+          "color": "#f23f5d"
+        },
+        {
+          "name": "doubao",
+          "vendor": "doubao",
+          "color": "#1e37fc"
+        },
+        {
+          "name": "step-2",
+          "vendor": "stepfun",
+          "color": "#000000"
+        },
+        {
+          "name": "hy3",
+          "vendor": "hunyuan",
+          "color": "#0053e0"
+        },
+        {
+          "name": "swe-1",
+          "vendor": "devin",
+          "color": "#000000"
+        },
+        {
+          "name": "big-pickle",
+          "vendor": "opencode",
+          "color": "#000000"
+        },
+        {
+          "name": "unknown-model",
+          "vendor": null,
+          "color": "#a57df0"
+        },
+        {
+          "name": "未知模型",
+          "vendor": null,
+          "color": "#d97bc4"
+        },
+        {
+          "name": "polygenelubricants",
+          "vendor": null,
+          "color": "#a57df0"
+        }
+      ],
+      "providers": [
+        {
+          "id": "claude",
+          "color": "#cc7c5e"
+        },
+        {
+          "id": "codex",
+          "color": "#445566"
+        },
+        {
+          "id": "factory",
+          "color": "#112233"
+        },
+        {
+          "id": "droid",
+          "color": "#112233"
+        },
+        {
+          "id": "newapi",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "sub2api",
+          "color": "#6ab4f0"
+        },
+        {
+          "id": "unknown-provider",
+          "color": "#6ab4f0"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "value": true,
+      "enabled": true
+    },
+    {
+      "value": false,
+      "enabled": false
+    }
+  ]
+}

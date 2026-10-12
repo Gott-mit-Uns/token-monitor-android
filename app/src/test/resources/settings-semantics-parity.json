@@ -1,0 +1,723 @@
+{
+  "reference": "desktop v0.68.0 motionPreference.js and usageAttributionRows.js",
+  "motions": [
+    {
+      "value": "system",
+      "system": false,
+      "normalized": "system",
+      "reduced": false
+    },
+    {
+      "value": "system",
+      "system": true,
+      "normalized": "system",
+      "reduced": true
+    },
+    {
+      "value": "on",
+      "system": false,
+      "normalized": "on",
+      "reduced": true
+    },
+    {
+      "value": "on",
+      "system": true,
+      "normalized": "on",
+      "reduced": true
+    },
+    {
+      "value": "off",
+      "system": false,
+      "normalized": "off",
+      "reduced": false
+    },
+    {
+      "value": "off",
+      "system": true,
+      "normalized": "off",
+      "reduced": false
+    },
+    {
+      "value": "",
+      "system": false,
+      "normalized": "system",
+      "reduced": false
+    },
+    {
+      "value": "",
+      "system": true,
+      "normalized": "system",
+      "reduced": true
+    },
+    {
+      "value": "invalid",
+      "system": false,
+      "normalized": "system",
+      "reduced": false
+    },
+    {
+      "value": "invalid",
+      "system": true,
+      "normalized": "system",
+      "reduced": true
+    },
+    {
+      "value": " on ",
+      "system": false,
+      "normalized": "on",
+      "reduced": true
+    },
+    {
+      "value": " on ",
+      "system": true,
+      "normalized": "on",
+      "reduced": true
+    }
+  ],
+  "cases": [
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 0,
+          "unattributed": true
+        }
+      ],
+      "metric": "tokens",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 0,
+          "unattributed": true
+        }
+      ],
+      "metric": "cost",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 0,
+          "unattributed": true
+        }
+      ],
+      "metric": "invalid",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0.1
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 2
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 1,
+          "unattributed": true
+        }
+      ],
+      "metric": "tokens",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0.1
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 2
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 1,
+          "unattributed": true
+        }
+      ],
+      "metric": "cost",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 2
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 1
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 0.1
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0.1
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 2
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 1,
+          "unattributed": true
+        }
+      ],
+      "metric": "invalid",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 2
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 2,
+          "unattributed": true
+        }
+      ],
+      "metric": "tokens",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 2
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 2,
+          "unattributed": true
+        }
+      ],
+      "metric": "cost",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 2
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 2
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 2
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 2
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 2,
+          "unattributed": true
+        }
+      ],
+      "metric": "invalid",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": -1
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0.5
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 0,
+          "unattributed": true
+        }
+      ],
+      "metric": "tokens",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": -1
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0.5
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 0,
+          "unattributed": true
+        }
+      ],
+      "metric": "cost",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 0.5
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 0
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 0
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": -1
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0.5
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 0,
+          "unattributed": true
+        }
+      ],
+      "metric": "invalid",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 3,
+          "unattributed": true
+        }
+      ],
+      "metric": "tokens",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 3,
+          "unattributed": true
+        }
+      ],
+      "metric": "cost",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "public-low",
+          "value": 100,
+          "cost": 0
+        },
+        {
+          "key": "public-high",
+          "value": 1000,
+          "cost": 0
+        },
+        {
+          "key": "__unattributed",
+          "value": 50,
+          "cost": 3,
+          "unattributed": true
+        }
+      ],
+      "metric": "invalid",
+      "expected": [
+        {
+          "id": "public-high",
+          "tokens": 1000,
+          "barValue": 1000
+        },
+        {
+          "id": "public-low",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "__unattributed",
+          "tokens": 50,
+          "barValue": 50
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "zulu",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "alpha",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "Zulu",
+          "value": 100,
+          "cost": 2
+        }
+      ],
+      "metric": "tokens",
+      "expected": [
+        {
+          "id": "alpha",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "zulu",
+          "tokens": 100,
+          "barValue": 100
+        },
+        {
+          "id": "Zulu",
+          "tokens": 100,
+          "barValue": 100
+        }
+      ]
+    },
+    {
+      "input": [
+        {
+          "key": "zulu",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "alpha",
+          "value": 100,
+          "cost": 2
+        },
+        {
+          "key": "Zulu",
+          "value": 100,
+          "cost": 2
+        }
+      ],
+      "metric": "cost",
+      "expected": [
+        {
+          "id": "alpha",
+          "tokens": 100,
+          "barValue": 2
+        },
+        {
+          "id": "zulu",
+          "tokens": 100,
+          "barValue": 2
+        },
+        {
+          "id": "Zulu",
+          "tokens": 100,
+          "barValue": 2
+        }
+      ]
+    }
+  ]
+}
