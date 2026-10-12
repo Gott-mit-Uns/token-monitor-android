@@ -16,13 +16,16 @@ class HubLifecycleTest {
     @Test fun backgroundClosesStreamAndForegroundCreatesNewSnapshotConnection() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val app = instrumentation.targetContext.applicationContext as Application
-        val store = HubStore(app, "test-lifecycle-${UUID.randomUUID()}.bin")
+        val storeNameForBuild="test-lifecycle-${UUID.randomUUID()}.bin"
+        val store = HubStore(app,storeNameForBuild)
         val server = ServerSocket(0, 4, InetAddress.getByName("127.0.0.1"))
         val first = CountDownLatch(1)
         val second = CountDownLatch(1)
         val closed = CountDownLatch(1)
         val streams = AtomicInteger()
         val workers = mutableListOf<Thread>()
+        val build=HubBuildInfo("node-hub",1,74,HubBuildRegistry.entries.getValue("core").getValue(74L),5,HubBuildRegistry.entries.getValue("node-hub").getValue(5L))
+        val health=build.cache().dropLast(1)+",\"ok\":true,\"role\":\"hub\"}"
         val body = """{"periods":{"today":{"totalTokens":123}},"devices":[]}"""
         val accepting = thread {
             while (!server.isClosed) {
@@ -42,7 +45,7 @@ class HubLifecycleTest {
                             val disconnected = try { input.read() == -1 } catch (_: java.net.SocketException) { true }
                             if (disconnected && n == 1) closed.countDown()
                         } else {
-                            val response = if (path.contains("/api/health")) """{"ok":true,"role":"hub"}""" else body
+                            val response = if (path.contains("/api/health")) health else body
                             output.write(("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ${response.toByteArray().size}\r\nConnection: close\r\n\r\n$response").toByteArray())
                             output.flush()
                         }
@@ -64,6 +67,14 @@ class HubLifecycleTest {
                 model.refresh("http://192.168.1.1:${server.localPort}", UUID.randomUUID().toString())
             }
             assertTrue(first.await(5, TimeUnit.SECONDS))
+            assertEquals(build,model.state.value.hubBuild)
+            assertEquals(build,HubStore(app,storeNameForBuild).load()?.hubBuild)
+            lateinit var restored:HubViewModel
+            instrumentation.runOnMainSync {restored=HubViewModel(app,HubStore(app,storeNameForBuild),client)}
+            val restoreDeadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5)
+            while(restored.state.value.loading && System.nanoTime()<restoreDeadline) Thread.sleep(10)
+            assertEquals(build,restored.state.value.hubBuild)
+            assertEquals("Cached build restores without a second stream",1,streams.get())
             instrumentation.runOnMainSync { model.setForeground(false) }
             assertTrue(closed.await(5, TimeUnit.SECONDS))
             assertEquals(1, streams.get())

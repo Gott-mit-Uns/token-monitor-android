@@ -750,20 +750,33 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val measurer=rememberTextMeasurer();val density=LocalDensity.current
     val fontResolver=LocalFontFamilyResolver.current
     val base=(LocalConfiguration.current.screenWidthDp*0.11f).coerceIn(30f,46f)
-    val numberStyle=MaterialTheme.typography.bodySmall.copy(fontFamily=LocalDesktopDisplayFont.current,fontSize=base.sp,fontWeight=FontWeight.Medium,lineHeight=(base*1.05f).sp,fontFeatureSettings="tnum")
+    val originalNumberStyle=MaterialTheme.typography.bodySmall.copy(fontFamily=LocalDesktopDisplayFont.current,fontSize=base.sp,fontWeight=FontWeight.Medium,lineHeight=(base*1.05f).sp,fontFeatureSettings="tnum")
     val compactStyle=quotaTextStyle(13)
     val suffixWidth=remember(compact,compactStyle,density.density,density.fontScale,measurer,fontResolver) {
         compact?.let {measurer.measure(AnnotatedString(it),compactStyle).size.width/density.density+8} ?: 0f
     }
-    val natural=remember(widest,numberStyle,density.density,density.fontScale,measurer,fontResolver) {
-        measurer.measure(AnnotatedString(widest),numberStyle).size.width/density.density
+    val natural=remember(widest,originalNumberStyle,density.density,density.fontScale,measurer,fontResolver) {
+        measurer.measure(AnnotatedString(widest),originalNumberStyle).size.width/density.density
     }
     Column(Modifier.fillMaxWidth().padding(top=8.dp,bottom=14.dp),verticalArrangement=Arrangement.spacedBy(5.dp)) {
         Text(strings.getString(R.string.desktop_total),color=MaterialTheme.colorScheme.onSurfaceVariant,style=quotaTextStyle(11))
         BoxWithConstraints(Modifier.fillMaxWidth()) {
-            // Keep system text size. Move the approximation below rather than squeezing
-            // both strings into one line; very long exact counts may wrap in full.
-            val stacked = natural + suffixWidth + 1f > maxWidth.value
+            // Desktop fits the exact total after reserving the compact chip. Apply this
+            // only at standard text size; accessibility sizes retain the full-size stack.
+            val standardSize = density.fontScale <= 1f && LocalDesktopTextScale.current <= 1f
+            val available = (maxWidth.value - suffixWidth - 2f).coerceAtLeast(0f)
+            val numberStyle = remember(widest,originalNumberStyle,available,standardSize,density,fontResolver) {
+                fun style(size:Float)=originalNumberStyle.copy(fontSize=size.sp,lineHeight=(size*1.05f).sp)
+                fun width(size:Float)=measurer.measure(AnnotatedString(widest),style(size)).size.width/density.density
+                if(!standardSize || natural <= available) originalNumberStyle else {
+                    // Actual glyph measurements account for font hinting and sp rounding.
+                    var low=24f;var high=base
+                    repeat(10) {val middle=(low+high)/2f;if(width(middle)<=available) low=middle else high=middle}
+                    style(low)
+                }
+            }
+            val fittedWidth = measurer.measure(AnnotatedString(widest),numberStyle).size.width / density.density
+            val stacked = fittedWidth + suffixWidth + 1f > maxWidth.value
             @Composable fun number(modifier:Modifier) {
                 Text(value,color=LocalDesktopNumberColor.current,style=numberStyle,
                     softWrap=stacked,maxLines=if(stacked) Int.MAX_VALUE else 1,

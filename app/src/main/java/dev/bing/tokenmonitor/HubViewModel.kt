@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 data class HubState(val snapshot: Snapshot? = null, val loading: Boolean = false, val error: Int? = null, val savedAt: Long? = null, val history: HubHistory? = null, val subscriptions: List<Subscription>? = null, val live: Boolean = false, val deviceAliases: Map<String, String> = emptyMap(), val modelNames: ModelNames? = null, val pricing: HubPricing? = null, val deviceHistories: DeviceHistories? = null, val connectionFailure:Int? = null, val connectionRevision:Long = 0, val connectionAttempt:Long = 0,
     // A successful read is a Dashboard render event even if its history equals the previous payload.
     val historyRenderRevision:Long = 0,
-    val historyReadReceipt:HistoryReadReceipt? = null, val lanPolicyRevision:Long = 0)
+    val historyReadReceipt:HistoryReadReceipt? = null, val lanPolicyRevision:Long = 0, val hubBuild:HubBuildInfo? = null)
 class HubViewModel @JvmOverloads constructor(application: Application, private val store: HubStore = HubStore(application),
     private val client: OkHttpClient = defaultClient(), private val displayStore: DisplayPreferenceStore = DisplayPreferenceStore(application)) : AndroidViewModel(application), HubUiActions {
     companion object {
@@ -113,7 +113,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private fun currentRecord(): SavedHub? {
         return SavedHub(currentHub ?: return null, credential ?: return null,
             latestBody ?: return null, mutable.value.savedAt ?: System.currentTimeMillis(), alternateHub, historyBody, subscriptionsBody, mutable.value.deviceAliases, modelNamesBody, pricingBody, deviceHistoryBody, historySignature,
-            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated }
+            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated; it.hubBuild=mutable.value.hubBuild }
     }
     private suspend fun saveCurrent(stillValid: (() -> Boolean)? = null): Boolean {
         val record = currentRecord() ?: return false
@@ -176,9 +176,9 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         mutable.value=mutable.value.copy(loading=true,error=null,connectionFailure=null,connectionAttempt=mutable.value.connectionAttempt+1)
         viewModelScope.launch {
             val result=withContext(Dispatchers.IO) {runCatching {
-                http.verify(base) {foreground && ticket==requestToken}
+                val build=http.verify(base) {foreground && ticket==requestToken}
                 val projected=http.readStats(base,secret) {foreground && ticket==requestToken}
-                HubParser.parse(projected) to projected.body
+                Triple(HubParser.parse(projected),projected.body,build)
             }}
             if(ticket!=requestToken) return@launch
             manualValidationTicket=null
@@ -193,10 +193,10 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 startStream()
                 return@launch
             }
-            val (parsed,body)=result.getOrThrow()
+            val (parsed,body,build)=result.getOrThrow()
             val sameHub=secret==credential && (base==currentHub || (endpointsAssociated && base==alternateHub))
             val baseline=if(sameHub) mutable.value.copy(connectionFailure=null) else HubState()
-            val next=refreshedSnapshot(baseline,parsed,false).copy(loading=false,connectionFailure=null,
+            val next=refreshedSnapshot(baseline,parsed,false).copy(loading=false,connectionFailure=null,hubBuild=build,
                 connectionRevision=mutable.value.connectionRevision + if(sameHub) 0 else 1,
                 connectionAttempt=mutable.value.connectionAttempt)
             val record=SavedHub(base,secret,body,next.savedAt!!,alternate,
@@ -204,6 +204,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 modelNamesBody.takeIf {next.modelNames!=null},pricingBody.takeIf {next.pricing!=null},deviceHistoryBody.takeIf {next.deviceHistories!=null},
                 historySignature.takeIf {next.history!=null}, parsed.observedModelIds).also {
                 it.lanEnabled = lanEnabled
+                it.hubBuild = build
                 it.endpointsAssociated = endpointsAssociated && secret == credential && setOf(base, alternate) == setOf(currentHub, alternateHub)
             }
             // Lifecycle/network changes stop all reads immediately. During the local atomic write,
@@ -449,7 +450,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 store.load()?.let { saved ->
                     val snapshot = saved.parsedSnapshot ?: HubParser.parse(saved.snapshot, saved.observedModelIds)
                     val history = saved.history?.let { runCatching { HistoryParser.parse(it) }.getOrNull() }
-                    HubState(snapshot = snapshot, savedAt = saved.savedAt, deviceAliases = saved.deviceAliases,
+                    HubState(snapshot = snapshot, savedAt = saved.savedAt, deviceAliases = saved.deviceAliases, hubBuild=saved.hubBuild,
                         modelNames = saved.modelNames?.let { runCatching { ModelNamesParser.parse(it) }.getOrNull() },
                         pricing = saved.pricing?.let { runCatching { PricingParser.parse(it) }.getOrNull() },
                         deviceHistories = saved.deviceHistory?.let { runCatching { DeviceHistoryParser.parse(it).takeIf { value -> value.signature == FixedPeriods.signature(snapshot) } }.getOrNull() },
@@ -745,10 +746,10 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 runCatching {
-                    http.verify(base) { foreground && ticket == requestToken }
+                    val build=http.verify(base) { foreground && ticket == requestToken }
                     if (ticket != requestToken) throw java.util.concurrent.CancellationException()
                     val projected = http.readStats(base, secret) { foreground && ticket == requestToken }
-                    HubParser.parse(projected) to projected.body
+                    Triple(HubParser.parse(projected),projected.body,build)
                 }
             }
             if (ticket != requestToken) return@launch
@@ -765,9 +766,10 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 }
             }
             mutable.value = result.fold(
-                { (parsed, text) ->
+                { (parsed, text, build) ->
                     streamEligible = true
                     historyReads.revalidated()
+                    mutable.value=mutable.value.copy(hubBuild=build)
                     acceptSnapshot(parsed, text, live = false, forceHistory = forceHistory)
                     mutable.value.copy(loading = false)
                 },

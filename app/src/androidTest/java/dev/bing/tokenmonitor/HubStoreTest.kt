@@ -16,12 +16,14 @@ class HubStoreTest {
         val record = SavedHub("https://example.invalid", generated, """{"periods":{"today":{"totalTokens":5000000123}}}""", 1234, "http://192.168.31.12:17321",
             """{"daily":[{"date":"2026-10-09","tokens":123}],"monthly":[]}""", """{"subscriptions":[]}""", mapOf("fixture-desktop" to "示例电脑"),
             """{"ok":true,"value":{"modelAliases":{"vendor/model":"model"},"modelAliasGrouping":"off"}}""", """{"ok":true,"version":1,"revision":1,"value":[{"modelId":"fixture-model","inputPerM":0}]}""")
+        record.hubBuild=HubBuildInfo("node-hub",1,78,HubBuildRegistry.entries.getValue("core").getValue(78L),5,HubBuildRegistry.entries.getValue("node-hub").getValue(5L))
         try {
             assertFalse(record.toString().contains(generated))
             assertFalse(record.toString().contains(record.snapshot))
             assertFalse(record.toString().contains(record.address))
             assertNull(store.load())
             store.save(record)
+            assertEquals(record.hubBuild,HubStore(context,name).load()!!.hubBuild)
             val bytes = file.readBytes()
             assertEquals(2, bytes[0].toInt())
             assertFalse(bytes.toString(Charsets.ISO_8859_1).contains(generated))

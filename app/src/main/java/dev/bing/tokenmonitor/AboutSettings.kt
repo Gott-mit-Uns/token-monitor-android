@@ -3,6 +3,7 @@ package dev.bing.tokenmonitor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -19,7 +20,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AboutSettings() {
+fun AboutSettings(hubBuild:HubBuildInfo?=null) {
     val context = LocalContext.current
     val strings = LocalResources.current
     val version = remember(context) {
@@ -29,10 +30,18 @@ fun AboutSettings() {
     var opened by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(strings.getString(R.string.about_heading), style = MaterialTheme.typography.titleLarge)
-        Text(strings.getString(R.string.app_version, version),Modifier.testTag("about-android-version"), style = MaterialTheme.typography.bodySmall)
-        Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.testTag("about-desktop-reference"),style=MaterialTheme.typography.bodySmall)
-        Text(strings.getString(R.string.desktop_parity_partial),Modifier.testTag("about-parity-status"),style=MaterialTheme.typography.bodySmall)
-        Text(strings.getString(R.string.hub_version_unknown),Modifier.testTag("about-hub-version"),style=MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.app_version, version),Modifier.fillMaxWidth().testTag("about-android-version"), style = MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.fillMaxWidth().testTag("about-desktop-reference"),style=MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.desktop_parity_partial),Modifier.fillMaxWidth().testTag("about-parity-status"),style=MaterialTheme.typography.bodySmall)
+        val runtime=when(hubBuild?.runtime) {"node-hub"->"Node Hub";"cloudflare-worker"->"Cloudflare Worker";else->"Hub"}
+        val buildLabel=if(hubBuild?.coreRevision!=null && hubBuild.runtimeRevision!=null)
+            strings.getString(R.string.hub_build_version,runtime,hubBuild.coreRevision,hubBuild.runtimeRevision)
+            else strings.getString(if(hubBuild==null) R.string.hub_version_pending else R.string.hub_version_unknown)
+        Text(buildLabel,Modifier.fillMaxWidth().testTag("about-hub-version"),style=MaterialTheme.typography.bodySmall)
+        hubBuild?.let {info->Text(strings.getString(when(info.status) {
+            "current"->R.string.hub_build_current;"updateAvailable","legacy"->R.string.hub_build_older
+            "remoteNewer"->R.string.hub_build_newer;else->R.string.hub_build_unverified
+        }),Modifier.fillMaxWidth().testTag("about-hub-build-status"),style=MaterialTheme.typography.bodySmall)}
         OutlinedButton(onClick = { opened = true }) { Text(strings.getString(R.string.open_licenses)) }
     }
     if (opened) {

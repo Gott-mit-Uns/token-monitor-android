@@ -689,6 +689,12 @@
     <string name="session_group_subagent">Subagent</string>
     <string name="desktop_reference_version">Desktop reference: v%1$s</string>
     <string name="desktop_parity_partial">Desktop parity: partially aligned (supported Hub fields only)</string>
-    <string name="hub_version_unknown">Hub version: unknown (not provided)</string>
+    <string name="hub_version_unknown">Hub build: not reported by server</string>
     <plurals name="session_subagent_count"><item quantity="one">%1$d subagent</item><item quantity="other">%1$d subagents</item></plurals>
+    <string name="hub_version_pending">Hub build: waiting for connection verification</string>
+    <string name="hub_build_version">Hub build: %1$s · core %2$d · runtime %3$d</string>
+    <string name="hub_build_current">Matches desktop reference 0.69.0</string>
+    <string name="hub_build_older">Older build; desktop reference 0.69.0 recommends updating the Hub</string>
+    <string name="hub_build_newer">Newer than desktop reference 0.69.0</string>
+    <string name="hub_build_unverified">Build identity could not be verified against desktop reference 0.69.0</string>
 </resources>
