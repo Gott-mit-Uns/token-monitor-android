@@ -1,5 +1,7 @@
 # 0.2.51 与桌面 v0.69.0 功能差异
 
+0.2.54增量：P1-10主页精确总量与近似值挤压、TOTAL裁切和百分比拆行已修复，保留字号、自动分行/增高，真实系统配置0.9/2.0浅深及375dp窄屏合成验证通过。新版真机待复核。P1-09两阶段测试/工具完整整合，统计/Hub合同/SSE产品行为未变，详见HANDOFF_0.2.54.md。
+
 审计日期2026-10-12。A=Android已支持；B=Android缺失但Hub已有所需数据；C=Android缺失且当前Hub不提供；D=仅桌面无需移植；E=证据不足。一个发布功能可拆为不同 wire/本地部分；不把目标Hub支持等同当前部署已有。
 
 上游固定 [v0.68.0…v0.69.0](https://github.com/Javis603/token-monitor/compare/v0.68.0...v0.69.0)，16提交；目标 `3f106ae3d4712b26cced8272f0d488eaab0de1e6`。下表上游路径基于该提交，Android路径基于当前源码；定向 diff 在 `work/audit-069-source/relevant.diff`。
