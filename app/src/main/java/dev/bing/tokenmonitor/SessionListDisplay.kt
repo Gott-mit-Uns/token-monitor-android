@@ -58,7 +58,6 @@ internal object SessionListDisplay {
         return if(a.timedDurationMs>0 && output>0) output*1000/a.timedDurationMs else 0.0
     }
     fun raw(rows:List<UsageRow>,now:Long,hideTitles:Boolean=false,archivedLabel:String="Archived",label:(String)->String={it},zone:ZoneId=ZoneId.systemDefault(),names:ModelNames?=null,observed:Collection<String> = rows.flatMap {SessionDisplay.models(it).keys}):List<SessionListRow> = HubWorkTrace.trace(HubWorkStage.SESSION_RAW,units=rows.size.toLong()) {
-        val collator=Collator.getInstance(Locale.ENGLISH)
         rows.filter {(it.tokens ?: 0)>0 && !synthetic(it)}.map {row->
             val model=modelLabel(row,names,observed);val client=row.tool.orEmpty().trim();val clientLabel=label(client).ifEmpty {"Session"}
             val title=row.session?.title?.takeUnless {hideTitles}.orEmpty();val parts=listOf(clientLabel,model).filter(String::isNotEmpty).joinToString(" · ")
@@ -70,7 +69,12 @@ internal object SessionListDisplay {
                 if(accounting.calls>0) "${integer(accounting.calls)} ${if(accounting.calls==1.0) "call" else "calls"}" else "",cache,rate).filter(String::isNotEmpty).joinToString(" · ")
             SessionListRow(row.id,row,title.ifEmpty {parts},if(title.isEmpty()) activity else parts,if(title.isEmpty()) "" else activity,
                 idLabel(row.session?.sessionId ?: row.id),BigInteger.valueOf(row.tokens!!),row.cost?.let {runCatching {BigDecimal(it)}.getOrNull()}?.toPlainString() ?: "0",row.unpriced,at)
-        }.sortedWith {a,b->
+        }.let(::sorted)
+    }
+    /** Full display rows and all summaries share the desktop's mixed-list ordering. */
+    fun sorted(rows:List<SessionListRow>):List<SessionListRow> {
+        val collator=Collator.getInstance(Locale.ENGLISH)
+        return rows.sortedWith {a,b->
             b.sortTime.compareTo(a.sortTime).takeIf {it!=0} ?: b.tokens.compareTo(a.tokens).takeIf {it!=0}
             ?: BigDecimal(b.cost).compareTo(BigDecimal(a.cost)).takeIf {it!=0} ?: collator.compare(a.name,b.name)
         }
@@ -81,7 +85,7 @@ internal object SessionListDisplay {
         val tokens=reviews.fold(BigInteger.ZERO) {sum,row->sum+row.tokens};val cost=reviews.fold(BigDecimal.ZERO) {sum,row->sum+BigDecimal(row.cost)}
         val first=reviews.first();val clock=time(first.sortTime,now,zone)
         val summary=SessionListRow("session-group:codex-auto-review",null,label,listOf(if(clock.isNotEmpty()) latest(clock) else "",if(first.tokens.signum()>0) compact(first.tokens) else "").filter(String::isNotEmpty).joinToString(" · "),"",count(reviews.size),tokens,cost.toPlainString(),null,first.sortTime,true,reviews)
-        SessionRelationshipGroups.group(rows.filter {it.source?.session?.kind?.trim()!="background-review"},grokLabel,subagentCount,now)+summary.copy(groupKind="review",groupClient="codex",unpricedTotal=reviews.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)})
+        sorted(SessionRelationshipGroups.group(rows.filter {it.source?.session?.kind?.trim()!="background-review"},grokLabel,subagentCount,now)+summary.copy(groupKind="review",groupClient="codex",unpricedTotal=reviews.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)}))
     }
     fun page(rows:List<SessionListRow>,requested:Int):SessionListPage = HubWorkTrace.trace(HubWorkStage.SESSION_PAGE,units=rows.size.toLong()) {
         val count=((rows.size+99)/100).coerceAtLeast(1);val page=requested.coerceIn(0,count-1);val start=page*100

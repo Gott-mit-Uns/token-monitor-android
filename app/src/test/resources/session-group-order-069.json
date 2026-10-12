@@ -1,0 +1,502 @@
+{
+  "source": "desktop 3f106ae3d4712b26cced8272f0d488eaab0de1e6 groupSessionRows",
+  "blob": "939c418a6cfd0aa24b943653bf12167fe126b670",
+  "now": 1791792000000,
+  "legacyOrders": [
+    [
+      "public:0",
+      "public:1",
+      "public:2"
+    ],
+    [
+      "session-group:codex-auto-review",
+      "public:1",
+      "public:2",
+      "public:3"
+    ],
+    [
+      "session-group:codex-auto-review",
+      "public:3",
+      "public:4",
+      "public:5"
+    ],
+    [
+      "session-group:codex-auto-review",
+      "public:101",
+      "public:102",
+      "public:103"
+    ]
+  ],
+  "cases": [
+    {
+      "name": "newest",
+      "input": {
+        "sessions": {
+          "normal": {
+            "client": "codex",
+            "sessionId": "Normal",
+            "title": "Normal",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.000Z"
+          },
+          "review": {
+            "client": "codex",
+            "sessionId": "Review",
+            "title": "Review",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z",
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 100,
+          "cost": "1",
+          "members": [
+            "review"
+          ]
+        },
+        {
+          "id": "normal",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "middle",
+      "input": {
+        "sessions": {
+          "new": {
+            "client": "codex",
+            "sessionId": "New",
+            "title": "New",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "review": {
+            "client": "codex",
+            "sessionId": "Review",
+            "title": "Review",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.000Z",
+            "sessionKind": "background-review"
+          },
+          "old": {
+            "client": "codex",
+            "sessionId": "Old",
+            "title": "Old",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:58.000Z"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "new",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        },
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 100,
+          "cost": "1",
+          "members": [
+            "review"
+          ]
+        },
+        {
+          "id": "old",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "oldest",
+      "input": {
+        "sessions": {
+          "normal": {
+            "client": "codex",
+            "sessionId": "Normal",
+            "title": "Normal",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "review": {
+            "client": "codex",
+            "sessionId": "Review",
+            "title": "Review",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.000Z",
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "normal",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        },
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 100,
+          "cost": "1",
+          "members": [
+            "review"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tokens-tie-break",
+      "input": {
+        "sessions": {
+          "normal": {
+            "client": "codex",
+            "sessionId": "Normal",
+            "title": "Normal",
+            "totalTokens": 150,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "a": {
+            "client": "codex",
+            "sessionId": "A",
+            "title": "A",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z",
+            "sessionKind": "background-review"
+          },
+          "b": {
+            "client": "codex",
+            "sessionId": "B",
+            "title": "B",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.900Z",
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 200,
+          "cost": "2",
+          "members": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "id": "normal",
+          "value": 150,
+          "cost": "1",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "cost-tie-break",
+      "input": {
+        "sessions": {
+          "normal": {
+            "client": "codex",
+            "sessionId": "Normal",
+            "title": "Normal",
+            "totalTokens": 200,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "a": {
+            "client": "codex",
+            "sessionId": "A",
+            "title": "A",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z",
+            "sessionKind": "background-review"
+          },
+          "b": {
+            "client": "codex",
+            "sessionId": "B",
+            "title": "B",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.900Z",
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 200,
+          "cost": "2",
+          "members": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "id": "normal",
+          "value": 200,
+          "cost": "1",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "name-tie-break",
+      "input": {
+        "sessions": {
+          "z": {
+            "client": "codex",
+            "sessionId": "Zulu",
+            "title": "Zulu",
+            "totalTokens": 200,
+            "costUsd": 2,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "a": {
+            "client": "codex",
+            "sessionId": "alpha",
+            "title": "alpha",
+            "totalTokens": 200,
+            "costUsd": 2,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "review": {
+            "client": "codex",
+            "sessionId": "Review",
+            "title": "Review",
+            "totalTokens": 200,
+            "costUsd": 2,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z",
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "a",
+          "value": 200,
+          "cost": "2",
+          "members": []
+        },
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 200,
+          "cost": "2",
+          "members": [
+            "review"
+          ]
+        },
+        {
+          "id": "z",
+          "value": 200,
+          "cost": "2",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "mixed-groups",
+      "input": {
+        "sessions": {
+          "codex:Root": {
+            "client": "codex",
+            "sessionId": "Root",
+            "title": "Root",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:57.000Z"
+          },
+          "codex:Child": {
+            "client": "codex",
+            "sessionId": "Child",
+            "title": "Child",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.000Z",
+            "parentSessionId": "Root",
+            "parentClient": "codex"
+          },
+          "review": {
+            "client": "codex",
+            "sessionId": "Review",
+            "title": "Review",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.500Z",
+            "sessionKind": "background-review"
+          },
+          "bot": {
+            "client": "cursor",
+            "sessionId": "sand-subagent-public",
+            "title": "Bot",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "session-group:cursor-grok-bot",
+          "value": 100,
+          "cost": "1",
+          "members": [
+            "bot"
+          ]
+        },
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 100,
+          "cost": "1",
+          "members": [
+            "review"
+          ]
+        },
+        {
+          "id": "session-group:subagents:codex:Root",
+          "value": 200,
+          "cost": "2",
+          "members": [
+            "codex:Root",
+            "codex:Child"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "no-review",
+      "input": {
+        "sessions": {
+          "z": {
+            "client": "codex",
+            "sessionId": "Zulu",
+            "title": "Zulu",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          },
+          "a": {
+            "client": "codex",
+            "sessionId": "alpha",
+            "title": "alpha",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "a",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        },
+        {
+          "id": "z",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        }
+      ]
+    },
+    {
+      "name": "only-review",
+      "input": {
+        "sessions": {
+          "a": {
+            "client": "codex",
+            "sessionId": "A",
+            "title": "A",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T08:00:00.000Z",
+            "sessionKind": "background-review"
+          },
+          "b": {
+            "client": "codex",
+            "sessionId": "B",
+            "title": "B",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": "2026-10-12T07:59:59.000Z",
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 200,
+          "cost": "2",
+          "members": [
+            "a",
+            "b"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "missing-time",
+      "input": {
+        "sessions": {
+          "normal": {
+            "client": "codex",
+            "sessionId": "Normal",
+            "title": "Normal",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": null
+          },
+          "review": {
+            "client": "codex",
+            "sessionId": "Review",
+            "title": "Review",
+            "totalTokens": 100,
+            "costUsd": 1,
+            "lastUsedAt": null,
+            "sessionKind": "background-review"
+          }
+        }
+      },
+      "expected": [
+        {
+          "id": "session-group:codex-auto-review",
+          "value": 100,
+          "cost": "1",
+          "members": [
+            "review"
+          ]
+        },
+        {
+          "id": "normal",
+          "value": 100,
+          "cost": "1",
+          "members": []
+        }
+      ]
+    }
+  ]
+}

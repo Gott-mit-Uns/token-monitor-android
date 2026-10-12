@@ -49,6 +49,35 @@ class SessionListScreenTest {
     }.toString())
     private fun show(id:String)=compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(id))
     private fun sessions() {compose.onNodeWithTag("hub-view-selector").performClick();compose.onNodeWithTag("view-sessions").performScrollTo().performClick()}
+    @Test fun newestReviewGroupPrecedesOlderSessionsAndItsMembersStillOpen() {
+        val now=Instant.now()
+        val actions=Actions()
+        val snapshot=HubParser.parse(buildJsonObject {
+            put("periods",buildJsonObject {put("today",buildJsonObject {
+                put("totalTokens",2000);put("sessions",buildJsonObject {
+                    put("review:latest",record(0,now,review=true))
+                    put("public:older",record(1,now))
+                })
+            })})
+        }.toString())
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions"),
+            appearance=AppearancePreferences(reduceMotion="on"))
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(true,prefs.language,prefs.appearance) {
+            HubScreen(HubState(snapshot=snapshot,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")),actions,preferences=prefs)
+        }}}
+        sessions()
+        val group="session-row-session-group:codex-auto-review"
+        show(group)
+        val groupBounds=compose.onNodeWithTag(group).fetchSemanticsNode().boundsInRoot
+        val olderBounds=compose.onNodeWithTag("session-row-public:older").fetchSemanticsNode().boundsInRoot
+        saveVisualEvidence(compose.activity,compose.onRoot(),"session-review-order-before-assert.png")
+        assertTrue("Latest review summary must precede the older session",groupBounds.top<olderBounds.top)
+        compose.onNodeWithTag(group).performClick()
+        show("session-row-review:latest")
+        compose.onNodeWithTag("session-row-review:latest").assertIsDisplayed()
+        saveVisualEvidence(compose.activity,compose.onRoot(),"session-review-order-members.png")
+        assertEquals(0,actions.reads)
+    }
     @Test fun sourceRowsModelsContextPrivacyAndBackgroundReviewGroup() {
         val now=Instant.now();val actions=Actions();val state=mutableStateOf(HubState(snapshot=snapshot(now),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions")))
