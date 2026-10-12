@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -23,12 +24,15 @@ fun AboutSettings() {
     val strings = LocalResources.current
     val version = remember(context) {
         @Suppress("DEPRECATION")
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty()
+        context.packageManager.getPackageInfo(context.packageName, 0).let {it.versionName.orEmpty()+" ("+(if(android.os.Build.VERSION.SDK_INT>=28) it.longVersionCode else it.versionCode.toLong())+")"}
     }
     var opened by remember { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(strings.getString(R.string.about_heading), style = MaterialTheme.typography.titleLarge)
-        Text(strings.getString(R.string.app_version, version), style = MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.app_version, version),Modifier.testTag("about-android-version"), style = MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.testTag("about-desktop-reference"),style=MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.desktop_parity_partial),Modifier.testTag("about-parity-status"),style=MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.hub_version_unknown),Modifier.testTag("about-hub-version"),style=MaterialTheme.typography.bodySmall)
         OutlinedButton(onClick = { opened = true }) { Text(strings.getString(R.string.open_licenses)) }
     }
     if (opened) {

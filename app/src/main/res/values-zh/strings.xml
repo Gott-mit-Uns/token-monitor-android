@@ -683,5 +683,8 @@
     <string name="session_grok_group">Grok Bot</string>
     <string name="session_group_main">主对话 / 续接</string>
     <string name="session_group_subagent">子代理</string>
+    <string name="desktop_reference_version">桌面参考版本：v%1$s</string>
+    <string name="desktop_parity_partial">桌面对齐状态：部分对齐（仅支持的 Hub 字段）</string>
+    <string name="hub_version_unknown">Hub 版本：未知（未提供）</string>
     <plurals name="session_subagent_count"><item quantity="other">%1$d 个子代理</item></plurals>
 </resources>

@@ -687,5 +687,8 @@
     <string name="session_grok_group">Grok Bot</string>
     <string name="session_group_main">Main conversation / continuation</string>
     <string name="session_group_subagent">Subagent</string>
+    <string name="desktop_reference_version">Desktop reference: v%1$s</string>
+    <string name="desktop_parity_partial">Desktop parity: partially aligned (supported Hub fields only)</string>
+    <string name="hub_version_unknown">Hub version: unknown (not provided)</string>
     <plurals name="session_subagent_count"><item quantity="one">%1$d subagent</item><item quantity="other">%1$d subagents</item></plurals>
 </resources>
