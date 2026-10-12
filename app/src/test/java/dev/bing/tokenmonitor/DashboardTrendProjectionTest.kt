@@ -156,8 +156,8 @@ class DashboardTrendProjectionTest {
     @Test fun minimumAndFallbackDimensionsDoNotRemoveAxisSpace() {
         val minimum = project(sparse, width = 100.0, height = 100.0)
         assertEquals(320.0, minimum.width, 0.0)
-        assertEquals(200.0, minimum.height, 0.0)
-        assertEquals(DashboardTrendPlot(52.0, 10.0, 254.0, 166.0), minimum.plot)
+        assertEquals(160.0, minimum.height, 0.0)
+        assertEquals(DashboardTrendPlot(52.0, 10.0, 254.0, 126.0), minimum.plot)
         val fallback = project(sparse, width = 0.0, height = 0.0)
         assertEquals(800.0, fallback.width, 0.0)
         assertEquals(360.0, fallback.height, 0.0)

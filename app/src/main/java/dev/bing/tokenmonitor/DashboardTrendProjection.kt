@@ -60,7 +60,7 @@ internal object DashboardTrendProjection {
     const val CANDLE_DOWN_ARGB = 0xFFF06A7BL
     private val zero = BigInteger.ZERO
     private val one = BigInteger.ONE
-    private data class Folded(val values: Map<String, BigInteger>, val unknownKeys: Set<String>, val complete: Boolean)
+    private data class Folded(val values: Map<String, BigInteger>, val unknownKeys: Set<String>, val complete: Boolean, val total: BigInteger)
 
     /** Coordinates are the source model's units, before SVG's final two-decimal rounding.
      * [sourceLocale] makes the original host-default localeCompare collation explicit on Android.
@@ -73,10 +73,15 @@ internal object DashboardTrendProjection {
     ): DashboardTrendModel {
         require(range in ranges)
         val w = dimension(width, 320.0, 800.0)
-        val h = dimension(height, 200.0, 360.0)
+        val h = dimension(height, 160.0, 360.0)
         val plot = DashboardTrendPlot(52.0, 10.0, w - 66.0, h - 34.0)
-        val invalid = history.daily.filter { date(it.date) == null }.mapTo(linkedSetOf()) { it.date }
-        val grouped = history.daily.filter { date(it.date) != null }.groupBy { it.date }
+        // Validate once per row and preserve wire insertion order for diagnostics.
+        val invalid = linkedSetOf<String>()
+        val grouped = linkedMapOf<String, MutableList<HistoryRow>>()
+        history.daily.forEach { row ->
+            if (date(row.date) == null) invalid += row.date
+            else grouped.getOrPut(row.date) { mutableListOf() }.add(row)
+        }
         // A duplicated date is ambiguous. Collapse it into an explicit unknown record rather than double count.
         val duplicates = grouped.filterValues { it.size != 1 }.keys
         val ascending = grouped.map { (key, rows) -> if (rows.size == 1) rows.single() else HistoryRow(key, null, null) }
@@ -106,15 +111,16 @@ internal object DashboardTrendProjection {
             val order = totals.getValue(b).compareTo(totals.getValue(a))
             if (order != 0) order else collator.compare(a, b)
         }
-        val rowTotals = folded.map { it.values.values.fold(zero, BigInteger::add) }
+        val rowTotals = folded.map { it.total }
         val maximum = maxOf(one, rowTotals.maxOrNull() ?: zero)
+        val maximumDouble = maximum.toDouble()
         val slot = plot.width / daily.size
         val barWidth = slot * .7
         val bars = daily.mapIndexed { index, row ->
             val x = plot.x + index * slot + (slot - barWidth) / 2
             var cumulative = 0.0
             val segments = keys.mapNotNull { key -> folded[index].values[key]?.let { value ->
-                val height = plot.height * ratio(value, maximum)
+                val height = plot.height * (value.toDouble() / maximumDouble)
                 cumulative += height
                 DashboardTrendSegment(key, value, key !in folded[index].unknownKeys,
                     x, plot.y + plot.height - cumulative, barWidth, height)
@@ -174,14 +180,16 @@ internal object DashboardTrendProjection {
         val raw = if (byModel) row.perModel else row.perClient
         val values = linkedMapOf<String, BigInteger>()
         val unknown = linkedSetOf<String>()
+        var total = zero
         raw.forEach { (name, value) ->
             val key = if (!byModel && name == "antigravity-cli") "antigravity" else name
             val tokens = value.presentationTokens()
             values[key] = (values[key] ?: zero) + (tokens ?: zero)
+            total += tokens ?: zero
             if (tokens == null) unknown += key
         }
         // Empty attribution and a known zero total is a known zero bar; an absent positive/unknown attribution is incomplete.
-        return Folded(values, unknown, unknown.isEmpty() && (raw.isNotEmpty() || row.tokens == 0L))
+        return Folded(values, unknown, unknown.isEmpty() && (raw.isNotEmpty() || row.tokens == 0L), total)
     }
 
     private fun ticks(plot: DashboardTrendPlot, maximum: BigInteger) = (0..4).map { index ->
