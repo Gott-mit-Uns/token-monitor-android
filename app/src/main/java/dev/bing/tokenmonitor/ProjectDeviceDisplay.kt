@@ -72,7 +72,7 @@ internal object ProjectDisplay {
 internal object DeviceDisplay {
     val accent=0xFF73BDF5L;val staleColor=0xFF8C97A7L
     fun name(device:Device,alias:String?=null,fallback:String="device"):String =
-        listOf(alias,device.hubDisplayName,device.id,device.name).firstNotNullOfOrNull {it?.trim()?.takeIf(String::isNotEmpty)} ?: fallback
+        listOf(alias,device.hubDisplayName,device.id,device.name.takeUnless {it=="__unnamed_device__"}).firstNotNullOfOrNull {it?.trim()?.takeIf(String::isNotEmpty)} ?: fallback
     fun platform(device:Device):String {
         val raw=device.rawPlatform ?: device.platform.orEmpty();val prefix=raw.lowercase(Locale.ROOT).substringBefore('-')
         val fallback=when(prefix) {"darwin"->"macOS";"win32"->"Windows";"linux"->"Linux";else->raw}
