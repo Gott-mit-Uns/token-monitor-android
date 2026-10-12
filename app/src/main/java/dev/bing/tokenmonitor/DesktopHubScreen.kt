@@ -427,7 +427,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                     else {if(range!=mode) recordBreakdownPeriod(true);range = mode; periodMenu = false; updateDisplay?.invoke(DisplayChange.PeriodSelection(mode)) }
                                 }, shape = RoundedCornerShape(6.dp),
                                     colors = ButtonDefaults.textButtonColors(containerColor = Color.Transparent, contentColor = if (active) colors.primary else colors.onSurfaceVariant),
-                                    contentPadding = PaddingValues(0.dp), modifier = Modifier.fillMaxWidth().heightIn(min=22.dp).testTag("hub-period-$slot").semantics { selected = active; contentDescription = FixedPeriods.label(mode) }) {
+                                    contentPadding = PaddingValues(0.dp), modifier = Modifier.fillMaxWidth().then(if(stackedPeriods) Modifier.heightIn(min=22.dp) else Modifier.height(22.dp)).testTag("hub-period-$slot").semantics { selected = active; contentDescription = FixedPeriods.label(mode) }) {
                                     Text(FixedPeriods.label(mode), Modifier.fillMaxWidth().testTag("hub-period-label-$slot"), style = quotaTextStyle(9), textAlign=androidx.compose.ui.text.style.TextAlign.Center, maxLines=1, softWrap=false)
                                 }
                                 if(slot=="month") DesktopOptionMenu(periodMenu,FixedPeriods.modes.map {DesktopMenuOption(it,FixedPeriods.label(it),"hub-period-menu-$it")},monthMode,"hub-period-menu",width=132.dp,wrapNavigation=true,animate=true,dismiss={periodMenu=false}) {choice->if(range!=choice) recordBreakdownPeriod(false);monthMode=choice;range=choice;periodMenu=false;updateDisplay?.invoke(DisplayChange.PeriodSelection(choice))}
