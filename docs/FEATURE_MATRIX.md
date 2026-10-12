@@ -28,3 +28,7 @@
 | Windows Edge Dock恢复置顶、Electron43.7.9、headless安装文档 | D | 050f983、ad3f9aa、8891608 | 无Android开发任务 |
 
 每项当前部署E不是实现任务许可。后续先解决证据缺口；如确认字段被当前Hub丢弃，改记C并将Hub/Agent升级放入独立授权范围。Android不得补本地采集。
+
+## V4核查入口
+
+用户授权按现有可选v0.69合同补客户端消费，生产字段存在性仍为E；客户端fixture支持不等于已部署。等待批准原因、零Token local overlay、Grok跨历史身份和Windows Dock受限，详见HANDOFF_DESKTOP_069_UI.md阶段A。
