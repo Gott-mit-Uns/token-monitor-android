@@ -30,3 +30,5 @@
 交付dist/release-0.2.56/：正式APK、SHA256SUMS、release-manifest、VALIDATION；只上传这四个文件，不上传测试包、私人配置、密钥或截图。Tag及提交由发布清单绑定，实际发布与下载核验回执见GITHUB_PUBLICATION.md。旧Debug迁移和新版真机保持独立边界，不卸载或清数据绕过签名。
 
 本次到统一GitHub Release发布及回读校验后停止，不自动选择新任务或修改NAS/Hub/Agent/Lucky/路由/桌面客户端。
+
+发布回执：2026-10-12，[v0.2.56](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.56)已正式发布，Tag产品提交e13b68f7bc8ae021356152040edf96ba131ba6b2。四个资产完整下载逐文件一致，最终发布后APK再次下载SHA256一致。首次提前下载校验及恢复草稿过程如实记录在GITHUB_PUBLICATION.md和本地publication-order-recovery.txt。发布资产/Tag保持固定，后续提交仅更新文档回执。验证模拟器已关闭，本轮停止。

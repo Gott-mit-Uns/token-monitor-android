@@ -1,5 +1,17 @@
 # Native GitHub 发布记录
 
+## 0.2.56 多任务统一正式发布
+
+2026-10-12，[v0.2.56 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.56)已正式发布，非草稿/非预发行；main与带注释Tag已推送，Tag产品提交e13b68f7bc8ae021356152040edf96ba131ba6b2。用户授权合并其他任务一起发布，完整保留来源许可7a69170、页面优化d20a509及其最终交接7a829dc的提交历史，并保留0.2.55会话排序。版本统一0.2.56/code65，不覆盖历史Tag或资产。
+
+整合包419项Release单元通过，12项页面与23项网络/菜单/缓存检查通过；最终测试包4项freshness/生命周期检查通过，阶段复跑不累加独立测试数。专项候选完成26组系统配置/78项检查及42项相关回归；最终包另行整合验证。正式签名0.2.55→0.2.56合成加密记录/偏好覆盖安装通过；Lint0错误/93既有警告/1提示，67项依赖通知生成与APK内容校验通过。首次freshness失败及0.2.55基线复现保留，修正夹具HTTP重新验证观察检查点，未改变产品重连逻辑。详情见HANDOFF_0.2.56.md。
+
+正式APK SHA256为d41dc0a075a83824f48100a54f6f0a78cc84a7f371c4d7398631e2319ae51a1f，11,471,717字节；沿用0.2.53起的正式证书。APK、SHA256SUMS、release-manifest、VALIDATION四个资产均uploaded；完整下载四个资产后逐文件哈希一致，manifest commit与Tag一致，最终正式发布后再次完整下载APK校验一致。
+
+首次下载仍在运行时曾提前校验并触发发布，随即恢复草稿；等待下载完成、确认全部资产一致后才重新正式发布。首次失败和恢复过程保留在publication-order-recovery.txt，未覆盖资产或Tag。网络TLS/HTTP2临时失败通过仅当前进程HTTP/1.1兼容方式完成，不修改全局配置、路由或证书验证。
+
+交付dist/release-0.2.56/；完整统一证据位于work/token-monitor-unified-056/evidence/unified-release-056/，专项矩阵位于work/token-monitor-ui-quality-055/evidence/scoped-ui-quality-055/。未执行实体手机、蜂窝/Lucky、生产Hub或GitHub Actions验收；未修改NAS/Hub/Agent/路由。独立验证模拟器已停止。本轮发布完成后停止；后续只补文档回执，不改变固定Tag/APK。
+
 ## 0.2.55 会话混合排序正式发布
 
 2026-10-12，[v0.2.55 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.55)已正式发布，非草稿/非预发行；main和带注释Tag已推送，Tag产品提交a1ba688203684cbf58103fd8027f22ac38f343ef。开发分支fix/session-review-order-055基于已发布0.2.54，快进合入main，保留历史，无强制推送或remote变更。
