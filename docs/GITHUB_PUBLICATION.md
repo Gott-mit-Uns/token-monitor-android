@@ -1,5 +1,13 @@
 # Native GitHub 发布记录
 
+## 0.2.54 双任务整合正式发布
+
+2026-10-12，[v0.2.54 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.54)已发布，非草稿、非预发行。main和带注释标签已推送；标签产品提交97f8d0adba5fa4d2619e539903fe1ca87f0c9c2e。大字体2070edf与历史验证55d682f完整合并，合并提交f517232。
+
+正式APK为0.2.54/code63，包名dev.bing.tokenmonitor.nativeclient，沿用0.2.53正式证书。APK SHA256：65d629702762298b6cf56842e61fd252069a5c386f754b26028de1090bfdb9f5。APK、SHA256SUMS、release-manifest、VALIDATION四个资产均uploaded；重新下载全部资产，APK与清单校验一致，manifest对应标签提交。验证范围和未验证边界见HANDOFF_0.2.54.md，完整本机发布回执为evidence/large-font-054/github-release.json及github-download/。
+
+新版真机覆盖/大字体、运行中字号刷新、蜂窝/Lucky和真机SSE尚未验证。电脑未识别手机，不把模拟器升级声明为手机验收。发布后仅补本文档回执，不改变APK/标签或开启下一任务。
+
 ## 0.2.53 正式签名 APK 发布
 
 2026-10-12，经用户授权修复手机 UI 并配置正式签名，[PR #1](https://github.com/Gott-mit-Uns/token-monitor-android/pull/1) 已合并，首次正式签名 [v0.2.53 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.53) 已发布（非草稿、非预发行）。Tag 指向 `cc50eb565c4e71f3716a40c2be613914235478c1`；与验证提交 `50733ab08aaccc761c6c0f7c767f86897e5c8aa0` 源码树完全相同。
