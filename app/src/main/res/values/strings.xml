@@ -685,7 +685,7 @@
     <string name="session_waiting">Waiting</string>
     <string name="session_waiting_reply">Waiting for your reply</string>
     <string name="session_grok_group">Grok Bot</string>
-    <string name="session_subagent_count">%1$d subagents</string>
     <string name="session_group_main">Main conversation / continuation</string>
     <string name="session_group_subagent">Subagent</string>
+    <plurals name="session_subagent_count"><item quantity="one">%1$d subagent</item><item quantity="other">%1$d subagents</item></plurals>
 </resources>

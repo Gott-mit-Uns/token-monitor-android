@@ -153,7 +153,8 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     }
     var opened by rememberSaveable { mutableStateOf(state.snapshot != null) }
     var menu by remember { mutableStateOf(false) }
-    var query by rememberSaveable(page) { mutableStateOf("") }
+    val browse=rememberSaveable(state.connectionRevision,saver=PageBrowseState.Saver) {PageBrowseState()}
+    var query by browse.query(page)
     // Resolve an open dialog from the current snapshot. SSE title revocation must also
     // remove the old title while a detail dialog is already visible.
     var deviceDetail by remember { mutableStateOf<String?>(null) }
@@ -165,7 +166,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     fun rowKey(raw: String, isModel: Boolean = false) = "${page.name}:${if(isModel) "model" else "tool"}:$raw"
     fun toggleRow(raw: String, isModel: Boolean = false) { val key=rowKey(raw,isModel);expandedBreakdown=if(expandedBreakdown==key) null else key }
     LaunchedEffect(page,trendsDetail) { periodMenu = false; expandedBreakdown = null }
-    val mainContentScroll = rememberSaveable(page, saver = LazyListState.Saver) { LazyListState() }
+    val mainContentScroll = browse.scroll(page)
     val settingsContentScroll = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
     val trendsViewportHeight by remember(mainContentScroll) {derivedStateOf {mainContentScroll.layoutInfo.viewportSize.height}}
     var trendsStatusHeight by remember(page,range) {mutableIntStateOf(0)}
@@ -196,7 +197,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     }
     val sessionGrouped=remember(sessionRaw,sessionNow,strings.configuration.locales[0],preferences.main.compactUnits) {SessionListDisplay.grouped(sessionRaw,strings.getString(R.string.session_review_group),
         {strings.getString(R.string.session_review_count,it)},{strings.getString(R.string.session_review_latest,it)},
-        {DesktopCompactTokens.format(it.toDouble(),preferences.main.compactUnits,DesktopCompactTokens.localeTag(strings.configuration.locales[0]))},sessionNow,grokLabel=strings.getString(R.string.session_grok_group),subagentCount={strings.getString(R.string.session_subagent_count,it)})}
+        {DesktopCompactTokens.format(it.toDouble(),preferences.main.compactUnits,DesktopCompactTokens.localeTag(strings.configuration.locales[0]))},sessionNow,grokLabel=strings.getString(R.string.session_grok_group),subagentCount={strings.getQuantityString(R.plurals.session_subagent_count,it,it)})}
     val sessionReview=sessionGrouped.firstOrNull {it.id==selectedSessionGroup}
     val sessionMatching=HubWorkTrace.trace(HubWorkStage.SESSION_FILTER,units=(if(reviewGroupOpen) sessionReview?.reviews?.size ?: 0 else sessionGrouped.size).toLong()) {
         (if(reviewGroupOpen) sessionReview?.reviews.orEmpty() else sessionGrouped).filter {
@@ -359,7 +360,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
         else {trendsHistoryOpen=false;directPage=null;page = if(page in listOf(HubPage.PRICING,HubPage.SUBSCRIPTIONS)) HubPage.SETTINGS else landing}
     }
     LaunchedEffect(state.snapshot != null) { if (state.snapshot != null && !opened) { opened = true; page = HubPage.HOME } }
-    LaunchedEffect(preferences.hideTitles, preferences.hideSessionTitles, page, range) { query = "" }
+    LaunchedEffect(preferences.hideTitles, preferences.hideSessionTitles, range) { query = "" }
     val historySignature=remember(state.snapshot?.historyRevision,state.snapshot?.historyPreview) {homeHistorySignature(state.snapshot)}
     val historyPolicy=rememberHomeHistoryReadPolicy(HistoryReadKey(state.connectionRevision,historySignature),
         state.historyReadReceipt,

@@ -681,7 +681,7 @@
     <string name="session_waiting">等待交互</string>
     <string name="session_waiting_reply">等待用户回复</string>
     <string name="session_grok_group">Grok Bot</string>
-    <string name="session_subagent_count">%1$d 个子代理</string>
     <string name="session_group_main">主对话 / 续接</string>
     <string name="session_group_subagent">子代理</string>
+    <plurals name="session_subagent_count"><item quantity="other">%1$d 个子代理</item></plurals>
 </resources>
