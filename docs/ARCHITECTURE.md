@@ -63,10 +63,10 @@ SSE 消费采用一个待处理帧槽、独立消费 Job 和 conflated 保存队
 
 | 优先级 | 问题与证据 | 影响 | 下一步 |
 |---|---|---|---|
-| P0 开发前置 | 无 Git；构建冻结回执 `allCompilerInputsClaimed=false` | 没有可回退提交与完整构建输入历史 | 保留当前指纹/归档，在独立任务建立可追溯基线 |
+| 已完成本地基线；历史限制保留 | 第二阶段建立Git基线和v0.2.51-dev标签；旧冻结回执仍为 `allCompilerInputsClaimed=false` | 现已能回退当前源码，不恢复旧开发提交来源 | 见GIT_BASELINE_0.2.51.md；禁止把新基线提升为旧APK完整可重复构建证明 |
 | P1 | `HubViewModel.kt` 同时承担 repository/网络/持久化/生命周期 | 双入口策略变更容易伤及认证、升级和旧请求隔离 | 先定向状态机验收；不为审计拆层重构 |
 | P1 | `SessionMetadata` 不保留 liveActivity/关系；`SessionListDisplay.raw` 过滤零 Token | v0.69 等待、父子和 T3/Grok 组不能直接展示 | 先明确 wire 能力，再分开接入状态与分组 |
-| P1 | `LimitDisplay.compactWindows` 每模型组选一窗口 | 单组 Antigravity 只显示一个周期 | 首个独立开发任务修正 pick 与标签 |
+| 已完成P1-01 | `LimitDisplay.compactWindows` 单组各选session/weekly，HomeQuotaLayout周期标签对齐 | 两周期各自保留原读数/重置；空周期不展示，无数据不造零 | 第二阶段交接记录定向验收；真机边界仍保留 |
 | P1 | `DesktopHubScreen.kt` 817 行，列表/历史/显示派生集中 | 大数据与 UI 生命周期交错；触摸流畅度未证明 | 继承 perf50 指标，仅针对实测热点，不做全页重写 |
 | P1 | `HubJsonProjection`/缓存多份正文与树；限额32 MiB/10 MiB | 大帧、缓存保存、冷恢复可能逼近堆边界 | 先实机复测受控 full frame+导航+保存；不直接提高限制 |
 | P1 | LAN 与同 Hub 身份是人工配置，当前恢复优先 HTTPS | 新要求的 LAN 优先/已验证地址回退尚未实现 | 对照 API 合同设计候选地址验证与网络绑定 |

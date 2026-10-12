@@ -1,0 +1,495 @@
+{
+  "sourceCommit": "3f106ae3d4712b26cced8272f0d488eaab0de1e6",
+  "sourceFile": "src/electron/renderer/limits/providerPresentation.js",
+  "sourceSha256": "b9cec7f85127b97375de9f0ceedf2714bd8eee03a04d065a4e48855b8e542cd5",
+  "cases": [
+    {
+      "name": "only-session",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "only-weekly",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "both",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T15:00:00Z"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        },
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "reversed",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          },
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        1,
+        0
+      ],
+      "home": [
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        },
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "duplicates-tightest",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T15:00:00Z"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          },
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 50
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 12
+          }
+        ]
+      },
+      "selected": [
+        2,
+        3
+      ],
+      "home": [
+        {
+          "index": 2,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        },
+        {
+          "index": 3,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "ties-retain-first",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T15:00:00Z"
+          },
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T16:00:00Z"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        2
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        },
+        {
+          "index": 2,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "no-reset",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        },
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "missing-reading",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "empty-reading",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": null,
+            "usedPercent": null
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "used-only",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "usedPercent": 25
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro 5-hour",
+          "periodLabel": ""
+        },
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "missing-kind",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ],
+      "homePolicy": "Android conservative handling of malformed period metadata; not a claim of identical desktop malformed-row admission"
+    },
+    {
+      "name": "empty-kind",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 1,
+          "label": "Gemini 3 Pro Weekly",
+          "periodLabel": ""
+        }
+      ],
+      "homePolicy": "Android conservative handling of malformed period metadata; not a claim of identical desktop malformed-row admission"
+    },
+    {
+      "name": "missing-label",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "remainingPercent": 72
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          }
+        ]
+      },
+      "selected": [
+        0,
+        1
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Session",
+          "periodLabel": ""
+        },
+        {
+          "index": 1,
+          "label": "Weekly",
+          "periodLabel": ""
+        }
+      ]
+    },
+    {
+      "name": "empty-windows",
+      "input": {
+        "provider": "antigravity",
+        "windows": []
+      },
+      "selected": [],
+      "home": []
+    },
+    {
+      "name": "multi-group",
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 3 Pro 5-hour",
+            "remainingPercent": 72,
+            "resetsAt": "2026-10-12T15:00:00Z"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini 3 Pro weekly",
+            "remainingPercent": 31,
+            "resetsAt": "2026-10-15T15:00:00Z"
+          },
+          {
+            "kind": "session",
+            "label": "Claude 5-hour",
+            "remainingPercent": 66
+          },
+          {
+            "kind": "weekly",
+            "label": "Claude weekly",
+            "remainingPercent": 10
+          }
+        ]
+      },
+      "selected": [
+        0,
+        3
+      ],
+      "home": [
+        {
+          "index": 0,
+          "label": "Gemini 3 Pro",
+          "periodLabel": "5-hour"
+        },
+        {
+          "index": 3,
+          "label": "Claude",
+          "periodLabel": "Weekly"
+        }
+      ]
+    }
+  ],
+  "homeExpectationScope": "Labels and period prefixes execute the unmodified pinned desktop functions; typed Android projection conservatively excludes absent/blank kinds and unavailable readings. Empty providers retain a parser status placeholder, not a window."
+}

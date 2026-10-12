@@ -1,7 +1,15 @@
 package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -46,6 +54,68 @@ class HomeQuotaScreenTest {
             is JsonArray->JsonArray(element.map(::shift));else->element
         }
         return HubParser.parse(buildJsonObject {put("periods",buildJsonObject {put("today",buildJsonObject {put("totalTokens",1000)})});put("limits",buildJsonObject {put("providers",shift(providers))})}.toString())
+    }
+    @Test fun antigravityDualPeriodsKeepCompleteTextAndSeparateReadingsAcrossThemesAndFontSizes() {
+        val providers=buildJsonArray {add(buildJsonObject {
+            put("provider","antigravity");put("windows",buildJsonArray {
+                add(buildJsonObject {put("kind","weekly");put("label","Gemini 3 Pro weekly");put("remainingPercent",31);put("resetsAt","2026-10-15T15:00:00Z")})
+                add(buildJsonObject {put("kind","session");put("label","Gemini 3 Pro 5-hour");put("remainingPercent",72);put("resetsAt","2026-10-12T15:00:00Z")})
+            })
+        })}
+        val all=snapshot(providers).limits
+        val now=Instant.parse("2026-10-12T12:00:00Z")
+        // Synthetic font/theme matrix on a real Compose Activity; no phone claim.
+        val theme=mutableStateOf(false);val font=mutableStateOf(1f);val size=mutableStateOf("standard");val bars=mutableStateOf(false)
+        val prefs=LimitDisplayPreferences(homeBars=false)
+        val account=HomeQuotaLayout.project(all,prefs,now=now).single()
+        compose.activity.runOnUiThread {compose.activity.setContent {
+            val density=LocalDensity.current
+            CompositionLocalProvider(LocalDensity provides Density(density.density,font.value)) {
+                TokenTheme(theme.value,LanguageChoice.ENGLISH,AppearancePreferences(textSize=size.value,reduceMotion="on")) {
+                    CompositionLocalProvider(LocalLimitDisplay provides prefs.copy(homeBars=bars.value)) {
+                        androidx.compose.material3.Surface(color=androidx.compose.material3.MaterialTheme.colorScheme.background) {
+                            Column(Modifier.widthIn(max=360.dp).fillMaxWidth().safeDrawingPadding().padding(12.dp)) {HomeQuotaRow(account) {}}
+                        }
+                    }
+                }
+            }
+        }}
+        for(dark in listOf(false,true)) for(scale in listOf(1f,2f)) for(mode in listOf(false,true)) {
+            compose.runOnIdle {theme.value=dark;font.value=scale;size.value=if(scale==1f) "standard" else "largest";bars.value=mode}
+            val windows=account.windows
+            assertEquals(listOf("Gemini 3 Pro 5-hour","Gemini 3 Pro Weekly"),windows.map {it.label})
+            val bounds=windows.indices.map {index ->
+                val tag="0-$index"
+                val parent=compose.onNodeWithTag("limit-window-$tag",useUnmergedTree=true).assertIsDisplayed().getUnclippedBoundsInRoot()
+                for(text in listOf(windows[index].label,windows[index].value,windows[index].boundary)) {
+                    val node=compose.onNodeWithText(text,useUnmergedTree=true).assertIsDisplayed()
+                    val result=mutableListOf<TextLayoutResult>()
+                    node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(result)}
+                    // Match HomeQuotaEntryScreenTest's glyph-bound contract:
+                    // paragraph width may retain the available constraint while
+                    // wrap-content Text measures exactly to its visible glyphs.
+                    val measured=result.single()
+                    assertFalse("$dark/$scale/$mode $text height overflow",measured.didOverflowHeight)
+                    for(line in 0 until measured.lineCount) {
+                        assertFalse("$text must not be ellipsized",measured.isLineEllipsized(line))
+                        assertTrue("$text glyphs must fit left",measured.getLineLeft(line)>=-.5f)
+                        assertTrue("$text glyphs must fit right",measured.getLineRight(line)<=measured.size.width+.5f)
+                        assertTrue("$text glyphs must fit bottom",measured.getLineBottom(line)<=measured.size.height+.5f)
+                    }
+                    val child=node.getUnclippedBoundsInRoot()
+                    assertTrue(child.left>=parent.left-.5.dp && child.right<=parent.right+.5.dp)
+                    assertTrue(child.top>=parent.top-.5.dp && child.bottom<=parent.bottom+.5.dp)
+                }
+                compose.onNodeWithTag("limit-value-$tag").assertTextEquals(if(index==0) "72% left" else "31% left")
+                parent
+            }
+            assertTrue("period windows must not overlap",bounds[0].right<=bounds[1].left || bounds[0].bottom<=bounds[1].top)
+            compose.mainClock.advanceTimeByFrame()
+            compose.waitForIdle()
+            saveVisualEvidence(compose.activity,compose.onRoot(),"antigravity-dual-${if(dark) "dark" else "light"}-${scale}-${if(mode) "bars" else "text"}.png")
+        }
+        compose.onAllNodesWithTag("home-quota-0").assertCountEquals(1)
+        assertEquals(2,all.size)
     }
     @Test fun actualHomeUsesSourceUrgencyTextModeAndCustomSettingsAndRestoresThemInTheActivity() {
         val sourceCase=home.getValue("cases").jsonArray[10].jsonObject;val snapshot=snapshot(sourceCase.getValue("input").jsonArray)

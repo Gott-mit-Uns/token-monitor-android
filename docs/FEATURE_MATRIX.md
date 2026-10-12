@@ -19,7 +19,7 @@
 | Antigravity标题/重命名显示 | A展示读取，E当前生产端标题/策略 | Android `HubData.kt:50`、`SessionMetadataParser` 已读取受限title；上游 `providers/antigravity/sessionMetadata.js` SQLite摘要+撤销/重命名watch | P1仅联调标题启用、重命名、撤销；桌面读取SQLite属于D，Android不实现 |
 | Antigravity原生生成速度 | A通用counter消费；E当前生产端时序数据 | 上游vendor pin增加原生duration；Android `LiveTokenRate.kt` 连续设备counter差分，`SessionListDisplay.rate` session duration比值 | P1确认agent产出timedTokens/timedOutputTokens/timedDurationMs及capability；缺数据显示无读数 |
 | Antigravity推理Token纳入总量/历史 | A消费Hub权威total；生产端计算D，当前修正是否生效E | 上游 `history.js` 将antigravity加入disjoint reasoning集合；vendor更新；Android按Hub totalTokens读取 | 不在Android重复加reasoning；P1验证生产端升级后总量/历史/components一致 |
-| Antigravity单可见模型组同时显示5-hour/Weekly | B，Android缺失 | 上游 `limits/providerPresentation.js:271` 单组两周期分支；Android `LimitDisplay.kt:66` 单组仍选一窗 | P1，第一个独立开发任务；现有Hub windows足够，不等Hub升级 |
+| Antigravity单可见模型组同时显示5-hour/Weekly | A，第二阶段已实现；真机仍未验证 | 上游 `limits/providerPresentation.js:271` 单组两周期分支；Android `LimitDisplay.compactWindows` 分别选session/weekly，HomeQuotaLayout标签含模型与周期 | 15组输入的定向逻辑证据、Compose矩阵和边界见 [第二阶段交接](HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)；现有Hub数据足够，不需Hub升级 |
 | Cursor turn结束指示 | A通用turnEnded消费；生产端及时检测D，当前数据E | Android `HubData.kt:54`三态、`SessionDisplay.activity`；上游Cursor metadata新增完成检测 | 定向fixture确保显式true/false/缺失；不重新实现采集 |
 | 设备名称统一 | B部分缺失 | 上游 `deviceBreakdown.js:10` displayName→deviceId→hostname→device；Android项目设备行已有类似顺序，但 `LiveTokenRate.kt:92` 仍用hostname，`DeviceDetails.kt` 也走name | P2统一只读展示resolver，明确本地别名优先级和空白处理 |
 | 导航Lucide图标 | B静态UI差异，不依赖Hub | 上游4129b5e修改model/session/status/tool/trends SVG；Android资源由旧v0.68导入 | P2仅资源/许可/尺寸更新；保留八入口及48dp触摸验收 |

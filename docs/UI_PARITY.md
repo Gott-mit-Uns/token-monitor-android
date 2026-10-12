@@ -16,6 +16,8 @@
 
 ## v0.69 UI 改动计划
 
+第二阶段已独立完成Antigravity单可见组双周期pick及标签，产品布局组件保持原实现。受影响单元、浅深Compose交互和8组字体/模式窗口证据见 [双周期交接](HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。大字采用合成LocalDensity；真机、真实系统字号和公网边界不变。仅此模块对齐v0.69，不能把全局已实现参考改称v0.69。
+
 详见 [功能差异表](FEATURE_MATRIX.md)。独立接入Antigravity双周期pick/名称、会话等待状态、Codex/T3/Grok分组与成员明细、设备名称resolver、Lucide静态资源；每项复用既有组件、字号、48dp目标、弹层与reduce-motion体系，不重写页面。零Token本地会话不在远程合同内。
 
 ## 实体设备与公网验收单

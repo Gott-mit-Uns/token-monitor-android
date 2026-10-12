@@ -77,7 +77,13 @@ internal object LimitDisplay {
         }
         if(windows.any {group(it)==null}) return windows
         fun remaining(window:Limit?)=window?.let {percent(it,false)} ?: Double.POSITIVE_INFINITY
-        return windows.groupBy {group(it)}.values.mapIndexed {index,rows ->
+        val groups=windows.groupBy {group(it)}
+        // Hidden windows are filtered by Home before this pick. One model group
+        // can use both slots without duplicating a reading or inventing a period.
+        if(groups.size==1) return listOf("session","weekly").mapNotNull {kind ->
+            windows.filter {it.kind==kind}.minByOrNull {remaining(it)}
+        }
+        return groups.values.mapIndexed {index,rows ->
             val session=rows.filter {it.kind=="session"}.minByOrNull {remaining(it)}
             val weekly=rows.filter {it.kind=="weekly"}.minByOrNull {remaining(it)}
             val chosen=if(session==null) weekly!! else if(weekly==null) session else if(remaining(weekly)<remaining(session) && (remaining(weekly)<20 || !remaining(session).isFinite())) weekly else session

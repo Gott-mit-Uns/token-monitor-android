@@ -1,19 +1,19 @@
 # 下一阶段任务与停止边界
 
-基线2026-10-12接管审计，当前交付0.2.51-dev/code60。下列是建议，不是本轮执行授权。本轮只完成文档后停止，不自动修改代码、构建、安装或升级服务。
+基线2026-10-12接管审计，当前正式交付仍是0.2.51-dev/code60。第二阶段按单独授权完成P0-01本地基线及P1-01双周期修复，见 [第二阶段交接](HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。其他项目仍是建议，不自动继续执行；没有正式版本递增或服务升级。
 
 ## P0：开发前置的可追溯基线
 
 | ID | 证据/影响 | 下一步与完成条件 |
 |---|---|---|
-| P0-01 | 无.git，无branch/tag/commit；选定511源文件匹配，但旧冻结不包含全部编译输入。影响回滚、审阅与交付来源追踪；并非已发现生产崩溃 | 独立任务先归档整个源码与root构建输入/本地SDK版本，保留旧证据、失败日志和dist；排除敏感配置后建立Git基线。列明哪些历史修改没有commit来源，不伪造提交历史。当前审计指纹入口见takeover receipt |
+| P0-01 已完成 | 用户明确授权的第二阶段建立本地Git，基线标签v0.2.51-dev；历史开发提交来源仍不可恢复 | 纳入源码、资源、测试、构建与文档；排除缓存/证据/APK/凭据，保留磁盘原文件；680项基线指纹（清单自身另入库），无remote。见GIT_BASELINE_0.2.51.md及第二阶段交接 |
 | P0-02 | 真机覆盖安装与旧加密缓存仍未验证，模拟器升级已通过 | 下次手机交付前，与用户安排真实覆盖安装，先确认旧版本/签名和可恢复的数据保留方式；禁止卸载/清数据。安装、启动、设置/旧记录解密分别留脱敏证据 |
 
 ## P1：功能与核心链路
 
 | ID | 证据/影响 | 下一步与验收 |
 |---|---|---|
-| P1-01 首个开发任务 | `LimitDisplay.compactWindows` 单组仍挑一窗；上游891ac79修复双周期 | 只修compact selection和HomeQuota标签；单可见group时各保留一个最紧session/weekly，标签含模型+5-hour/Weekly；多组旧行为不变。缺reset也区分周期；hidden先过滤。总量、设置和动画沿用 |
+| P1-01 已完成 | 对齐上游891ac79：单组session/weekly独立选择与标签；缺字段不造零，重复同周期取最紧 | 产品修改只在LimitDisplay/HomeQuotaLayout；复用HomeQuotaRow及parser，多组和其他provider规则保留。定向验证、首次失败及未验证边界见第二阶段交接 |
 | P1-02 | 当前初次恢复/后台恢复/网络替换优先HTTPS；本次要求已验证LAN优先HTTP。HTTPS失败无已验证HTTP自动回退 | 独立连接策略任务，先明确成功验证记录与同Hub身份边界；仅许可LAN和已验证同HubHTTP可选；公网HTTPS、401停试、绑定Network、失败候选不持久化、缓存单份、无重复SSE。复用HubNetworkTransition/HubEndpoint/ConnectionTransaction/Lifecycle场景，新增仅缺失的状态覆盖 |
 | P1-03 | Luckyhealth core74，目标core78；NAS SSH被拒绝；新字段当前部署E | 先恢复已配置的安全只读连接或用已授权安全会话；核对后端/双入口身份、部署build与生产端版本、私有payload字段存在性。不给health200升级成功含义。服务升级另外立任务，不在Android审计里执行 |
 | P1-04 | Android丢弃liveActivity/waitingForInput，活动显示仅旧三态 | 在P1-03证据后，接入可选状态模型、30秒租约和10分钟问题等待、unknown/归档/未来/缺失回退；Home/Sessions共享投影。保留turnEnded优先，重连/缓存不复活过期等待；零Token本地overlay不采集 |
@@ -31,7 +31,7 @@
 | P2-02 | 上游4129b5e更新导航静态SVG | 导入受影响资源与许可，检查theme/尺寸/48dp；不改导航布局 |
 | P2-03 | 旧文档包含历史“当前包”说法；Lint93/97来自不同构建 | 新文档作总入口，旧文档注明历史范围；按报告来源跟踪实际警告，不为消除计数改产品语义 |
 
-## P1-01 的可独立执行规格
+## P1-01 已完成的独立执行规格
 
 输入：现有Hub antigravity windows，无需服务部署。修改范围限定 `LimitDisplay.kt`、`HomeQuotaLayout.kt` 及必要的existing tests；优先扩展 `LimitDisplayTest`、`HomeQuotaLayoutTest`、`HomeQuotaScreenTest` 中已有fixture，而非复制新测试工程。
 

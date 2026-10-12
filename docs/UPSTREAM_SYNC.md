@@ -36,3 +36,9 @@ Node `src/hub/server.js`无diff，shared/Worker usage有diff；事件名保持�
 5. 新功能实际验收后才更新“已实现参考”；不批量重构/递增版本/发包。
 
 首次本地promisor clone获取失败与后续成功范围记录在 `evidence/takeover-069-2026-10-12/acquisition-notes.md`；失败仓库不是上游证据来源。
+
+## 第二阶段独立增量
+
+2026-10-12完成891ac79对应的Android单组双周期与标签分支。直接执行固定目标providerPresentation函数生成15组定向selection/label fixture，记录源文件SHA256；旧limit-display fixture只更新受影响的单组case，并附独立sourceCommit，不回写其余v0.68来源。空kind准入与空provider状态占位采用Android保守语义，未把畸形输入假称全部桌面DOM对等。
+
+没有重新扫描上游16提交，未处理其它会话/设备/网络功能；全局桌面已实现参考仍为v0.68。交接与验证见 [HANDOFF_ANTIGRAVITY_DUAL_WINDOWS](HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。

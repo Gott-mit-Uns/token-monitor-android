@@ -1,5 +1,7 @@
 # Token Monitor Native Android
 
+2026-10-12 第二阶段：[Antigravity单组双周期修复与本地Git交接](docs/HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。修复在独立本地分支及开发验证Debug包中；正式版本仍0.2.51-dev/code60，原dist交付APK未覆盖，没有GitHub推送。
+
 2026-10-12 接管审计：[基线、构建与测试结论](docs/TAKEOVER_AUDIT_0.2.51.md)、[v0.69.0 功能差异](docs/FEATURE_MATRIX.md)、[后续独立任务](docs/NEXT_TASKS.md)。本次仅审计和文档；当前源码仍为 0.2.51-dev/code60，桌面已实现参考仍是 v0.68.0，没有生成新 APK。
 
 2026-10-12 本轮交付：[0.2.51-dev 安装包](dist/token-monitor-native-0.2.51-dev.apk)、[交付范围与安装说明](docs/HANDOFF_0.2.51.md)。按用户要求，本任务到修复三项反馈并交付 APK 为止；后续移植使用新的任务。

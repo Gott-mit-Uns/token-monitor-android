@@ -6,7 +6,7 @@
 
 先读 `docs/TAKEOVER_AUDIT_0.2.51.md`、`docs/NEXT_TASKS.md`，再按问题查 `docs/ARCHITECTURE.md`、`docs/FEATURE_MATRIX.md`、`docs/HUB_API_CONTRACT.md`。历史入口是 `docs/HANDOFF_0.2.51.md` 和 `docs/USER_FEEDBACK_048.md`。先目录、搜索、具体范围；不遍历证据截图、冻结源码和整个上游。
 
-2026-10-12 此目录及父目录没有 Git 元数据。不得把“没有 Git”写成“工作区干净”，不得清理、重置、覆盖现有工作，不得自行初始化仓库来伪造基线。先保留源码、构建输入与证据，再在单独获授权的任务中建立版本管理。
+2026-10-12 接管审计时此目录及父目录没有 Git 元数据。第二阶段已按用户明确授权建立本地基线，带注释标签 `v0.2.51-dev`，分支 `fix/antigravity-dual-windows`；安全范围见 `docs/GIT_BASELINE_0.2.51.md`。此基线保存当时源码，不代表此前两天有可追溯提交。不得清理、重置或覆盖现有工作；不自行创建 remote 或推送旧 GitHub Android 仓库。
 
 ## 产品与安全边界
 
