@@ -6,8 +6,8 @@ android {
         applicationId = "dev.bing.tokenmonitor.nativeclient"
         minSdk = 26
         targetSdk = 37
-        versionCode = 60
-        versionName = "0.2.51-dev"
+        versionCode = 61
+        versionName = "0.2.52-dev"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }

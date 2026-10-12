@@ -21,7 +21,7 @@
 | 3e98bff | Grok Bot识别/分组、历史身份证据overlay | 基本分组可用旧Hub；历史增强远程不完整 |
 | 2c927c5 | Antigravity摘要标题读取、重命名watch | Android已有title显示，生产端与标题策略待验证 |
 | 12ec522、6d36168 | Codex父子/原生续接、T3跨provider关系 | 新wire元数据、账目去重、分组和成员详情 |
-| 3f106ae | 发布0.69.0 | 不触发Android自动递增版本 |
+| 3f106ae | 发布0.69.0 | 桌面参考版本独立；新Android交付按版本策略递增 |
 
 已读的不仅是公告：API.diff、shared usage normalize/merge、sessionLive、collector增量、Antigravity metadata、T3 metadata、renderer sessionRows、deviceBreakdown/providerPresentation、syncDisplayStats本地overlay、sessionRelationshipWire测试，以及Android对应parser/纯展示/网络状态机。
 
