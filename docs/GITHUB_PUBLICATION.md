@@ -1,5 +1,14 @@
 # Native GitHub 发布记录
 
+## 0.2.57 — Token Monitor Android 名称与 README
+
+2026-10-12，[v0.2.57 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.57)正式发布，非草稿、非预发行。产品提交e72cc3f094c22a2bf04c529c5eb4ff47fafddefb，main与带注释Tag均推送。名称统一为Token Monitor Android，version0.2.57/code66；仓库介绍也同步更新，历史Tag/Release没有改写。
+
+README重写并入库四张实际模拟器演示截图；通过GitHub内容API回读README与四个PNG，逐文件字节一致。正式APK名token-monitor-android-0.2.57.apk，SHA256：932ba020525ee79a367e3dc2fd1451a0075d106f70ad28d4c643b8513ee4dbe6。APK、SHA256SUMS、release-manifest及VALIDATION四份附件在草稿阶段全部下载核对，发布后再次下载APK校验一致；正式签名沿用既有证书。
+
+7次现有Release页面定向检查、Lint0错误、APK实际名称/版本/许可归属和签名检查通过；截图使用公开演示数据。没有本轮旧版数据保留专项、真机、蜂窝/Lucky或生产服务操作。交接HANDOFF_0.2.57.md；交付在work/token-monitor-readme-refresh/dist/release-0.2.57，证据在其evidence/readme-057。发布后仅补文档回执，保持APK和Tag不变，到此停止。
+
+
 ## 0.2.56 多任务统一正式发布
 
 2026-10-12，[v0.2.56 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.56)已正式发布，非草稿/非预发行；main与带注释Tag已推送，Tag产品提交e13b68f7bc8ae021356152040edf96ba131ba6b2。用户授权合并其他任务一起发布，完整保留来源许可7a69170、页面优化d20a509及其最终交接7a829dc的提交历史，并保留0.2.55会话排序。版本统一0.2.56/code65，不覆盖历史Tag或资产。

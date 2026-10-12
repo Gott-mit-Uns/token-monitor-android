@@ -13,3 +13,5 @@ README改为产品首页，删除历史更新流水，突出用量/费用、多�
 本轮未改统计、网络、缓存或页面布局，不重复未受影响的全量单元/网络套件。应用与测试包安装和页面启动通过；没有本轮旧版数据保留专项、真机、蜂窝/Lucky或生产Hub验收，不操作NAS或其他模拟器。旧Debug迁移限制保留。
 
 交付dist/release-0.2.57/包含APK、SHA256SUMS、release-manifest、VALIDATION。正式发布与下载回读结果记录于GITHUB_PUBLICATION.md。本轮到发布验证后停止。
+
+发布完成：[GitHub v0.2.57](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.57)，产品提交e72cc3f094c22a2bf04c529c5eb4ff47fafddefb。四个附件草稿阶段下载一致，发布后APK再次下载校验一致；GitHub README和四张PNG回读与本地一致。历史Release/Tag不变，详情见GITHUB_PUBLICATION.md。
