@@ -1,5 +1,15 @@
 # Token Monitor Android GitHub 发布记录
 
+## 0.2.59 — V5 统一优化正式发布
+
+2026-10-13，[v0.2.59 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.59)已正式发布，非草稿、非预发行。版本0.2.59/code68，产品提交与固定Tag指向 `a509800a062732cb8ecd9820458d48440a199f3c`；main与feat/v5-unified-compact-trends均已推送。安全同步c04533e，保留历史及未跟踪AGENTS-original.md，没有覆盖未提交修改。
+
+本次统一交付真实桌面/Hub联调、测量支持的投影热点优化、趋势图/表格紧凑化、TLS连接池退出主线程修复及共享Compact Tokens。419 Release单元通过，Lint0错误/93既有警告/1提示，67项依赖通知校验通过；38组字号/窗口/主题/语言检查、受影响UI回归、25项网络/缓存回归与正式签名67→68升级通过。最终发布字节另行安装并通过UI、严格TLS、真实Lucky转发和旧加密缓存恢复检查。范围、首次失败及继承证据见HANDOFF_V5_UNIFIED.md。
+
+正式APK为11,472,453字节，SHA256为 `06375896d1d9d4083ca9b39ab6198b4133942dff41633f5be075dd56bafcd3e7`，沿用既有正式证书。APK、SHA256SUMS、release-manifest.json和VALIDATION.md四个资产正式发布后全部重新下载，与本地逐文件哈希一致。最终APK内嵌源码提交与固定Tag一致，安装字节也与发布资产一致。
+
+真实LAN使用只读桥接，真实Lucky使用透明TCP转发且保留原主机名与系统TLS验证；模拟器直连LAN正确拒绝，公网直连受其路由环境限制。实体手机、蜂窝切换、厂商后台和真实设备FPS尚未验收，不把这些路径声明为通过；未修改NAS、Agent、Lucky或路由器。交付dist/release-0.2.59/，证据evidence/v5-unified/，下载回执release-gates/download-verification.json。发布后仅补文档回执，不改变固定Tag/APK；V5完成后停止。
+
 ## 0.2.58 — 手机布局密度与字号反馈
 
 2026-10-13，[v0.2.58 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.58)已正式发布，非草稿、非预发行，标记为最新正式版。产品提交578d15d251541eb4bfe69dd06fc646a3f55d81f9，main及带注释Tag已推送；版本0.2.58/code67，沿用既有正式签名。

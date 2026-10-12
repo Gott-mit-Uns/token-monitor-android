@@ -48,3 +48,8 @@ Real Lucky via transparent TCP route and realLAN via authenticated read bridge p
 Final signed APK/tag/source fingerprint and GitHub download receipt are recorded in `GITHUB_PUBLICATION.md` and the release-manifest asset. AGP embeds Git commit metadata in`META-INF/version-control-info.textproto`; builds after source commits therefore change APK SHA even with identical runtime content. Release verification compares every ZIP entry payload (allowing only this explicit commit-metadata change), checks the embedded final commit, signature/package/version, installs the final bytes and reruns a final scoped UI/strictTLS/live-Lucky check. Candidate hashes are not substituted for formal asset hashes.
 
 Evidence root: `evidence/v5-unified/`; final delivery: `dist/release-0.2.59/`. V5 stops after this single publication. No later development round is authorized by this handoff.
+
+
+## Published receipt — 2026-10-13
+
+Formal v0.2.59/code68 is published at https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.59 (not draft/prerelease). Fixed source/tag commit: `a509800a062732cb8ecd9820458d48440a199f3c`; both main and the V5 development branch were pushed. Formal APK SHA256: `06375896d1d9d4083ca9b39ab6198b4133942dff41633f5be075dd56bafcd3e7` (11,472,453 bytes). All four published assets were downloaded after publication and match local hashes individually; receipt: `evidence/v5-unified/release-gates/download-verification.json`. Final APK installation, UI, strict TLS, real Lucky relay and old encrypted-store recovery checks passed on the exact final bytes. Publication documentation is appended without rebuilding APK or moving the fixed tag. V5 is complete; no subsequent round is started.
