@@ -24,6 +24,7 @@
 | 设备名称统一 | A共享名称resolver | Home/设备列表、详情、rate使用DeviceDisplay.name：本地别名→Hub displayName→id→hostname；空白与内部占位值不显示 | P2真机核对各入口一致；相关单元与UI回归见本轮交接 |
 | 导航Lucide图标 | A静态资源已对齐，不依赖Hub | 上游4129b5e修改model/session/status/tool/trends SVG；Android五项资源按固定v0.69源码更新 | P2仅资源/许可/尺寸更新；保留八入口及48dp触摸验收 |
 | Hub API/SSE协议 | A旧事件消费；客户端支持可选字段；部署仍E | diff未修改 `src/hub/server.js`；shared usage及Worker副本变更；事件仍snapshot/stats/freshness，stream v2 | P1验证生产产出，不能称“服务文件未改所以协议无变化” |
+| Home history重试与revision失效读取 | A本地策略；旧生产失败归因E | 0.2.53同目标失败后等待4秒，新revision新周期允许立即读取；22项定向单元含1.685秒两分支。原桥接只有聚合开始时间，不能判定同周期或并发 | P1-09本地定位完成，实网请求身份时间线缺失；旧失败不改为通过，见 [P1-09交接](HANDOFF_P1_09_HISTORY_DIAGNOSIS.md) |
 | Cursor活动驱动云端用量刷新 | D生产端 | 上游collector/source watch、自刷新节流；Android只看Hub | 不移植，不启动后台轮询 |
 | Windows Edge Dock恢复置顶、Electron43.7.9、headless安装文档 | D | 050f983、ad3f9aa、8891608 | 无Android开发任务 |
 

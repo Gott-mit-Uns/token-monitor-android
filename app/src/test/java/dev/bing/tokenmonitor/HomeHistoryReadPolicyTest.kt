@@ -10,6 +10,51 @@ class HomeHistoryReadPolicyTest {
         request: Long? = attempt.takeIf { it > 0 }?.toLong()) =
         HistoryReadReceipt(target, cycle, request, attempt, phase, preview, days, bindingRequested = attempt > 0)
 
+    @Test fun observedShortGapCannotDispatchARetryForTheSameHistoryTarget() {
+        val coordinator = HistoryReadCoordinator()
+        val schedule = HomeHistoryReadSchedule(key)
+        schedule.observe(63227, true, false, coordinator.target(key))
+        assertTrue(schedule.requested(63227))
+        val start = coordinator.begin(key, 1, false, true)!!
+        schedule.observe(63227, true, true, start)
+        val failed = coordinator.finish(start, HistoryReadPhase.FAILED)!!
+        schedule.observe(63228, true, false, failed)
+
+        // Replay r10's 1.685-second start-to-start gap without changing the target.
+        schedule.observe(64912, true, false, coordinator.target(key))
+        assertFalse(schedule.ready(64912))
+        assertFalse(schedule.requested(64912))
+        assertEquals(1, coordinator.receipt!!.attempt)
+        assertFalse(schedule.ready(67227))
+        assertTrue(schedule.requested(67228))
+        assertEquals(start.cycleId, coordinator.begin(key, 2, false, true)!!.cycleId)
+        assertEquals(2, coordinator.receipt!!.attempt)
+    }
+
+    @Test fun observedShortGapCanDispatchANewRevisionWithoutAcceptingTheOldReply() {
+        val coordinator = HistoryReadCoordinator()
+        val oldSchedule = HomeHistoryReadSchedule(key)
+        oldSchedule.observe(63227, true, false, coordinator.target(key))
+        assertTrue(oldSchedule.requested(63227))
+        val oldStart = coordinator.begin(key, 1, false, true)!!
+        oldSchedule.observe(63227, true, true, oldStart)
+
+        // acceptSnapshot cancels an in-flight old revision before targeting the new one.
+        coordinator.cancelActive(HistoryReadPhase.STALE)
+        val nextKey = key.copy(signature = "public-r2")
+        val queued = coordinator.target(nextKey)
+        val nextSchedule = HomeHistoryReadSchedule(nextKey)
+        nextSchedule.observe(64912, true, false, queued)
+        assertTrue(queued.cycleId > oldStart.cycleId)
+        assertEquals(0, queued.attempt)
+        assertTrue(nextSchedule.requested(64912))
+        val nextStart = coordinator.begin(nextKey, 2, false, true)!!
+        assertEquals(1, nextStart.attempt)
+        assertNull(coordinator.finish(oldStart, HistoryReadPhase.RESOLVED, 2))
+        assertSame(nextStart, coordinator.receipt)
+        assertEquals(nextKey, nextStart.key)
+    }
+
     @Test fun manualCycleUsesItsOwnReceiptsAndSameReceiptCannotRestartFourSecondWait() {
         val schedule = HomeHistoryReadSchedule(key)
         schedule.observe(0, true, false, receipt(HistoryReadPhase.CACHED, days = 20))
