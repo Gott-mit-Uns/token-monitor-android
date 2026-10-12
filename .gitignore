@@ -36,3 +36,6 @@ dist/
 *.pfx
 credentials*
 secrets*
+
+# Signing configuration must never enter source control.
+*signing*.properties

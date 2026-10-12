@@ -428,6 +428,28 @@ class DisclosureBoundaryWindowTest {
         val popupBeforeClose=popupWindowCounts(scenario)
         assertEquals("The public child fixture must own exactly one native Popup root",1,popupBeforeClose.roots)
         assertEquals("The public child fixture's real Popup root must be attached before close",1,popupBeforeClose.attached)
+        val nativePopupAfter=AtomicInteger(-1)
+        val nativeAttachedPopupAfter=AtomicInteger(-1)
+        val checkedAt=AtomicLong()
+        val exitStillRunning=AtomicBoolean()
+        val exitStillRetainsLayer=AtomicBoolean()
+        // Measure native ownership in the actual first closing draw. A second
+        // ActivityScenario.onActivity round trip can wait for the UI to idle,
+        // which samples after the finite animation and cannot test this boundary.
+        probe.windowObservation.set { sample ->
+            if(sample.phase==DesktopDisclosureObservationPhase.DRAW && !sample.open &&
+                sample.pose.running && checkedAt.get()==0L) {
+                check(Build.VERSION.SDK_INT>=29) {"Native Popup ownership acceptance requires API29 or newer"}
+                val roots=WindowInspector.getGlobalWindowViews().filter {view ->
+                    view.javaClass.name=="androidx.compose.ui.window.PopupLayout"
+                }
+                nativePopupAfter.set(roots.size)
+                nativeAttachedPopupAfter.set(roots.count {it.isAttachedToWindow})
+                exitStillRunning.set(sample.pose.running)
+                exitStillRetainsLayer.set(retainedLayers(probe.samples).isNotEmpty())
+                checkedAt.set(System.nanoTime())
+            }
+        }
         val closing = System.nanoTime()
         scenario.onActivity { open.value = false }
         waitUntil("Parent close must unmount the active child immediately") {
@@ -438,25 +460,8 @@ class DisclosureBoundaryWindowTest {
             it.phase==DesktopDisclosureObservationPhase.STATE && !it.open && it.pose.running})
         val exitDeadline=exitBegan.atNanos+(DesktopDisclosureMotionTokens.accordionDurationMs*
             1_000_000.0*probe.scale.get()).toLong()
-        val nativePopupAfter=AtomicInteger(-1)
-        val nativeAttachedPopupAfter=AtomicInteger(-1)
-        val checkedAt=AtomicLong()
-        val exitStillRunning=AtomicBoolean()
-        val exitStillRetainsLayer=AtomicBoolean()
-        scenario.onActivity {
-            check(Build.VERSION.SDK_INT>=29) {"Native Popup ownership acceptance requires API29 or newer"}
-            if(Build.VERSION.SDK_INT>=29) {
-                val roots=WindowInspector.getGlobalWindowViews().filter {view->
-                    view.javaClass.name=="androidx.compose.ui.window.PopupLayout"
-                }
-                nativePopupAfter.set(roots.size)
-                nativeAttachedPopupAfter.set(roots.count {it.isAttachedToWindow})
-            }
-            checkedAt.set(System.nanoTime())
-            val latest=observations(probe.samples).lastOrNull()
-            exitStillRunning.set(latest!=null && !latest.open && latest.pose.running)
-            exitStillRetainsLayer.set(retainedLayers(probe.samples).isNotEmpty())
-        }
+        waitUntil("Native Popup ownership must be measured in a real running exit draw") {checkedAt.get()>0L}
+        probe.windowObservation.set(null)
         if(Build.VERSION.SDK_INT>=34) automation.clearCache()
         val accessibilityStillListsPopup=automation.windows.any {it.id==popupWindow}
         File(directory,"disclosure-boundary-parent-popup-close-public.json").writeText(JSONObject()

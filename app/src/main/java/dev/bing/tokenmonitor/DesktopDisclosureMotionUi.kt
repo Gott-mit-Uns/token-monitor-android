@@ -136,9 +136,9 @@ internal fun rememberDesktopDisclosureMotion(
 
 /**
  * A clipped natural-height child. Only this layout and its graphics layer read
- * the frame. A viewport-bounded display list retains the last actual draw during
- * exit. The active subtree is removed immediately, which also disposes child
- * Popup/Dialog windows and their input/IME sessions. Saveable holders at the call
+ * the frame. Open content draws live; a viewport-bounded display list retains
+ * the last actual draw only for exit. The active subtree is removed immediately,
+ * which also disposes child Popup/Dialog windows and their input/IME sessions. Saveable holders at the call
  * sites preserve ordinary local choices; plain credential drafts are never saved.
  */
 @Composable
@@ -225,8 +225,13 @@ internal fun DesktopDisclosureContent(
                 val visible = cache.visible
                 if (state.foreground && visible.width > 0f && visible.height > 0f) {
                     cache.record(visible, this) { this@drawWithContent.drawContent() }
-                    cache.draw(this)
-                } else drawContent()
+                }
+                // Lazy children can move or invalidate their own layers without
+                // redrawing this ancestor. Replaying its clipped exit display
+                // list while open freezes that earlier viewport and can leave
+                // newly exposed settings blank. Only closing uses the snapshot;
+                // active content always follows Compose's live drawing tree.
+                drawContent()
             } else cache.draw(this)
             observer?.let { callback -> runCatching {
                 callback(DesktopDisclosureObservation(state.kind, state.identity,
