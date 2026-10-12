@@ -2,6 +2,8 @@
 
 2026-10-12，Asia/Shanghai。起点main / 9049bf3，已发布0.2.54/code63；开发分支fix/session-review-order-055。本轮只处理最新桌面对齐交接明确保留的P2局部排序（NEXT_TASKS索引P2-04），未处理动态字号、真机、生产字段或其他任务。原有AGENTS-original.md保持未跟踪且未修改。
 
+正式产品提交/Tag为a1ba688203684cbf58103fd8027f22ac38f343ef / v0.2.55；已快进合入并推送main，沿用既有remote。[GitHub Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.55)非草稿/非预发行，四个资产uploaded，草稿阶段全部下载回读一致，正式发布后APK再次下载哈希一致。上传CLI曾返回APK资产重名，先核对草稿四份资产内容后才发布；没有覆盖资产。最终回执见GITHUB_PUBLICATION.md，本轮已停止。
+
 ## 定位与最小修改
 
 SessionListDisplay.grouped原先将Auto Review摘要追加在已排序的关系/Grok/普通会话列表末尾，因此最新Review仍落在旧会话后。上游固定3f106ae3d4712b26cced8272f0d488eaab0de1e6的groupSessionRows会在所有摘要加入后统一排序：时间降序，Token降序，费用降序，名称比较。
