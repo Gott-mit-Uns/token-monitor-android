@@ -43,16 +43,28 @@ import java.time.LocalDate
     val toggleWithAnchor:()->Unit={if(anchor==null) toggle() else anchor.toggle(id,!expanded,toggle)}
     Column(Modifier.fillMaxWidth().clip(shape).background(colors.surfaceContainer.copy(alpha=if(expanded) .55f else .35f)).testTag("settings-section-$id")) {
         if(!first) HorizontalDivider(color=LocalDesktopLineColor.current.copy(alpha=.07f),thickness=1.dp)
+        BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val titleStyle=quotaTextStyle(11).copy(fontWeight=FontWeight.SemiBold)
+        val summaryStyle=quotaTextStyle(9).copy(fontSize=9.5.sp,lineHeight=11.875.sp)
+        val density=LocalDensity.current
+        val natural=with(density) {(rememberDesktopLabelWidths(listOf(title),titleStyle).single()+rememberDesktopLabelWidths(listOf(summary),summaryStyle).single()).toDp()}+73.dp
+        val stacked=natural>maxWidth
         Row(Modifier.fillMaxWidth().heightIn(min=48.dp).settingsHeaderPosition(anchor,id,motion).clickable(role=Role.Button,onClick=toggleWithAnchor).padding(horizontal=11.dp,vertical=9.dp).testTag(tag).semantics {stateDescription=description},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             Icon(painterResource(icon),null,Modifier.size(15.dp),tint=if(expanded) colors.primary else colors.onSurfaceVariant.copy(alpha=.85f))
-            Text(title,Modifier.weight(1f),style=quotaTextStyle(11).copy(fontWeight=FontWeight.SemiBold),maxLines=1,overflow=TextOverflow.Ellipsis)
-            Text(summary,Modifier.widthIn(max=150.dp),style=quotaTextStyle(9).copy(fontSize=9.5.sp,lineHeight=11.875.sp),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis,textAlign=TextAlign.End)
+            if(stacked) Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                Text(title,Modifier.testTag("$tag-title"),style=titleStyle)
+                Text(summary,Modifier.testTag("$tag-summary"),style=summaryStyle,color=colors.onSurfaceVariant)
+            } else {
+                Text(title,Modifier.weight(1f).testTag("$tag-title"),style=titleStyle)
+                Text(summary,Modifier.testTag("$tag-summary"),style=summaryStyle,color=colors.onSurfaceVariant,textAlign=TextAlign.End)
+            }
             val chevron=colors.onSurfaceVariant
             Canvas(Modifier.size(12.dp).graphicsLayer {rotationZ=180f*motion.pose.value.chevronFraction}) {
                 val p=Path();val mid=size.width/2;val rise=1f
                 p.moveTo(mid-2.5.dp.toPx(),size.height/2-rise*1.25.dp.toPx());p.lineTo(mid,size.height/2+rise*1.25.dp.toPx());p.lineTo(mid+2.5.dp.toPx(),size.height/2-rise*1.25.dp.toPx())
                 drawPath(p,chevron,style=Stroke(1.5.dp.toPx()))
             }
+        }
         }
         DesktopAccordion(expanded,"settings-section-motion-$id",kind=DesktopDisclosureKind.SETTINGS_SECTION,state=motion) {
             HorizontalDivider(color=LocalDesktopLineColor.current.copy(alpha=.08f),thickness=1.dp)
@@ -72,7 +84,7 @@ import java.time.LocalDate
 @Composable internal fun DesktopSettingInlineChoices(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,change:(String)->Unit) {
     FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalArrangement=Arrangement.spacedBy(0.dp)) {
         Box(Modifier.heightIn(min=48.dp),contentAlignment=Alignment.CenterStart) {Text(title,style=quotaTextStyle(11))}
-        Row(Modifier.selectableGroup(),horizontalArrangement=Arrangement.spacedBy(2.dp),verticalAlignment=Alignment.CenterVertically) {
+        FlowRow(Modifier.selectableGroup(),horizontalArrangement=Arrangement.spacedBy(2.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
             choices.forEach {(id,label)->DesktopChoicePill(label,selected==id,"$tag-$id") {change(id)}}
         }
     }
