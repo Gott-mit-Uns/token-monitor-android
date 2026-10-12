@@ -89,6 +89,19 @@ closed.wait(30)
         self.assertTrue(all(process.poll() is not None for process in self.processes))
         self.assertEqual(0, self.server.status()["streamStarts"])
 
+    def test_history_trace_records_start_and_process_end_without_payload(self):
+        self.start("wait")
+        peer = self.request("history")
+        self.await_status(lambda status: len(status["historyEvents"]) == 1)
+        peer.close()
+        self.await_status(lambda status: status["activeReads"] == 0)
+        events = self.server.status()["historyEvents"]
+        self.assertEqual(["STARTED", "ENDED"], [item["phase"] for item in events])
+        self.assertEqual([1, 1], [item["sequence"] for item in events])
+        self.assertEqual([1, 0], [item["active"] for item in events])
+        self.assertLessEqual(events[0]["atNs"], events[1]["atNs"])
+        self.assertTrue(all(set(item) == {"phase", "sequence", "atNs", "active"} for item in events))
+
     def test_split_heartbeats_are_counted_once_and_stream_stays_open(self):
         self.start("split")
         peer = self.request("stats/stream")

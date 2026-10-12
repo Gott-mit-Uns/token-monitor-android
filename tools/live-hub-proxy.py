@@ -161,6 +161,7 @@ class ReadBridgeServer(http.server.ThreadingHTTPServer):
         # Monotonic offset in seconds for each accepted route request; count-only evidence
         # cannot tell a four-second receipt retry from a duplicate dispatch.
         self.route_times = {}
+        self.history_events = []
         self.started_monotonic = time.monotonic()
         self.requests = self.stream_starts = self.stream_ends = self.heartbeats = 0
 
@@ -170,7 +171,8 @@ class ReadBridgeServer(http.server.ThreadingHTTPServer):
                     "streamStarts": self.stream_starts, "streamEnds": self.stream_ends,
                     "activeStreams": sum(route == "stats/stream" for route, _ in self.reads.values()),
                     "heartbeats": self.heartbeats, "routes": dict(self.route_requests), "attempts": dict(self.route_attempts),
-                    "readTimes": {route: list(times) for route, times in self.route_times.items()}}
+                    "readTimes": {route: list(times) for route, times in self.route_times.items()},
+                    "historyEvents": [dict(event) for event in self.history_events]}
 
     def close_reads(self):
         with self.reads_lock:
@@ -229,6 +231,11 @@ class ReadBridge(http.server.BaseHTTPRequestHandler):
             if route == "stats/stream":
                 self.server.stream_starts += 1
             self.server.reads[id(process)] = (route, stop_read)
+            history_sequence = self.server.route_requests.get("history", 0)
+            if route == "history":
+                self.server.history_events.append({"sequence": history_sequence, "phase": "STARTED",
+                    "atNs": time.monotonic_ns(),
+                    "active": sum(value[0] == "history" for value in self.server.reads.values())})
         watcher_stop = threading.Event()
 
         def watch_peer():
@@ -276,6 +283,10 @@ class ReadBridge(http.server.BaseHTTPRequestHandler):
             process.stdout.close()
             with self.server.reads_lock:
                 self.server.reads.pop(id(process), None)
+                if route == "history":
+                    self.server.history_events.append({"sequence": history_sequence, "phase": "ENDED",
+                        "atNs": time.monotonic_ns(),
+                        "active": sum(value[0] == "history" for value in self.server.reads.values())})
                 if route == "stats/stream":
                     self.server.stream_ends += 1
                 self.server.reads_condition.notify_all()

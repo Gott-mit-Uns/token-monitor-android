@@ -15,6 +15,8 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 import android.os.Bundle
 import kotlinx.serialization.json.*
+import android.os.SystemClock
+import kotlinx.coroutines.*
 
 /** Opt-in integration test. Real authentication stays in upstream bridge process memory. */
 @RunWith(AndroidJUnit4::class)
@@ -41,6 +43,41 @@ class LiveHubTest {
             var value = false
             activity.scenario.onActivity { value = it.hasWindowFocus() }
             value
+        }
+        // Test-only trace: retain identities in memory, export only run-local ordinals/numbers.
+        // Unconfined collection observes synchronous STARTED/terminal updates without polling.
+        val historyEvents = mutableListOf<String>()
+        var previousReceipt: HistoryReadReceipt? = null
+        var previousKey: HistoryReadKey? = null
+        var targetOrdinal = 0
+        val traceScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        lateinit var historyTrace: Job
+        instrumentation.runOnMainSync {
+            historyTrace = traceScope.launch(start = CoroutineStart.UNDISPATCHED) {
+                model.state.collect { state ->
+                    val receipt = state.historyReadReceipt ?: return@collect
+                    if (receipt == previousReceipt) return@collect
+                    val changed = previousKey != null && previousKey != receipt.key
+                    val revisionChanged = previousKey?.let { it.signature != receipt.key.signature } == true
+                    val bindingChanged = previousKey?.let { it.connectionRevision != receipt.key.connectionRevision } == true
+                    if (previousKey != receipt.key) targetOrdinal++
+                    previousKey = receipt.key
+                    previousReceipt = receipt
+                    val event = buildJsonObject {
+                        put("atMs", SystemClock.elapsedRealtime())
+                        put("target", targetOrdinal)
+                        put("changed", changed)
+                        put("revisionChanged", revisionChanged)
+                        put("bindingChanged", bindingChanged)
+                        put("cycle", receipt.cycleId)
+                        put("request", receipt.requestId ?: 0)
+                        put("attempt", receipt.attempt)
+                        put("phase", receipt.phase.name)
+                        put("retryEligible", receipt.allowsAutomaticRead)
+                    }.toString()
+                    synchronized(historyEvents) { historyEvents.add(event) }
+                }
+            }
         }
         try {
             await { !model.state.value.loading }
@@ -103,6 +140,10 @@ class LiveHubTest {
             instrumentation.runOnMainSync { model.setForeground(false); model.forget() }
             await { !model.state.value.loading }
             store.clear()
+            instrumentation.runOnMainSync { historyTrace.cancel(); traceScope.cancel() }
+            synchronized(historyEvents) { historyEvents.toList() }.forEach { event ->
+                instrumentation.sendStatus(2, Bundle().apply { putString("nativeHistoryEvent", event) })
+            }
         }
     }
 }

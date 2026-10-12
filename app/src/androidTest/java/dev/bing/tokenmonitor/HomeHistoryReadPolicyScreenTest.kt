@@ -172,6 +172,39 @@ class HomeHistoryReadPolicyScreenTest {
         } finally { compose.mainClock.autoAdvance = true }
     }
 
+    @Test fun shortGapRemainsBlockedUntilANewHistoryRevisionQueuesItsOwnFirstRead() {
+        val state = mutableStateOf(initial())
+        val actions = Actions(state)
+        try {
+            show(state, actions)
+            assertEquals(1, actions.historyReads)
+            val first = state.value.historyReadReceipt!!
+            val firstAt = compose.mainClock.currentTime
+            finish(actions)
+            step(1500)
+            assertEquals("Same target cannot retry before four seconds", 1, actions.historyReads)
+            val nextSnapshot = snapshot("public-r2")
+            compose.runOnIdle {
+                state.value = state.value.copy(snapshot = nextSnapshot, history = null, error = null,
+                    historyReadReceipt = HistoryReadReceipt(
+                        HistoryReadKey(state.value.connectionRevision, homeHistorySignature(nextSnapshot)),
+                        first.cycleId + 1, null, 0, HistoryReadPhase.QUEUED))
+            }
+            step(64)
+            assertTrue("New revision must dispatch before the old retry deadline",
+                compose.mainClock.currentTime - firstAt < 4000)
+            assertEquals(2, actions.historyReads)
+            assertEquals(0, actions.manualReads)
+            val next = state.value.historyReadReceipt!!
+            assertEquals(first.cycleId + 1, next.cycleId)
+            assertEquals(1, next.attempt)
+            assertEquals("public-r2", next.key.signature)
+            finish(actions, complete, false)
+            step(5000)
+            assertEquals("Accepted new revision must not retry", 2, actions.historyReads)
+        } finally { compose.mainClock.autoAdvance = true }
+    }
+
     @Test fun backgroundAndHiddenViewsCancelWaitWithoutRefundingAnyAcceptedAttempt() {
         val state = mutableStateOf(initial())
         val actions = Actions(state)
