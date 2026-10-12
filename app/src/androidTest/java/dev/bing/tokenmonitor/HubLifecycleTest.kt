@@ -23,6 +23,7 @@ class HubLifecycleTest {
         val second = CountDownLatch(1)
         val closed = CountDownLatch(1)
         val streams = AtomicInteger()
+        val healthReads=AtomicInteger()
         val workers = mutableListOf<Thread>()
         val build=HubBuildInfo("node-hub",1,74,HubBuildRegistry.entries.getValue("core").getValue(74L),5,HubBuildRegistry.entries.getValue("node-hub").getValue(5L))
         val health=build.cache().dropLast(1)+",\"ok\":true,\"role\":\"hub\"}"
@@ -45,7 +46,7 @@ class HubLifecycleTest {
                             val disconnected = try { input.read() == -1 } catch (_: java.net.SocketException) { true }
                             if (disconnected && n == 1) closed.countDown()
                         } else {
-                            val response = if (path.contains("/api/health")) health else body
+                            val response = if (path.contains("/api/health")) {healthReads.incrementAndGet();health} else body
                             output.write(("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ${response.toByteArray().size}\r\nConnection: close\r\n\r\n$response").toByteArray())
                             output.flush()
                         }
@@ -67,6 +68,7 @@ class HubLifecycleTest {
                 model.refresh("http://192.168.1.1:${server.localPort}", UUID.randomUUID().toString())
             }
             assertTrue(first.await(5, TimeUnit.SECONDS))
+            assertEquals("Build uses the existing single health read",1,healthReads.get())
             assertEquals(build,model.state.value.hubBuild)
             assertEquals(build,HubStore(app,storeNameForBuild).load()?.hubBuild)
             lateinit var restored:HubViewModel
@@ -75,6 +77,7 @@ class HubLifecycleTest {
             while(restored.state.value.loading && System.nanoTime()<restoreDeadline) Thread.sleep(10)
             assertEquals(build,restored.state.value.hubBuild)
             assertEquals("Cached build restores without a second stream",1,streams.get())
+            assertEquals("Cache restoration does not read health again",1,healthReads.get())
             instrumentation.runOnMainSync { model.setForeground(false) }
             assertTrue(closed.await(5, TimeUnit.SECONDS))
             assertEquals(1, streams.get())

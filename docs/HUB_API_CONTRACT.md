@@ -62,3 +62,9 @@ SavedHub保持一个凭据和单份权威缓存。新增加密可选lanEnabled/e
 下一步只保留脱敏能力结果：build、字段是否出现、各状态数量、schema合法性、连接数/生命周期计数与全量一致性摘要；不保存凭据、标题、私有响应正文。取得现成安全会话后才读取私有接口，普通health连通不作为完整业务通过。
 
 V4不改事件、HTTP路径、网络策略或存储信封。原始snapshot可选元数据随加密缓存保存，恢复时按当前时钟评估租约；freshness不重写关系。版本展示不将health.version=1或hubBuild指纹当作Hub应用版本。
+
+## 0.2.56 Hub构建展示增量
+
+Android复用现有GET /api/health的验证响应，保留可选hubBuild.schemaVersion/runtime/coreRevision/coreBuildId/runtimeRevision/runtimeBuildId。按固定桌面v0.69注册表比较状态；runtime只归一化node-hub/cloudflare-worker，修订须为正整数，指纹只接受sha256:加64位小写十六进制。health.version仍只作协议含义，不转换应用SemVer。
+
+只有health、鉴权stats及解析成功后才提交候选构建，失败/取消保持既有绑定和有效状态。元数据随现有加密SavedHub可选字段缓存，缺字段旧记录保持可读；前后台/SSE/freshness仍保留现有state.copy语义。不保存原始health正文，不增加请求/轮询，不改变服务端合同或部署。关于页明确等待验证、未报告、真实修订与无法验证状态，离线值来自最近成功验证。定向证据见HANDOFF_SCOPED_UI_0.2.56.md。
