@@ -250,7 +250,7 @@
     <string name="widget_no_value">—</string>
     <string name="widget_settings_note">Shows the last saved Hub usage and reading time. It stays offline in the background; tap the widget to open the app and update. Names and titles are omitted.</string>
     <string name="widget_add">Add to home screen</string>
-    <string name="widget_add_manually">Long-press the home screen, open Widgets, and choose Token Monitor Native → Hub usage.</string>
+    <string name="widget_add_manually">Long-press the home screen, open Widgets, and choose Token Monitor Android → Hub usage.</string>
     <string name="widget_tokens_accessible">Tokens: %1$s</string>
     <string name="error_no_network">No network is available. Saved data is kept; reconnect to update.</string>
     <string name="about_heading">About this app</string>

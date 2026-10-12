@@ -1,4 +1,4 @@
-Token Monitor Native — source and open-source notices
+Token Monitor Android — source and open-source notices
 
 Independently implemented in Kotlin/Compose, using the Token Monitor Hub protocol and display semantics.
 Upstream: https://github.com/Javis603/token-monitor

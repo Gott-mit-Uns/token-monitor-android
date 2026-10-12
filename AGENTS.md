@@ -1,4 +1,4 @@
-# Token Monitor Android Native — 永久开发规则
+# Token Monitor Android — 永久开发规则
 
 本文件定义 Token Monitor Android Native 项目的长期工程约束。所有 AI 开发任务均应遵守。具体开发目标、桌面目标版本和阶段性待办由项目其他文档管理，不在本文件中固定。
 

@@ -248,7 +248,7 @@
     <string name="widget_no_value">—</string>
     <string name="widget_settings_note">显示上次保存的 Hub 用量和读取时间。后台保持离线，点击小组件打开应用更新；不显示名称或标题。</string>
     <string name="widget_add">添加到主屏幕</string>
-    <string name="widget_add_manually">长按主屏幕，进入小组件列表，选择 Token Monitor Native → Hub 用量。</string>
+    <string name="widget_add_manually">长按主屏幕，进入小组件列表，选择 Token Monitor Android → Hub 用量。</string>
     <string name="widget_tokens_accessible">Token：%1$s</string>
     <string name="error_no_network">当前没有可用网络。已保存数据会保留，恢复联网后更新。</string>
     <string name="about_heading">关于应用</string>

@@ -72,7 +72,7 @@ class EnglishScreenTest {
         compose.onNodeWithTag("hub-content").performScrollToNode(hasText("Source and open-source licenses"))
         compose.onNodeWithText("Source and open-source licenses").performClick()
         compose.onNodeWithText("Source and licenses").assertIsDisplayed()
-        compose.onNodeWithText("Token Monitor Native — source and open-source notices").assertIsDisplayed()
+        compose.onNodeWithText("Token Monitor Android — source and open-source notices").assertIsDisplayed()
         compose.onNodeWithText("Close").performClick()
         compose.runOnIdle { preferences.value = preferences.value.copy(language = LanguageChoice.CHINESE) }
         compose.onNodeWithTag("hub-content").performScrollToNode(hasText("来源与开源许可"))

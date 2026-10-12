@@ -66,7 +66,7 @@ def generate():
                 record["sources"].append(f"{coordinate} / {filename}")
     if not any("END OF TERMS AND CONDITIONS" in record["text"] for record in bundled.values()):
         raise ValueError("Complete Apache license text missing from runtime artifacts")
-    intro = ("Token Monitor Native — source and open-source notices\n\n"
+    intro = ("Token Monitor Android — source and open-source notices\n\n"
              "Independently implemented in Kotlin/Compose, using the Token Monitor Hub protocol and display semantics.\n"
              "Upstream: https://github.com/Javis603/token-monitor\n"
              "Hub build registry and comparison semantics: Token Monitor upstream (MIT).\n"
