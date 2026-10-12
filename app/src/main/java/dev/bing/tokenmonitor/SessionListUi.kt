@@ -53,15 +53,19 @@ import java.util.Locale
     val renderObserver=LocalHeadlineRenderObserver.current
     SideEffect {renderObserver?.invoke("session-row:$motionKey")}
     val barTarget=SessionListDisplay.bar(display.tokens,max)
-    val active=!reviewRun && row!=null && SessionDisplay.activity(row,now)=="running"
-    val models=row?.let {SessionDisplay.displayModels(it,names,observed)}.orEmpty();val modelLabel=row?.let {SessionListDisplay.modelLabel(it,names,observed)}.orEmpty()
+    val activityState=display.groupState ?: row?.let {SessionDisplay.activity(it,now)} ?: "idle"
+    val active=!reviewRun && activityState=="running"
+    val models=if(display.review && display.groupKind!="review") display.reviews.fold(emptyMap<String,BigInteger>()) {sum,member->
+        val next=sum.toMutableMap();member.source?.let {SessionDisplay.displayModels(it,names,observed)}.orEmpty().forEach {(name,value)->next[name]=(next[name] ?: BigInteger.ZERO)+value};next
+    } else row?.let {SessionDisplay.displayModels(it,names,observed)}.orEmpty()
+    val modelLabel=when(models.size) {0->"";1->models.keys.single();else->"${models.size} models"}
     val context=row?.takeUnless {reviewRun}?.let {SessionDisplay.context(it,now)};val cache=row?.takeUnless {reviewRun}?.let {SessionDisplay.cache(it,now)}
     val palette=LocalDesktopVendorPalette.current
-    val client=if(display.review) "codex" else row?.tool.orEmpty()
+    val client=display.groupClient ?: row?.tool.orEmpty()
     val fallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFFD97BC4L,0xFFF0D66AL,0xFFF06A7BL)
     val color=if(reviewRun) Color(0xFF6AB4F0) else palette[client]?.let {Color(it)} ?: if(modelLabel.isNotEmpty()) modelColor(modelLabel,palette) else Color(fallbackColors[(kotlin.math.abs(display.id.hashCode().toLong())%fallbackColors.size).toInt()])
     val shownName=if(reviewRun) listOf(modelLabel,SessionListDisplay.time(display.sortTime,now)).filter(String::isNotEmpty).joinToString(" · ").ifEmpty {strings.getString(R.string.session_review_group)} else display.name
-    val shownSubtitle=if(reviewRun) display.detail else display.subtitle
+    val shownSubtitle=if(reviewRun) display.detail else if(display.review && display.groupKind!="review") modelLabel else display.subtitle
     val shownActivity=if(reviewRun) "" else display.activity
     val shownDetail=if(reviewRun) "" else display.detail
     val sunkenContext=LocalDesktopSunkenColor.current.copy(alpha=.46f)
@@ -72,7 +76,7 @@ import java.util.Locale
     var contextOpen by rememberSaveable(display.id) {mutableStateOf(false)}
     var summaryOpen by rememberSaveable(display.id) {mutableStateOf(false)}
     fun titleModifier(text:String):Modifier=if(models.size>1 && (text.endsWith(modelLabel) || (reviewRun && text==shownName))) Modifier.clickable {modelsOpen=true}.testTag("session-models-${display.id}") else Modifier
-    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable {if(display.review) openReview() else summaryOpen=true}.testTag("session-row-${display.id}").semantics {if(active) stateDescription=strings.getString(R.string.session_running)},verticalArrangement=Arrangement.spacedBy(5.dp)) {
+    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable {if(display.review) openReview() else summaryOpen=true}.testTag("session-row-${display.id}").semantics {if(active) stateDescription=strings.getString(R.string.session_running) else if(activityState=="waiting") stateDescription=strings.getString(R.string.session_waiting)},verticalArrangement=Arrangement.spacedBy(5.dp)) {
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             Row(Modifier.weight(1f),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
                 Box(Modifier.padding(top=2.dp).size(11.dp)) {
@@ -83,6 +87,8 @@ import java.util.Locale
                 }
                 Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(1.dp)) {
                     Box(titleModifier(shownName)) {Text(shownName,Modifier.testTag("session-title-${display.id}"),style=quotaTextStyle(12),maxLines=1,overflow=TextOverflow.Ellipsis)}
+                    display.groupRole?.let {role->Text(strings.getString(if(role=="main") R.string.session_group_main else R.string.session_group_subagent),Modifier.testTag("session-role-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)}
+                    if(activityState=="waiting" && !reviewRun) Text(strings.getString(if(row?.let {SessionDisplay.waitingForReply(it,now)}==true) R.string.session_waiting_reply else R.string.session_waiting),Modifier.testTag("session-waiting-${display.id}"),style=quotaTextStyle(10),color=colors.primary)
                     if(shownSubtitle.isNotEmpty()) Box(titleModifier(shownSubtitle)) {Text(shownSubtitle,Modifier.testTag("session-subtitle-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)}
                     if(shownActivity.isNotEmpty()) Text(shownActivity,Modifier.testTag("session-activity-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
                     // Hub metadata has no local transcript detail. Keep its identifier available in the read-only summary.
@@ -92,7 +98,7 @@ import java.util.Locale
             Column(Modifier.widthIn(min=66.dp),horizontalAlignment=Alignment.End,verticalArrangement=Arrangement.spacedBy(2.dp)) {
                 BreakdownAnimatedNumber(display.tokens,motion,motionKey,Modifier.testTag("session-tokens-${display.id}"),
                     style=quotaTextStyle(12),locale=Locale.US,maxLines=1)
-                Text(usageCostText(display.cost,display.unpriced),Modifier.testTag("session-cost-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1)
+                Text(usageCostText(display.cost,display.unpricedTotal),Modifier.testTag("session-cost-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1)
                 if(context!=null) {
                     val percent=if(main.sessionContextMetric=="remaining") context.left else context.used
                     val tone=when(context.tone) {"low"->Color(0xFFF4A073);"caution"->Color(0xFFF1D973);else->colors.onSurfaceVariant}
@@ -114,11 +120,14 @@ import java.util.Locale
             HorizontalDivider(thickness=1.dp,color=lineColor.copy(alpha=.12f))
         }
     }
-    if(modelsOpen && row!=null && models.size>1) CompactUsageDialog(strings.getString(R.string.session_models_details),"session-model-details",{modelsOpen=false},desktopTooltip=true) {
-        SessionDisplay.modelShares(row,names,observed).forEach {entry->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+    if(modelsOpen && models.size>1) CompactUsageDialog(strings.getString(R.string.session_models_details),"session-model-details",{modelsOpen=false},desktopTooltip=true) {
+        if(row!=null) SessionDisplay.modelShares(row,names,observed).forEach {entry->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             Text(entry.name.ifEmpty {strings.getString(R.string.token_unclassified)},Modifier.weight(1f),style=quotaTextStyle(10))
-            Text(numbers.format(entry.tokens),style=quotaTextStyle(10),color=colors.onSurface.copy(alpha=.54f))
-            Text(entry.share,style=quotaTextStyle(10),color=colors.onSurface.copy(alpha=.54f))
+            Text(numbers.format(entry.tokens),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+            Text(entry.share,style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+        }} else models.forEach {(name,tokens)->Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+            Text(name.ifEmpty {strings.getString(R.string.token_unclassified)},Modifier.weight(1f),style=quotaTextStyle(10))
+            Text(numbers.format(tokens),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
         }}
     }
     if(contextOpen && row!=null && (context!=null || cache!=null)) CompactUsageDialog(strings.getString(R.string.session_context_details),"session-context-details",{contextOpen=false},desktopTooltip=true) {
@@ -128,7 +137,7 @@ import java.util.Locale
     }
     if(summaryOpen && row!=null) CompactUsageDialog(display.name,"session-summary-details",{summaryOpen=false},desktopTooltip=true) {
         Text(strings.getString(R.string.session_hub_summary),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-        Text("${numbers.format(display.tokens)} Token · ${usageCostText(display.cost,display.unpriced)}",style=quotaTextStyle(11))
+        Text("${numbers.format(display.tokens)} Token · ${usageCostText(display.cost,display.unpricedTotal)}",style=quotaTextStyle(11))
         Text(display.detail,style=quotaTextStyle(10))
         Text(listOf(display.subtitle,display.activity).filter(String::isNotEmpty).joinToString("\n"),style=quotaTextStyle(10))
     }

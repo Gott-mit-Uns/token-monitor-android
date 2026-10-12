@@ -682,4 +682,10 @@
     <string name="lan_association_warning">Confirm that these two addresses reach the same Hub. The app checks authenticated reads, but the protocol cannot prove server identity. Matching credentials or usage are not proof. LAN HTTP sends credentials and data in cleartext; reused IPs or incorrect configuration remain risks. Confirmation allows automatic switching. You can disable LAN HTTP at any time.</string>
     <string name="lan_confirm">Confirm and validate</string>
     <string name="error_tls">HTTPS certificate or TLS validation failed. No automatic endpoint switch was made.</string>
+    <string name="session_waiting">Waiting</string>
+    <string name="session_waiting_reply">Waiting for your reply</string>
+    <string name="session_grok_group">Grok Bot</string>
+    <string name="session_subagent_count">%1$d subagents</string>
+    <string name="session_group_main">Main conversation / continuation</string>
+    <string name="session_group_subagent">Subagent</string>
 </resources>

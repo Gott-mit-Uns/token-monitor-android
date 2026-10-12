@@ -678,4 +678,10 @@
     <string name="lan_association_warning">请确认这两个地址确实连接同一个 Hub。应用会检查两端鉴权读取，但当前协议无法证明它们是同一服务器。相同凭据或用量不能证明身份；局域网 HTTP 明文传输凭据和数据，IP 复用或错误配置仍有风险。确认后允许自动切换；可随时关闭局域网 HTTP。</string>
     <string name="lan_confirm">我确认，验证并启用</string>
     <string name="error_tls">HTTPS 证书或 TLS 校验失败，未自动切换地址。</string>
+    <string name="session_waiting">等待交互</string>
+    <string name="session_waiting_reply">等待用户回复</string>
+    <string name="session_grok_group">Grok Bot</string>
+    <string name="session_subagent_count">%1$d 个子代理</string>
+    <string name="session_group_main">主对话 / 续接</string>
+    <string name="session_group_subagent">子代理</string>
 </resources>

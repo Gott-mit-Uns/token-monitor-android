@@ -87,8 +87,8 @@ internal class LiveTokenRateTracker(private val now:()->Long) {
         private fun cap(value:Double)=if(value.isNaN() || value<=0) 0.0 else min(1e12,value)
         private fun speed(value:TimedUsage)=if(value.timedDurationMs<=0 || value.timedOutputTokens<=0) 0.0 else cap(value.timedOutputTokens*1000/value.timedDurationMs)
         private fun burn(value:TimedUsage)=if(value.timedDurationMs<=0 || value.timedTokens<=0) 0.0 else cap(value.timedTokens*60000/value.timedDurationMs)
-        fun entries(snapshot:Snapshot?,deviceId:String=""):List<RateEntry> = snapshot?.devices.orEmpty().filter {device->
+        fun entries(snapshot:Snapshot?,deviceId:String="",aliases:Map<String,String> = emptyMap()):List<RateEntry> = snapshot?.devices.orEmpty().filter {device->
             if(deviceId.isEmpty()) device.stale!=true && device.periodDetails["today"]!=null else device.id==deviceId && device.periodDetails["today"]!=null
-        }.map {RateEntry("device:"+it.id.ifEmpty {"unknown"},it.name,it.periodDetails["today"]?.throughput)}
+        }.map {RateEntry("device:"+it.id.ifEmpty {"unknown"},DeviceDisplay.name(it,aliases[it.id]),it.periodDetails["today"]?.throughput)}
     }
 }

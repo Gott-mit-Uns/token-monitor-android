@@ -16,7 +16,7 @@ fun DeviceDetails(device: Device, alias: String?, onDismiss: () -> Unit, onRenam
     val numbers = NumberFormat.getIntegerInstance(strings.configuration.locales[0])
     var range by remember(device.id) { mutableStateOf(initialRange) }
     val period = device.periods[range]
-    AlertDialog(onDismissRequest = onDismiss, title = { Text(alias ?: device.displayName(strings)) }, text = {
+    AlertDialog(onDismissRequest = onDismiss, title = { Text(DeviceDisplay.name(device,alias,strings.getString(R.string.devices))) }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (alias != null) Text(strings.getString(R.string.hub_original_name, device.displayName(strings)))
             Text(when (device.stale) { true -> strings.getString(R.string.device_stale); false -> strings.getString(R.string.device_not_stale); null -> strings.getString(R.string.freshness_unknown) })

@@ -11,7 +11,9 @@ import kotlin.math.floor
 
 internal data class SessionListRow(val id:String,val source:UsageRow?,val name:String,val subtitle:String,val activity:String,
     val detail:String,val tokens:BigInteger,val cost:String,val unpriced:Long?,val sortTime:Long,val review:Boolean=false,
-    val reviews:List<SessionListRow> = emptyList())
+    val reviews:List<SessionListRow> = emptyList(),val groupKind:String?=null,val groupClient:String?=null,
+    val groupModels:Map<String,BigInteger> = emptyMap(),val groupState:String?=null,val groupRole:String?=null,
+    val unpricedTotal:BigInteger?=unpriced?.let(BigInteger::valueOf))
 internal data class SessionListPage(val rows:List<SessionListRow>,val page:Int,val pageCount:Int,val start:Int,val end:Int,val total:Int) {
     val paginated get()=total>100
 }
@@ -73,13 +75,13 @@ internal object SessionListDisplay {
             ?: BigDecimal(b.cost).compareTo(BigDecimal(a.cost)).takeIf {it!=0} ?: collator.compare(a.name,b.name)
         }
     }
-    fun grouped(rows:List<SessionListRow>,label:String="Codex Auto Review",count:(Int)->String={"$it sessions"},latest:(String)->String={"Latest $it"},compact:(BigInteger)->String={it.toString()},now:Long,zone:ZoneId=ZoneId.systemDefault()):List<SessionListRow> = HubWorkTrace.trace(HubWorkStage.SESSION_GROUP,units=rows.size.toLong()) {
+    fun grouped(rows:List<SessionListRow>,label:String="Codex Auto Review",count:(Int)->String={"$it sessions"},latest:(String)->String={"Latest $it"},compact:(BigInteger)->String={it.toString()},now:Long,zone:ZoneId=ZoneId.systemDefault(),grokLabel:String="Grok Bot",subagentCount:(Int)->String={"$it subagents"}):List<SessionListRow> = HubWorkTrace.trace(HubWorkStage.SESSION_GROUP,units=rows.size.toLong()) {
         val reviews=rows.filter {it.source?.session?.kind?.trim()=="background-review"}.sortedByDescending {it.sortTime}
-        if(reviews.isEmpty()) return@trace rows
+        if(reviews.isEmpty()) return@trace SessionRelationshipGroups.group(rows,grokLabel,subagentCount,now)
         val tokens=reviews.fold(BigInteger.ZERO) {sum,row->sum+row.tokens};val cost=reviews.fold(BigDecimal.ZERO) {sum,row->sum+BigDecimal(row.cost)}
         val first=reviews.first();val clock=time(first.sortTime,now,zone)
         val summary=SessionListRow("session-group:codex-auto-review",null,label,listOf(if(clock.isNotEmpty()) latest(clock) else "",if(first.tokens.signum()>0) compact(first.tokens) else "").filter(String::isNotEmpty).joinToString(" · "),"",count(reviews.size),tokens,cost.toPlainString(),null,first.sortTime,true,reviews)
-        rows.filter {it.source?.session?.kind?.trim()!="background-review"}+summary
+        SessionRelationshipGroups.group(rows.filter {it.source?.session?.kind?.trim()!="background-review"},grokLabel,subagentCount,now)+summary.copy(groupKind="review",groupClient="codex",unpricedTotal=reviews.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)})
     }
     fun page(rows:List<SessionListRow>,requested:Int):SessionListPage = HubWorkTrace.trace(HubWorkStage.SESSION_PAGE,units=rows.size.toLong()) {
         val count=((rows.size+99)/100).coerceAtLeast(1);val page=requested.coerceIn(0,count-1);val start=page*100

@@ -11,7 +11,7 @@
 
 The monochrome vector shapes in `app/src/main/res/drawable/brand_*.xml` are converted from the icons bundled by Javis603/token-monitor v0.68.0, commit `5d2db368d8313415763860d594de00e46a663418`, under `assets/icons/`. Provider and operating-system names and marks remain those of their respective owners. The existing upstream MIT notice is retained in this project and the application assets. These shapes are used to identify the same providers and platforms as the desktop interface.
 
-Desktop settings and home glyphs are derived from Lucide Icons.
+Desktop settings/home glyphs and the v0.69.0 tool/model/session/status/trends navigation artwork are derived from Lucide Icons.
 Lucide Icons license:
 
 ISC License

@@ -71,6 +71,8 @@ internal object ProjectDisplay {
 
 internal object DeviceDisplay {
     val accent=0xFF73BDF5L;val staleColor=0xFF8C97A7L
+    fun name(device:Device,alias:String?=null,fallback:String="device"):String =
+        listOf(alias,device.hubDisplayName,device.id,device.name).firstNotNullOfOrNull {it?.trim()?.takeIf(String::isNotEmpty)} ?: fallback
     fun platform(device:Device):String {
         val raw=device.rawPlatform ?: device.platform.orEmpty();val prefix=raw.lowercase(Locale.ROOT).substringBefore('-')
         val fallback=when(prefix) {"darwin"->"macOS";"win32"->"Windows";"linux"->"Linux";else->raw}
@@ -91,7 +93,7 @@ internal object DeviceDisplay {
     }
     fun home(devices:List<Device>,period:String,aliases:Map<String,String> = emptyMap(),localId:String="",cap:Int=4):List<HomeDeviceRow> = devices.mapIndexedNotNull {index,device->
         val value=(device.periods[period]?.tokens ?: 0).coerceAtLeast(0);if(value<=0) null else {
-            val id=device.id.trim().ifEmpty {index.toString()};val name=(aliases[device.id]?.takeIf(String::isNotEmpty) ?: device.hubDisplayName?.takeIf(String::isNotEmpty) ?: device.id.takeIf(String::isNotEmpty) ?: device.name.takeIf(String::isNotEmpty) ?: id).trim()
+            val id=device.id.trim().ifEmpty {index.toString()};val name=name(device,aliases[device.id])
             HomeDeviceRow(id,name,value,device.rawPlatform ?: device.platform.orEmpty(),device.stale==true,localId.trim().isNotEmpty() && id==localId.trim()) to index
         }
     }.sortedWith {a,b->b.first.tokens.compareTo(a.first.tokens).takeIf {it!=0} ?: b.first.local.compareTo(a.first.local).takeIf {it!=0} ?: a.first.stale.compareTo(b.first.stale).takeIf {it!=0} ?: a.second.compareTo(b.second)}.take(cap.coerceAtLeast(0)).map {it.first}

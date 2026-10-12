@@ -27,7 +27,7 @@ import java.util.Locale
 internal val LocalRateNow=staticCompositionLocalOf<()->Long> {{android.os.SystemClock.elapsedRealtime()}}
 
 /** Display expiry only; this observer creates no network work or background job. */
-@Composable internal fun rememberLiveTokenRate(snapshot:Snapshot?,live:Boolean,preferences:MainDisplayPreferences):RateSample? {
+@Composable internal fun rememberLiveTokenRate(snapshot:Snapshot?,live:Boolean,preferences:MainDisplayPreferences,aliases:Map<String,String> = emptyMap()):RateSample? {
     val now=LocalRateNow.current;val tracker=remember(now) {LiveTokenRateTracker(now)}
     val lifecycle=LocalLifecycleOwner.current.lifecycle
     var active by remember(lifecycle) {mutableStateOf(lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))}
@@ -38,10 +38,10 @@ internal val LocalRateNow=staticCompositionLocalOf<()->Long> {{android.os.System
         lifecycle.addObserver(observer)
         onDispose {lifecycle.removeObserver(observer);tracker.reset()}
     }
-    LaunchedEffect(active,live,preferences.showLiveRate,preferences.rateDevice,snapshot) {
+    LaunchedEffect(active,live,preferences.showLiveRate,preferences.rateDevice,snapshot,aliases) {
         if(!active || !live || !preferences.showLiveRate) {tracker.reset();context=null;sample=null}
         else {
-            val entries=LiveTokenRateTracker.entries(snapshot,preferences.rateDevice)
+            val entries=LiveTokenRateTracker.entries(snapshot,preferences.rateDevice,aliases)
             if(context!=preferences.rateDevice) {context=preferences.rateDevice;tracker.reset(entries);sample=null}
             else sample=tracker.observe(entries)
         }

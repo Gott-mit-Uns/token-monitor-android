@@ -8,6 +8,7 @@ import java.time.ZoneOffset
 import kotlin.math.ceil
 import kotlin.math.floor
 
+data class SessionLiveActivity(val state:String,val observedAt:Long)
 data class SessionPromptCache(val observedAt:String,val ttlSeconds:Int)
 data class SessionAccounting(val calls:Double=0.0,val input:Double=0.0,val cacheRead:Double=0.0,val cacheWrite:Double=0.0,
     val output:Double=0.0,val timedOutput:Double=0.0,val timedDurationMs:Double=0.0)
@@ -15,7 +16,9 @@ data class SessionAccounting(val calls:Double=0.0,val input:Double=0.0,val cache
 data class SessionMetadata(val title:String?=null,val projectLabel:String?=null,val sessionId:String?=null,
     val startedAt:String?=null,val kind:String?=null,val archived:Boolean=false,val models:Map<String,Long> = emptyMap(),
     val contextTokens:Double?=null,val contextWindow:Double?=null,val promptCache:SessionPromptCache?=null,
-    val accounting:SessionAccounting=SessionAccounting(),val excludedFromHubList:Boolean=false)
+    val accounting:SessionAccounting=SessionAccounting(),val excludedFromHubList:Boolean=false,
+    val waitingForInput:Boolean?=null,val liveActivity:SessionLiveActivity?=null,val nativeSessionId:String?=null,
+    val parentSessionId:String?=null,val parentClient:String?=null,val t3ThreadId:String?=null)
 
 internal object SessionMetadataParser {
     fun parse(row:JsonObject,title:String?):SessionMetadata {
@@ -27,6 +30,14 @@ internal object SessionMetadataParser {
             val ttl=(raw["ttlSeconds"] as? JsonPrimitive)?.intOrNull?.takeIf {it in listOf(300,1800,3600)}
             if(at!=null && ttl!=null) SessionPromptCache(at,ttl) else null
         }
+        val client=text("client")?.trim()?.lowercase(java.util.Locale.ROOT)
+        val live=if(client in listOf("claude","codex")) (row["liveActivity"] as? JsonObject)?.let {raw->
+            val state=(raw["state"] as? JsonPrimitive)?.takeIf {it.isString}?.content
+            val observed=(raw["observedAt"] as? JsonPrimitive)?.takeIf {it.isString}?.content?.let(SessionDisplay::timestamp)
+            if(state in listOf("running","waiting","idle","unknown") && observed!=null && observed>0) SessionLiveActivity(state!!,observed) else null
+        } else null
+        val native=text("nativeSessionId")?.takeIf {client=="codex" && Regex("[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}",RegexOption.IGNORE_CASE).matches(it)}?.lowercase(java.util.Locale.ROOT)
+        val thread=text("t3ThreadId")?.takeIf {Regex("[a-z0-9][a-z0-9:%_.-]*",RegexOption.IGNORE_CASE).matches(it)}
         val models=(row["models"] as? JsonObject).orEmpty().mapNotNull {(id,value)->
             (value as? JsonPrimitive)?.longOrNull?.takeIf {it>0}?.let {id to it}
         }.toMap()
@@ -35,7 +46,9 @@ internal object SessionMetadataParser {
             positive("contextTokens"),positive("contextWindow"),cache,
             SessionAccounting(counter("messageCount"),counter("inputTokens"),counter("cacheReadTokens"),counter("cacheWriteTokens"),
                 counter("outputTokens"),counter("timedOutputTokens"),counter("timedDurationMs")),
-            ((row["sessionId"] as? JsonPrimitive)?.contentOrNull?.takeIf {it.isNotEmpty()} ?: (row["session_id"] as? JsonPrimitive)?.contentOrNull).orEmpty().trim().lowercase(java.util.Locale.ROOT).let {it.startsWith("reasonix:") || it.startsWith("reasonix-stats:")})
+            ((row["sessionId"] as? JsonPrimitive)?.contentOrNull?.takeIf {it.isNotEmpty()} ?: (row["session_id"] as? JsonPrimitive)?.contentOrNull).orEmpty().trim().lowercase(java.util.Locale.ROOT).let {it.startsWith("reasonix:") || it.startsWith("reasonix-stats:")},
+            (row["waitingForInput"] as? JsonPrimitive)?.takeIf {client=="codex" && !it.isString}?.booleanOrNull,live,native,
+            text("parentSessionId") ?: text("parent_session_id"),text("parentClient")?.takeIf {Regex("[a-z0-9_-]{1,64}",RegexOption.IGNORE_CASE).matches(it)}?.lowercase(java.util.Locale.ROOT),thread)
     }
 }
 
@@ -46,6 +59,7 @@ internal data class SessionModelShare(val name:String,val tokens:BigInteger,val 
 /** Ports sessionLive.js and the Home's recentSessionRows(...,5,includeRunningBeyondCap). */
 internal object SessionDisplay {
     const val runningWindow=600_000L
+    const val liveWindow=30_000L
     fun timestamp(value:String?):Long?=value?.takeIf {it.isNotBlank()}?.let {
         runCatching {Instant.parse(it).toEpochMilli()}.getOrNull()
             ?: runCatching {LocalDate.parse(it).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()}.getOrNull()
@@ -65,10 +79,13 @@ internal object SessionDisplay {
     }
     fun activity(row:UsageRow,now:Long):String {
         if(row.session?.archived==true) return "idle"
+        row.session?.liveActivity?.takeIf {it.state!="unknown" && it.observedAt<=now && now-it.observedAt<liveWindow}?.let {return it.state}
         val last=timestamp(row.lastUsed)?.takeIf {it!=0L} ?: return "idle"
         val recent=now.toDouble()-last.toDouble()<=runningWindow
-        return if(!recent) "idle" else if(row.turnEnded==true) "ended" else "running"
+        return if(!recent) "idle" else if(row.turnEnded==true) "ended"
+            else if(row.tool=="codex" && row.session?.waitingForInput==true) "waiting" else "running"
     }
+    fun waitingForReply(row:UsageRow,now:Long)=activity(row,now)=="waiting" && row.tool=="codex" && row.session?.waitingForInput==true
     fun context(row:UsageRow,now:Long):SessionContext? {
         if(activity(row,now)=="idle") return null
         val tokens=row.session?.contextTokens?.takeIf {it.isFinite() && it>0} ?: return null
@@ -88,6 +105,9 @@ internal object SessionDisplay {
     fun nextStatusAt(rows:List<UsageRow>,now:Long):Long?=buildList {
         rows.forEach {row->
             cache(row,now)?.let {add(it.expiresAt-(it.minutes-1)*60_000L)}
+            if(row.session?.archived!=true) row.session?.liveActivity?.let {reading->
+                (reading.observedAt+liveWindow).takeIf {reading.state!="unknown" && reading.observedAt<=now && it>now}?.let(::add)
+            }
             if(row.session?.archived!=true) timestamp(row.lastUsed)?.takeIf {it!=0L}?.let {last->
                 (last+runningWindow+1).takeIf {it>now}?.let(::add)
             }

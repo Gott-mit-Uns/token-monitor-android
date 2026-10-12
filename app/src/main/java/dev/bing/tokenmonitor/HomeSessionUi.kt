@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
     Column(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable(onClick=open).padding(vertical=5.dp).testTag("home-session-${row.id}"),verticalArrangement=Arrangement.spacedBy(2.dp)) {
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
             BrandMark(row.tool.orEmpty(),size=10.dp,modifier=Modifier.padding(top=1.dp))
-            SessionActivityMark(state,Modifier.padding(top=1.dp))
+            SessionActivityMark(state,Modifier.padding(top=1.dp),SessionDisplay.waitingForReply(row,now))
             Text(if(hideTitles) strings.getString(R.string.dimension_summary,strings.getString(R.string.dimension_sessions)) else SessionDisplay.title(row),
                 Modifier.weight(1f).testTag("home-session-title-${row.id}"),style=quotaTextStyle(11),maxLines=1,overflow=TextOverflow.Ellipsis)
             Text(DesktopCompactTokens.format((row.tokens ?: 0).toDouble(),main.compactUnits,locale),Modifier.widthIn(min=42.dp).testTag("home-session-value-${row.id}"),style=quotaTextStyle(11),textAlign=TextAlign.End)
@@ -79,9 +79,9 @@ import androidx.compose.ui.unit.dp
     }
 }
 
-@Composable internal fun SessionActivityMark(state:String,modifier:Modifier=Modifier) {
+@Composable internal fun SessionActivityMark(state:String,modifier:Modifier=Modifier,waitingReply:Boolean=false) {
     val strings=LocalResources.current;val colors=MaterialTheme.colorScheme;val overlay=LocalDesktopOverlayColor.current
-    val label=strings.getString(when(state) {"running"->R.string.session_running;"ended"->R.string.session_finished;else->R.string.session_idle})
+    val label=strings.getString(when(state) {"running"->R.string.session_running;"ended"->R.string.session_finished;"waiting"->if(waitingReply) R.string.session_waiting_reply else R.string.session_waiting;else->R.string.session_idle})
     val elapsed=rememberSessionSpinner(state=="running")
     Canvas(modifier.size(10.dp).testTag("session-state-$state").semantics {contentDescription=label;this[StatusMotionPhase]=(elapsed%900/900).toFloat()}) {
         when(state) {
@@ -91,6 +91,11 @@ import androidx.compose.ui.unit.dp
                     val alpha=DesktopSessionSpinner.alpha(elapsed,index)
                     drawRoundRect(colors.onSurface.copy(alpha=alpha),Offset(center.x-0.65f*scale,center.y-4.75f*scale),Size(1.3f*scale,2.75f*scale),CornerRadius(.65f*scale))
                 }}
+            }
+            "waiting"->{
+                val tone=colors.primary
+                drawLine(tone,Offset(size.width*.35f,size.height*.2f),Offset(size.width*.35f,size.height*.8f),size.width*.15f,StrokeCap.Round)
+                drawLine(tone,Offset(size.width*.65f,size.height*.2f),Offset(size.width*.65f,size.height*.8f),size.width*.15f,StrokeCap.Round)
             }
             "ended"->{
                 val scale=size.width/24

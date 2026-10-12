@@ -86,7 +86,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     LaunchedEffect(page,preferences.main.viewOrder,preferences.main.hiddenViews) {
         if(!settingsPage && page.name.lowercase() !in visiblePages) {directPage=null;page=HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,page.name.lowercase())}}
     }
-    val liveRate=rememberLiveTokenRate(state.snapshot,state.live,preferences.main)
+    val liveRate=rememberLiveTokenRate(state.snapshot,state.live,preferences.main,state.deviceAliases)
     val periodVisible=page !in listOf(HubPage.SETTINGS,HubPage.PRICING,HubPage.SUBSCRIPTIONS) && !trendsDetail
     var selectedPrice by rememberSaveable {mutableStateOf<String?>(null)}
     var selectedSubscription by rememberSaveable {mutableStateOf<String?>(null)}
@@ -188,15 +188,16 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val headline = rememberHeadlineNumber(period?.tokens,range,page !in listOf(HubPage.SETTINGS,HubPage.SUBSCRIPTIONS,HubPage.PRICING) && !trendsDetail,preferences.appearance.reduceMotion,
         detailUnavailable=FixedPeriods.derived(range) && mainPage in listOf(HubPage.SESSIONS,HubPage.PROJECTS))
     var sessionPage by rememberSaveable {mutableStateOf(0)}
-    var reviewGroupOpen by rememberSaveable {mutableStateOf(false)}
+    var selectedSessionGroup by rememberSaveable(state.connectionRevision) {mutableStateOf<String?>(null)}
+    val reviewGroupOpen=selectedSessionGroup!=null
     val sessionNow=calendarNow.toEpochMilli()
     val sessionRaw=remember(page,period?.sessions,sessionNow,preferences.hideSessionTitles,strings.configuration.locales[0],state.modelNames,observedModels) {
         if(page==HubPage.SESSIONS && !FixedPeriods.derived(range)) SessionListDisplay.raw(period?.sessions.orEmpty(),sessionNow,preferences.hideSessionTitles,strings.getString(R.string.session_archived),::toolLabel,names=state.modelNames,observed=observedModels) else emptyList()
     }
-    val sessionGrouped=SessionListDisplay.grouped(sessionRaw,strings.getString(R.string.session_review_group),
+    val sessionGrouped=remember(sessionRaw,sessionNow,strings.configuration.locales[0],preferences.main.compactUnits) {SessionListDisplay.grouped(sessionRaw,strings.getString(R.string.session_review_group),
         {strings.getString(R.string.session_review_count,it)},{strings.getString(R.string.session_review_latest,it)},
-        {DesktopCompactTokens.format(it.toDouble(),preferences.main.compactUnits,DesktopCompactTokens.localeTag(strings.configuration.locales[0]))},sessionNow)
-    val sessionReview=sessionGrouped.firstOrNull {it.review}
+        {DesktopCompactTokens.format(it.toDouble(),preferences.main.compactUnits,DesktopCompactTokens.localeTag(strings.configuration.locales[0]))},sessionNow,grokLabel=strings.getString(R.string.session_grok_group),subagentCount={strings.getString(R.string.session_subagent_count,it)})}
+    val sessionReview=sessionGrouped.firstOrNull {it.id==selectedSessionGroup}
     val sessionMatching=HubWorkTrace.trace(HubWorkStage.SESSION_FILTER,units=(if(reviewGroupOpen) sessionReview?.reviews?.size ?: 0 else sessionGrouped.size).toLong()) {
         (if(reviewGroupOpen) sessionReview?.reviews.orEmpty() else sessionGrouped).filter {
             query.isEmpty() || it.name.contains(query,true) || it.subtitle.contains(query,true) || it.source?.tool?.contains(query,true)==true
@@ -204,8 +205,8 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     }
     val sessionVisiblePage=SessionListDisplay.page(sessionMatching,sessionPage)
     val sessionBarMax=sessionMatching.maxOfOrNull {it.tokens} ?: BigInteger.ZERO
-    LaunchedEffect(page,range,query) {sessionPage=0;if(page!=HubPage.SESSIONS) reviewGroupOpen=false}
-    LaunchedEffect(sessionReview?.id) {if(sessionReview==null) reviewGroupOpen=false}
+    LaunchedEffect(page,range,query) {sessionPage=0;if(page!=HubPage.SESSIONS) selectedSessionGroup=null}
+    LaunchedEffect(sessionReview?.id) {if(sessionReview==null) selectedSessionGroup=null}
     LaunchedEffect(sessionVisiblePage.page) {sessionPage=sessionVisiblePage.page}
     LaunchedEffect(sessionPage,reviewGroupOpen) {if(page==HubPage.SESSIONS) contentScroll.scrollToItem(0)}
     val activeToolKey=expandedBreakdown?.takeIf { page==HubPage.TOOLS && it.startsWith("TOOLS:tool:") }?.removePrefix("TOOLS:tool:")
@@ -354,7 +355,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
         state.connectionRevision,mainPage.name,quotaRenderToken,quotaVisible,preferences.appearance.reduceMotion)
     BackHandler(enabled = (page != landing || trendsDetail) && state.snapshot != null) {
         if(trendsDetail) trendsHistoryOpen=false
-        else if(reviewGroupOpen) reviewGroupOpen=false
+        else if(reviewGroupOpen) selectedSessionGroup=null
         else {trendsHistoryOpen=false;directPage=null;page = if(page in listOf(HubPage.PRICING,HubPage.SUBSCRIPTIONS)) HubPage.SETTINGS else landing}
     }
     LaunchedEffect(state.snapshot != null) { if (state.snapshot != null && !opened) { opened = true; page = HubPage.HOME } }
@@ -440,7 +441,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                     if(stacked) Row(Modifier.fillMaxWidth().testTag("tool-detail-footer-stacked"),horizontalArrangement=Arrangement.Center) {
                         ToolDetailSwitch(activeToolDetail.mode(toolDetailMode)) { toolDetailMode=it }
                     }
-                    if(page==HubPage.SESSIONS && !reviewGroupOpen && !FixedPeriods.derived(range)) SessionPageControls(sessionVisiblePage) {sessionPage=it}
+                    if(page==HubPage.SESSIONS && !FixedPeriods.derived(range)) SessionPageControls(sessionVisiblePage) {sessionPage=it}
                     if(stackedRate) Row(Modifier.fillMaxWidth().testTag("live-rate-footer-stacked"),horizontalArrangement=Arrangement.Center) {LiveTokenRateControl(liveRate,preferences.main,updateDisplay)}
                     Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                         Row(Modifier.weight(1f),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
@@ -569,18 +570,18 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                     else {
                                         if(directPage=="sessions" && !reviewGroupOpen) item {SessionReturn(strings.getString(R.string.session_return_home),"session-return-home") {directPage=null;page=landing}}
                                         if(reviewGroupOpen) {
-                                            item {SessionReturn(strings.getString(R.string.session_review_group),"session-return-list") {reviewGroupOpen=false}}
+                                            item {SessionReturn(sessionReview?.name ?: strings.getString(R.string.session_review_group),"session-return-list") {selectedSessionGroup=null}}
                                             sessionReview?.let {summary->item {Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {
                                                 Text(strings.getString(R.string.session_review_count,summary.reviews.size),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-                                                Text("${numbers.format(summary.tokens)} · ${usageCostText(summary.cost)}",style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                                                Text("${numbers.format(summary.tokens)} · ${usageCostText(summary.cost,summary.unpricedTotal)}",style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                                             }}}
                                         }
                                         if(!reviewGroupOpen && (period?.sessionsOmitted ?: 0)>0) item {Text(strings.getString(R.string.session_details_omitted),style=quotaTextStyle(10),color=colors.onSurfaceVariant)}
                                         if(sessionMatching.isNotEmpty()) items(mainSessionRows,key={"full-session:${state.connectionRevision}:$range:${it.id}"}) {row->
                                             val motionKey=SessionBreakdownMotionProjection.key(row.id)
                                             DesktopBreakdownMotionRow(motionKey,rowPlacementToken,rowPlacementMotion) {
-                                                DesktopSessionRow(row,sessionBarMax,sessionNow,reviewRun=reviewGroupOpen,reduceMotion=preferences.appearance.reduceMotion,
-                                                    names=state.modelNames,observed=observedModels,motion=breakdownMotion,motionKey=motionKey) {reviewGroupOpen=true}
+                                                DesktopSessionRow(row,sessionBarMax,sessionNow,reviewRun=reviewGroupOpen && sessionReview?.groupKind=="review",reduceMotion=preferences.appearance.reduceMotion,
+                                                    names=state.modelNames,observed=observedModels,motion=breakdownMotion,motionKey=motionKey) {selectedSessionGroup=row.id}
                                             }
                                         }
                                         else if(sessionRaw.isEmpty() && (period?.tokens ?: 0)>0 && !reviewGroupOpen && query.isEmpty()) {
