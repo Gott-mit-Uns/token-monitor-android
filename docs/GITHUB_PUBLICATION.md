@@ -1,6 +1,14 @@
 # Native GitHub 发布记录
 
-## 当前源码同步
+## 0.2.53 正式签名 APK 发布
+
+2026-10-12，经用户授权修复手机 UI 并配置正式签名，[PR #1](https://github.com/Gott-mit-Uns/token-monitor-android/pull/1) 已合并，首次正式签名 [v0.2.53 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.53) 已发布（非草稿、非预发行）。Tag 指向 `cc50eb565c4e71f3716a40c2be613914235478c1`；与验证提交 `50733ab08aaccc761c6c0f7c767f86897e5c8aa0` 源码树完全相同。
+
+发布 APK 为 0.2.53/code62，SHA256 `dff4af8483554533d517000636d687144258cf120f7f6499876b10781525b292`。APK、SHA256SUMS、release-manifest.json、VALIDATION.md 上传后在草稿阶段全部下载回读校验一致，正式发布后 APK 再次下载校验一致。私有仓库需要已获授权的 GitHub 账号访问；未更改可见性，旧预发布和资产保留。
+
+本轮本地 404 单元、16 Debug UI、18 Release UI和11 Window边界通过，Lint无错误；没有 GitHub Actions 或实体手机验收。签名密钥只在仓库外，不上传。旧 Debug 安装不能直接覆盖，禁止先卸载/清数据绕过签名；详情见 [HANDOFF_0.2.53.md](HANDOFF_0.2.53.md) 和 [RELEASE_SIGNING.md](RELEASE_SIGNING.md)。发布后仅文档状态更新，不重建或覆盖固定 Tag/APK。
+
+## 历史源码同步
 
 2026-10-12，用户确认本 Native 项目的正式仓库地址为 https://github.com/Gott-mit-Uns/token-monitor-android，并明确要求先发布 GitHub。本次将本地桌面 0.69 部分对齐、0.2.52-dev/code61 版本记录及合并后的根目录 `AGENTS.md` 同步至既有私有仓库；默认分支继续使用 `main`。远端 `main` 为本地开发分支祖先，保留全部提交历史，使用快进同步，不强制推送、不覆盖旧 Tag 或 Release。
 
