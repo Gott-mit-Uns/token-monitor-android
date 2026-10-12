@@ -270,18 +270,32 @@ class FreshnessReuseIntegrationTest {
             val oldFull = fixture.sendAndAwait(firstStream, "snapshot", stats(FIRST), FIRST)
             val oldFresh = fixture.sendAndAwait(firstStream, "freshness", freshness(FRESH_ONE, true), FRESH_ONE)
             assertBusinessReferences(oldFull, oldFresh)
+            assertEquals("Exactly one initial HTTP read precedes EOF", 1, fixture.peer.statsReads.get())
             val savedBeforeEof = fixture.store.saved.get()
             val writesBeforeEof = fixture.store.writes.get()
             firstStream.finishNormally()
             assertTrue("First public stream did not reach EOF", firstStream.closed.await(5, TimeUnit.SECONDS))
             await("Ordinary EOF did not mark the ViewModel disconnected") { !fixture.model.state.value.live }
             val secondStream = fixture.peer.stream(2)
+            // Ordinary reconnect verifies HTTP before opening the replacement stream.
+            // Capture that authoritative baseline, then require orphan freshness to
+            // preserve its identity and its exact committed write count.
+            await("EOF must revalidate and save HTTP before the replacement stream") {
+                fixture.peer.statsReads.get() == 2 && fixture.snapshot().updated == "2026-10-09T07:00:00Z" &&
+                    fixture.store.writes.get() == writesBeforeEof + 1
+            }
+            val revalidated = fixture.snapshot()
+            val savedBeforeOrphan = fixture.store.saved.get()
+            val writesBeforeOrphan = fixture.store.writes.get()
+            assertEquals(writesBeforeEof + 1, writesBeforeOrphan)
+            assertNotSame(oldFresh, revalidated)
+            assertNotSame(savedBeforeEof, savedBeforeOrphan)
             fixture.settleRejectedFrame(secondStream, "freshness", freshness(FRESH_TWO, false))
-            assertSame(oldFresh, fixture.snapshot())
-            assertSame(savedBeforeEof, fixture.store.saved.get())
-            assertEquals(writesBeforeEof, fixture.store.writes.get())
+            assertSame(revalidated, fixture.snapshot())
+            assertSame(savedBeforeOrphan, fixture.store.saved.get())
+            assertEquals(writesBeforeOrphan, fixture.store.writes.get())
             assertFalse(fixture.model.state.value.live)
-            assertEquals(1, fixture.peer.statsReads.get())
+            assertEquals(2, fixture.peer.statsReads.get())
 
             val newFull = fixture.sendAndAwait(secondStream, "stats", stats(SECOND, 7_000_000_999L, "public-model-two"), SECOND)
             assertNotSame(oldFull.periods, newFull.periods)
