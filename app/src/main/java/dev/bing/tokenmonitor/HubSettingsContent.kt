@@ -32,8 +32,8 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
     }
 
     val scrollAnchor = rememberDesktopSettingsScrollAnchor(scroll, section)
-    CompositionLocalProvider(LocalDesktopSettingsScrollAnchor provides scrollAnchor) {
-    LazyColumn(Modifier.fillMaxSize().imePadding().testTag("hub-content").cancelSettingsAnchorOnInteraction(scrollAnchor),state=scroll,contentPadding=PaddingValues(horizontal=20.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(0.dp)) {
+    CompositionLocalProvider(LocalDesktopSettingsScrollAnchor provides scrollAnchor,LocalDesktopSettingsRowHeight provides 44.dp,LocalMinimumInteractiveComponentSize provides 44.dp) {
+    LazyColumn(Modifier.fillMaxSize().imePadding().testTag("hub-content").cancelSettingsAnchorOnInteraction(scrollAnchor),state=scroll,contentPadding=PaddingValues(horizontal=20.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(0.dp)) {
         if(state.snapshot==null) item(key="connection-wizard") {Column {connectionContent()};Spacer(Modifier.height(12.dp))}
         item(key="settings-general") {
             val language=when(preferences.language) {LanguageChoice.ENGLISH->"English";LanguageChoice.CHINESE->strings.getString(R.string.language_chinese);else->strings.getString(R.string.follow_system)}
@@ -74,6 +74,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
         }
         item(key="settings-tools") {
             DesktopSettingSection("tools",strings.getString(R.string.dimension_tools),R.drawable.desktop_view_tool,"",section=="tools","settings-tools-toggle",toggle={selectSection("tools")}) {
+                Text(strings.getString(R.string.tool_settings_mobile_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
                 if(updateDisplay!=null) ToolDisplaySettings(preferences,updateDisplay,toolQuery,{toolQuery=it})
                 ModelRuleControl(state.modelNames,state.loading,model::loadModelNames)
                 val prices=state.pricing
@@ -131,7 +132,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
     }
     order.forEach {id->
         val visible=id in visibleModules;val index=order.indexOf(id)
-        Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
             Text(strings.getString(labels.getValue(id)),Modifier.weight(1f),style=quotaTextStyle(11).copy(fontWeight=androidx.compose.ui.text.font.FontWeight.Medium),color=MaterialTheme.colorScheme.onSurface.copy(alpha=if(visible) 1f else .58f))
             if(id=="activity") DesktopListIcon(strings.getString(R.string.home_configure_activity),"home-activity-settings",drawable=R.drawable.desktop_settings_general,accent=activityExpanded,expanded=activityExpanded) {activityExpanded=!activityExpanded}
             if(id=="limits") DesktopListIcon(strings.getString(R.string.home_configure_limits),"home-quota-settings-toggle",drawable=R.drawable.desktop_settings_general,accent=limitsExpanded,expanded=limitsExpanded) {limitsExpanded=!limitsExpanded}
@@ -161,7 +162,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
         DesktopListIcon(strings.getString(R.string.tool_list_reset_order),"tool-list-reset",glyph="↺",visualSize=24,enabled=preferences.toolOrder.isNotEmpty() || preferences.pinnedTools.isNotEmpty()) {updateDisplay(DisplayChange.ToolUsageOrder)}
         DesktopListIcon(strings.getString(R.string.tool_list_show_all),"tool-list-show-all",drawable=R.drawable.desktop_eye,visualSize=24,enabled=preferences.hiddenTools.isNotEmpty()) {updateDisplay(DisplayChange.ShowAllTools)}
     }
-    Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(6.dp)) {
+    Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         Text(strings.getString(if(preferences.toolOrder.isEmpty()) R.string.tool_list_usage_mode else R.string.tool_list_manual_mode),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
         DesktopListSearch(toolQuery,setQuery,strings.getString(R.string.tool_list_search),"tool-list-search")
         if(toolQuery.isNotBlank()) Text(strings.getString(R.string.tool_list_filter_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)

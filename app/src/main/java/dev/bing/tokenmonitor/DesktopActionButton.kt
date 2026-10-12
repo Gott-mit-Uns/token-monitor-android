@@ -42,7 +42,7 @@ internal enum class DesktopActionRole { SETTINGS, BACKGROUND, CONNECTION_EDIT }
     val line = desktopEditLine()
     val overlay = LocalDesktopOverlayColor.current
     val text = if (inline) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
-    Box(modifier.heightIn(min = 48.dp).widthIn(min = 48.dp)
+    Box(modifier.heightIn(min = LocalDesktopSettingsRowHeight.current).widthIn(min = 48.dp)
         .clickable(enabled = enabled, role = Role.Button, onClick = onClick), contentAlignment = Alignment.Center) {
         Row(Modifier.graphicsLayer { alpha = opacity }.heightIn(min = height)
             .then(if (visualTag == null) Modifier else Modifier.testTag(visualTag))

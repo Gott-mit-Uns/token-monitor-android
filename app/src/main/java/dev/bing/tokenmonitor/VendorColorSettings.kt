@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
     val appearance=preferences.appearance
     val palette=DesktopVendorPalette.resolve(appearance.vendorColors)
     Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
-        DesktopTextButton({expanded=!expanded},Modifier.weight(1f).heightIn(min=48.dp).testTag("vendor-colors-toggle"),contentPadding=PaddingValues(0.dp)) {
+        DesktopTextButton({expanded=!expanded},Modifier.weight(1f).heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("vendor-colors-toggle"),contentPadding=PaddingValues(0.dp)) {
             Text(strings.getString(R.string.appearance_vendor_colors),Modifier.weight(1f),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
             Text(if(expanded) "⌃" else "⌄",style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
     }
     if(expanded) {
         Text(strings.getString(R.string.appearance_vendor_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
-        LazyColumn(Modifier.fillMaxWidth().height(196.dp).padding(end=4.dp).testTag("vendor-color-list"),verticalArrangement=Arrangement.spacedBy(6.dp)) {
+        LazyColumn(Modifier.fillMaxWidth().height(196.dp).padding(end=4.dp).testTag("vendor-color-list"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
             items(DesktopVendorPalette.ids,key={it}) {id->
                 val label=if(id=="default") strings.getString(R.string.appearance_vendor_default) else desktopVendorLabels.getValue(id)
                 val value="#"+(palette.getValue(id) and 0xFFFFFF).toString(16).padStart(6,'0')

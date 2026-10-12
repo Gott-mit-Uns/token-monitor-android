@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 
 internal val LocalDesktopVendorPalette=staticCompositionLocalOf { desktopVendorColors }
 internal val LocalDesktopToolIcons=staticCompositionLocalOf { true }
@@ -70,4 +72,10 @@ internal fun desktopColorScheme(values:Map<String,String>):ColorScheme {
         surfaceContainerLowest=bg,surfaceContainerLow=surface(0.025f),surfaceContainer=panel,
         surfaceContainerHigh=surface(0.06f),surfaceContainerHighest=surface(0.08f)
     )
+}
+
+/** Match text sizing, including Android nonlinear system font scaling. */
+@Composable internal fun desktopScaledIconSize(base:Dp):Dp {
+    val scale=LocalDesktopTextScale.current
+    return with(LocalDensity.current) {(base.value*scale).sp.toDp()}
 }

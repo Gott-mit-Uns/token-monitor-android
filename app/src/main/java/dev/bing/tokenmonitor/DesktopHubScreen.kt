@@ -472,9 +472,11 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                         }
                         if(showToolDetailSwitch && !stacked) ToolDetailSwitch(activeToolDetail.mode(toolDetailMode)) { toolDetailMode=it }
                         if(rateVisible && !stackedRate) LiveTokenRateControl(liveRate,preferences.main,updateDisplay)
+                        Row(horizontalArrangement=Arrangement.spacedBy(0.dp)) {
                         listOf(if(preferences.main.swapActions) "settings" else "refresh",if(preferences.main.swapActions) "refresh" else "settings").forEach {action->
                             if(action=="refresh") DesktopFooterAction(true,strings.getString(R.string.refresh),"hub-refresh",!state.loading && state.snapshot!=null) {when(page) {HubPage.PRICING -> model.loadPricing();HubPage.SUBSCRIPTIONS -> model.loadSubscriptions();HubPage.HOME -> model.refreshSaved(forceHistory=true);HubPage.TRENDS -> if(trendsDetail) model.loadHistory(true) else model.refreshSaved();else -> model.refreshSaved()}}
                             else DesktopFooterAction(false,strings.getString(R.string.nav_settings),"hub-settings-toggle") {directPage=null;page=if(page==HubPage.SETTINGS && state.snapshot!=null) HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,previousPage.name.lowercase())} else HubPage.SETTINGS}
+                        }
                         }
                     }
                 }
@@ -751,9 +753,9 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val fontResolver=LocalFontFamilyResolver.current
     val base=(LocalConfiguration.current.screenWidthDp*0.11f).coerceIn(30f,46f)
     val originalNumberStyle=MaterialTheme.typography.bodySmall.copy(fontFamily=LocalDesktopDisplayFont.current,fontSize=base.sp,fontWeight=FontWeight.Medium,lineHeight=(base*1.05f).sp,fontFeatureSettings="tnum")
-    val compactStyle=quotaTextStyle(13)
+    val compactStyle=quotaTextStyle(15)
     val suffixWidth=remember(compact,compactStyle,density.density,density.fontScale,measurer,fontResolver) {
-        compact?.let {measurer.measure(AnnotatedString(it),compactStyle).size.width/density.density+8} ?: 0f
+        compact?.let {measurer.measure(AnnotatedString(it),compactStyle).size.width/density.density+4} ?: 0f
     }
     val natural=remember(widest,originalNumberStyle,density.density,density.fontScale,measurer,fontResolver) {
         measurer.measure(AnnotatedString(widest),originalNumberStyle).size.width/density.density
@@ -761,14 +763,13 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     Column(Modifier.fillMaxWidth().padding(top=8.dp,bottom=14.dp),verticalArrangement=Arrangement.spacedBy(5.dp)) {
         Text(strings.getString(R.string.desktop_total),color=MaterialTheme.colorScheme.onSurfaceVariant,style=quotaTextStyle(11))
         BoxWithConstraints(Modifier.fillMaxWidth()) {
-            // Desktop fits the exact total after reserving the compact chip. Apply this
-            // only at standard text size; accessibility sizes retain the full-size stack.
-            val standardSize = density.fontScale <= 1f && LocalDesktopTextScale.current <= 1f
+            // Reserve the suffix first, then fit the exact number down to 24sp.
+            // System scaling still applies to that readability floor; stack only if necessary.
             val available = (maxWidth.value - suffixWidth - 2f).coerceAtLeast(0f)
-            val numberStyle = remember(widest,originalNumberStyle,available,standardSize,density,fontResolver) {
+            val numberStyle = remember(widest,originalNumberStyle,available,density,fontResolver) {
                 fun style(size:Float)=originalNumberStyle.copy(fontSize=size.sp,lineHeight=(size*1.05f).sp)
                 fun width(size:Float)=measurer.measure(AnnotatedString(widest),style(size)).size.width/density.density
-                if(!standardSize || natural <= available) originalNumberStyle else {
+                if(natural <= available) originalNumberStyle else {
                     // Actual glyph measurements account for font hinting and sp rounding.
                     var low=24f;var high=base
                     repeat(10) {val middle=(low+high)/2f;if(width(middle)<=available) low=middle else high=middle}
@@ -782,15 +783,15 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                     softWrap=stacked,maxLines=if(stacked) Int.MAX_VALUE else 1,
                     modifier=modifier.testTag("hub-total-tokens").heightIn(min=48.dp).wrapContentHeight().clickable(interactionSource=remember {androidx.compose.foundation.interaction.MutableInteractionSource()},indication=null,enabled=period!=null,onClickLabel=strings.getString(R.string.token_components)) {details=true})
             }
-            @Composable fun approximation() {
-                compact?.let {Text(it,modifier=(if(stacked) Modifier.fillMaxWidth() else Modifier.width((suffixWidth-8f+1f).dp)).padding(bottom=6.dp).testTag("hub-total-compact"),style=compactStyle,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+            @Composable fun approximation(modifier:Modifier=Modifier) {
+                compact?.let {Text(it,modifier=modifier.then(if(stacked) Modifier.fillMaxWidth() else Modifier.width((suffixWidth-4f+1f).dp)).testTag("hub-total-compact"),style=compactStyle,color=MaterialTheme.colorScheme.onSurfaceVariant)}
             }
             if(stacked) Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
                 number(Modifier.fillMaxWidth())
                 approximation()
-            } else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                number(Modifier.weight(1f))
-                approximation()
+            } else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(4.dp)) {
+                number(Modifier.weight(1f).alignByBaseline())
+                approximation(Modifier.alignByBaseline())
             }
         }
         Text(LocalUsageCurrency.current.headline(period?.cost,period?.unpriced),modifier=Modifier.testTag("hub-total-cost"),color=MaterialTheme.colorScheme.onSurfaceVariant,style=quotaTextStyle(12))

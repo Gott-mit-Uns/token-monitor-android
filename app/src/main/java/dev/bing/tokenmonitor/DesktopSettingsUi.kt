@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
+internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
+
 @Composable internal fun DesktopSettingSection(id:String,title:String,icon:Int,summary:String,expanded:Boolean,tag:String,first:Boolean=false,last:Boolean=false,toggle:()->Unit,content:@Composable ColumnScope.()->Unit) {
     val shape=androidx.compose.foundation.shape.RoundedCornerShape(topStart=if(first) 12.dp else 0.dp,topEnd=if(first) 12.dp else 0.dp,bottomStart=if(last) 12.dp else 0.dp,bottomEnd=if(last) 12.dp else 0.dp)
     val colors=MaterialTheme.colorScheme
@@ -49,7 +51,7 @@ import java.time.LocalDate
         val density=LocalDensity.current
         val natural=with(density) {(rememberDesktopLabelWidths(listOf(title),titleStyle).single()+rememberDesktopLabelWidths(listOf(summary),summaryStyle).single()).toDp()}+73.dp
         val stacked=natural>maxWidth
-        Row(Modifier.fillMaxWidth().heightIn(min=48.dp).settingsHeaderPosition(anchor,id,motion).clickable(role=Role.Button,onClick=toggleWithAnchor).padding(horizontal=11.dp,vertical=9.dp).testTag(tag).semantics {stateDescription=description},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).settingsHeaderPosition(anchor,id,motion).clickable(role=Role.Button,onClick=toggleWithAnchor).padding(horizontal=11.dp,vertical=6.dp).testTag(tag).semantics {stateDescription=description},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             Icon(painterResource(icon),null,Modifier.size(15.dp),tint=if(expanded) colors.primary else colors.onSurfaceVariant.copy(alpha=.85f))
             if(stacked) Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(4.dp)) {
                 Text(title,Modifier.testTag("$tag-title"),style=titleStyle)
@@ -68,7 +70,7 @@ import java.time.LocalDate
         }
         DesktopAccordion(expanded,"settings-section-motion-$id",kind=DesktopDisclosureKind.SETTINGS_SECTION,state=motion) {
             HorizontalDivider(color=LocalDesktopLineColor.current.copy(alpha=.08f),thickness=1.dp)
-            saved.SaveableStateProvider(id) {Column(Modifier.fillMaxWidth().padding(horizontal=11.dp,vertical=10.dp).testTag("settings-details-$id"),verticalArrangement=Arrangement.spacedBy(8.dp),content=content)}
+            saved.SaveableStateProvider(id) {Column(Modifier.fillMaxWidth().padding(horizontal=11.dp,vertical=6.dp).testTag("settings-details-$id"),verticalArrangement=Arrangement.spacedBy(4.dp),content=content)}
         }
     }
 }
@@ -83,7 +85,7 @@ import java.time.LocalDate
 /** Original settings-item label/control row, wrapping only when Android text no longer fits. */
 @Composable internal fun DesktopSettingInlineChoices(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,change:(String)->Unit) {
     FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalArrangement=Arrangement.spacedBy(0.dp)) {
-        Box(Modifier.heightIn(min=48.dp),contentAlignment=Alignment.CenterStart) {Text(title,style=quotaTextStyle(11))}
+        Box(Modifier.heightIn(min=LocalDesktopSettingsRowHeight.current),contentAlignment=Alignment.CenterStart) {Text(title,style=quotaTextStyle(11))}
         FlowRow(Modifier.selectableGroup(),horizontalArrangement=Arrangement.spacedBy(2.dp),verticalArrangement=Arrangement.spacedBy(4.dp)) {
             choices.forEach {(id,label)->DesktopChoicePill(label,selected==id,"$tag-$id") {change(id)}}
         }
@@ -104,7 +106,7 @@ import java.time.LocalDate
     } // Round each actual padding edge, gap and disclosure before adding them.
     val control:@Composable (Modifier)->Unit={modifier->
         Box(modifier.onSizeChanged {menuWidth=with(density) {it.width.toDp()}}) {
-            Row(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable(role=Role.Button,onClick={menu=true}).testTag("$tag-select").semantics {stateDescription=strings.getString(if(menu) R.string.desktop_collapse else R.string.desktop_expand)},verticalAlignment=Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).clickable(role=Role.Button,onClick={menu=true}).testTag("$tag-select").semantics {stateDescription=strings.getString(if(menu) R.string.desktop_collapse else R.string.desktop_expand)},verticalAlignment=Alignment.CenterVertically) {
                 Row(Modifier.fillMaxWidth().border(1.dp,desktopEditLine(),androidx.compose.foundation.shape.RoundedCornerShape(6.dp)).background(LocalDesktopSunkenColor.current.copy(alpha=DesktopEditTokens.sunken),androidx.compose.foundation.shape.RoundedCornerShape(6.dp)).padding(horizontal=8.dp,vertical=7.dp).testTag("$tag-visual"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                     Text(selectedLabel,Modifier.weight(1f).testTag("$tag-value"),style=style,color=colors.onSurface)
                     DesktopDisclosure(menu)
@@ -116,7 +118,7 @@ import java.time.LocalDate
     BoxWithConstraints(Modifier.fillMaxWidth().testTag("$tag-row")) {
         val availableWidth=maxWidth
         val canStayInline=!stacked && with(density) {titleWidth+8.dp.roundToPx()+naturalControlWidth.roundToPx()<=availableWidth.roundToPx()}
-        if(canStayInline) Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        if(canStayInline) Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             if(title.isNotEmpty()) Text(title,Modifier.weight(1f).testTag("$tag-title"),style=style)
             control(Modifier.width(naturalControlWidth.coerceAtMost(availableWidth)))
         } else Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
@@ -129,7 +131,7 @@ import java.time.LocalDate
 @Composable internal fun DesktopSettingSwitch(label:String,checked:Boolean,tag:String,enabled:Boolean=true,change:(Boolean)->Unit) {
     val colors=MaterialTheme.colorScheme
     val sunken=LocalDesktopSunkenColor.current.copy(alpha=.55f)
-    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).toggleable(checked,enabled=enabled,role=Role.Checkbox,onValueChange=change).testTag(tag),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).toggleable(checked,enabled=enabled,role=Role.Checkbox,onValueChange=change).testTag(tag),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         Text(label,Modifier.weight(1f),style=quotaTextStyle(11))
         Canvas(Modifier.size(34.dp,20.dp).alpha(if(enabled) 1f else .38f)) {
             val shape=androidx.compose.ui.geometry.CornerRadius(10.dp.toPx())

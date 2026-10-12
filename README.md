@@ -13,22 +13,16 @@
 <table>
   <tr><th>浅色主题</th><th>深色主题</th></tr>
   <tr>
-    <td><img src="docs/images/home-light.png" alt="Token Monitor Android 浅色主页：Token 总量、费用和用量明细" width="320"></td>
-    <td><img src="docs/images/home-dark.png" alt="Token Monitor Android 深色主页：Token 总量、费用和用量明细" width="320"></td>
+    <td><img src="docs/images/home-light.jpg" alt="Token Monitor Android 浅色主页：Token 总量、费用和用量明细" width="320"></td>
+    <td><img src="docs/images/home-dark.jpg" alt="Token Monitor Android 深色主页：Token 总量、费用和用量明细" width="320"></td>
   </tr>
 </table>
 
 ### 设置
 
-<table>
-  <tr><th>浅色主题</th><th>深色主题</th></tr>
-  <tr>
-    <td><img src="docs/images/settings-light.png" alt="Token Monitor Android 浅色设置页" width="320"></td>
-    <td><img src="docs/images/settings-dark.png" alt="Token Monitor Android 深色设置页" width="320"></td>
-  </tr>
-</table>
+<img src="docs/images/settings-dark.jpg" alt="Token Monitor Android 手机实拍：深色外观设置" width="320">
 
-截图来自应用在 Android 模拟器中的实际渲染，使用演示数据；不包含真实账号、连接凭据或私人会话。
+以上图片由用户提供，展示手机上的实际主页与设置；原图保留，未重绘。截图为 0.2.56 的实际使用界面，后续版本的布局调整请以安装版本为准。
 
 ## 重点功能
 
@@ -54,6 +48,10 @@
 
 后续正式版沿用同一包名和签名，可覆盖升级。早期 Debug 开发包与正式版签名不同，不能直接覆盖；有数据的旧安装请先安排迁移，勿通过卸载或清空数据绕过签名问题。详见 [签名与升级说明](docs/RELEASE_SIGNING.md)。
 
+### “设置—工具”的用途
+
+这里调整手机上工具页的列表显隐、置顶、排序与搜索，并提供 Hub 模型规则和价格表入口。设置保存在本机，不配置或启动 AI 工具，也不改变 Hub 的统计总量；主页排行榜仍保留来源数据的排名。
+
 ## 工作方式与隐私
 
 ```text
@@ -66,7 +64,7 @@
 
 Android 客户端读取 Hub 数据，本机不扫描 AI 工具日志、不采集本机 Token，也不承担后台 Agent 的工作。连接信息及缓存通过现有加密存储保存；应用退到后台后关闭常规 HTTP/SSE 连接，小组件仅读取缓存。
 
-本项目以桌面端的显示语义为参考，针对手机触控和屏幕宽度适配。桌面参考版本与具体实现范围单独记录，不代表所有桌面能力均已移植。真实手机、蜂窝网络和生产端新增字段的验收范围见 [最新交接](docs/HANDOFF_0.2.57.md)。
+本项目以桌面端的显示语义为参考，针对手机触控和屏幕宽度适配。桌面参考版本与具体实现范围单独记录，不代表所有桌面能力均已移植。真实手机、蜂窝网络和生产端新增字段的验收范围见 [最新交接](docs/HANDOFF_0.2.58.md)。
 
 ## 开发
 

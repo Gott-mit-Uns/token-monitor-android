@@ -28,21 +28,21 @@ fun AboutSettings(hubBuild:HubBuildInfo?=null) {
         context.packageManager.getPackageInfo(context.packageName, 0).let {it.versionName.orEmpty()+" ("+(if(android.os.Build.VERSION.SDK_INT>=28) it.longVersionCode else it.versionCode.toLong())+")"}
     }
     var opened by remember { mutableStateOf(false) }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(strings.getString(R.string.about_heading), style = MaterialTheme.typography.titleLarge)
-        Text(strings.getString(R.string.app_version, version),Modifier.fillMaxWidth().testTag("about-android-version"), style = MaterialTheme.typography.bodySmall)
-        Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.fillMaxWidth().testTag("about-desktop-reference"),style=MaterialTheme.typography.bodySmall)
-        Text(strings.getString(R.string.desktop_parity_partial),Modifier.fillMaxWidth().testTag("about-parity-status"),style=MaterialTheme.typography.bodySmall)
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(strings.getString(R.string.about_heading),Modifier.fillMaxWidth(), style = quotaTextStyle(11,true))
+        Text(strings.getString(R.string.app_version, version),Modifier.fillMaxWidth().testTag("about-android-version"), style = quotaTextStyle(11))
+        Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.fillMaxWidth().testTag("about-desktop-reference"),style=quotaTextStyle(11))
+        Text(strings.getString(R.string.desktop_parity_partial),Modifier.fillMaxWidth().testTag("about-parity-status"),style=quotaTextStyle(11))
         val runtime=when(hubBuild?.runtime) {"node-hub"->"Node Hub";"cloudflare-worker"->"Cloudflare Worker";else->"Hub"}
         val buildLabel=if(hubBuild?.coreRevision!=null && hubBuild.runtimeRevision!=null)
             strings.getString(R.string.hub_build_version,runtime,hubBuild.coreRevision,hubBuild.runtimeRevision)
             else strings.getString(if(hubBuild==null) R.string.hub_version_pending else R.string.hub_version_unknown)
-        Text(buildLabel,Modifier.fillMaxWidth().testTag("about-hub-version"),style=MaterialTheme.typography.bodySmall)
+        Text(buildLabel,Modifier.fillMaxWidth().testTag("about-hub-version"),style=quotaTextStyle(11))
         hubBuild?.let {info->Text(strings.getString(when(info.status) {
             "current"->R.string.hub_build_current;"updateAvailable","legacy"->R.string.hub_build_older
             "remoteNewer"->R.string.hub_build_newer;else->R.string.hub_build_unverified
-        }),Modifier.fillMaxWidth().testTag("about-hub-build-status"),style=MaterialTheme.typography.bodySmall)}
-        OutlinedButton(onClick = { opened = true }) { Text(strings.getString(R.string.open_licenses)) }
+        }),Modifier.fillMaxWidth().testTag("about-hub-build-status"),style=quotaTextStyle(11))}
+        DesktopActionButton(onClick = { opened = true }) { Text(strings.getString(R.string.open_licenses),style=quotaTextStyle(11)) }
     }
     if (opened) {
         val paragraphs = remember(context) {
@@ -51,7 +51,7 @@ fun AboutSettings(hubBuild:HubBuildInfo?=null) {
         AlertDialog(onDismissRequest = { opened = false }, title = { Text(strings.getString(R.string.licenses_title)) }, text = {
             if (paragraphs == null) Text(strings.getString(R.string.licenses_unavailable))
             else LazyColumn(Modifier.heightIn(max = 400.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(paragraphs) { paragraph -> SelectionContainer { Text(paragraph, style = MaterialTheme.typography.bodySmall) } }
+                items(paragraphs) { paragraph -> SelectionContainer { Text(paragraph, style = quotaTextStyle(11)) } }
             }
         }, confirmButton = { DesktopTextButton(onClick = { opened = false }) { Text(strings.getString(R.string.close)) } })
     }

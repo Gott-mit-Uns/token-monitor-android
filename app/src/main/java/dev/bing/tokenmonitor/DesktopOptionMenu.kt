@@ -99,13 +99,13 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
     val widthPx=maxOf(with(density) {width.roundToPx()},with(density) {48.dp.roundToPx()},naturalWidth)
         .coerceAtMost((windowWidth-2*gutter).coerceAtLeast(1))
     val naturalHeight=remember(renderedOptions,labelStyle,density,textMeasurer,widthPx,chrome,iconSpace,compactNavigation) {
-        val rowMinimum=with(density) {48.dp.roundToPx()}
+        val rowMinimum=with(density) {(if(compactNavigation) 36.dp else 48.dp).roundToPx()}
         val outerPadding=with(density) {2*4.dp.roundToPx()}
         val rowGap=0
         outerPadding+rowGap*(renderedOptions.size-1).coerceAtLeast(0)+renderedOptions.sumOf {option->
             val textWidth=(widthPx-chrome-if(option.icon!=null) iconSpace else 0).coerceAtLeast(1)
             val textHeight=textMeasurer.measure(option.label,labelStyle,softWrap=true,constraints=Constraints(maxWidth=textWidth)).size.height
-            maxOf(rowMinimum,textHeight)
+            maxOf(rowMinimum,textHeight+with(density) {if(compactNavigation) 8.dp.roundToPx() else 0})
         }
     }
     val explicitHeight=maxHeight?.let {with(density) {it.roundToPx().coerceAtLeast(1)}}
@@ -169,7 +169,7 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
             renderedOptions.forEachIndexed {index,option->
                 val active=selected!=null && option.id==selected
                 var focused by remember(option.id) {mutableStateOf(false)}
-                Row(Modifier.fillMaxWidth().heightIn(min=48.dp).focusRequester(focus[index])
+                Row(Modifier.fillMaxWidth().heightIn(min=if(compactNavigation) 36.dp else 48.dp).focusRequester(focus[index])
                     .onFocusChanged {focused=it.isFocused}
                     .onPreviewKeyEvent {event->
                         if(!expanded) true else if(event.key==Key.Escape) {
@@ -207,9 +207,9 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
                     .semantics {role=if(selected!=null) Role.RadioButton else Role.Button;if(selected!=null) this.selected=active;if(!option.enabled) disabled();onClick {if(option.enabled && expanded) {choose(option.id);true} else false}}
                     .focusable(enabled=option.enabled && expanded)
                     .testTag(option.tag),verticalAlignment=Alignment.CenterVertically) {
-                    Row(Modifier.fillMaxWidth().heightIn(min=48.dp)
+                    Row(Modifier.fillMaxWidth().heightIn(min=if(compactNavigation) 36.dp else 48.dp)
                         .background(if(active) colors.primary.copy(alpha=.12f) else if(focused) LocalDesktopOverlayColor.current.copy(alpha=.07f) else androidx.compose.ui.graphics.Color.Transparent,RoundedCornerShape(5.dp))
-                        .padding(horizontal=7.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
+                        .padding(horizontal=7.dp,vertical=if(compactNavigation) 4.dp else 0.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
                         option.icon?.let {Icon(painterResource(it),null,Modifier.size(14.dp),tint=if(active) colors.primary else colors.onSurfaceVariant)}
                         Text(option.label,Modifier.weight(1f).testTag("${option.tag}-label"),style=labelStyle,color=(if(active) colors.primary else colors.onSurfaceVariant).copy(alpha=if(option.enabled) 1f else .5f))
                     }

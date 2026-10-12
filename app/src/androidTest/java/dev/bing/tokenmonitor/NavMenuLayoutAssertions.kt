@@ -33,7 +33,7 @@ internal fun assertNavigationMenuLayout(
         val row = compose.onNodeWithTag("view-$id", useUnmergedTree = true)
         row.assertExists()
         val bounds = row.getUnclippedBoundsInRoot()
-        assertTrue("$id keeps its 48 dp touch height", bounds.height.value + toleranceDp >= 48f)
+        assertTrue("$id keeps its 36 dp compact navigation height", bounds.height.value + toleranceDp >= 36f)
         assertTrue("$id keeps its 48 dp touch width", bounds.width.value + toleranceDp >= 48f)
         assertTrue("$id stays inside the menu horizontally", bounds.left.value + toleranceDp >= viewport.left.value && bounds.right.value <= viewport.right.value + toleranceDp)
         if (requireNoScroll) {
@@ -56,7 +56,7 @@ internal fun assertNavigationMenuLayout(
     }
 }
 
-/** Ordinary portrait phones have room for the default eight 48 dp rows. */
+/** Ordinary portrait phones have room for the default eight compact navigation rows. */
 internal fun navigationWindowCanFitDefaultRows(activity: MainActivity): Boolean {
     val configuration = activity.resources.configuration
     return configuration.orientation == Configuration.ORIENTATION_PORTRAIT &&

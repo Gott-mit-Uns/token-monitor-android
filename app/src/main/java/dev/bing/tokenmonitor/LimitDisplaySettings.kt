@@ -21,7 +21,7 @@ internal val LocalLimitDisplay = staticCompositionLocalOf { LimitDisplayPreferen
 @Composable internal fun LimitDisplaySettings(preferences:DisplayPreferences,update:(DisplayChange)->Unit,limits:List<Limit> = emptyList(),embedded:Boolean=false) {
     val strings=LocalResources.current
     var expanded by rememberSaveable {mutableStateOf(false)}
-    if(!embedded) DesktopTextButton({expanded=!expanded},modifier=Modifier.heightIn(min=48.dp).testTag("limit-settings-toggle")) {Text(strings.getString(R.string.limit_display_title),style=quotaTextStyle(11))}
+    if(!embedded) DesktopTextButton({expanded=!expanded},modifier=Modifier.heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("limit-settings-toggle")) {Text(strings.getString(R.string.limit_display_title),style=quotaTextStyle(11))}
     if(expanded || embedded) Column(Modifier.fillMaxWidth().testTag("limit-settings-controls"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         QuotaProviderSettings(preferences,update,limits)
         DesktopSettingSwitch(strings.getString(R.string.limit_show_source),preferences.limits.showSource,"limit-show-source") {update(DisplayChange.LimitSource(it))}
@@ -34,7 +34,7 @@ internal val LocalLimitDisplay = staticCompositionLocalOf { LimitDisplayPreferen
 /** Original usage-item checkbox at the left; entire row remains one touch target. */
 @Composable internal fun LimitDisplayToggle(label:String,tag:String,value:Boolean,enabled:Boolean=true,change:(Boolean)->Unit) {
     val colors=MaterialTheme.colorScheme
-    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).testTag(tag).toggleable(value,enabled=enabled,role=Role.Checkbox,onValueChange=change),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).testTag(tag).toggleable(value,enabled=enabled,role=Role.Checkbox,onValueChange=change),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         Checkbox(value,null,enabled=enabled,modifier=Modifier.size(20.dp))
         Text(label,Modifier.weight(1f),style=quotaTextStyle(11),color=colors.onSurface.copy(alpha=if(enabled) 1f else .58f))
     }
@@ -62,7 +62,7 @@ internal val LocalLimitDisplay = staticCompositionLocalOf { LimitDisplayPreferen
         val index=ordered.indexOf(id)
         Column(Modifier.fillMaxWidth().testTag("limit-provider-row-$id")) {
             Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
-                DesktopTextButton({expanded=if(open) null else id},modifier=Modifier.weight(1f).heightIn(min=48.dp).testTag("limit-items-$id").semantics {stateDescription=listOfNotNull(strings.getString(if(open) R.string.settings_options_expanded else R.string.settings_options_collapsed),detectedStatus).joinToString(" · ")},shape=RoundedCornerShape(4.dp),contentPadding=PaddingValues(0.dp)) {
+                DesktopTextButton({expanded=if(open) null else id},modifier=Modifier.weight(1f).heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("limit-items-$id").semantics {stateDescription=listOfNotNull(strings.getString(if(open) R.string.settings_options_expanded else R.string.settings_options_collapsed),detectedStatus).joinToString(" · ")},shape=RoundedCornerShape(4.dp),contentPadding=PaddingValues(0.dp)) {
                     Box(Modifier.weight(1f)) {LimitSettingsProviderCopy(id,label,groups[id].orEmpty(),prefs.maskEmails)}
                     val accounts=LimitSettingsPresentation.accounts(groups[id].orEmpty())
                     if(accounts.isNotEmpty()) Text(strings.getQuantityString(R.plurals.limit_accounts,LimitSettingsPresentation.accountCount(accounts),LimitSettingsPresentation.accountCount(accounts)),Modifier.padding(horizontal=4.dp).testTag("limit-provider-account-count-$id"),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
@@ -119,7 +119,7 @@ private data class LimitSettingItem(val key:String,val label:String,val availabl
     val available=limits.map {it.provider}.toSet()+prefs.hiddenHomeProviders
     ordered.filter {it in available}.forEach {id->
         val label=LimitPreferences.settingsLabel(id);val visible=id !in prefs.hiddenHomeProviders
-        Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=Alignment.CenterVertically) {
             Text(label,Modifier.weight(1f),style=quotaTextStyle(11).copy(fontWeight=FontWeight.Medium),color=MaterialTheme.colorScheme.onSurface.copy(alpha=if(visible) 1f else .58f),maxLines=1,overflow=TextOverflow.Ellipsis)
             DesktopListIcon(strings.getString(if(visible) R.string.tool_list_hide else R.string.tool_list_show,label),"home-quota-provider-$id",checked=visible,drawable=if(visible) R.drawable.desktop_eye else R.drawable.desktop_eye_off,accent=visible) {update(DisplayChange.HomeLimitProviderVisibility(id))}
             QuotaOrderMenu(id,label,ordered.indexOf(id),ordered.size,true,false,update)

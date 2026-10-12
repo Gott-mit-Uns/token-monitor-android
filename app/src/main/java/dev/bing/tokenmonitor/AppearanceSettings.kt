@@ -27,12 +27,12 @@ import kotlinx.coroutines.launch
     val palette=renderedDesktopPalette(preferences.appearance.colors)
     val preset=DesktopAppearance.presets.entries.firstOrNull {it.value==palette}?.key
     val labels=mapOf("default" to R.string.appearance_graphite,"obsidian" to R.string.appearance_carbon,"porcelain" to R.string.appearance_paper)
-    if(!embedded) DesktopTextButton({expanded=!expanded},Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("appearance-toggle")) {
+    if(!embedded) DesktopTextButton({expanded=!expanded},Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("appearance-toggle")) {
         Text(strings.getString(R.string.appearance_title),Modifier.weight(1f),style=quotaTextStyle(11))
         Text(strings.getString(labels[preset] ?: R.string.appearance_custom),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
     if(!expanded && !embedded) return
-    Column(Modifier.fillMaxWidth().testTag("appearance-controls"),verticalArrangement=Arrangement.spacedBy(6.dp)) {
+    Column(Modifier.fillMaxWidth().testTag("appearance-controls"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
             Text(strings.getString(R.string.appearance_theme_title).uppercase(strings.configuration.locales[0]),Modifier.weight(1f),style=quotaTextStyle(9).copy(letterSpacing=1.35.sp),color=MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha=.9f))
             DesktopEditAction("↺",strings.getString(R.string.appearance_reset_colors),"appearance-reset-colors",visualSize=24,glyphSize=16,chrome=false) {commit(DisplayChange.Theme(preferences.theme))}
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
         }
         ThemeCodeControl(palette,::commit)
         HorizontalDivider(color=desktopEditLine(),thickness=1.dp)
-        DesktopTextButton({advanced=!advanced},Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("appearance-colors-toggle"),contentPadding=PaddingValues(0.dp)) {
+        DesktopTextButton({advanced=!advanced},Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("appearance-colors-toggle"),contentPadding=PaddingValues(0.dp)) {
             Text(strings.getString(R.string.appearance_colors),Modifier.weight(1f),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
             Text(if(advanced) "⌃" else "⌄",style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -106,7 +106,7 @@ import kotlinx.coroutines.launch
         lifecycle.addObserver(observer)
         onDispose {lifecycle.removeObserver(observer);preview?.clear(session)}
     }
-    Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         Text(label,Modifier.weight(1f),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
         Box(Modifier.size(48.dp).clickable(role=Role.Button,onClick={focus.clearFocus();keyboard?.hide();open=true}).testTag("$tag-open").semantics {contentDescription=label+" "+value},contentAlignment=Alignment.Center) {
             Box(Modifier.size(30.dp,22.dp).border(1.dp,desktopEditLine(),RoundedCornerShape(6.dp)).padding(2.dp).background(hexColor(displayed),RoundedCornerShape(4.dp)).testTag("$tag-swatch"))

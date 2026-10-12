@@ -42,7 +42,7 @@ fun TokenTheme(dark: Boolean = isSystemInDarkTheme(), language: LanguageChoice =
     }
 }
 
-/* Desktop labels/data text scale independently of the Token total and icon sizes. */
+/* Desktop labels/data text use the chosen scale; home icons follow the same scaled text units. */
 private fun desktopTypography(font:FontFamily,scale:Float):Typography {
     fun style(size:Int,height:Int,weight:FontWeight=FontWeight.Normal)=TextStyle(fontFamily=font,fontWeight=weight,fontSize=(size*scale).sp,lineHeight=(height*scale).sp)
     return Typography(

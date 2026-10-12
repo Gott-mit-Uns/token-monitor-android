@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
             Text(title.uppercase(java.util.Locale.ROOT),Modifier.weight(1f),style=quotaTextStyle(11,true),maxLines=1,overflow=TextOverflow.Ellipsis)
             Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
                 meta?.let {Text(it,if(headerTag=="home-sessions-jump") Modifier.testTag("home-sessions-running") else Modifier,style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)}
-                Icon(painterResource(icon),null,Modifier.size(13.dp).alpha(.8f),tint=colors.onSurfaceVariant)
+                Icon(painterResource(icon),null,Modifier.size(desktopScaledIconSize(13.dp)).testTag("home-heading-icon-$icon").alpha(.8f),tint=colors.onSurfaceVariant)
             }
         }
         Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(bodyGap.dp),content=content)

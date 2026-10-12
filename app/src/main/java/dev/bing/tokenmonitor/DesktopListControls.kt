@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
     val strings=androidx.compose.ui.platform.LocalResources.current
     val colors=MaterialTheme.colorScheme;val ink=(if(accent) colors.primary else colors.onSurfaceVariant).copy(alpha=if(enabled) 1f else .34f)
     val action=if(checked==null) Modifier.clickable(enabled,role=Role.Button,onClick=click) else Modifier.toggleable(checked,enabled,role=Role.Checkbox,onValueChange={click()})
-    Box(Modifier.size(48.dp).then(action).testTag(tag).semantics {contentDescription=label;if(expanded!=null) stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)},contentAlignment=Alignment.Center) {
+    Box(Modifier.size(LocalDesktopSettingsRowHeight.current).then(action).testTag(tag).semantics {contentDescription=label;if(expanded!=null) stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)},contentAlignment=Alignment.Center) {
         Box(Modifier.size(visualSize.dp).border(1.dp,if(outlined) colors.primary.copy(alpha=.28f) else Color.Transparent,RoundedCornerShape(6.dp))
             .background(if(outlined) colors.primary.copy(alpha=.06f) else Color.Transparent,RoundedCornerShape(6.dp)),contentAlignment=Alignment.Center) {
             if(drawable!=null) Icon(painterResource(drawable),null,Modifier.size(13.dp),tint=ink) else Text(glyph,style=quotaTextStyle(glyphSize),color=ink)
@@ -48,10 +48,10 @@ import androidx.compose.ui.unit.dp
     var focused by remember {mutableStateOf(false)};val colors=MaterialTheme.colorScheme
     val strings=androidx.compose.ui.platform.LocalResources.current
     val focus=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
-    BasicTextField(value,change,Modifier.fillMaxWidth().heightIn(min=48.dp).testTag(tag).onFocusChanged {focused=it.isFocused}.semantics {contentDescription=label},
+    BasicTextField(value,change,Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).testTag(tag).onFocusChanged {focused=it.isFocused}.semantics {contentDescription=label},
         textStyle=quotaTextStyle(11).copy(color=colors.onSurface),singleLine=true,cursorBrush=SolidColor(colors.onSurface),
         keyboardOptions=KeyboardOptions(autoCorrectEnabled=false,imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={focus.clearFocus();keyboard?.hide()}),decorationBox={inner->
-            Box(Modifier.fillMaxWidth().heightIn(min=48.dp),contentAlignment=Alignment.Center) {
+            Box(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),contentAlignment=Alignment.Center) {
                 Row(Modifier.fillMaxWidth().border(1.dp,if(focused) DesktopEditTokens.focus else desktopEditLine(),RoundedCornerShape(6.dp))
                     .background(LocalDesktopSunkenColor.current.copy(alpha=.48f),RoundedCornerShape(6.dp)).padding(top=5.dp,bottom=5.dp,start=9.dp,end=if(value.isEmpty()) 9.dp else 48.dp),verticalAlignment=Alignment.CenterVertically) {
                     val ink=colors.onSurfaceVariant
@@ -71,10 +71,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable internal fun DesktopInlineChoices(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,change:(String)->Unit) {
     val colors=MaterialTheme.colorScheme;val line=LocalDesktopLineColor.current.copy(alpha=.14f)
-    Row(Modifier.fillMaxWidth().heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         Canvas(Modifier.width(1.dp).height(24.dp)) {drawRect(line)}
         FlowRow(Modifier.weight(1f),horizontalArrangement=Arrangement.SpaceBetween,verticalArrangement=Arrangement.spacedBy(0.dp)) {
-        Box(Modifier.heightIn(min=48.dp),contentAlignment=Alignment.CenterStart) {Text(title,style=quotaTextStyle(11))}
+        Box(Modifier.heightIn(min=LocalDesktopSettingsRowHeight.current),contentAlignment=Alignment.CenterStart) {Text(title,style=quotaTextStyle(11))}
         Row(Modifier.selectableGroup(),horizontalArrangement=Arrangement.spacedBy(2.dp),verticalAlignment=Alignment.CenterVertically) {
             choices.forEach {(id,label)->DesktopChoicePill(label,selected==id,"$tag-$id") {change(id)}}
         }
@@ -85,7 +85,7 @@ import androidx.compose.ui.unit.dp
 /** Original inline-option CSS: 4/10 padding, pill radius, overlay .12 on selected. */
 @Composable internal fun DesktopChoicePill(label:String,selected:Boolean,tag:String,click:()->Unit) {
     val colors=MaterialTheme.colorScheme
-    Box(Modifier.widthIn(min=48.dp).heightIn(min=48.dp).selectable(selected,role=Role.RadioButton,onClick=click).testTag(tag),contentAlignment=Alignment.Center) {
+    Box(Modifier.widthIn(min=LocalDesktopSettingsRowHeight.current).heightIn(min=LocalDesktopSettingsRowHeight.current).selectable(selected,role=Role.RadioButton,onClick=click).testTag(tag),contentAlignment=Alignment.Center) {
         Text(label,Modifier.background(if(selected) LocalDesktopOverlayColor.current.copy(alpha=.12f) else Color.Transparent,RoundedCornerShape(999.dp)).padding(horizontal=10.dp,vertical=4.dp),
             style=quotaTextStyle(11),color=if(selected) colors.onSurface else colors.onSurfaceVariant)
     }

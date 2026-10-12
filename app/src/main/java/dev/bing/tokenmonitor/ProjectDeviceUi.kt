@@ -53,7 +53,7 @@ private val sourceFallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFF
 @Composable internal fun HomeDeviceLine(row:HomeDeviceRow) {
     val strings=LocalResources.current;val main=LocalMainDisplay.current;val colors=MaterialTheme.colorScheme
     Row(Modifier.fillMaxWidth().testTag("home-device-${row.id}"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
-        DeviceMark(row.platform,row.stale,"home-${row.id}")
+        DeviceMark(row.platform,row.stale,"home-${row.id}",desktopScaledIconSize(10.dp))
         Text(row.name,Modifier.weight(1f),style=quotaTextStyle(11),color=if(row.stale) colors.onSurfaceVariant else colors.onSurface,maxLines=1,overflow=TextOverflow.Ellipsis)
         if(row.local) Text("you",style=quotaTextStyle(9),color=colors.onSurfaceVariant)
         Text(DesktopCompactTokens.format(row.tokens.toDouble(),main.compactUnits,DesktopCompactTokens.localeTag(strings.configuration.locales[0])),style=quotaTextStyle(11),textAlign=TextAlign.End,color=if(row.stale) colors.onSurfaceVariant else colors.onSurface)

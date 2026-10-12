@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
     val state=LocalResources.current.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val statusWidth=maxWidth*.58f
-        Row(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable(enabled=enabled,role=Role.Button,onClick=open).testTag(tag).semantics {stateDescription=state}.alpha(if(enabled) 1f else .38f),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(4.dp)) {
+        Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).clickable(enabled=enabled,role=Role.Button,onClick=open).testTag(tag).semantics {stateDescription=state}.alpha(if(enabled) 1f else .38f),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(4.dp)) {
             Text(title,Modifier.weight(1f),style=quotaTextStyle(11).copy(lineHeight=(11*1.35f*LocalDesktopTextScale.current).sp),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
             Text(status,Modifier.widthIn(max=statusWidth).border(1.dp,desktopEditLine(),RoundedCornerShape(999.dp)).background(LocalDesktopOverlayColor.current.copy(alpha=.045f),RoundedCornerShape(999.dp)).padding(horizontal=5.dp,vertical=1.dp).testTag("$tag-status"),style=quotaTextStyle(9).copy(lineHeight=(9*1.25f*LocalDesktopTextScale.current).sp),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
             val chevron=colors.onSurfaceVariant

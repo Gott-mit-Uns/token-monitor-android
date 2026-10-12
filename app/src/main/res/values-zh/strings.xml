@@ -693,4 +693,5 @@
     <string name="hub_build_older">构建较旧；桌面参考 0.69.0 建议更新 Hub</string>
     <string name="hub_build_newer">构建比桌面参考 0.69.0 更新</string>
     <string name="hub_build_unverified">无法按桌面参考 0.69.0 验证构建标识</string>
+    <string name="tool_settings_mobile_note">仅调整本机的工具展示：显隐、置顶、排序与搜索。模型规则和价格表来自 Hub，不在手机上采集或配置工具。</string>
 </resources>

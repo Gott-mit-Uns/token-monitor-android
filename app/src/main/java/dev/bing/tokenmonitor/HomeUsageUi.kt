@@ -36,7 +36,7 @@ internal object HomeUsageDisplay {
     val tag="home-${if(model) "model" else "tool"}-${row.id}"
     @Composable fun name(modifier:Modifier) {
         Row(modifier,verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            if(model) BreakdownMark(row.id,true,unknownSource,10.dp) else BrandMark(row.id,size=10.dp)
+            if(model) BreakdownMark(row.id,true,unknownSource,desktopScaledIconSize(10.dp)) else BrandMark(row.id,size=desktopScaledIconSize(10.dp))
             Text(row.name,Modifier.weight(1f),style=quotaTextStyle(11),maxLines=1,overflow=TextOverflow.Ellipsis)
         }
     }

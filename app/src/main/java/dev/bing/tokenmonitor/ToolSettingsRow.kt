@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
     val strings=LocalResources.current;val label=toolLabel(id)
     val hidden=id in preferences.hiddenTools;val pinned=id in preferences.pinnedTools
     var ordering by remember {mutableStateOf(false)}
-    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).testTag("tool-setting-$id").semantics {
+    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("tool-setting-$id").semantics {
         stateDescription=strings.getString(if(hidden) R.string.tool_list_hidden else if(pinned) R.string.tool_list_pinned else R.string.tool_list_visible)
     },verticalAlignment=Alignment.CenterVertically) {
         Text(label,Modifier.weight(1f),style=quotaTextStyle(11).copy(fontWeight=androidx.compose.ui.text.font.FontWeight.Medium),color=MaterialTheme.colorScheme.onSurface.copy(alpha=if(hidden) .58f else 1f),maxLines=1,overflow=TextOverflow.Ellipsis)

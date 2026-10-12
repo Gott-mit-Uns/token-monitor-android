@@ -697,4 +697,5 @@
     <string name="hub_build_older">Older build; desktop reference 0.69.0 recommends updating the Hub</string>
     <string name="hub_build_newer">Newer than desktop reference 0.69.0</string>
     <string name="hub_build_unverified">Build identity could not be verified against desktop reference 0.69.0</string>
+    <string name="tool_settings_mobile_note">Controls tool visibility, pinning, order and search on this phone. Model rules and pricing come from the Hub; this phone does not collect usage or configure tools.</string>
 </resources>
