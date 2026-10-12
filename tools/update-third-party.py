@@ -69,6 +69,7 @@ def generate():
     intro = ("Token Monitor Native — source and open-source notices\n\n"
              "Independently implemented in Kotlin/Compose, using the Token Monitor Hub protocol and display semantics.\n"
              "Upstream: https://github.com/Javis603/token-monitor\n"
+             "Hub build registry and comparison semantics: Token Monitor upstream (MIT).\n"
              "No business source code from the previous Android fork is included.\n\n"
              "Token Monitor upstream MIT license\n\n")
     text = intro + (ROOT / "app/src/main/assets/token-monitor-upstream-MIT.txt").read_text()

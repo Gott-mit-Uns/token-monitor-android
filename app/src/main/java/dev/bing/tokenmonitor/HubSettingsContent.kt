@@ -40,7 +40,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
             DesktopSettingSection("general",strings.getString(R.string.settings_general),R.drawable.desktop_settings_general,language,section=="general","settings-general-toggle",first=true,toggle={selectSection("general")}) {
                 if(updateDisplay!=null) DesktopSettingSelect(strings.getString(R.string.language_label),listOf(LanguageChoice.CHINESE.name to strings.getString(R.string.language_chinese),LanguageChoice.ENGLISH.name to "English",LanguageChoice.SYSTEM.name to strings.getString(R.string.follow_system)),preferences.language.name,"settings-language") {updateDisplay(DisplayChange.Language(LanguageChoice.valueOf(it)))}
                 WidgetSettings()
-                AboutSettings()
+                AboutSettings(state.hubBuild)
             }
         }
         if(updateDisplay!=null) {

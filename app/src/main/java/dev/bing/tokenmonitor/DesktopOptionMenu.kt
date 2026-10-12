@@ -101,7 +101,7 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
     val naturalHeight=remember(renderedOptions,labelStyle,density,textMeasurer,widthPx,chrome,iconSpace,compactNavigation) {
         val rowMinimum=with(density) {48.dp.roundToPx()}
         val outerPadding=with(density) {2*4.dp.roundToPx()}
-        val rowGap=with(density) {(if(compactNavigation) 0.dp else 2.dp).roundToPx()}
+        val rowGap=0
         outerPadding+rowGap*(renderedOptions.size-1).coerceAtLeast(0)+renderedOptions.sumOf {option->
             val textWidth=(widthPx-chrome-if(option.icon!=null) iconSpace else 0).coerceAtLeast(1)
             val textHeight=textMeasurer.measure(option.label,labelStyle,softWrap=true,constraints=Constraints(maxWidth=textWidth)).size.height
@@ -165,7 +165,7 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
         }.focusable(enabled=renderedOptions.none {it.enabled}).width(menuWidth).heightIn(max=menuMaxHeight).shadow(10.dp,shape)
             .background(Brush.verticalGradient(LocalDesktopTooltipColors.current),shape)
             .border(1.dp,LocalDesktopLineColor.current.copy(alpha=.22f),shape)
-            .verticalScroll(rememberScrollState()).padding(4.dp).then(if(expanded) Modifier.testTag(tag) else Modifier),verticalArrangement=Arrangement.spacedBy(if(compactNavigation) 0.dp else 2.dp)) {
+            .verticalScroll(rememberScrollState()).padding(4.dp).then(if(expanded) Modifier.testTag(tag) else Modifier),verticalArrangement=Arrangement.spacedBy(0.dp)) {
             renderedOptions.forEachIndexed {index,option->
                 val active=selected!=null && option.id==selected
                 var focused by remember(option.id) {mutableStateOf(false)}
@@ -207,7 +207,7 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
                     .semantics {role=if(selected!=null) Role.RadioButton else Role.Button;if(selected!=null) this.selected=active;if(!option.enabled) disabled();onClick {if(option.enabled && expanded) {choose(option.id);true} else false}}
                     .focusable(enabled=option.enabled && expanded)
                     .testTag(option.tag),verticalAlignment=Alignment.CenterVertically) {
-                    Row(Modifier.fillMaxWidth().heightIn(min=if(compactNavigation) 44.dp else 28.dp)
+                    Row(Modifier.fillMaxWidth().heightIn(min=48.dp)
                         .background(if(active) colors.primary.copy(alpha=.12f) else if(focused) LocalDesktopOverlayColor.current.copy(alpha=.07f) else androidx.compose.ui.graphics.Color.Transparent,RoundedCornerShape(5.dp))
                         .padding(horizontal=7.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
                         option.icon?.let {Icon(painterResource(it),null,Modifier.size(14.dp),tint=if(active) colors.primary else colors.onSurfaceVariant)}

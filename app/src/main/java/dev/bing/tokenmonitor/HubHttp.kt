@@ -75,10 +75,12 @@ class HubHttp(private val client: OkHttpClient, private val transport: (String) 
             span.end(successful, input?.bytesRead ?: 0L)
         }
     }
-    fun verify(base: String, valid: () -> Boolean = { true }) {
-        val health = Json.parseToJsonElement(read(base, "health", valid = valid)).jsonObject
+    fun verify(base: String, valid: () -> Boolean = { true }): HubBuildInfo {
+        val body = read(base, "health", valid = valid)
+        val health = Json.parseToJsonElement(body).jsonObject
         require((health["ok"] as? JsonPrimitive)?.booleanOrNull == true)
         require((health["role"] as? JsonPrimitive)?.contentOrNull == "hub")
+        return HubBuildInfo.parse(body) ?: HubBuildInfo("",buildPresent=false)
     }
 }
 class HubReadException(val display: Int, val unauthorized: Boolean = false) : Exception()

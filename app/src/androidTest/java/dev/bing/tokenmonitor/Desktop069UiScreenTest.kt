@@ -101,8 +101,10 @@ class Desktop069UiScreenTest {
             val strings=observed!!
             complete(strings.getString(R.string.desktop_reference_version,"0.69.0"))
             complete(strings.getString(R.string.desktop_parity_partial))
-            complete(strings.getString(R.string.hub_version_unknown))
-            compose.onNodeWithTag("about-android-version").assertTextContains("0.2.53 (62)",substring=true)
+            complete(strings.getString(R.string.hub_version_pending))
+            @Suppress("DEPRECATION") val packageInfo=compose.activity.packageManager.getPackageInfo(compose.activity.packageName,0)
+            val code=if(android.os.Build.VERSION.SDK_INT>=28) packageInfo.longVersionCode else packageInfo.versionCode.toLong()
+            compose.onNodeWithTag("about-android-version").assertTextContains("${packageInfo.versionName} ($code)",substring=true)
             saveVisualEvidence(compose.activity,compose.onRoot(),"desktop069-about-${theme}-${lang.name}.png")
         }
     }

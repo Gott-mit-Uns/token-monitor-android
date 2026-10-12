@@ -2,6 +2,7 @@ Token Monitor Native — source and open-source notices
 
 Independently implemented in Kotlin/Compose, using the Token Monitor Hub protocol and display semantics.
 Upstream: https://github.com/Javis603/token-monitor
+Hub build registry and comparison semantics: Token Monitor upstream (MIT).
 No business source code from the previous Android fork is included.
 
 Token Monitor upstream MIT license
