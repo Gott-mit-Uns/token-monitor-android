@@ -28,3 +28,7 @@
 正式APK SHA256：016b0a8b51497df51925963d75a8499bbf30db68a72ae55e1ff49a6b61010f15。最终测试APK SHA256：b650f5143692c7405665eac29d737d4a54918555ec86bdbb393f20f2c8582b4f。证据在本工作区evidence/mobile-density-058/，包含首失败、各阶段报告、字号实测、实际布局截图、签名及升级回执。只读这些测试环境，不访问NAS/Hub/路由器或其他已有模拟器；新版真机触控/布局、蜂窝与长期性能未验收。
 
 交付dist/release-0.2.58/：APK、SHA256SUMS、release-manifest、VALIDATION；不上传测试APK和本地诊断。GitHub正式发布及回读结果见GITHUB_PUBLICATION.md。完成后停止，不扩展其他任务。
+
+## 正式发布回执
+
+2026-10-13，v0.2.58已正式发布并标记最新正式版，非草稿/非预发行。产品提交578d15d251541eb4bfe69dd06fc646a3f55d81f9，main与带注释Tag已推送。四份草稿附件完整下载后逐文件字节一致，GitHub README及三张实机JPG回读一致；正式发布后APK再次下载SHA256一致。本轮后续仅补文档，不重新构建或改写Tag/APK。

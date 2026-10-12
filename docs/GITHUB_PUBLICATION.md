@@ -1,4 +1,14 @@
-# Native GitHub 发布记录
+# Token Monitor Android GitHub 发布记录
+
+## 0.2.58 — 手机布局密度与字号反馈
+
+2026-10-13，[v0.2.58 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.58)已正式发布，非草稿、非预发行，标记为最新正式版。产品提交578d15d251541eb4bfe69dd06fc646a3f55d81f9，main及带注释Tag已推送；版本0.2.58/code67，沿用既有正式签名。
+
+完成用户指定的8项手机布局/字号/README反馈，详情见HANDOFF_0.2.58.md。15项定向Release单元、9项最终设置回归、18项系统字号矩阵、2项额外大数值/最大字号检查及正式签名升级通过；Lint0错误。新版实体手机触控、蜂窝与长期性能未验收。
+
+APK、SHA256SUMS、release-manifest及VALIDATION四份附件在草稿阶段全部下载，与本地逐文件字节一致；GitHub内容API回读README及三张用户实机照片也与本地逐字节一致。正式发布后再次下载APK，SHA256为016b0a8b51497df51925963d75a8499bbf30db68a72ae55e1ff49a6b61010f15，与构建及模拟器安装字节一致。产品Tag/APK保持固定；发布后仅补文档回执。
+
+交付位于work/token-monitor-mobile-density-058/dist/release-0.2.58，证据在该工作区evidence/mobile-density-058。本轮完成后停止，不扩大其他待办。
 
 ## 0.2.57 — Token Monitor Android 名称与 README
 
