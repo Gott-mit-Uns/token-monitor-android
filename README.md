@@ -1,6 +1,6 @@
 # Token Monitor Native Android
 
-2026-10-12 最新本地开发交付：**0.2.52-dev/code61**，包含Antigravity双周期、V3连接策略及V4桌面0.69部分对齐/导航/设置改动。[APK](dist/token-monitor-native-0.2.52-dev.apk)、[版本与交付记录](docs/HANDOFF_0.2.52.md)。每次新交付递增版本；旧包保留。本版本尚未推送GitHub，真机/公网边界见交接。以下发布与开发条目保留其当时版本。
+2026-10-12 最新本地开发交付：**0.2.52-dev/code61**，包含Antigravity双周期、V3连接策略及V4桌面0.69部分对齐/导航/设置改动。[APK](dist/token-monitor-native-0.2.52-dev.apk)、[版本与交付记录](docs/HANDOFF_0.2.52.md)。每次新交付递增版本；旧包保留。本版本源码已按用户授权同步至 GitHub `main`，包含合并后的根目录 `AGENTS.md`；本次仅发布源码，不构建或上传 APK，不创建新的 APK Release。`dist/` 和原始 `evidence/` 仍仅在本机；真机/公网边界见交接。以下发布与开发条目保留其当时版本。
 
 2026-10-12 GitHub 开发预发布：本 Native 项目已独立保存于 [token-monitor-android](https://github.com/Gott-mit-Uns/token-monitor-android)（初始私有）。当前源码包含 Antigravity 双周期修复及 V3 连接策略；[开发验证 APK 与校验](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/dev-hub-failover-20261012)、[网络专项交接](docs/HANDOFF_HUB_CONNECTION_FAILOVER.md)、[发布记录](docs/GITHUB_PUBLICATION.md)。应用仍为0.2.51-dev/code60，真机/蜂窝/Lucky未验收；以下早期“未推送”和dist/evidence链接是本地历史记录，未上传历史APK与原始证据目录。
 
