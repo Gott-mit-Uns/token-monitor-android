@@ -7,6 +7,7 @@ import subprocess
 import threading
 import time
 from pathlib import Path
+from history_read_evidence import parse_history_events, validate_history_events
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--adb", required=True)
@@ -61,6 +62,19 @@ instrumentation = None
 reader = None
 received = []
 stages = set()
+history_events = []
+history_validation = None
+
+
+def save_history_evidence():
+    if args.case != "home":
+        return
+    # Whitelisted identities only; never archive the raw instrumentation transcript.
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    import json
+    evidence = {"native": history_events, "bridge": server.status()["historyEvents"],
+                "validation": history_validation}
+    args.output.with_suffix(".history.txt").write_text(json.dumps(evidence, indent=2) + "\n")
 back_destroyed = None
 lock_destroyed = None
 lost_transport_closed_peer = None
@@ -203,16 +217,13 @@ try:
         assert 1 <= history_reads <= 1+history_revision_changes, "History reread without an observed source revision change"
         expected_reads += history_reads-1
     if args.case == "home":
-        # Home may read history more than once: 0.2.47 allows the bounded receipt retry, and a
-        # real source revision change starts a fresh cycle at any time (this Mac keeps collecting
-        # usage). Both are legitimate, so the count is bounded at 1..4; what must never happen is
-        # a burst of reads for the same cycle, which the observed minimum spacing guards. Only
-        # aggregate offsets are recorded, never the signature or any response content.
-        assert 1 <= history_reads <= 4, f"Home history reads must stay inside the bounded receipt retry: {history_reads}"
+        # The four-attempt budget and four-second wait apply per witnessed cycle.
+        # New source revisions may dispatch immediately, but an unexplained short gap fails.
+        assert history_reads >= 1, "Home history read unavailable"
         history_times=final.get("readTimes",{}).get("history",[])
         assert len(history_times)==history_reads, "Per-route read times unavailable for the Home history check"
-        for earlier,later in zip(history_times,history_times[1:]):
-            assert later-earlier>=3.5, f"Two Home history reads closer than the policy's four-second retry spacing: {history_times}"
+        history_events = parse_history_events(transcript)
+        history_validation = validate_history_events(history_events, final["historyEvents"], history_reads)
         expected_reads += history_reads-1
     safe_routes={key:final["routes"].get(key,0) for key in ("health","stats","history","subscriptions","sync/settings/modelAliases","stats/stream")}
     assert final["requests"] == expected_reads, f"Unexpected real Hub read counts: expected={expected_reads}, actual={final['requests']}, routes={safe_routes}"
@@ -394,6 +405,7 @@ try:
               "Final: both streams ended, zero active read processes, test cache cleared: PASS\n"
               + (f"Home history read offsets (seconds, aggregate only): {final.get('readTimes',{}).get('history',[])}\n"
                  if args.case == "home" else "")
+              + (f"Identity-correlated history validation: {history_validation}\n" if args.case == "home" else "")
               + f"Real authentication remains in {credential_location}; no private responses, labels or diagnostics archived.\n\n"
               "dev.bing.tokenmonitor.LiveHubTest.readsRealNasHubThroughCredentialPreservingBridge\n"
               + ("Time: " + duration.group(1) + "\n" if duration else "") + "OK (1 test)\n")
@@ -407,6 +419,13 @@ except BaseException:
         safe_probes += re.findall(r"nativeOldStreamProbe=(cancelled:(?:true|false),running:(?:true|false),queued:(?:true|false))", "".join(received))
     args.output.write_text("FAILED; private diagnostics withheld\n" + "\n".join(dict.fromkeys(native_frames + safe_probes + ["JUnit seconds: "+value for value in safe_durations])) + "\n" + str(server.status()) + "\n")
     print("Live check stopped; sanitized native frames and aggregate counters saved.", flush=True)
+    # Parse independently so a validation failure still retains safe identity evidence.
+    if args.case == "home" and not history_events:
+        try:
+            history_events = parse_history_events("".join(received))
+        except AssertionError:
+            pass
+    save_history_evidence()
     raise
 finally:
     try:
@@ -439,4 +458,5 @@ finally:
 args.output.parent.mkdir(parents=True, exist_ok=True)
 network_probes = re.findall(r"nativeOldStreamProbe=(cancelled:(?:true|false),running:(?:true|false),queued:(?:true|false))", "".join(received)) if args.case=="network" else []
 args.output.write_text(report + f"Safe route counts: {final['routes']}\nUpstream authentication location: {credential_location}.\n" + "".join("Old stream probe: "+probe+"\n" for probe in network_probes))
+save_history_evidence()
 print(f"Real NAS Hub {args.case} Activity/read/cache/foreground restore: PASS; temporary listener stopped, no reverse mapping used", flush=True)
