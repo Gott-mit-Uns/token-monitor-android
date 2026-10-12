@@ -409,10 +409,15 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     DesktopBackgroundSurface {
         Scaffold(containerColor = Color.Transparent, topBar = {
             Column(Modifier.statusBarsPadding().padding(horizontal = 14.dp, vertical = 8.dp)) {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                val stackedPeriods = effectiveTextScale() > 1.15f
+                @Composable fun title() {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     DesktopTitle(preferences.main.titleIconOnly,preferences.appearance.showLiveDot,state.live,Modifier.weight(1f),onAverage={averageRateOpen=true}) {openDirect(HubPage.HOME)}
                     if(trendsDetail) DesktopTextButton(onClick={trendsHistoryOpen=false},modifier=Modifier.testTag("trends-history-back")) {Text("← ${strings.getString(R.string.desktop_trends)}",style=quotaTextStyle(11))}
-                    if (periodVisible) Row(Modifier.width(154.dp).heightIn(min=48.dp).padding(vertical=9.dp).border(1.dp, LocalDesktopTooltipBorder.current.copy(alpha=0.09f), RoundedCornerShape(10.dp)).background(LocalDesktopOverlayColor.current.copy(alpha=0.026f),RoundedCornerShape(10.dp)).padding(3.dp).desktopPeriodIndicator(periodIndicator,periodOverlay,periodLine),horizontalArrangement=Arrangement.spacedBy(2.dp)) {
+                    }
+                }
+                @Composable fun periods(modifier: Modifier) {
+                    if (periodVisible) Row(modifier.heightIn(min=48.dp).padding(vertical=9.dp).border(1.dp, LocalDesktopTooltipBorder.current.copy(alpha=0.09f), RoundedCornerShape(10.dp)).background(LocalDesktopOverlayColor.current.copy(alpha=0.026f),RoundedCornerShape(10.dp)).padding(3.dp).desktopPeriodIndicator(periodIndicator,periodOverlay,periodLine),horizontalArrangement=Arrangement.spacedBy(2.dp)) {
                         listOf("today", "month", "allTime").forEach { slot ->
                             val active = FixedPeriods.slot(range) == slot
                             val mode = if (slot == "month") monthMode else slot
@@ -422,13 +427,20 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                     else {if(range!=mode) recordBreakdownPeriod(true);range = mode; periodMenu = false; updateDisplay?.invoke(DisplayChange.PeriodSelection(mode)) }
                                 }, shape = RoundedCornerShape(6.dp),
                                     colors = ButtonDefaults.textButtonColors(containerColor = Color.Transparent, contentColor = if (active) colors.primary else colors.onSurfaceVariant),
-                                    contentPadding = PaddingValues(0.dp), modifier = Modifier.fillMaxWidth().height(22.dp).testTag("hub-period-$slot").semantics { selected = active; contentDescription = FixedPeriods.label(mode) }) {
-                                    Text(FixedPeriods.label(mode), style = quotaTextStyle(9))
+                                    contentPadding = PaddingValues(0.dp), modifier = Modifier.fillMaxWidth().heightIn(min=22.dp).testTag("hub-period-$slot").semantics { selected = active; contentDescription = FixedPeriods.label(mode) }) {
+                                    Text(FixedPeriods.label(mode), Modifier.fillMaxWidth().testTag("hub-period-label-$slot"), style = quotaTextStyle(9), textAlign=androidx.compose.ui.text.style.TextAlign.Center, maxLines=1, softWrap=false)
                                 }
                                 if(slot=="month") DesktopOptionMenu(periodMenu,FixedPeriods.modes.map {DesktopMenuOption(it,FixedPeriods.label(it),"hub-period-menu-$it")},monthMode,"hub-period-menu",width=132.dp,wrapNavigation=true,animate=true,dismiss={periodMenu=false}) {choice->if(range!=choice) recordBreakdownPeriod(false);monthMode=choice;range=choice;periodMenu=false;updateDisplay?.invoke(DisplayChange.PeriodSelection(choice))}
                             }
                         }
                     }
+                }
+                if (stackedPeriods) Column(Modifier.fillMaxWidth()) {
+                    title()
+                    periods(Modifier.fillMaxWidth())
+                } else Row(Modifier.fillMaxWidth(), verticalAlignment=Alignment.CenterVertically, horizontalArrangement=Arrangement.SpaceBetween) {
+                    Box(Modifier.weight(1f)) {title()}
+                    periods(Modifier.width(154.dp))
                 }
                 if (state.loading) LinearProgressIndicator(Modifier.fillMaxWidth().height(2.dp))
                 state.error?.let { Text(strings.getString(it), color = colors.error, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp).semantics { liveRegion = LiveRegionMode.Polite }) }
@@ -749,11 +761,23 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     Column(Modifier.fillMaxWidth().padding(top=8.dp,bottom=14.dp),verticalArrangement=Arrangement.spacedBy(5.dp)) {
         Text(strings.getString(R.string.desktop_total),color=MaterialTheme.colorScheme.onSurfaceVariant,style=quotaTextStyle(11))
         BoxWithConstraints(Modifier.fillMaxWidth()) {
-            val size=base*((maxWidth.value-suffixWidth).coerceAtLeast(1f)/natural.coerceAtLeast(1f)).coerceAtMost(1f)
-            Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                Text(value,color=LocalDesktopNumberColor.current,style=numberStyle.copy(fontSize=size.sp,lineHeight=(size*1.05f).sp),maxLines=1,softWrap=false,
-                    modifier=Modifier.weight(1f,false).testTag("hub-total-tokens").heightIn(min=48.dp).wrapContentHeight().clickable(interactionSource=remember {androidx.compose.foundation.interaction.MutableInteractionSource()},indication=null,enabled=period!=null,onClickLabel=strings.getString(R.string.token_components)) {details=true})
-                compact?.let {Text(it,modifier=Modifier.padding(bottom=6.dp).testTag("hub-total-compact"),style=compactStyle,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+            // Keep system text size. Move the approximation below rather than squeezing
+            // both strings into one line; very long exact counts may wrap in full.
+            val stacked = natural + suffixWidth + 1f > maxWidth.value
+            @Composable fun number(modifier:Modifier) {
+                Text(value,color=LocalDesktopNumberColor.current,style=numberStyle,
+                    softWrap=stacked,maxLines=if(stacked) Int.MAX_VALUE else 1,
+                    modifier=modifier.testTag("hub-total-tokens").heightIn(min=48.dp).wrapContentHeight().clickable(interactionSource=remember {androidx.compose.foundation.interaction.MutableInteractionSource()},indication=null,enabled=period!=null,onClickLabel=strings.getString(R.string.token_components)) {details=true})
+            }
+            @Composable fun approximation() {
+                compact?.let {Text(it,modifier=(if(stacked) Modifier.fillMaxWidth() else Modifier.width((suffixWidth-8f+1f).dp)).padding(bottom=6.dp).testTag("hub-total-compact"),style=compactStyle,color=MaterialTheme.colorScheme.onSurfaceVariant)}
+            }
+            if(stacked) Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                number(Modifier.fillMaxWidth())
+                approximation()
+            } else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                number(Modifier.weight(1f))
+                approximation()
             }
         }
         Text(LocalUsageCurrency.current.headline(period?.cost,period?.unpriced),modifier=Modifier.testTag("hub-total-cost"),color=MaterialTheme.colorScheme.onSurfaceVariant,style=quotaTextStyle(12))

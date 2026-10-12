@@ -35,7 +35,7 @@ internal fun Modifier.desktopPeriodIndicator(motion:State<DesktopPeriodIndicator
         val gap=2.dp.toPx()
         val width=((size.width-2*gap)/3f).coerceAtLeast(0f)
         val topLeft=Offset(motion.value.index*(width+gap),0f)
-        val bounds=Size(width,minOf(22.dp.toPx(),size.height))
+        val bounds=Size(width,size.height)
         val radius=CornerRadius(6.dp.toPx())
         drawRoundRect(overlay.copy(alpha=.06f),topLeft,bounds,radius)
         drawRoundRect(line.copy(alpha=.13f),topLeft,bounds,radius,style=Stroke(1.dp.toPx()))
