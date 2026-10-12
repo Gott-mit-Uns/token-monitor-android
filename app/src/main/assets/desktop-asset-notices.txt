@@ -1,8 +1,10 @@
 Desktop visual assets
 
-App icon, brand silhouettes and view glyphs are adapted from the Token Monitor v0.68.0 assets and renderer/icons/views. Upstream MIT attribution is included above. Android layouts, data handling and chart rendering are independent Kotlin implementations.
+App icon, brand silhouettes and view glyphs are adapted from the Token Monitor assets and renderer/icons/views. Upstream MIT attribution is included above. Android layouts, data handling and chart rendering are independent Kotlin implementations.
 
-Desktop settings and home glyphs are derived from Lucide Icons.
+Desktop settings, home and navigation glyphs are derived from Lucide Icons.
+Source: https://github.com/lucide-icons/lucide
+Feather project: https://github.com/feathericons/feather
 
 Lucide Icons license:
 
