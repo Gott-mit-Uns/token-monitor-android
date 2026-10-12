@@ -36,22 +36,27 @@ group只是一层展示：一个accounting member计算一次；父total不能�
 
 **不进入Hub：**zero-token local rows、period.sessionActivity局部覆盖、nativeSessions/nativeProjects、localRecentUsageActivity以及Electron历史Grok身份overlay。已产生Token的会话可以带liveActivity随普通发布上传，但源端局部活动变化不推进用量时间、不单独触发同步；headless Agent关闭持续活动polling。Android不能保证桌面同样即时的等待，也不能通过后台采集补齐。
 
-## 双入口：实现与本次要求
+## 双入口：V3准入
 
-当前SavedHub共用一个凭据和一份缓存；地址切换不累加数据。switchEndpoint显式切换；新连接先health/stats/parse，再原子持久化；失败保留旧绑定和数据。同Hub识别依赖已配置地址/凭据及用户确认，没有可自动证明身份的稳定hubId。
+固定v0.69 server.js的health字段为ok/role/runtime/version/hubBuild/deviceCount/secretRequired/now，没有可认证的稳定实例ID。相同凭据、设备、总量、版本或HTTP200均不证明同源，Android无法可靠检测IDENTITY_MISMATCH，不自行发明字段或改Hub。
 
-| 条件 | 当前源码 | 下一阶段验收要求 |
-|---|---|---|
-| 初次加载/后台恢复/网络替换 | HTTPS优先，即使LAN可用 | 已验证LAN中优先已验证HTTP；网段匹配只是许可，仍需同Hub确认与该地址历史成功验证 |
-| 私网HTTP不许可/网络未知/蜂窝/VPN | 若有HTTPS切到HTTPS，否则停请求 | 继承；公网永不使用HTTP |
-| HTTPS连接失败 | 保留缓存/报错，没有按已验证HTTP自动回退 | 仅在许可LAN、绑定Network可用、同Hub及HTTP已验证、失败非401/403时评估回退 |
-| 手动候选地址失败 | 事务失败不替换旧绑定，旧流可恢复 | 继承；失败草稿不得变成自动候选 |
-| 401/403 | authBlocked，网络/前后台/自动换地址不解除 | 继承，必须用户主动动作才能再试 |
-| 默认网络替换 | 取消旧HTTP/流/重连，epoch/requestToken隔离，再验证 | 继承，不重复连接、不将私网socket转发到蜂窝或代理 |
-| 两个入口是否同Hub | 配置约定，未有跨入口身份自动证明 | 用安全的只读验证/明确用户确认，不以同期totals相同当成永久身份 |
+SavedHub保持一个凭据和单份权威缓存。新增加密可选lanEnabled/endpointsAssociated，旧记录默认允许手动LAN、双入口未确认。用户明确确认同Hub且两端分别health/鉴权stats/完整解析成功后才保存关联；验证时不发布候选数据。这是用户声明加可读性检查，不能抵抗共享凭据错配/IP复用；TLS不变。改地址/凭据撤销关联。
+
+| 条件 | V3行为 |
+|---|---|
+| 前台恢复/网络替换 | 已关联且系统许可LAN、绑定Network和本地权限可用时优先HTTP；否则HTTPS或保持未确认的权威入口 |
+| 未确认入口 | 不自动接管；用户主动切换走health/stats/解析/原子提交，失败保留旧绑定和缓存，不混合新旧明细 |
+| HTTP网络故障/5xx | 关联确认后才一次HTTPS回退，LAN60秒冷却；认证/格式/协议错误不换址 |
+| HTTPS网络故障 | 关联确认且LAN仍许可时一次HTTP回退；外网/未知/VPN禁止 |
+| TLS证书/握手错误 | 独立提示、封锁自动恢复；不经LAN换址掩盖，不绕证书。用户主动连接事务才重验 |
+| 401/403 | 自动HTTP/SSE停止，生命周期/网络不解封；用户主动连接事务重验 |
+| 后台 | 取消HTTP/流/重连并停止网络观察，不读Hub统计 |
+| 竞争与重连 | requestToken/epoch/bindingToken隔离，旧流响应释放完才开新流；基底为空，首full snapshot |
+
+动态IP无法由静态Network Security Config精确穷举；继承manifest usesCleartextTraffic=true，Hub HTTP仍受地址正规化/私网字面IP/权限/能力/子网/绑定Network/无代理/独立开关限制，不新增全局放行或trust-all。详见V3交接。
 
 ## 当前部署证据与缺口
 
-本轮仅对已知Lucky入口公开health作系统TLS校验的GET；role=hub、4devices、coreRevision74、node-hub runtimeRevision5。coreBuildId匹配v0.68.0注册表；目标v0.69.0为coreRevision78。无鉴权stats/SSE样本，且DXP4800 SSH拒绝连接，不能确认该Lucky后端与默认NAS、LAN入口为同一服务，也不能宣称已升级/提供新字段。
+上一接管审计仅对已知Lucky入口公开health作系统TLS校验的GET；role=hub、4devices、coreRevision74、node-hub runtimeRevision5。coreBuildId匹配v0.68.0注册表；目标v0.69.0为coreRevision78。无鉴权stats/SSE样本，且DXP4800 SSH拒绝连接，不能确认该Lucky后端与默认NAS、LAN入口为同一服务，也不能宣称已升级/提供新字段。
 
 下一步只保留脱敏能力结果：build、字段是否出现、各状态数量、schema合法性、连接数/生命周期计数与全量一致性摘要；不保存凭据、标题、私有响应正文。取得现成安全会话后才读取私有接口，普通health连通不作为完整业务通过。

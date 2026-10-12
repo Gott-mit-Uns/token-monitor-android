@@ -30,7 +30,7 @@ flowchart TD
 |---|---|---|
 | Activity | `MainActivity.kt:44` 起 | onStart 网络观察+前台；onStop 停止观察、通知后台；collectAsStateWithLifecycle 接收状态 |
 | UI 操作接口 | `HubUiActions.kt` | UI 调用连接、刷新、历史、共享配置、设备本地别名等；不直接发网络请求 |
-| 协调层 | `HubViewModel.kt`，702 行 | 连接校验、事务保存、缓存、所有明细、SSE、认证封锁、网络重建与状态；**没有独立 Repository**，协调职责集中在 ViewModel |
+| 协调层 | `HubViewModel.kt`，793 行 | 连接校验、事务保存、缓存、所有明细、SSE、认证封锁、网络重建与状态；**没有独立 Repository**，协调职责集中在 ViewModel |
 | HTTP | `HubHttp.kt`，84 行 | 白名单 GET；health 角色校验；Bearer 私有读取；取消/后台暂停、JSON/状态/大小限制，禁止重定向 |
 | SSE | `HubStream.kt`、`HubSseFramer.kt` | stream v2；snapshot/stats/freshness；有界读取、取消；Retry-After；freshness 限字段合并 |
 | 模型/投影 | `HubJsonProjection.kt`、`HubData.kt` | 严格 UTF-8/32 MiB 输入；删除重复 device sessions/projects，保留顶层明细与数值；typed Snapshot 只暴露显式字段 |
@@ -69,8 +69,14 @@ SSE 消费采用一个待处理帧槽、独立消费 Job 和 conflated 保存队
 | 已完成P1-01 | `LimitDisplay.compactWindows` 单组各选session/weekly，HomeQuotaLayout周期标签对齐 | 两周期各自保留原读数/重置；空周期不展示，无数据不造零 | 第二阶段交接记录定向验收；真机边界仍保留 |
 | P1 | `DesktopHubScreen.kt` 817 行，列表/历史/显示派生集中 | 大数据与 UI 生命周期交错；触摸流畅度未证明 | 继承 perf50 指标，仅针对实测热点，不做全页重写 |
 | P1 | `HubJsonProjection`/缓存多份正文与树；限额32 MiB/10 MiB | 大帧、缓存保存、冷恢复可能逼近堆边界 | 先实机复测受控 full frame+导航+保存；不直接提高限制 |
-| P1 | LAN 与同 Hub 身份是人工配置，当前恢复优先 HTTPS | 新要求的 LAN 优先/已验证地址回退尚未实现 | 对照 API 合同设计候选地址验证与网络绑定 |
+| P1-02 有限完成 | HubConnectionPolicy与明确双入口关联，许可LAN优先/网络故障回退 | 当前协议无可认证Hub ID，用户声明不抵抗IP复用或共享凭据错配 | 实体手机/Lucky验收与独立身份协议任务，见V3交接 |
 | P1 | 最新反馈记录LAN桥接15/16，`work/s5-lan-home-r10.txt`保留history间隔1.685秒失败 | revision变动/重试可能破坏最小读取间隔；尚非根因结论 | 仅复现该时间线，对照HistoryReadCoordinator与页面读触发，见NEXT_TASKS P1-09 |
 | P2 | 设备名 resolver 分散；97 个诊断 Lint 警告，历史报告93 | 部分页面显示不一致；报告来源易混淆 | 分别统一 resolver，清理时只处理实际影响项 |
 
 没有从模拟器或健康接口推断生产故障；真机、公网、当前 Hub 新字段均仍有验证边界。
+
+## V3 连接增量
+
+HubConnectionPolicy只负责候选排序、失败分类和回退准入；ViewModel仍独占SSE。SavedHub可选加密字段lanEnabled/endpointsAssociated，旧记录默认允许手动LAN，但未获自动双入口授权；默认字段省略以保持旧记录大小。地址/凭据改变撤销关联。
+
+HTTP绑定Network、无代理，connect/read/call上限3/5/8秒；SSE仍read45秒/call无限。单轮最多一次换址，LAN网络故障后60秒冷却。认证/TLS封锁不由生命周期解除。旧SSE响应释放后才开新流，代次继续隔离旧数据。断流继承2–60秒退避与Retry-After，再读取完整快照；普通恢复也可由新流full首帧同步。首次HTTP失败后无后台定时重试，等待用户/网络/生命周期重新评估。

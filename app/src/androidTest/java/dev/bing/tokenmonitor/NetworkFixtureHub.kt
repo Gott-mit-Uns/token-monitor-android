@@ -29,6 +29,7 @@ internal class NetworkFixtureHub(private val credential: String, tls: HandshakeC
     val statsBody=AtomicReference(stats)
     val statsGate=AtomicReference<CountDownLatch?>()
     val statsEntered=CountDownLatch(1)
+    fun dropStreams() { sockets.forEach { runCatching { it.close() } } }
     private val accepting = thread {
         while (!server.isClosed) {
             val socket = try { server.accept() } catch (_: IOException) { break }

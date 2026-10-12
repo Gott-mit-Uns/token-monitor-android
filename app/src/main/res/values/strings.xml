@@ -26,7 +26,7 @@
     <string name="address_label">HTTPS / local HTTP Hub root URL</string>
     <string name="alternate_label">Second endpoint (optional)</string>
     <string name="dual_endpoint_note">Both endpoints must reach the same Hub and use the same credential. Enter your Lucky HTTPS URL and local HTTP URL.</string>
-    <string name="endpoint_policy">HTTPS is preferred on each return to the app or network change. Local HTTP can be selected on the same Wi-Fi or wired subnet. HTTPS failures do not trigger an HTTP fallback.</string>
+    <string name="endpoint_policy">After explicit association and successful validation, allowed LAN networks prefer HTTP with HTTPS fallback for network failures. Other networks use HTTPS. Authentication or certificate errors never trigger fallback.</string>
     <string name="credential_label">Hub credential</string>
     <string name="connect_save">Connect and save endpoints</string>
     <string name="connected_note">Data loaded. Open Home to view it.</string>
@@ -675,4 +675,11 @@
     <string name="dashboard_previous_record">Previous record</string>
     <string name="dashboard_next_record">Next record</string>
     <string name="dashboard_close">Back to Trends</string>
+    <string name="lan_disable">Disable LAN HTTP</string>
+    <string name="lan_enable">Enable LAN HTTP</string>
+    <string name="lan_associate">Confirm endpoint association</string>
+    <string name="lan_associated">Association confirmed by you and both endpoints readable; this is not cryptographic identity verification.</string>
+    <string name="lan_association_warning">Confirm that these two addresses reach the same Hub. The app checks authenticated reads, but the protocol cannot prove server identity. Matching credentials or usage are not proof. LAN HTTP sends credentials and data in cleartext; reused IPs or incorrect configuration remain risks. Confirmation allows automatic switching. You can disable LAN HTTP at any time.</string>
+    <string name="lan_confirm">Confirm and validate</string>
+    <string name="error_tls">HTTPS certificate or TLS validation failed. No automatic endpoint switch was made.</string>
 </resources>

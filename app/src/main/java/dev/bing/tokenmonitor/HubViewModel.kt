@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 data class HubState(val snapshot: Snapshot? = null, val loading: Boolean = false, val error: Int? = null, val savedAt: Long? = null, val history: HubHistory? = null, val subscriptions: List<Subscription>? = null, val live: Boolean = false, val deviceAliases: Map<String, String> = emptyMap(), val modelNames: ModelNames? = null, val pricing: HubPricing? = null, val deviceHistories: DeviceHistories? = null, val connectionFailure:Int? = null, val connectionRevision:Long = 0, val connectionAttempt:Long = 0,
     // A successful read is a Dashboard render event even if its history equals the previous payload.
     val historyRenderRevision:Long = 0,
-    val historyReadReceipt:HistoryReadReceipt? = null)
+    val historyReadReceipt:HistoryReadReceipt? = null, val lanPolicyRevision:Long = 0)
 class HubViewModel @JvmOverloads constructor(application: Application, private val store: HubStore = HubStore(application),
     private val client: OkHttpClient = defaultClient(), private val displayStore: DisplayPreferenceStore = DisplayPreferenceStore(application)) : AndroidViewModel(application), HubUiActions {
     companion object {
@@ -54,16 +54,20 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private var currentHub: String? = null
     private var alternateHub: String? = null
     private var credential: String? = null
+    private var lanEnabled = true
+    private var endpointsAssociated = false
+    private var lanRetryAfter = 0L
     private val http = HubHttp(client, ::transport).apply { pause() }
     @Volatile private var requestToken = 0L
     private var manualValidationTicket:Long? = null
     private var manualValidationBase:String? = null
     private var committingConnection=false
     @Volatile private var authBlocked = false
+    private var tlsBlocked = false
     private var streamEligible = false
     @Volatile private var foreground = false
     @Volatile private var networkScope: HubNetworkScope? = null
-    private fun permitsHttp(base: String, scope: HubNetworkScope? = networkScope) = HubLocalPermission.granted(getApplication()) && scope?.let { it.permitsHttp(base) && it.socketFactory != null } == true
+    private fun permitsHttp(base: String, scope: HubNetworkScope? = networkScope) = lanEnabled && HubLocalPermission.granted(getApplication()) && scope?.let { it.permitsHttp(base) && it.socketFactory != null } == true
     private val transportLock = Any()
     private var localFactory: SocketFactory? = null
     private var localClient: OkHttpClient? = null
@@ -76,13 +80,18 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             if (localFactory !== factory) {
                 localClient?.connectionPool?.evictAll()
                 localFactory = factory
-                localClient = client.newBuilder().socketFactory(factory).proxy(Proxy.NO_PROXY).connectionPool(ConnectionPool()).build()
+                localClient = client.newBuilder().socketFactory(factory).proxy(Proxy.NO_PROXY).connectionPool(ConnectionPool())
+                    .connectTimeout(minOf(client.connectTimeoutMillis.takeIf { it > 0 } ?: 3000, 3000).toLong(), TimeUnit.MILLISECONDS)
+                    .readTimeout(minOf(client.readTimeoutMillis.takeIf { it > 0 } ?: 5000, 5000).toLong(), TimeUnit.MILLISECONDS)
+                    .callTimeout(minOf(client.callTimeoutMillis.takeIf { it > 0 } ?: 8000, 8000).toLong(), TimeUnit.MILLISECONDS).build()
             }
             localClient!!
         }
     }
     @Volatile private var epoch = 0L
     private var streamCall: Call? = null
+    private var streamTransportActive = false
+    private var streamRestartPending = false
     private var streamFrames: Channel<HubStreamSnapshot>? = null
     private var streamConsumer: Job? = null
     private data class StreamSave(val record: SavedHub, val binding: Long, val sequence: Long)
@@ -104,7 +113,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private fun currentRecord(): SavedHub? {
         return SavedHub(currentHub ?: return null, credential ?: return null,
             latestBody ?: return null, mutable.value.savedAt ?: System.currentTimeMillis(), alternateHub, historyBody, subscriptionsBody, mutable.value.deviceAliases, modelNamesBody, pricingBody, deviceHistoryBody, historySignature,
-            mutable.value.snapshot?.observedModelIds)
+            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated }
     }
     private suspend fun saveCurrent(stillValid: (() -> Boolean)? = null): Boolean {
         val record = currentRecord() ?: return false
@@ -185,7 +194,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 return@launch
             }
             val (parsed,body)=result.getOrThrow()
-            val sameHub=secret==credential && (base==currentHub || base==alternateHub)
+            val sameHub=secret==credential && (base==currentHub || (endpointsAssociated && base==alternateHub))
             val baseline=if(sameHub) mutable.value.copy(connectionFailure=null) else HubState()
             val next=refreshedSnapshot(baseline,parsed,false).copy(loading=false,connectionFailure=null,
                 connectionRevision=mutable.value.connectionRevision + if(sameHub) 0 else 1,
@@ -193,23 +202,27 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             val record=SavedHub(base,secret,body,next.savedAt!!,alternate,
                 historyBody.takeIf {next.history!=null},subscriptionsBody.takeIf {next.subscriptions!=null},next.deviceAliases,
                 modelNamesBody.takeIf {next.modelNames!=null},pricingBody.takeIf {next.pricing!=null},deviceHistoryBody.takeIf {next.deviceHistories!=null},
-                historySignature.takeIf {next.history!=null}, parsed.observedModelIds)
+                historySignature.takeIf {next.history!=null}, parsed.observedModelIds).also {
+                it.lanEnabled = lanEnabled
+                it.endpointsAssociated = endpointsAssociated && secret == credential && setOf(base, alternate) == setOf(currentHub, alternateHub)
+            }
             // Lifecycle/network changes stop all reads immediately. During the local atomic write,
             // defer reconnection until the committed binding or rollback is known.
             committingConnection=true
             val saved=try {persist(record,bindingToken)} finally {committingConnection=false}
             if(saved) {
                 currentHub=base;alternateHub=alternate;credential=secret
+                endpointsAssociated=record.endpointsAssociated;lanRetryAfter=0L
                 latestBody=body;historyBody=record.history;subscriptionsBody=record.subscriptions
                 historySignature=record.historySignature
                 modelNamesBody=record.modelNames;pricingBody=record.pricing;deviceHistoryBody=record.deviceHistory
-                authBlocked=false;streamEligible=ticket==requestToken
+                authBlocked=false;tlsBlocked=false;streamEligible=ticket==requestToken
                 historyReads.revalidated()
                 mutable.value=next.copy(historyReadReceipt=historyReads.target(historyKey(next)))
             } else mutable.value=mutable.value.copy(loading=false,connectionFailure=R.string.error_data_save,
                 error=if(currentHub!=null) R.string.error_connection_change else R.string.error_data_save)
             if(foreground && ticket!=requestToken) {
-                preferSecureEndpoint()
+                selectPreferredEndpoint()
                 enforceSecureEndpoint()
                 if(!streamEligible && !authBlocked && !mutable.value.loading) refreshSaved() else startStream()
             } else {if(foreground) enforceSecureEndpoint();startStream()}
@@ -239,9 +252,9 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         if (active) {
             http.resume()
             if(committingConnection) return
-            if (!wasForeground) preferSecureEndpoint()
+            if (!wasForeground && !tlsBlocked) selectPreferredEndpoint()
             enforceSecureEndpoint()
-            if (!streamEligible && !authBlocked && !mutable.value.loading) refreshSaved() else startStream()
+            if (!streamEligible && !authBlocked && !tlsBlocked && !mutable.value.loading) refreshSaved() else startStream()
         } else {
             cancelHistory()
             interruptConnectionValidation()
@@ -282,31 +295,25 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         client.connectionPool.evictAll()
         synchronized(transportLock) { localClient?.connectionPool?.evictAll() }
         mutable.value = mutable.value.copy(loading = false)
-        val base=currentHub ?: return
-        val secure = alternateHub?.takeIf { base.startsWith("http://") && it.startsWith("https://") }
-        if (secure != null) { currentHub = secure; alternateHub = base; bindingToken++ }
         if (!foreground) return
         if (networkScope?.available == false) {
             if (!authBlocked) mutable.value = mutable.value.copy(error = R.string.error_no_network)
             return
         }
-        if (!authBlocked) refreshSaved()
+        if (!authBlocked && !tlsBlocked) refreshSaved()
     }
-    private fun preferSecureEndpoint() {
-        val base = currentHub?.takeIf { it.startsWith("http://") } ?: return
-        val secure = alternateHub?.takeIf { it.startsWith("https://") } ?: return
-        val secret = credential ?: return
-        if (!foreground) return
-        cancelHistory()
-        stopStream()
-        requestToken++
-        http.cancel()
+    private fun preferredEndpoint(): String? {
+        val base = currentHub ?: return null
+        val local = listOfNotNull(base, alternateHub).firstOrNull { it.startsWith("http://") }
+        return HubConnectionPolicy.preferred(base, alternateHub, endpointsAssociated,
+            local?.let(::permitsHttp) == true, android.os.SystemClock.elapsedRealtime() < lanRetryAfter)
+    }
+    private fun selectPreferredEndpoint() {
+        val next = preferredEndpoint() ?: return
+        if (!foreground || next == currentHub || authBlocked || tlsBlocked) return
+        cancelHistory();stopStream();requestToken++;http.cancel()
         mutable.value = mutable.value.copy(loading = false)
-        if (authBlocked) {
-            currentHub = secure; alternateHub = base; bindingToken++; streamEligible = false
-            return
-        }
-        refresh(secure, secret, base)
+        refresh(next, credential ?: return, currentHub)
     }
     private fun enforceSecureEndpoint() {
         val base = currentHub ?: return
@@ -316,19 +323,20 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         requestToken++
         http.cancel()
         mutable.value = mutable.value.copy(loading = false)
-        val secure = alternateHub?.takeIf { it.startsWith("https://") }
+        val secure = alternateHub?.takeIf { endpointsAssociated && it.startsWith("https://") }
         val secret = credential
         if (secure != null && secret != null) {
             if (authBlocked) { currentHub = secure; alternateHub = base; bindingToken++; streamEligible = false }
-            else refresh(secure, secret, base)
+            else if (!tlsBlocked) refresh(secure, secret, base)
         }
-        else mutable.value = mutable.value.copy(error = localConnectionMessage())
+        else if (!authBlocked) mutable.value = mutable.value.copy(error = localConnectionMessage())
     }
     private fun localConnectionMessage() = if (!HubLocalPermission.granted(getApplication())) R.string.error_local_permission else R.string.error_local_network
-    private fun connectionMessage(error: Throwable) = (error as? HubReadException)?.display
+    private fun connectionMessage(error: Throwable) = if (HubConnectionPolicy.classify(error) == HubConnectionPolicy.Failure.TLS) R.string.error_tls else (error as? HubReadException)?.display
         ?: if (error is java.io.IOException && !HubLocalPermission.granted(getApplication())) R.string.error_connection_local_check else R.string.error_connection
     private fun stopStream() {
         epoch++
+        streamRestartPending = false
         streamCall?.cancel(); streamCall = null
         streamFrames?.cancel(); streamFrames = null
         streamConsumer?.cancel(); streamConsumer = null
@@ -338,7 +346,8 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         mutable.value = mutable.value.copy(live = false)
     }
     private fun startStream() {
-        if (!foreground || !streamEligible || streamCall != null || mutable.value.loading || authBlocked || networkScope?.available == false || streamConsumer?.isActive == true) return
+        if (!foreground || !streamEligible || tlsBlocked || streamCall != null || mutable.value.loading || authBlocked || networkScope?.available == false || streamConsumer?.isActive == true) return
+        if (streamTransportActive) { streamRestartPending = true; return }
         val base = currentHub ?: return
         if (base.startsWith("http://") && !permitsHttp(base)) return
         val secret = credential ?: return
@@ -389,6 +398,8 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         }
         streamConsumer = consumer
         val stream = HubStream(transport(base).newBuilder().callTimeout(0, TimeUnit.SECONDS).readTimeout(45, TimeUnit.SECONDS).build())
+        streamTransportActive = true
+        streamRestartPending = false
         streamCall = stream.openProjected(base, secret, { foreground && epoch == generation && !authBlocked }, { frame ->
             // The producer blocks when this one-slot queue is full; no unbounded coroutine fan-out.
             HubWorkTrace.trace(HubWorkStage.SSE_FRAME_WAIT, frame.body.length.toLong()) {
@@ -410,16 +421,27 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 http.cancel()
                 mutable.value = mutable.value.copy(loading = false)
             }
-            mutable.value = mutable.value.copy(live = false, error = if (unauthorized) R.string.error_stream_auth else R.string.error_stream_retry)
-            if (!unauthorized) reconnect = viewModelScope.launch {
+            mutable.value = mutable.value.copy(live = false, error = if (unauthorized) R.string.error_stream_auth else if(ending.tlsFailure) R.string.error_tls else R.string.error_stream_retry)
+            if (ending.tlsFailure) tlsBlocked = true
+            if (ending.tlsFailure || !ending.recoverable) streamEligible = false
+            if (!unauthorized && !ending.tlsFailure && ending.recoverable) reconnect = viewModelScope.launch {
                 delay(maxOf(retryDelay, ending.retryAfterMs ?: 0L) + kotlin.random.Random.nextLong(500))
                 if (!foreground || epoch != generation) return@launch
                 retryDelay = (retryDelay * 2).coerceAtMost(60000L)
                 // A valid final frame finishes parsing before an ordinary reconnect replaces its generation.
                 consumer.join()
-                if (foreground && epoch == generation) startStream()
+                if (foreground && epoch == generation) {
+                    streamEligible = false
+                    mutable.value = mutable.value.copy(loading = false)
+                    refreshSaved()
+                }
             }
-        } })
+        } }, released = {
+            viewModelScope.launch {
+                streamTransportActive = false
+                if (streamRestartPending) { streamRestartPending = false; startStream() }
+            }
+        })
     }
     init {
         viewModelScope.launch {
@@ -437,9 +459,10 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             loaded.onSuccess { restored ->
                 val saved = restored?.second
                 if (saved != null) {
-                    val preferHttps = saved.address.startsWith("http://") && saved.alternate?.startsWith("https://") == true
-                    currentHub = if (preferHttps) saved.alternate else saved.address
-                    alternateHub = if (preferHttps) saved.address else saved.alternate
+                    currentHub = saved.address
+                    alternateHub = saved.alternate
+                    lanEnabled = saved.lanEnabled
+                    endpointsAssociated = saved.endpointsAssociated
                     credential = saved.credential
                     latestBody = saved.snapshot
                     historyBody = saved.history
@@ -453,7 +476,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                     val cachedDays = mutable.value.history?.daily?.size?.takeIf { historySignature != null && historySignature == key.signature }
                     mutable.value = mutable.value.copy(historyReadReceipt = historyReads.target(key, cachedDays))
                     if (!foreground) return@onSuccess
-                    refresh(currentHub!!, saved.credential)
+                    refreshSaved()
                 } else mutable.value = HubState()
             }.onFailure { mutable.value = HubState(error = R.string.error_decrypt) }
         }
@@ -461,14 +484,68 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     override fun connect(address: String, credential: String, alternate: String) = refresh(address, credential, alternate,manual=true)
     override fun refreshSaved() = refreshSaved(false)
     override fun refreshSaved(forceHistory: Boolean) {
-        val base = currentHub ?: return
+        if (authBlocked || tlsBlocked) return
+        val base = preferredEndpoint() ?: run {
+            mutable.value = mutable.value.copy(error = localConnectionMessage()); return
+        }
         val secret = credential ?: return
-        refresh(base, secret, forceHistory = forceHistory)
+        refresh(base, secret, if(base == currentHub) alternateHub else currentHub, forceHistory = forceHistory)
     }
     override fun switchEndpoint() {
         val alternate = alternateHub ?: return
         val secret = credential ?: return
-        refresh(alternate, secret, currentHub)
+        refresh(alternate, secret, currentHub, manual = true)
+    }
+    override fun lanEnabled() = lanEnabled
+    override fun endpointsAssociated() = endpointsAssociated
+    override fun configureLan(enabled: Boolean, confirmAssociation: Boolean) {
+        if (!foreground || mutable.value.loading || committingConnection) return
+        val base = currentHub ?: return
+        val secret = credential ?: return
+        val local = listOfNotNull(base, alternateHub).firstOrNull { it.startsWith("http://") } ?: return
+        if (confirmAssociation && (!enabled || alternateHub == null || authBlocked)) return
+        // Disabling is immediate; enabling does not bypass system network/permission gates.
+        if (!confirmAssociation) {
+            lanEnabled = enabled
+            mutable.value = mutable.value.copy(lanPolicyRevision = mutable.value.lanPolicyRevision + 1)
+            cancelHistory();stopStream();requestToken++;http.cancel();streamEligible = false
+            mutable.value = mutable.value.copy(loading = false)
+            viewModelScope.launch {
+                if (!saveCurrent()) mutable.value = mutable.value.copy(error = R.string.error_data_save)
+                if (foreground && !authBlocked) refreshSaved()
+            }
+            return
+        }
+        lanEnabled = true
+        if (!permitsHttp(local)) { mutable.value = mutable.value.copy(error = localConnectionMessage()); return }
+        cancelHistory();stopStream();http.cancel();streamEligible = false
+        val ticket = ++requestToken
+        mutable.value = mutable.value.copy(loading = true, error = null)
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) { runCatching {
+                for (candidate in listOfNotNull(base, alternateHub)) {
+                    http.verify(candidate) { foreground && ticket == requestToken }
+                    HubParser.parse(http.readStats(candidate, secret) { foreground && ticket == requestToken })
+                }
+            } }
+            if (ticket != requestToken) return@launch
+            if (result.isFailure) {
+                val failure = result.exceptionOrNull()!!
+                if (failure is HubReadException && failure.unauthorized) authBlocked = true
+                if (HubConnectionPolicy.classify(failure) == HubConnectionPolicy.Failure.TLS) tlsBlocked = true
+                mutable.value = mutable.value.copy(loading = false, error = connectionMessage(failure))
+                return@launch
+            }
+            val record = currentRecord() ?: return@launch
+            record.endpointsAssociated = true
+            committingConnection = true
+            val saved = try { persist(record, bindingToken) }
+                finally { committingConnection = false }
+            endpointsAssociated = saved
+            mutable.value = mutable.value.copy(loading = false, error = if(saved) null else R.string.error_data_save)
+            if (endpointsAssociated) lanRetryAfter = 0L
+            if (foreground && !authBlocked && !tlsBlocked) refreshSaved()
+        }
     }
     override fun connectionEndpoints() = listOfNotNull(currentHub,alternateHub)
     override fun editConnection(address: String, alternate: String, replacementCredential: String?) {
@@ -613,6 +690,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 currentHub = null
                 alternateHub = null
                 credential = null
+                endpointsAssociated = false;lanEnabled = true;lanRetryAfter = 0L;tlsBlocked = false
                 streamEligible = false
                 latestBody = null; historyBody = null; historySignature = null; deviceHistoryBody = null; subscriptionsBody = null; modelNamesBody = null; pricingBody = null
                 historyReads.reset()
@@ -620,7 +698,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             } else mutable.value = mutable.value.copy(loading = false, error = R.string.error_clear)
         }
     }
-    fun refresh(address: String, secret: String, alternateAddress: String? = alternateHub,manual:Boolean=false, forceHistory: Boolean = false) {
+    fun refresh(address: String, secret: String, alternateAddress: String? = alternateHub,manual:Boolean=false, forceHistory: Boolean = false, allowFallback: Boolean = true) {
         if (!foreground || mutable.value.loading || committingConnection) return
         if (networkScope?.available == false) {
             mutable.value = mutable.value.copy(error = R.string.error_no_network)
@@ -639,7 +717,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             return
         }
         if (base.startsWith("http://") && !permitsHttp(base)) {
-            if (alternate?.startsWith("https://") == true) refresh(alternate, secret, base,manual, forceHistory)
+            if ((manual || endpointsAssociated) && alternate?.startsWith("https://") == true) refresh(alternate, secret, base,manual, forceHistory)
             else mutable.value = mutable.value.copy(error = localConnectionMessage())
             return
         }
@@ -650,7 +728,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         if(manual) {replaceConnection(base,secret,alternate);return}
         if (currentHub != base || credential != secret) {
             bindingToken++
-            val sameHub = credential == secret && (base == currentHub || base == alternateHub)
+            val sameHub = credential == secret && (base == currentHub || (endpointsAssociated && base == alternateHub))
             if (!sameHub) {
                 mutable.value = HubState(connectionRevision = mutable.value.connectionRevision + 1)
                 latestBody = null; historyBody = null; historySignature = null; deviceHistoryBody = null; subscriptionsBody = null; modelNamesBody = null; pricingBody = null
@@ -674,6 +752,18 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 }
             }
             if (ticket != requestToken) return@launch
+            if (result.isFailure && allowFallback) {
+                val failure = HubConnectionPolicy.classify(result.exceptionOrNull()!!)
+                if (base.startsWith("http://") && failure == HubConnectionPolicy.Failure.NETWORK)
+                    lanRetryAfter = android.os.SystemClock.elapsedRealtime() + 60000L
+                val next = HubConnectionPolicy.fallback(base, alternate, endpointsAssociated,
+                    alternate?.let(::permitsHttp) == true, failure)
+                if (next != null) {
+                    mutable.value = mutable.value.copy(loading = false)
+                    refresh(next, secret, base, forceHistory = forceHistory, allowFallback = false)
+                    return@launch
+                }
+            }
             mutable.value = result.fold(
                 { (parsed, text) ->
                     streamEligible = true
@@ -683,6 +773,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 },
                 { error ->
                     if (error is HubReadException && error.unauthorized) authBlocked = true
+                    if (HubConnectionPolicy.classify(error) == HubConnectionPolicy.Failure.TLS) tlsBlocked = true
                     mutable.value.copy(loading = false, error = connectionMessage(error))
                 }
             )

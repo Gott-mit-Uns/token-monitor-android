@@ -30,6 +30,14 @@ class HubStoreTest {
             assertTrue(loaded.credential == generated)
             assertEquals(5000000123L, HubParser.parse(loaded.snapshot).periods.getValue("today").tokens)
             assertEquals(1234L, loaded.savedAt)
+            assertTrue(loaded.lanEnabled)
+            assertFalse(loaded.endpointsAssociated)
+            record.lanEnabled = false
+            record.endpointsAssociated = true
+            store.save(record)
+            val policy = HubStore(context, name).load()!!
+            assertFalse(policy.lanEnabled)
+            assertTrue(policy.endpointsAssociated)
             assertEquals("http://192.168.31.12:17321", loaded.alternate)
             assertEquals(123L, HistoryParser.parse(loaded.history!!).daily.single().tokens)
             assertTrue(SubscriptionParser.parse(loaded.subscriptions!!).isEmpty())

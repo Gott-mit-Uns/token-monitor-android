@@ -10,6 +10,9 @@ interface HubUiActions {
         connect(address, replacementCredential.orEmpty(), alternate)
     }
     fun dismissConnectionFailure() {}
+    fun lanEnabled(): Boolean = true
+    fun endpointsAssociated(): Boolean = false
+    fun configureLan(enabled: Boolean, confirmAssociation: Boolean = false) {}
     fun refreshSaved()
     /** Home refresh queues a new history cycle after the stats read succeeds. */
     fun refreshSaved(forceHistory: Boolean) { refreshSaved() }

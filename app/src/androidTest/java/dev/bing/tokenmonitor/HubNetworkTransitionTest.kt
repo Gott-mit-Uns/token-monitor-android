@@ -36,7 +36,7 @@ class HubNetworkTransitionTest {
         }
         return builder.build()
     }
-    @Test fun actualDualStreamsRestartOverSecureEndpointAcrossDefaultNetworks() {
+    @Test fun unconfirmedDualStreamsRequireExplicitAuthorityChangeAcrossDefaultNetworks() {
         val generated = UUID.randomUUID().toString()
         val certificate = HeldCertificate.Builder().addSubjectAlternativeName("127.0.0.1").build()
         val serverTls = HandshakeCertificates.Builder().heldCertificate(certificate).build()
@@ -62,12 +62,19 @@ class HubNetworkTransitionTest {
             await { http.streams.get() == 1 && https.closedStreams.get() == 1 && model.state.value.live }
             assertTrue(localFactory.created.get() > 0)
             assertEquals("http", model.endpointType())
+            // Unconfirmed alternate is a new authority; old details are not silently mixed.
+            assertNull(model.state.value.history)
+            main { model.loadHistory() }
+            await { model.state.value.history != null && !model.state.value.loading }
             val localReads = http.requests.get()
             val mobile = HubNetworkScope(false, false, emptyList(), networkId = 2L)
             main { model.updateNetworkScope(mobile) }
+            await { http.closedStreams.get() == 1 && !model.state.value.live }
+            assertEquals(1, https.streams.get()) // No automatic association inferred from configured URLs.
+            main { model.switchEndpoint() }
             await { https.streams.get() == 2 && http.closedStreams.get() == 1 && model.state.value.live }
             assertEquals("https", model.endpointType())
-            assertEquals(123L, model.state.value.history?.daily?.single()?.tokens)
+            assertNull(model.state.value.history) // Explicitly replaced unconfirmed authority.
             main { model.switchEndpoint() }
             await { !model.state.value.loading && https.streams.get() == 3 && model.state.value.live }
             assertEquals(localReads, http.requests.get())
@@ -190,7 +197,7 @@ class HubNetworkTransitionTest {
             connection.dispatcher.cancelAll(); connection.connectionPool.evictAll(); direct.close(); proxy.close(); store.clear()
         }
     }
-    @Test fun localAuthenticationFailureDoesNotRetryWhenForegroundOrVpnSelectsHttps() {
+    @Test fun localAuthenticationFailureDoesNotRetryOnForegroundOrVpn() {
         val generated = UUID.randomUUID().toString()
         val certificate = HeldCertificate.Builder().addSubjectAlternativeName("127.0.0.1").build()
         val https = NetworkFixtureHub(generated, HandshakeCertificates.Builder().heldCertificate(certificate).build())
@@ -206,24 +213,20 @@ class HubNetworkTransitionTest {
             main { model.updateNetworkScope(home); model.setForeground(true)
                 model.connect("https://127.0.0.1:${https.port}", generated, "http://192.168.1.1:${http.port}") }
             await { model.state.value.live && https.streams.get() == 1 }
-            http.status.set(401)
-            main { model.switchEndpoint() }
-            await { !model.state.value.loading && model.state.value.error == R.string.error_auth }
-            val secureReads = https.requests.get()
-            val localReads = http.requests.get()
-            main { model.setForeground(false); model.setForeground(true) }
-            assertEquals("https", model.endpointType())
-            assertEquals(secureReads, https.requests.get()); assertEquals(localReads, http.requests.get())
-            http.status.set(200)
             main { model.switchEndpoint() }
             await { model.state.value.live && http.streams.get() == 1 }
             http.status.set(401)
             main { model.refreshSaved() }
             await { !model.state.value.loading && model.state.value.error == R.string.error_auth }
-            val stoppedReads = http.requests.get()
+            val secureReads = https.requests.get()
+            val localReads = http.requests.get()
+            main { model.setForeground(false); model.setForeground(true) }
+            assertEquals("http", model.endpointType())
+            assertEquals(secureReads, https.requests.get()); assertEquals(localReads, http.requests.get())
             main { model.updateNetworkScope(home.copy(vpn = true)) }
-            assertEquals("https", model.endpointType())
-            assertEquals(secureReads, https.requests.get()); assertEquals(stoppedReads, http.requests.get())
+            assertEquals("http", model.endpointType()) // Unconfirmed alternate cannot acquire authority.
+            assertEquals(R.string.error_auth, model.state.value.error)
+            assertEquals(secureReads, https.requests.get()); assertEquals(localReads, http.requests.get())
         } finally {
             main { owner.clear() }
             connection.dispatcher.cancelAll(); connection.connectionPool.evictAll(); http.close(); https.close(); store.clear()

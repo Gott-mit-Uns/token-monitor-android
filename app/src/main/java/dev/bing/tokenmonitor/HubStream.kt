@@ -54,7 +54,7 @@ object StreamMerge {
     }
 }
 
-data class StreamEnd(val unauthorized: Boolean = false, val retryAfterMs: Long? = null)
+data class StreamEnd(val unauthorized: Boolean = false, val retryAfterMs: Long? = null, val tlsFailure: Boolean = false, val recoverable: Boolean = true)
 
 object HubRetryAfter {
     fun parse(value: String?, now: java.time.Instant = java.time.Instant.now()): Long? {
@@ -74,22 +74,28 @@ class HubStream(private val client: OkHttpClient) {
             maxBytes = 8L * 1024 * 1024, preserveDeviceDetails = true)
 
     internal fun openProjected(address: String, credential: String, valid: () -> Boolean = { true },
-        snapshot: (HubStreamSnapshot) -> Unit, ended: (StreamEnd) -> Unit): Call =
-        openFrames(address, credential, valid, snapshot, ended, HubJsonProjection.MAX_INPUT_BYTES, false)
+        snapshot: (HubStreamSnapshot) -> Unit, ended: (StreamEnd) -> Unit, released: () -> Unit = {}): Call =
+        openFrames(address, credential, valid, snapshot, ended, HubJsonProjection.MAX_INPUT_BYTES, false, released)
 
     private fun openFrames(address: String, credential: String, valid: () -> Boolean,
         snapshot: (HubStreamSnapshot) -> Unit, ended: (StreamEnd) -> Unit, maxBytes: Long,
-        preserveDeviceDetails: Boolean): Call {
+        preserveDeviceDetails: Boolean, released: () -> Unit = {}): Call {
         val call = client.newCall(Request.Builder().url("$address/api/stats/stream")
             .header("Authorization", "Bearer $credential").header("x-token-monitor-stream", "2").get().build())
         call.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) { if (!call.isCanceled() && valid()) ended(StreamEnd()) }
+            override fun onFailure(call: Call, e: IOException) {
+                try { if (!call.isCanceled() && valid()) ended(StreamEnd(tlsFailure = HubConnectionPolicy.classify(e) == HubConnectionPolicy.Failure.TLS)) }
+                finally { released() }
+            }
             override fun onResponse(call: Call, response: Response) {
                 var ending = StreamEnd()
                 try {
                     response.use {
                         ending = StreamEnd(it.code == 401 || it.code == 403, if (it.code == 429 || it.code == 503) HubRetryAfter.parse(it.header("Retry-After")) else null)
-                        check(it.isSuccessful && it.header("Content-Type").orEmpty().contains("text/event-stream"))
+                        if (!it.isSuccessful || !it.header("Content-Type").orEmpty().contains("text/event-stream")) {
+                            ending = ending.copy(recoverable = it.code == 429 || it.code == 503)
+                            return@use
+                        }
                         val source = it.body.source()
                         val frames = HubSseFramer(maxBytes)
                         var current: JsonObject? = null
@@ -125,8 +131,12 @@ class HubStream(private val client: OkHttpClient) {
                             }
                         }
                     }
-                } catch (_: Exception) { /* Only bounded status is returned, never private response text. */ }
-                if (!call.isCanceled() && valid()) ended(ending)
+                } catch (error: Exception) {
+                    // Never return private response text. EOF/socket failures can retry; malformed frames cannot.
+                    if (error !is IOException && ending.retryAfterMs == null && ending.recoverable) ending = ending.copy(recoverable = false)
+                    if (HubConnectionPolicy.classify(error) == HubConnectionPolicy.Failure.TLS) ending = ending.copy(tlsFailure = true)
+                }
+                try { if (!call.isCanceled() && valid()) ended(ending) } finally { released() }
             }
         })
         return call

@@ -1,6 +1,8 @@
 package dev.bing.tokenmonitor
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,6 +37,7 @@ internal class HubConnectionDraft {
 @Composable internal fun HubConnectionSettings(state:HubState,model:HubUiActions,localAllowed:Boolean,
     requestLocal:(()->Unit)?,openLocalSettings:(()->Unit)?,onForgot:()->Unit,draft:HubConnectionDraft) {
     val strings=LocalResources.current
+    var confirmLan by remember { mutableStateOf(false) }
     val endpoints=model.connectionEndpoints()
     val configured=endpoints.isNotEmpty() || state.snapshot!=null
     var editing by draft::editing
@@ -117,6 +120,12 @@ internal class HubConnectionDraft {
             if(openLocalSettings!=null) ConnectionButton(strings.getString(R.string.open_app_settings),"connection-system-settings",!state.loading,openLocalSettings)
         }
         if(configured) {
+            if(endpoints.any {it.startsWith("http://")}) {
+                ConnectionButton(strings.getString(if(model.lanEnabled()) R.string.lan_disable else R.string.lan_enable),"connection-lan-toggle",!state.loading) {model.configureLan(!model.lanEnabled())}
+                if(model.hasAlternate() && !model.endpointsAssociated())
+                    ConnectionButton(strings.getString(R.string.lan_associate),"connection-lan-associate",!state.loading && model.lanEnabled()) {confirmLan=true}
+                if(model.endpointsAssociated()) Text(strings.getString(R.string.lan_associated),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+            }
             if(model.hasAlternate()) {
                 Text(strings.getString(R.string.current_endpoint,strings.getString(if(model.endpointType()=="https") R.string.endpoint_https else R.string.endpoint_http)),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
                 ConnectionButton(strings.getString(R.string.switch_endpoint),"connection-switch",!state.loading) {model.switchEndpoint()}
@@ -124,6 +133,11 @@ internal class HubConnectionDraft {
             ConnectionButton(strings.getString(R.string.forget_connection),"connection-forget",!state.loading) {clearDraft();model.forget();onForgot()}
         }
     }
+    if(confirmLan) AlertDialog(onDismissRequest={confirmLan=false},
+        title={Text(strings.getString(R.string.lan_associate))},
+        text={Column(Modifier.heightIn(max=320.dp).verticalScroll(rememberScrollState())) {Text(strings.getString(R.string.lan_association_warning),Modifier.testTag("connection-lan-warning"))}},
+        confirmButton={TextButton(onClick={confirmLan=false;model.configureLan(true,true)},modifier=Modifier.testTag("connection-lan-confirm")) {Text(strings.getString(R.string.lan_confirm))}},
+        dismissButton={TextButton(onClick={confirmLan=false}) {Text(strings.getString(R.string.connection_cancel))}})
 }
 
 @Composable private fun ConnectionField(label:String,field:@Composable ()->Unit) {

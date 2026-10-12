@@ -26,7 +26,7 @@
     <string name="address_label">HTTPS / 局域网 HTTP Hub 根地址</string>
     <string name="alternate_label">第二入口（可选）</string>
     <string name="dual_endpoint_note">双入口应连接同一个 Hub，并使用同一连接凭据。可以填写 Lucky HTTPS 和局域网 HTTP。</string>
-    <string name="endpoint_policy">双入口每次打开或网络变更后优先使用 HTTPS；在同一 Wi-Fi 或有线网段可手动切换 HTTP。不会因 HTTPS 连接失败自动切换 HTTP。</string>
+    <string name="endpoint_policy">确认双入口关联并验证成功后，当前许可局域网内优先 HTTP；网络故障可回退 HTTPS。外网只用 HTTPS。认证或证书错误不会触发换址。</string>
     <string name="credential_label">Hub 连接凭据</string>
     <string name="connect_save">连接并保存入口</string>
     <string name="connected_note">读取成功，打开概览查看数据。</string>
@@ -671,4 +671,11 @@
     <string name="dashboard_previous_record">上一条记录</string>
     <string name="dashboard_next_record">下一条记录</string>
     <string name="dashboard_close">返回趋势</string>
+    <string name="lan_disable">关闭局域网 HTTP</string>
+    <string name="lan_enable">启用局域网 HTTP</string>
+    <string name="lan_associate">确认双入口关联</string>
+    <string name="lan_associated">双入口已由用户确认并验证可读；这不是密码学身份保证。</string>
+    <string name="lan_association_warning">请确认这两个地址确实连接同一个 Hub。应用会检查两端鉴权读取，但当前协议无法证明它们是同一服务器。相同凭据或用量不能证明身份；局域网 HTTP 明文传输凭据和数据，IP 复用或错误配置仍有风险。确认后允许自动切换；可随时关闭局域网 HTTP。</string>
+    <string name="lan_confirm">我确认，验证并启用</string>
+    <string name="error_tls">HTTPS 证书或 TLS 校验失败，未自动切换地址。</string>
 </resources>

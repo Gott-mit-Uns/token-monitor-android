@@ -31,6 +31,8 @@ data class SavedHub(val address: String, val credential: String, val snapshot: S
     val historySignature: String? = null, val observedModelIds: List<String>? = null) {
     // Kept outside the constructor so existing fake stores, copies and value equality stay compatible.
     internal var parsedSnapshot: Snapshot? = null
+    var lanEnabled: Boolean = true
+    var endpointsAssociated: Boolean = false
     override fun toString() = "SavedHub(private connection and cached data)"
 }
 
@@ -147,6 +149,8 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         writer.name("savedAt").value(record.savedAt)
         fun optional(name: String, value: String?) { if (value != null) writer.name(name).value(value) }
         optional("alternate", record.alternate)
+        if (!record.lanEnabled) writer.name("lanEnabled").value(false)
+        if (record.endpointsAssociated) writer.name("endpointsAssociated").value(true)
         optional("history", record.history)
         optional("historySignature", record.historySignature)
         optional("deviceHistory", record.deviceHistory)
@@ -170,6 +174,8 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         var snapshot: String? = null
         var savedAt: Long? = null
         var alternate: String? = null
+        var lanEnabled = true
+        var associated = false
         var history: String? = null
         var subscriptions: String? = null
         var aliases: Map<String, String> = emptyMap()
@@ -188,7 +194,7 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         reader.beginObject()
         while (reader.hasNext()) {
             val name = reader.nextName()
-            // There are only thirteen envelope fields; rejecting unknowns also bounds field bookkeeping.
+            // Reject unknown/duplicate fields to bound bookkeeping and avoid ambiguous policy.
             require(name in ENVELOPE_FIELDS && seen.add(name)) { "Invalid cache envelope field" }
             when (name) {
                 "address" -> address = string()
@@ -199,6 +205,8 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
                     savedAt = reader.nextString().toLongOrNull() ?: throw IOException("Invalid cache timestamp")
                 }
                 "alternate" -> alternate = string(true)
+                "lanEnabled" -> { require(reader.peek() == JsonToken.BOOLEAN); lanEnabled = reader.nextBoolean() }
+                "endpointsAssociated" -> { require(reader.peek() == JsonToken.BOOLEAN); associated = reader.nextBoolean() }
                 "history" -> history = string(true)
                 "subscriptions" -> subscriptions = string(true)
                 "modelNames" -> modelNames = string(true)
@@ -238,11 +246,11 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         reader.endObject()
         require(address != null && credential != null && snapshot != null && savedAt != null) { "Incomplete cache envelope" }
         return SavedHub(HubAddress.normalize(address!!), credential!!, snapshot!!, savedAt!!,
-            alternate?.let(HubAddress::normalize), history, subscriptions, aliases, modelNames, pricing, deviceHistory, historySignature, observed)
+            alternate?.let(HubAddress::normalize), history, subscriptions, aliases, modelNames, pricing, deviceHistory, historySignature, observed).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = associated }
     }
 
     private val ENVELOPE_FIELDS = setOf("address", "credential", "snapshot", "savedAt", "alternate", "history", "historySignature",
-        "deviceHistory", "modelNames", "pricing", "subscriptions", "deviceAliases", "observedModelIds")
+        "deviceHistory", "modelNames", "pricing", "subscriptions", "deviceAliases", "observedModelIds", "lanEnabled", "endpointsAssociated")
 
     private class LimitedInput(private val input: InputStream, private val limit: Int) : InputStream() {
         private var count = 0L

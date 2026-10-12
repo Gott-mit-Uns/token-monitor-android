@@ -28,42 +28,32 @@ class HubEndpointTest {
         }
         try {
             waitUntilReady()
-            assertEquals("https", model.endpointType())
-            instrumentation.runOnMainSync { model.setForeground(true) }
+            assertEquals("http", model.endpointType())
+            assertFalse(model.endpointsAssociated())
+            val saved = store.load()!!
+            instrumentation.runOnMainSync { model.setForeground(true); model.switchEndpoint() }
             waitUntilReady()
-            instrumentation.runOnMainSync { model.switchEndpoint() }
-            waitUntilReady()
-            assertNotNull(model.state.value.error)
+            assertNotNull(model.state.value.connectionFailure)
+            assertEquals("http", model.endpointType()) // Failed manual candidate never replaces the authority.
             assertEquals(123L, model.state.value.snapshot?.periods?.get("today")?.tokens)
             assertEquals(123L, model.state.value.history?.daily?.first()?.tokens)
-            assertEquals(address, store.load()?.address)
+            assertEquals(saved, store.load())
             assertFalse(model.state.value.live)
-            instrumentation.runOnMainSync {
-                model.updateNetworkScope(fixtureLocalScope())
-                model.setForeground(true)
-                model.updateNetworkScope(HubNetworkScope(false, false, emptyList()))
-            }
-            waitUntilReady()
-            assertEquals("https", model.endpointType())
-            assertEquals(123L, model.state.value.snapshot?.periods?.get("today")?.tokens)
-            instrumentation.runOnMainSync { model.switchEndpoint() }
-            waitUntilReady()
-            assertEquals("https", model.endpointType())
             val home = fixtureLocalScope()
             instrumentation.runOnMainSync { model.updateNetworkScope(home) }
             waitUntilReady()
             instrumentation.runOnMainSync { model.switchEndpoint() }
             waitUntilReady()
             assertEquals("http", model.endpointType())
-            instrumentation.runOnMainSync { model.updateNetworkScope(home.copy(networkId = 2L)) }
-            waitUntilReady()
-            assertEquals("https", model.endpointType())
-            instrumentation.runOnMainSync { model.switchEndpoint() }
+            assertEquals(saved, store.load())
+            instrumentation.runOnMainSync {
+                model.updateNetworkScope(home.copy(networkId = 2L,localTransport = false))
+                model.setForeground(false); model.setForeground(true)
+            }
             waitUntilReady()
             assertEquals("http", model.endpointType())
-            instrumentation.runOnMainSync { model.setForeground(false); model.setForeground(true) }
-            waitUntilReady()
-            assertEquals("https", model.endpointType())
+            assertEquals(saved, store.load())
+            assertEquals(123L, model.state.value.history?.daily?.first()?.tokens)
         } finally {
             instrumentation.runOnMainSync { model.setForeground(false) }
             client.dispatcher.cancelAll()

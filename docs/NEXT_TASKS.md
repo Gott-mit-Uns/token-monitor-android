@@ -14,7 +14,7 @@
 | ID | 证据/影响 | 下一步与验收 |
 |---|---|---|
 | P1-01 已完成 | 对齐上游891ac79：单组session/weekly独立选择与标签；缺字段不造零，重复同周期取最紧 | 产品修改只在LimitDisplay/HomeQuotaLayout；复用HomeQuotaRow及parser，多组和其他provider规则保留。定向验证、首次失败及未验证边界见第二阶段交接 |
-| P1-02 | 当前初次恢复/后台恢复/网络替换优先HTTPS；本次要求已验证LAN优先HTTP。HTTPS失败无已验证HTTP自动回退 | 独立连接策略任务，先明确成功验证记录与同Hub身份边界；仅许可LAN和已验证同HubHTTP可选；公网HTTPS、401停试、绑定Network、失败候选不持久化、缓存单份、无重复SSE。复用HubNetworkTransition/HubEndpoint/ConnectionTransaction/Lifecycle场景，新增仅缺失的状态覆盖 |
+| P1-02 本地安全实现完成，强身份/实网待验收 | 用户明确关联且两端验证后才LAN优先和网络失败回退；独立开关、认证/TLS封锁、SSE释放屏障 | 见HANDOFF_HUB_CONNECTION_FAILOVER.md。无可认证Hub ID，用户声明不是密码学证明。下一独立任务安排真机/蜂窝/Lucky验收；服务端身份协议另行授权 |
 | P1-03 | Luckyhealth core74，目标core78；NAS SSH被拒绝；新字段当前部署E | 先恢复已配置的安全只读连接或用已授权安全会话；核对后端/双入口身份、部署build与生产端版本、私有payload字段存在性。不给health200升级成功含义。服务升级另外立任务，不在Android审计里执行 |
 | P1-04 | Android丢弃liveActivity/waitingForInput，活动显示仅旧三态 | 在P1-03证据后，接入可选状态模型、30秒租约和10分钟问题等待、unknown/归档/未来/缺失回退；Home/Sessions共享投影。保留turnEnded优先，重连/缓存不复活过期等待；零Token本地overlay不采集 |
 | P1-05 | parent/native/T3字段未保存，只有旧auto-review汇总 | 独立关系任务：先native/T3等价身份，再parent；处理冲突、missing parent、cycle、人工fork、跨client、分页和详情。成员每个记账key只计算一次，费用/unpriced/models完整，Hub总量不改。协议→模型→cache→UI逐层验证 |
