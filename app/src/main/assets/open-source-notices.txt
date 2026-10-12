@@ -1,8 +1,7 @@
 Token Monitor Native — source and open-source notices
 
-Independently implemented in Kotlin/Compose, using the Token Monitor v0.68.0 Hub protocol and display semantics.
-Upstream: https://github.com/Javis603/token-monitor/releases/tag/v0.68.0
-Baseline commit: 5d2db368d8313415763860d594de00e46a663418
+Independently implemented in Kotlin/Compose, using the Token Monitor Hub protocol and display semantics.
+Upstream: https://github.com/Javis603/token-monitor
 No business source code from the previous Android fork is included.
 
 Token Monitor upstream MIT license
@@ -32,9 +31,11 @@ SOFTWARE.
 
 Desktop visual assets
 
-App icon, brand silhouettes and view glyphs are adapted from the Token Monitor v0.68.0 assets and renderer/icons/views. Upstream MIT attribution is included above. Android layouts, data handling and chart rendering are independent Kotlin implementations.
+App icon, brand silhouettes and view glyphs are adapted from the Token Monitor assets and renderer/icons/views. Upstream MIT attribution is included above. Android layouts, data handling and chart rendering are independent Kotlin implementations.
 
-Desktop settings and home glyphs are derived from Lucide Icons.
+Desktop settings, home and navigation glyphs are derived from Lucide Icons.
+Source: https://github.com/lucide-icons/lucide
+Feather project: https://github.com/feathericons/feather
 
 Lucide Icons license:
 
