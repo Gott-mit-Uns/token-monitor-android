@@ -1,5 +1,7 @@
 # Token Monitor Native Android
 
+2026-10-12 GitHub 开发预发布：本 Native 项目已独立保存于 [token-monitor-android-native](https://github.com/Gott-mit-Uns/token-monitor-android-native)（初始私有）。当前源码包含 Antigravity 双周期修复及 V3 连接策略；[开发验证 APK 与校验](https://github.com/Gott-mit-Uns/token-monitor-android-native/releases/tag/dev-hub-failover-20261012)、[网络专项交接](docs/HANDOFF_HUB_CONNECTION_FAILOVER.md)、[发布记录](docs/GITHUB_PUBLICATION.md)。应用仍为0.2.51-dev/code60，真机/蜂窝/Lucky未验收；以下早期“未推送”和dist/evidence链接是本地历史记录，未上传历史APK与原始证据目录。
+
 2026-10-12 第二阶段：[Antigravity单组双周期修复与本地Git交接](docs/HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。修复在独立本地分支及开发验证Debug包中；正式版本仍0.2.51-dev/code60，原dist交付APK未覆盖，没有GitHub推送。
 
 2026-10-12 接管审计：[基线、构建与测试结论](docs/TAKEOVER_AUDIT_0.2.51.md)、[v0.69.0 功能差异](docs/FEATURE_MATRIX.md)、[后续独立任务](docs/NEXT_TASKS.md)。本次仅审计和文档；当前源码仍为 0.2.51-dev/code60，桌面已实现参考仍是 v0.68.0，没有生成新 APK。
