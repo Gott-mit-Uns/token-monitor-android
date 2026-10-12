@@ -1,5 +1,7 @@
 # 0.2.51 与桌面 v0.69.0 功能差异
 
+2026-10-13 V5当前部署增量：Mac实际安装桌面0.69.0；DXP4800与Lucky公开构建及鉴权stats均为core78/runtime5、4设备，已只读取得真实history/shared数据。真实样本观察到waitingForInput/nativeSessionId/parentSessionId；liveActivity/t3ThreadId在该样本未出现，不能据此推断不支持。详细字段、Android解析及网络验收见HANDOFF_V5_NETWORK.md及HUB_API_CONTRACT.md。下文core74是2026-10-12历史快照，不代表本轮当前部署；未观察的生产事件仍保留E。
+
 0.2.56统一增量：标准字号精确Token与缩写适配、选择菜单间距、已有health公开构建信息及缓存展示、来源许可更正已整合；继承0.2.55混合排序。构建状态不是软件SemVer或生产字段验收，仍保留本表部署E及真机边界。验证/来源见HANDOFF_0.2.56.md及两项专项交接。
 
 0.2.55增量：Auto Review摘要参与普通会话、关系/Grok摘要的统一混合排序；固定桌面0.69排序goldens、Release会话专项及正式签名模拟器升级通过。见HANDOFF_0.2.55.md；生产字段、真机与其他功能边界仍按各自证据。
@@ -10,7 +12,7 @@
 
 上游固定 [v0.68.0…v0.69.0](https://github.com/Javis603/token-monitor/compare/v0.68.0...v0.69.0)，16提交；目标 `3f106ae3d4712b26cced8272f0d488eaab0de1e6`。下表上游路径基于该提交，Android路径基于当前源码；定向 diff 在 `work/audit-069-source/relevant.diff`。
 
-**当前入口边界：**Lucky公开health报告 coreRevision74/buildId匹配v0.68.0注册表，目标v0.69.0核心为78。v0.68 normalizer没有liveActivity/waitingForInput/nativeSessionId/parentSessionId/t3ThreadId；因此若当前服务确为注册表对应代码，它会丢弃这些新字段。未读鉴权stats、未核验部署源码（NAS SSH拒绝连接），这些项当前分类为E，并记录“可能C”；不能据health确认实际字段。B仅在已有v0.68字段足够时使用，或明确注明“目标v0.69 Hub能力”。
+**2026-10-12历史入口边界：**Lucky公开health报告 coreRevision74/buildId匹配v0.68.0注册表，目标v0.69.0核心为78。v0.68 normalizer没有liveActivity/waitingForInput/nativeSessionId/parentSessionId/t3ThreadId；因此若当前服务确为注册表对应代码，它会丢弃这些新字段。未读鉴权stats、未核验部署源码（NAS SSH拒绝连接），这些项当前分类为E，并记录“可能C”；不能据health确认实际字段。B仅在已有v0.68字段足够时使用，或明确注明“目标v0.69 Hub能力”。
 
 | 项目/拆分 | 分类与当前状态 | 实际证据 | 影响/优先级/下一步 |
 |---|---|---|---|

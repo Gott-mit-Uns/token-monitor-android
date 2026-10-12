@@ -46,13 +46,14 @@ class TrendsBarMotionScreenTest {
         preference: State<String>,
         view: State<String> = mutableStateOf("TRENDS"),
         shown: State<Boolean> = mutableStateOf(true),
-        height: State<Dp> = mutableStateOf(360.dp)
+        height: State<Dp> = mutableStateOf(360.dp),
+        textSize: State<String> = mutableStateOf("standard")
     ) {
         val animationClock = DesktopAnimationClock { compose.mainClock.currentTime * 1_000_000L }
         compose.mainClock.autoAdvance = false
         compose.activity.runOnUiThread { compose.activity.setContent {
             TokenTheme(true, LanguageChoice.ENGLISH, AppearancePreferences(
-                colors = mapOf("bg" to "#0b0f14", "chart" to "#2060a0"), reduceMotion = preference.value)) {
+                colors = mapOf("bg" to "#0b0f14", "chart" to "#2060a0"), reduceMotion = preference.value, textSize=textSize.value)) {
                 CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock,
                     LocalDesktopSystemMotionScale provides 1f) {
                     density = LocalDensity.current.density
@@ -155,20 +156,24 @@ class TrendsBarMotionScreenTest {
     @Test fun plotResizeScalesCurrentGeometryWithoutReenteringOrRestarting() {
         val model = mutableStateOf(scene("day" to 100, "last" to 100))
         val height = mutableStateOf(300.dp)
-        host(model, mutableStateOf(1), mutableStateOf("off"), height = height)
+        val textSize = mutableStateOf("standard")
+        host(model, mutableStateOf(1), mutableStateOf("off"), height = height, textSize=textSize)
         compose.mainClock.advanceTimeBy(64)
         val before = frame()
         assertTrue(before.running && before.scales.first() in 0f..1f)
         val small = image()
         compose.runOnIdle { height.value = 420.dp }
         compose.mainClock.advanceTimeByFrame()
+        assertEquals("A taller viewport preserves the compact plot",small.height,image().height)
+        compose.runOnIdle {textSize.value="largest"}
+        compose.mainClock.advanceTimeByFrame()
         val after = frame()
         val large = image()
-        assertTrue("Viewport adjustment grows the actual plot", large.height > small.height)
+        assertTrue("Real font-size adjustment adds axis room to the plot", large.height > small.height)
         assertTrue("Resize continues current progress and never reenters from zero", after.scales.first() >= before.scales.first())
         assertTrue(after.scales.first() < 1f)
         val innerHeight = large.height - 12 * density
-        assertEquals("The same normalized transform scales with the current viewport",
+        assertEquals("The same normalized transform scales with the actual resized plot",
             innerHeight * after.scales.first(), rows(large, 0, 2, .5f).toFloat(), 3f)
         // Resize must not reset the original 420ms/14ms endpoint.
         compose.mainClock.advanceTimeBy(400)

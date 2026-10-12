@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.height
 import androidx.compose.ui.unit.width
 import androidx.test.platform.app.InstrumentationRegistry
 import java.math.BigInteger
+import kotlin.math.roundToInt
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -23,6 +24,11 @@ class MobileDensityScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private val label get()=InstrumentationRegistry.getArguments().getString("evidenceLabel") ?: "standard"
+    private fun assertMinimumTarget(tag:String) {
+        val node=compose.onNodeWithTag(tag).fetchSemanticsNode()
+        val required=(44f*compose.activity.resources.displayMetrics.density).roundToInt()
+        assertTrue("$tag retains the 44dp minimum in real pixels: ${node.size.height} >= $required",node.size.height>=required)
+    }
     private class Actions:HubUiActions {
         override fun connect(address:String,credential:String,alternate:String) {}
         override fun refreshSaved() {}
@@ -97,13 +103,13 @@ class MobileDensityScreenTest {
         save("general")
         openSettingsSection(compose,"main");show("main-view-home-settings")
         val target=compose.onNodeWithTag("main-view-home-settings").getUnclippedBoundsInRoot()
-        assertTrue("Minimum target retained: $target",target.height>=44.dp);if(systemScale<=1.01f) assertTrue("Compact normal-size row: $target",target.height<=45.dp);save("main")
+        assertMinimumTarget("main-view-home-settings");if(systemScale<=1.01f) assertTrue("Compact normal-size row: $target",target.height<=45.dp);save("main")
         openSettingsSection(compose,"appearance");show("main-compact-total")
         val row=compose.onNodeWithTag("main-compact-total").getUnclippedBoundsInRoot()
-        assertTrue("Minimum switch row retained: $row",row.height>=44.dp);if(systemScale<=1.01f) assertTrue("Compact normal-size switch row: $row",row.height<=45.dp);save("appearance")
+        assertMinimumTarget("main-compact-total");if(systemScale<=1.01f) assertTrue("Compact normal-size switch row: $row",row.height<=45.dp);save("appearance")
         openSettingsSection(compose,"tools");show("tool-setting-codex")
         val tool=compose.onNodeWithTag("tool-setting-codex").getUnclippedBoundsInRoot()
-        assertTrue("Minimum tool row retained: $tool",tool.height>=44.dp);if(systemScale<=1.01f) assertTrue("Compact normal-size tool row: $tool",tool.height<=45.dp)
+        assertMinimumTarget("tool-setting-codex");if(systemScale<=1.01f) assertTrue("Compact normal-size tool row: $tool",tool.height<=45.dp)
         compose.onNodeWithTag("tool-visible-codex").assertIsDisplayed()
         compose.onNodeWithTag("tool-pin-codex").assertIsDisplayed()
         compose.onNodeWithTag("tool-order-codex").assertIsDisplayed();save("tools")
