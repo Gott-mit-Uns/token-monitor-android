@@ -24,11 +24,11 @@
 
 | 字段 | 语义与合并边界 | Android当前 |
 |---|---|---|
-| sessions.*.liveActivity.state/observedAt | running/waiting/idle/unknown；独立观察时钟，未来观测拒绝，30秒后退回transcript状态；unknown清除旧观测，归档不采用 | typed模型丢弃 |
-| sessions.*.waitingForInput | Codex原生问题等待；true/false/缺失；按lastUsedAt，时间相同false优先；turnEnded/归档压制，10分钟窗口 | 丢弃；不能当作批准信号 |
-| sessions.*.nativeSessionId | 验证的Codex UUID，续接rollout同native conversation；冲突丢弃；记账仍用client:sessionId | 丢弃 |
-| sessions.*.t3ThreadId | 验证的T3 App身份，可跨provider/native线程更换；有界非文本，冲突跨设备值丢弃，人工fork不同ID | 丢弃 |
-| sessions.*.parentSessionId/parentClient | 委派父关系；parentClient默认child client；缺失父不猜，人工fork不加link | 丢弃；旧review汇总不能代替关系树 |
+| sessions.*.liveActivity.state/observedAt | running/waiting/idle/unknown；独立观察时钟，未来观测拒绝，30秒后退回transcript状态；unknown清除旧观测，归档不采用 | 已消费；缓存恢复不延长租约 |
+| sessions.*.waitingForInput | Codex原生问题等待；true/false/缺失；按lastUsedAt，时间相同false优先；turnEnded/归档压制，10分钟窗口 | 已消费；不能当作批准信号 |
+| sessions.*.nativeSessionId | 验证的Codex UUID，续接rollout同native conversation；冲突丢弃；记账仍用client:sessionId | 已消费受限可选字段 |
+| sessions.*.t3ThreadId | 验证的T3 App身份，可跨provider/native线程更换；有界非文本，冲突跨设备值丢弃，人工fork不同ID | 已消费受限可选字段 |
+| sessions.*.parentSessionId/parentClient | 委派父关系；parentClient默认child client；缺失父不猜，人工fork不加link | 已消费；review独立于关系树 |
 | title | 服务器与生产设备独立opt-in；重命名和撤销由上游生产端处理 | 已读，限制160 code points/控制字符，不本地取标题 |
 | timedTokens/timedOutputTokens/timedDurationMs、modelThroughput | raw counters，按设备连续差分或session比例；capability false表示无读数；首帧仅基线，负delta重置 | 已支持通用消费；Antigravity原生duration是否产生需联调 |
 
@@ -60,3 +60,5 @@ SavedHub保持一个凭据和单份权威缓存。新增加密可选lanEnabled/e
 上一接管审计仅对已知Lucky入口公开health作系统TLS校验的GET；role=hub、4devices、coreRevision74、node-hub runtimeRevision5。coreBuildId匹配v0.68.0注册表；目标v0.69.0为coreRevision78。无鉴权stats/SSE样本，且DXP4800 SSH拒绝连接，不能确认该Lucky后端与默认NAS、LAN入口为同一服务，也不能宣称已升级/提供新字段。
 
 下一步只保留脱敏能力结果：build、字段是否出现、各状态数量、schema合法性、连接数/生命周期计数与全量一致性摘要；不保存凭据、标题、私有响应正文。取得现成安全会话后才读取私有接口，普通health连通不作为完整业务通过。
+
+V4不改事件、HTTP路径、网络策略或存储信封。原始snapshot可选元数据随加密缓存保存，恢复时按当前时钟评估租约；freshness不重写关系。版本展示不将health.version=1或hubBuild指纹当作Hub应用版本。

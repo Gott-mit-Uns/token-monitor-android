@@ -42,3 +42,7 @@ Node `src/hub/server.js`无diff，shared/Worker usage有diff；事件名保持�
 2026-10-12完成891ac79对应的Android单组双周期与标签分支。直接执行固定目标providerPresentation函数生成15组定向selection/label fixture，记录源文件SHA256；旧limit-display fixture只更新受影响的单组case，并附独立sourceCommit，不回写其余v0.68来源。空kind准入与空provider状态占位采用Android保守语义，未把畸形输入假称全部桌面DOM对等。
 
 没有重新扫描上游16提交，未处理其它会话/设备/网络功能；全局桌面已实现参考仍为v0.68。交接与验证见 [HANDOFF_ANTIGRAVITY_DUAL_WINDOWS](HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。
+
+## V4合同与UI增量
+
+固定3f106ae3d4712b26cced8272f0d488eaab0de1e6，只取sessionLive/sessionRows及直接依赖生成12分组+12状态参考。Android采用BigInteger/BigDecimal精确账目；跨端参考费用用可精确表示的0.125，避免将JavaScript 0.1浮点误差当作Android汇总错误。五项Lucide资源取自固定上游，保留MIT许可。等待批准、zero-token/local overlays、Grok历史身份无远程完整证据。部分对齐不证明生产升级；review仍列表末尾，与桌面混合排序有局部差异。详见HANDOFF_DESKTOP_069_UI.md。

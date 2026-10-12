@@ -80,3 +80,7 @@ SSE 消费采用一个待处理帧槽、独立消费 Job 和 conflated 保存队
 HubConnectionPolicy只负责候选排序、失败分类和回退准入；ViewModel仍独占SSE。SavedHub可选加密字段lanEnabled/endpointsAssociated，旧记录默认允许手动LAN，但未获自动双入口授权；默认字段省略以保持旧记录大小。地址/凭据改变撤销关联。
 
 HTTP绑定Network、无代理，connect/read/call上限3/5/8秒；SSE仍read45秒/call无限。单轮最多一次换址，LAN网络故障后60秒冷却。认证/TLS封锁不由生命周期解除。旧SSE响应释放后才开新流，代次继续隔离旧数据。断流继承2–60秒退避与Retry-After，再读取完整快照；普通恢复也可由新流full首帧同步。首次HTTP失败后无后台定时重试，等待用户/网络/生命周期重新评估。
+
+## V4展示层增量
+
+SessionMetadataParser保存受限可选状态与关系；SessionDisplay统一租约/输入等待投影，SessionRelationshipGroups只建立展示身份和父链，不改Hub总量或记账key。SessionListRow携带独立成员、精确汇总及角色，Home/Sessions复用状态。PageBrowseState只保存每页查询/滚动，不拥有HTTP或SSE；DesktopParityMetadata显式保持部分对齐和未知Hub版本。网络、加密存储信封和生产服务保持原链路。

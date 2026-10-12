@@ -16,9 +16,9 @@
 | P1-01 已完成 | 对齐上游891ac79：单组session/weekly独立选择与标签；缺字段不造零，重复同周期取最紧 | 产品修改只在LimitDisplay/HomeQuotaLayout；复用HomeQuotaRow及parser，多组和其他provider规则保留。定向验证、首次失败及未验证边界见第二阶段交接 |
 | P1-02 本地安全实现完成，强身份/实网待验收 | 用户明确关联且两端验证后才LAN优先和网络失败回退；独立开关、认证/TLS封锁、SSE释放屏障 | 见HANDOFF_HUB_CONNECTION_FAILOVER.md。无可认证Hub ID，用户声明不是密码学证明。下一独立任务安排真机/蜂窝/Lucky验收；服务端身份协议另行授权 |
 | P1-03 | Luckyhealth core74，目标core78；NAS SSH被拒绝；新字段当前部署E | 先恢复已配置的安全只读连接或用已授权安全会话；核对后端/双入口身份、部署build与生产端版本、私有payload字段存在性。不给health200升级成功含义。服务升级另外立任务，不在Android审计里执行 |
-| P1-04 | Android丢弃liveActivity/waitingForInput，活动显示仅旧三态 | 在P1-03证据后，接入可选状态模型、30秒租约和10分钟问题等待、unknown/归档/未来/缺失回退；Home/Sessions共享投影。保留turnEnded优先，重连/缓存不复活过期等待；零Token本地overlay不采集 |
-| P1-05 | parent/native/T3字段未保存，只有旧auto-review汇总 | 独立关系任务：先native/T3等价身份，再parent；处理冲突、missing parent、cycle、人工fork、跨client、分页和详情。成员每个记账key只计算一次，费用/unpriced/models完整，Hub总量不改。协议→模型→cache→UI逐层验证 |
-| P1-06 | Grok基本分组可依据现有id/models；历史增强是Electron-only | 独立纯展示分组，成员及合计保留；明确历史识别受限，不能声称完整历史对齐；不读取Cursor本地数据库 |
+| P1-04 客户端完成，生产联调待验收 | V4可选状态、30秒租约与输入等待，批准原因无可靠字段 | P1-03后验证生产时效；unknown/未来/归档/缓存恢复已有定向证据，不补本地overlay |
+| P1-05 客户端完成，生产联调待验收 | V4关系、续接、跨provider、冲突/循环及独立成员账目通过固定上游fixture | 下一步验证生产字段、真机成员详情；review混合排序仍保留局部差异 |
+| P1-06 基本分组完成 | V4按id/正数grok模型分组，不读取本地数据库 | 历史增强缺远程合同，不声称完整历史对齐；等待另行Hub能力任务 |
 | P1-07 | Antigravity title/throughput/总量消费已有，但当前Agent产出/授权未验证 | 定向只读联调生产端升级后的标题重命名/撤销、计时能力、推理Token总量与history一致性；缺数据保留无读数，不本地再加reasoning |
 | P1-08 | 真机公网、SSE单连接/恢复一致性未驗收；perf50仍接近192MiB边界 | 按UI_PARITY实体设备单完成；大full frame与导航/保存并发只做必要定向测量。先复现再优化，不能据局部freshness加速声称整体流畅 |
 | P1-09 | `USER_FEEDBACK_048.md`最新验收保留LAN只读桥接16次中的1次失败，history两读间隔1.685秒；原日志`work/s5-lan-home-r10.txt`仍在。影响历史请求节流和revision变化下的读取次数；不是重复SSE的证明 | 先对照该运行时间线、HistoryReadCoordinator和UI重试/revision失效触发，区分并发读与允许的新revision；只复现这条失败路径，保留首次日志。无证据时不归咎于Hub或改节流阈值掩盖 |
@@ -38,3 +38,7 @@
 定向验收：单group两周期、只剩一个周期、重复同kind取最紧、过滤hidden后只剩一group、多group保持旧pick/顺序、没有reset时标签完整、showUsed模式、reduce-motion无行为倒退。先跑受影响单元；需要界面证据时仅跑已有HomeQuota专项。当前任务不要求全量385/252、所有动效或重新打APK。完成后更新FEATURE_MATRIX/UI_PARITY并等待后续任务，不自动串行推进其它项目。
 
 需要用户配合的是手机连接/原版本确认、蜂窝公网测试，以及必要时恢复NAS安全只读访问。无需在聊天里提供凭据；若安全会话确实无法建立，在执行前单独确认登录方式。
+
+## V4停止边界
+
+本轮按明确授权消费可选0.69合同并优化现有导航/设置/关于信息。下一独立任务建议P1-03：只读确认生产Hub部署版本、两入口关联依据及新字段产出，再安排真实手机公网验收；不自动升级服务。P1-09和LiveHttpsEntryTest环境问题保持独立。完整对齐、旧review混合排序、Grok历史增强仍未完成。
