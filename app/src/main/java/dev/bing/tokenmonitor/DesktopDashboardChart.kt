@@ -9,14 +9,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
@@ -28,6 +31,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
+
+/** Measured native text bounds also exposed for axis accessibility/layout diagnostics. */
+internal val DashboardAxisBounds = SemanticsPropertyKey<List<Rect>>("DashboardAxisBounds")
+private data class DashboardAxisPlacement(val text:String,val layout:TextLayoutResult,val bounds:Rect)
+
+private fun dateAxisPlacements(labels:List<Pair<DashboardTrendAxisLabel,TextLayoutResult>>,
+    model:DashboardTrendModel,size:IntSize,gap:Float):List<DashboardAxisPlacement> {
+    if(size.width<=0 || size.height<=0) return emptyList()
+    val sx=size.width/model.width.toFloat();val sy=size.height/model.height.toFloat()
+    val candidates=labels.map {(label,layout)->
+        val x=(label.x.toFloat()*sx-layout.size.width/2f).coerceIn(0f,(size.width-layout.size.width).coerceAtLeast(0).toFloat())
+        val y=(label.y.toFloat()*sy-layout.firstBaseline).coerceIn(0f,(size.height-layout.size.height).coerceAtLeast(0).toFloat())
+        DashboardAxisPlacement(label.label,layout,Rect(x,y,x+layout.size.width,y+layout.size.height))
+    }
+    if(candidates.size<2) return candidates
+    val first=candidates.first();val last=candidates.last()
+    val selected=mutableListOf(first)
+    candidates.drop(1).dropLast(1).forEach {candidate->
+        if(candidate.bounds.left>=selected.last().bounds.right+gap && candidate.bounds.right+gap<=last.bounds.left) selected+=candidate
+    }
+    if(last.bounds.left>=selected.last().bounds.right+gap) selected+=last
+    return selected
+}
 
 internal data class DashboardRasterStrip(val sourceX:Int,val left:Int,val width:Int,val top:Int,val height:Int)
 internal class DashboardBarAtlas(
@@ -261,8 +287,28 @@ internal suspend fun prepareDashboardChart(
     val ticks=remember(model.axisTicks,textStyle,textMeasurer,display.compactUnits,locale) {
         model.axisTicks.map {tick->tick to textMeasurer.measure(compact(tick.value.toDouble()),textStyle)}
     }
-    val labels=remember(model.axisLabels,textStyle,textMeasurer) {
-        model.axisLabels.map {label->label to textMeasurer.measure(label.label,textStyle)}
+    val labels=remember(model.axisLabels,model.daily,model.bars,model.candles,textStyle,textMeasurer) {
+        val last=model.daily.lastOrNull()?.let {row->
+            val x=if(model.mode==DashboardTrendMode.BARS) model.bars.lastOrNull()?.let {it.x+it.width/2} else model.candles.lastOrNull()?.wickX
+            x?.let {DashboardTrendAxisLabel(DashboardTrendProjection.shortDate(row.date),it,model.height-4)}
+        }
+        val complete=if(last==null) model.axisLabels else model.axisLabels.filter {it.x<last.x} + last
+        complete.map {label->label to textMeasurer.measure(label.label,textStyle)}
+    }
+    var axisPixelSize by remember {mutableStateOf(IntSize.Zero)}
+    val nativeDensity=LocalDensity.current
+    val dates=remember(labels,model.width,model.height,axisPixelSize,nativeDensity) {
+        dateAxisPlacements(labels,model,axisPixelSize,with(nativeDensity) {4.dp.toPx()})
+    }
+    val tickPlacements=remember(ticks,model.width,model.height,axisPixelSize,dates,nativeDensity) {
+        if(axisPixelSize==IntSize.Zero) emptyList() else ticks.map {(tick,layout)->
+            val sx=axisPixelSize.width/model.width.toFloat();val sy=axisPixelSize.height/model.height.toFloat()
+            val x=(tick.labelX.toFloat()*sx-layout.size.width).coerceIn(0f,(axisPixelSize.width-layout.size.width).coerceAtLeast(0).toFloat())
+            val lastTextTop=dates.minOfOrNull {it.bounds.top} ?: axisPixelSize.height.toFloat()
+            val maximumTop=minOf(axisPixelSize.height-layout.size.height.toFloat(),lastTextTop-layout.size.height-with(nativeDensity) {2.dp.toPx()}).coerceAtLeast(0f)
+            val y=(tick.labelY.toFloat()*sy-layout.firstBaseline).coerceIn(0f,maximumTop)
+            DashboardAxisPlacement(layout.layoutInput.text.text,layout,Rect(x,y,x+layout.size.width,y+layout.size.height))
+        }
     }
     // A pending palette change must not recolour the previous committed model.
     // Direct component callers without a prepared target retain the original path.
@@ -290,7 +336,9 @@ internal suspend fun prepareDashboardChart(
             val bar=model.bars[accessibleIndex];onBar(bar,model.daily[accessibleIndex])
         } else onCandle(model.candles[accessibleIndex])
     }
-    Canvas(modifier.fillMaxWidth().testTag("dashboard-chart").semantics {
+    Canvas(modifier.fillMaxWidth().onSizeChanged {axisPixelSize=it}.testTag("dashboard-chart").semantics {
+        this[DashboardAxisBounds]=(tickPlacements+dates).map {it.bounds}
+        stateDescription=dates.joinToString(" – ") {it.text}
         contentDescription=strings.getString(R.string.dashboard_chart_description,count)
         if(count>0) {
             onClick(strings.getString(R.string.chart_tap_detail)) {choose(accessibleIndex);true}
@@ -312,13 +360,11 @@ internal suspend fun prepareDashboardChart(
         fun point(x:Double,y:Double)=Offset(x.toFloat()*sx,y.toFloat()*sy)
         fun roundedPoint(x:Double,y:Double)=point(DashboardTrendProjection.svgRound(x),DashboardTrendProjection.svgRound(y))
         val frame=motion?.value
-        ticks.forEach { (tick,layout)->
+        ticks.forEach { (tick,_)->
             drawLine(line.copy(alpha=.07f),point(model.plot.x,tick.lineY),
                 point(model.plot.x+model.plot.width,tick.lineY),sx)
-            // SVG y is the text baseline. Font ascent comes from the actual native layout.
-            drawText(layout,topLeft=Offset(tick.labelX.toFloat()*sx-layout.size.width,
-                tick.labelY.toFloat()*sy-layout.firstBaseline))
         }
+        tickPlacements.forEach {drawText(it.layout,topLeft=it.bounds.topLeft)}
         if(model.mode==DashboardTrendMode.BARS) {
             val atlas=if(preparedTarget!=null) preparedTarget.atlas else denseCache?.forSize(size)
             drawLine(line.copy(alpha=.18f),point(model.plot.x,model.plot.y+model.plot.height),
@@ -375,9 +421,6 @@ internal suspend fun prepareDashboardChart(
                 }
             }
         }
-        labels.forEach { (label,layout)->
-            drawText(layout,topLeft=Offset(label.x.toFloat()*sx-layout.size.width/2f,
-                label.y.toFloat()*sy-layout.firstBaseline))
-        }
+        dates.forEach {drawText(it.layout,topLeft=it.bounds.topLeft)}
     }
 }

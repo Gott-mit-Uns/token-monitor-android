@@ -274,7 +274,7 @@ class TrendsMainScreenTest {
         assertTrue("Long values remain above their caption", compose.onNodeWithTag("trends-main-active-days").getUnclippedBoundsInRoot().bottom <= compose.onNodeWithTag("trends-main-active-days-label").getUnclippedBoundsInRoot().top)
     }
 
-    @Test fun availableViewportFillsTheSparkAndShortLargeTextContentKeepsItsNaturalScrollableHeight() {
+    @Test fun compactSparkIsBoundedAndShortLargeTextContentKeepsItsNaturalScrollableHeight() {
         val model = mutableStateOf(TrendsMainProjection.project(preview(), "today", 165_164_772, today)!!)
         val appearance = mutableStateOf(AppearancePreferences(reduceMotion = "on"))
         val target = mutableStateOf<Dp?>(600.dp)
@@ -282,8 +282,8 @@ class TrendsMainScreenTest {
         host(model, appearance, availableHeight = target, viewportHeight = viewport)
         val large = compose.onNodeWithTag("trends-main").getUnclippedBoundsInRoot()
         val largeChart = compose.onNodeWithTag("trends-main-chart").getUnclippedBoundsInRoot()
-        assertEquals("Source flex preview fills the supplied viewport", 600f, (large.bottom-large.top).value, 1f)
-        assertTrue("The 120-unit viewBox is not a 120dp visual height limit", (largeChart.bottom-largeChart.top).value > 132f)
+        assertTrue("Compact content no longer fills unused viewport", (large.bottom-large.top).value < 600f)
+        assertEquals("Preferred plot height includes its padding", 160f, (largeChart.bottom-largeChart.top).value, 1f)
 
         compose.runOnIdle {
             target.value = 160.dp

@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import java.text.NumberFormat
 
@@ -59,7 +60,8 @@ fun HistoryTrend(history: HubHistory) {
         if (monthly) Text(strings.getString(R.string.monthly_note), style = MaterialTheme.typography.bodySmall)
         if (rows.isEmpty()) Text(strings.getString(R.string.history_missing, if (monthly) strings.getString(R.string.history_monthly) else strings.getString(R.string.history_daily)))
         rows.drop(page * 20).take(20).forEach { row ->
-            Column(Modifier.fillMaxWidth().clickable { selected = row }.padding(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(Modifier.fillMaxWidth().heightIn(min = CompactUiTokens.InteractiveMinHeight).testTag("history-record-${row.date}")
+                .clickable { selected = row }.padding(vertical = CompactUiTokens.DetailRowPadding), verticalArrangement = Arrangement.spacedBy(CompactUiTokens.ChartTitleSpacing)) {
                 Text(row.date, style = MaterialTheme.typography.bodySmall)
                 Text("${row.tokens?.let { numbers.format(it) } ?: strings.getString(R.string.not_provided)} Token")
             }

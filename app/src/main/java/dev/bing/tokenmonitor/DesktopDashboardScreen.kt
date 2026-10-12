@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -74,8 +73,7 @@ import kotlinx.coroutines.ensureActive
             error?.let {Text(strings.getString(it),Modifier.fillMaxWidth().padding(horizontal=14.dp,vertical=6.dp)
                 .semantics {liveRegion=LiveRegionMode.Polite},style=quotaTextStyle(11),color=MaterialTheme.colorScheme.error)}
         }}) {padding->
-        BoxWithConstraints(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding),contentAlignment=Alignment.TopCenter) {
-            val availableHeight=maxHeight-28.dp
+        Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding),contentAlignment=Alignment.TopCenter) {
             Column(Modifier.widthIn(max=1200.dp).fillMaxWidth().verticalScroll(rememberScrollState()).testTag("dashboard-scroll")
                 .padding(14.dp).onSizeChanged {ui.resizeOverview(with(density) {it.width.toDp().value.toDouble()})},verticalArrangement=Arrangement.spacedBy(12.dp)) {
                 if(history==null) {
@@ -86,7 +84,7 @@ import kotlinx.coroutines.ensureActive
                     DashboardTab.OVERVIEW->DesktopDashboardOverview(history,today,ui.metricCost,{ui.selectMetric(it);updateDisplay?.invoke(DisplayChange.HeatmapMetric(if(it) "cost" else "tokens"))},
                         {selectedRow=it},motion=overviewMotion)
                     DashboardTab.TRENDS->trend?.let {model->
-                        DashboardTrendsBody(history,model,ui,availableHeight,{bar,row->selectedBar=bar;selectedRow=row},{selectedCandle=it},chartMotion,chartEventKey)
+                        DashboardTrendsBody(history,model,ui,{bar,row->selectedBar=bar;selectedRow=row},{selectedCandle=it},chartMotion,chartEventKey)
                     }
                     DashboardTab.RECORDS->{
                         DesktopTextButton(onClick=ui::closeRecords,modifier=Modifier.testTag("dashboard-records-back")) {Text(strings.getString(R.string.dashboard_back_overview))}
@@ -115,17 +113,13 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
 }
 
 @Composable private fun DashboardTrendsBody(
-    history:HubHistory,model:DashboardTrendModel,ui:DashboardUiState,availableHeight:Dp,
+    history:HubHistory,model:DashboardTrendModel,ui:DashboardUiState,
     onBar:(DashboardTrendBar,HistoryRow)->Unit,onCandle:(DashboardTrendCandle)->Unit,motion:State<DashboardChartFrame>?,eventKey:Any?
 ) {
     val strings=LocalResources.current
     val density=LocalDensity.current
     val text=MaterialTheme.colorScheme.onSurface
     val overlay=LocalDesktopOverlayColor.current
-    var controlsHeightValue by rememberSaveable {mutableFloatStateOf(96f)}
-    var legendHeightValue by rememberSaveable {mutableFloatStateOf(0f)}
-    val controlsHeight=controlsHeightValue.dp
-    val legendHeight=legendHeightValue.dp
     var controlsMeasured by remember {mutableStateOf(false)}
     var legendMeasured by remember {mutableStateOf(false)}
     var chartSize by remember {mutableStateOf(IntSize.Zero)}
@@ -157,8 +151,8 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
             }
         }
     }
-    Column(Modifier.fillMaxWidth().testTag("dashboard-trends"),verticalArrangement=Arrangement.spacedBy(12.dp)) {
-        FlowRow(Modifier.fillMaxWidth().onSizeChanged {controlsHeightValue=with(density) {it.height.toDp().value};controlsMeasured=true},
+    Column(Modifier.fillMaxWidth().testTag("dashboard-trends"),verticalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
+        FlowRow(Modifier.fillMaxWidth().onSizeChanged {controlsMeasured=true},
             horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(2.dp),itemVerticalAlignment=Alignment.CenterVertically) {
             if(model.mode==DashboardTrendMode.BARS) DesktopDashboardSegment(
                 listOf("tool" to strings.getString(R.string.dashboard_by_tool),"model" to strings.getString(R.string.dashboard_by_model)),
@@ -177,8 +171,7 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
                 }
             }
         }
-        val h=(availableHeight-controlsHeight-(if(model.mode==DashboardTrendMode.BARS) legendHeight else 0.dp)-72.dp-
-            (if(model.hasUnknownData || model.daily.isEmpty()) 40.dp else 0.dp)).coerceAtLeast(200.dp)
+        val h=CompactUiTokens.chartHeight()
         val chartModifier=Modifier.fillMaxWidth().height(h).onSizeChanged {chartSize=it}
         val committedChart=ui.committedChart
         if(committedChart!=null) DesktopDashboardChart(committedChart,chartModifier,onBar,onCandle,motion,
@@ -186,7 +179,7 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
         else Spacer(chartModifier.testTag("dashboard-chart"))
         if(model.daily.isEmpty()) Text(strings.getString(R.string.dashboard_no_daily),style=quotaTextStyle(11),color=text.copy(alpha=.55f))
         if(model.hasUnknownData) Text(strings.getString(R.string.dashboard_chart_unknown),Modifier.testTag("dashboard-trend-unknown"),style=quotaTextStyle(11),color=text.copy(alpha=.55f))
-        if(model.mode==DashboardTrendMode.BARS) DashboardLegend(model,Modifier.onSizeChanged {legendHeightValue=with(density) {it.height.toDp().value};legendMeasured=true})
+        if(model.mode==DashboardTrendMode.BARS) DashboardLegend(model,Modifier.onSizeChanged {legendMeasured=true})
     }
 }
 
@@ -196,15 +189,15 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
     val palette=LocalDesktopVendorPalette.current
     val overlay=LocalDesktopOverlayColor.current
     val text=MaterialTheme.colorScheme.onSurface
-    Column(modifier.fillMaxWidth().heightIn(max=136.dp).verticalScroll(rememberScrollState()).testTag("dashboard-legend"),
+    Column(modifier.fillMaxWidth().heightIn(max=CompactUiTokens.ChartHeightSecondary).verticalScroll(rememberScrollState()).testTag("dashboard-legend"),
         verticalArrangement=Arrangement.spacedBy(1.dp)) {
         model.legend.forEach {row->
-            Row(Modifier.fillMaxWidth().padding(horizontal=6.dp,vertical=4.dp).testTag("dashboard-legend-${row.key}"),
+            Row(Modifier.fillMaxWidth().padding(horizontal=6.dp,vertical=CompactUiTokens.ChartTitleSpacing).testTag("dashboard-legend-${row.key}"),
                 verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
                 Row(Modifier.weight(1f),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                 Box(Modifier.size(11.dp).clip(RoundedCornerShape(3.dp)).background(dashboardColor(row.key,model.byModel,palette))
                     .border(1.dp,overlay.copy(alpha=.18f),RoundedCornerShape(3.dp)))
-                Text(row.key,Modifier.weight(1f),style=quotaTextStyle(12),color=text.copy(alpha=.9f),maxLines=1,overflow=TextOverflow.Ellipsis)
+                Text(row.key,Modifier.weight(1f),style=quotaTextStyle(12),color=text.copy(alpha=.9f))
                 }
                 Text(DesktopCompactTokens.format(row.value.toDouble(),display.compactUnits,DesktopCompactTokens.localeTag(locale)),style=quotaTextStyle(12,true),color=text.copy(alpha=.85f))
                 Text(row.percent.toPlainString()+"%",Modifier.widthIn(min=50.dp),style=quotaTextStyle(12),textAlign=TextAlign.End,color=text.copy(alpha=.55f))

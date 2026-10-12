@@ -44,9 +44,10 @@ import kotlin.math.floor
 ) {
     val strings = LocalResources.current
     val text = MaterialTheme.colorScheme.onSurface
+    val preferredChartHeight = CompactUiTokens.chartHeight()
     if (model.points.isEmpty()) {
-        Box(Modifier.fillMaxWidth().then(modifier).then(if (availableHeight != null) Modifier.heightIn(min = availableHeight) else Modifier)
-            .padding(end = 2.dp).padding(vertical = 24.dp).testTag("trends-main"), contentAlignment = Alignment.Center) {
+        Box(Modifier.fillMaxWidth().then(modifier).heightIn(min = CompactUiTokens.ChartHeightSecondary)
+            .padding(end = 2.dp).padding(vertical = CompactUiTokens.SectionSpacing).testTag("trends-main"), contentAlignment = Alignment.Center) {
             Text(strings.getString(R.string.trends_empty), style = quotaTextStyle(12), color = text.copy(alpha = .6f))
         }
         return
@@ -86,14 +87,13 @@ import kotlin.math.floor
         Triple("peak", R.string.trends_peak_day, DesktopCompactTokens.format(model.stats.peakDayTokens.toDouble(), display.compactUnits, DesktopCompactTokens.localeTag(locale)))
     )
 
-    // availableHeight is a flex target, never a fixed constraint on the lazy item.
-    // Measure non-chart content first so large text can increase the item's natural
-    // height instead of losing cards inside a forced viewport-sized placeable.
+    // The caller's viewport is not a chart growth target. Measure real paragraphs
+    // independently so short screens scroll and large text keeps its natural height.
     Layout(modifier = Modifier.fillMaxWidth().then(modifier).padding(end = 2.dp).testTag("trends-main"), content = {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(range.uppercase(Locale.ROOT), Modifier.weight(1f).testTag("trends-main-range"),
                 style = quotaTextStyle(11).copy(letterSpacing = (.44f * textScale).sp), color = text.copy(alpha = .6f))
-            Box(Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).testTag("trends-main-open-history")
+            Box(Modifier.sizeIn(minWidth = CompactUiTokens.InteractiveMinHeight, minHeight = CompactUiTokens.InteractiveMinHeight).testTag("trends-main-open-history")
                 .semantics { contentDescription = open }
                 .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null,
                     role = Role.Button, onClickLabel = open, onClick = onOpenHistory), contentAlignment = Alignment.Center) {
@@ -139,7 +139,7 @@ import kotlin.math.floor
                 style = quotaTextStyle(10).copy(fontFeatureSettings = "tnum"), color = text.copy(alpha = .45f),
                 textAlign = androidx.compose.ui.text.style.TextAlign.End)
         }
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
             metrics.chunked(2).forEach { row -> TrendsMainStatRow(row, text, overlay) }
         }
     }) { children, constraints ->
@@ -147,12 +147,10 @@ import kotlin.math.floor
         val cap = children[0].measure(natural)
         val axis = children[2].measure(natural)
         val cards = children[3].measure(natural)
-        val gap = 10.dp.roundToPx()
+        val gap = CompactUiTokens.ChartTitleSpacing.roundToPx()
         val chartPadding = 12.dp.roundToPx()
         val fixedHeight = cap.height + axis.height + cards.height + gap * 3
-        val viewport = availableHeight?.roundToPx()
-            ?: fixedHeight + 120.dp.roundToPx() + chartPadding
-        val chartHeight = maxOf(48.dp.roundToPx() + chartPadding, viewport - fixedHeight)
+        val chartHeight = maxOf(CompactUiTokens.InteractiveMinHeight.roundToPx() + chartPadding, preferredChartHeight.roundToPx())
         val spark = children[1].measure(natural.copy(minHeight = chartHeight, maxHeight = chartHeight))
         val height = fixedHeight + spark.height
         layout(constraints.maxWidth, constraints.constrainHeight(height)) {
@@ -179,9 +177,9 @@ private data class TrendsSparkGeometry(val x: Float, val y: Float, val width: Fl
                 style = quotaTextStyle(10), color = text.copy(alpha = .55f))
         }
     }) { children, constraints ->
-        val gap = 8.dp.roundToPx()
-        val horizontalPadding = 10.dp.roundToPx()
-        val verticalPadding = 8.dp.roundToPx()
+        val gap = CompactUiTokens.SectionSpacing.roundToPx()
+        val horizontalPadding = CompactUiTokens.CardHorizontalPadding.roundToPx()
+        val verticalPadding = CompactUiTokens.CardContentPadding.roundToPx()
         val textGap = 2.dp.roundToPx()
         val firstWidth = (constraints.maxWidth - gap) / 2
         val widths = listOf(firstWidth, constraints.maxWidth - gap - firstWidth)

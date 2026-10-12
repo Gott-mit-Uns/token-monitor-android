@@ -54,7 +54,7 @@ import kotlin.math.floor
     val strings=LocalResources.current
     BoxWithConstraints(Modifier.fillMaxWidth().then(modifier).testTag("dashboard-overview")) {
         val width=availableWidth?.coerceAtMost(maxWidth) ?: maxWidth
-        Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(12.dp)) {
+        Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
             DashboardStatStrip(model.summary)
             Column(verticalArrangement=Arrangement.spacedBy(10.dp)) {
                 FlowRow(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,
@@ -134,11 +134,10 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                         .drawBehind {
                             if(index%columns!=columns-1) drawLine(overlay.copy(alpha=.06f),Offset(size.width,0f),Offset(size.width,size.height),1.dp.toPx())
                             if(index>=columns) drawLine(overlay.copy(alpha=.06f),Offset.Zero,Offset(size.width,0f),1.dp.toPx())
-                        }.padding(horizontal=padding,vertical=14.dp),verticalArrangement=Arrangement.spacedBy(5.dp)) {
-                        Text(stat.value,Modifier.fillMaxWidth().testTag("dashboard-card-${stat.key}-value"),style=valueStyle,color=text,
-                            maxLines=1,overflow=TextOverflow.Ellipsis)
-                        Text(stat.label.uppercase(Locale.ROOT),Modifier.fillMaxWidth(),style=captionStyle,color=text.copy(alpha=.55f),
-                            maxLines=1,overflow=TextOverflow.Ellipsis)
+                        }.heightIn(min=if(clickable) CompactUiTokens.InteractiveMinHeight else CompactUiTokens.DetailRowMinHeight)
+                        .padding(horizontal=padding,vertical=CompactUiTokens.CardContentPadding),verticalArrangement=Arrangement.spacedBy(CompactUiTokens.ChartTitleSpacing)) {
+                        Text(stat.value,Modifier.fillMaxWidth().testTag("dashboard-card-${stat.key}-value"),style=valueStyle,color=text)
+                        Text(stat.label.uppercase(Locale.ROOT),Modifier.fillMaxWidth().testTag("dashboard-card-${stat.key}-label"),style=captionStyle,color=text.copy(alpha=.55f))
                     }
                 }
             }) {children,constraints->

@@ -74,7 +74,7 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
             val candles = remember(rows, bucketDays) { HistoryAnalytics.candles(rows, bucketDays) }
             val chartMax = if (mode == ChartMode.KLINE) candles.maxOfOrNull { it.high }?.coerceAtLeast(1) ?: 1L else maximum
             Row(Modifier.fillMaxWidth().horizontalScroll(scroll)) {
-                Canvas(Modifier.width(width).height(180.dp).testTag("desktop-history-chart").semantics {
+                Canvas(Modifier.width(width).height(CompactUiTokens.chartHeight(secondary = mode == ChartMode.LINE)).testTag("desktop-history-chart").semantics {
                     contentDescription = strings.getString(R.string.history_chart_description, start, end)
                 }.pointerInput(calendar, candles, mode, byModel) {
                     detectTapGestures { point ->
