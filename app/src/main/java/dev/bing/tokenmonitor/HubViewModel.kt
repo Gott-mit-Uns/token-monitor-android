@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.EmptyCoroutineContext
 import okhttp3.OkHttpClient
 import okhttp3.Call
 import okhttp3.ConnectionPool
@@ -68,6 +69,17 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     @Volatile private var foreground = false
     @Volatile private var networkScope: HubNetworkScope? = null
     private fun permitsHttp(base: String, scope: HubNetworkScope? = networkScope) = lanEnabled && HubLocalPermission.granted(getApplication()) && scope?.let { it.permitsHttp(base) && it.socketFactory != null } == true
+    // TLS idle socket close may send close_notify. Keep that I/O off Android's main
+    // thread and independent of viewModelScope, which is cancelled before onCleared.
+    // Capture retired pools now: a delayed close must never select a new local client.
+    private fun retireIdlePools(vararg pools: ConnectionPool?) {
+        val retired = pools.filterNotNull().distinct()
+        if (retired.isNotEmpty()) Dispatchers.IO.dispatch(EmptyCoroutineContext, Runnable {
+            retired.forEach { it.evictAll() }
+        })
+    }
+    private fun retireCurrentIdlePools() = retireIdlePools(client.connectionPool,
+        synchronized(transportLock) { localClient?.connectionPool })
     private val transportLock = Any()
     private var localFactory: SocketFactory? = null
     private var localClient: OkHttpClient? = null
@@ -78,7 +90,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         val factory = networkScope?.socketFactory ?: throw CancellationException()
         return synchronized(transportLock) {
             if (localFactory !== factory) {
-                localClient?.connectionPool?.evictAll()
+                retireIdlePools(localClient?.connectionPool)
                 localFactory = factory
                 localClient = client.newBuilder().socketFactory(factory).proxy(Proxy.NO_PROXY).connectionPool(ConnectionPool())
                     .connectTimeout(minOf(client.connectTimeoutMillis.takeIf { it > 0 } ?: 3000, 3000).toLong(), TimeUnit.MILLISECONDS)
@@ -270,7 +282,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         val changed = previous?.let { it.networkId != scope.networkId || it.available != scope.available } == true
         networkScope = scope
         if(committingConnection) {
-            if(changed) {cancelHistory();requestToken++;streamEligible=false;http.cancel();client.connectionPool.evictAll();synchronized(transportLock) {localClient?.connectionPool?.evictAll()}}
+            if(changed) {cancelHistory();requestToken++;streamEligible=false;http.cancel();retireCurrentIdlePools()}
             return
         }
         if(!changed && manualValidationBase?.let {it.startsWith("http://") && !permitsHttp(it)}==true) {
@@ -293,8 +305,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         streamEligible = false
         requestToken++
         http.cancel()
-        client.connectionPool.evictAll()
-        synchronized(transportLock) { localClient?.connectionPool?.evictAll() }
+        retireCurrentIdlePools()
         mutable.value = mutable.value.copy(loading = false)
         if (!foreground) return
         if (networkScope?.available == false) {
@@ -789,7 +800,6 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         setForeground(false)
         credential = null
         client.dispatcher.cancelAll()
-        client.connectionPool.evictAll()
-        synchronized(transportLock) { localClient?.connectionPool?.evictAll() }
+        retireCurrentIdlePools()
     }
 }

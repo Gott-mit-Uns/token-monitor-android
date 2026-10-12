@@ -68,3 +68,15 @@ V4不改事件、HTTP路径、网络策略或存储信封。原始snapshot可选
 Android复用现有GET /api/health的验证响应，保留可选hubBuild.schemaVersion/runtime/coreRevision/coreBuildId/runtimeRevision/runtimeBuildId。按固定桌面v0.69注册表比较状态；runtime只归一化node-hub/cloudflare-worker，修订须为正整数，指纹只接受sha256:加64位小写十六进制。health.version仍只作协议含义，不转换应用SemVer。
 
 只有health、鉴权stats及解析成功后才提交候选构建，失败/取消保持既有绑定和有效状态。元数据随现有加密SavedHub可选字段缓存，缺字段旧记录保持可读；前后台/SSE/freshness仍保留现有state.copy语义。不保存原始health正文，不增加请求/轮询，不改变服务端合同或部署。关于页明确等待验证、未报告、真实修订与无法验证状态，离线值来自最近成功验证。定向证据见HANDOFF_SCOPED_UI_0.2.56.md。
+
+## V5 真实部署复核（2026-10-13）
+
+本机已安装桌面 Token Monitor 0.69.0。只读复核沿用桌面现有安全配置，凭据仅在内存中使用；DXP4800 LAN 与既有 Lucky HTTPS 入口的 health 和鉴权 stats 均为 HTTP 200，设备数均为 4，Hub coreRevision=78、node-hub runtimeRevision=5，构建指纹与固定 v0.69 注册表一致。LAN history 和 sync/content 也读取成功。此结果更新上文历史 coreRevision=74 的部署快照，不意味着生产服务由本次 Android 任务升级。
+
+两个入口的设备集合与构建相同；连续读取时有正在发生的用量更新，不能要求不同时刻的 allTime 对象字节相同。LAN→Lucky→LAN 的夹取中，Lucky 的每个 allTime 字段与两侧至少一个 LAN 样本相同。仅保存匹配布尔值，不记录私有用量、设备名称、会话标题或正文。设备/构建/凭据匹配仍不提供可认证的稳定实例身份，V3 关联限制继续有效。
+
+宿主验证证据：`evidence/v5-unified/network/host-dual-entry.json`。Android 当前模拟器与真实 NAS 不同子网，直接 LAN 准入应保守拒绝；通过 Mac 回环只读桥接读取真实 LAN 数据的测试，须明确标为桥接。真实 Lucky HTTPS 可由模拟器正式客户端直接读取，系统证书校验不变；具体 APK 指纹、生命周期和缓存结果见 V5 网络交接。
+
+V5 Android 实际联调已完成：真实 LAN 数据经受控只读回环桥接、真实 Lucky 原域名/系统 TLS 经仅转发加密字节的本地 CONNECT 诊断路线。实际 snapshot/history/标题/timed 平均速率及受限 Codex 可选字段解析、加密缓存、Home/Launcher/SSE 与冷模型恢复通过。直接 Android LAN 和直接公网/蜂窝/IPv6 仍未验证，详见 `docs/HANDOFF_V5_NETWORK.md`，不将诊断路线等同于手机网络。
+
+真实 TLS 还暴露并修复 Android 连接池主线程清理异常：空闲 TLS Socket 关闭可发送 close_notify，原 ViewModel 清理/网络替换会触发 NetworkOnMainThreadException。现在捕获原池后在独立 IO 调度中关闭，不改变鉴权、证书/主机名、端点准入、取消/epoch、SSE 或有效缓存规则。相同真实 Conscrypt keep-alive/StrictMode 测试 APK 的修复前后失败→通过，以及最终真实联调均有指纹证据。

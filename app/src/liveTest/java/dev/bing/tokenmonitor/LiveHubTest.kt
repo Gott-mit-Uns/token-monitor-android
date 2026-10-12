@@ -90,6 +90,7 @@ class LiveHubTest {
             assertTrue(model.state.value.snapshot!!.periods.keys.containsAll(listOf("today", "month", "allTime")))
             await { store.load()?.snapshot != null }
             val cached = store.load()!!.snapshot
+            LiveV5ContractProof.verify(cached,HubParser.parse(cached))
             val sourceZones = (Json.parseToJsonElement(cached).jsonObject["devices"] as JsonArray).associate { value ->
                 val source = value.jsonObject
                 source["deviceId"]!!.jsonPrimitive.content to
