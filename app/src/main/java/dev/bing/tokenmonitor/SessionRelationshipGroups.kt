@@ -66,7 +66,7 @@ internal object SessionRelationshipGroups {
                 if(subagents>0) count(subagents) else "")
         }.toMutableList()
         if(bots.isNotEmpty()) result+=summarize("session-group:cursor-grok-bot",grokLabel,bots.sortedByDescending {it.sortTime},"grok","cursor",now,"${bots.size}")
-        return result.sortedWith(compareByDescending<SessionListRow> {it.sortTime}.thenByDescending {it.tokens}.thenByDescending {BigDecimal(it.cost)}.thenBy {it.name})
+        return SessionListDisplay.sorted(result)
     }
     private fun summarize(id:String,name:String,members:List<SessionListRow>,kind:String,client:String,now:Long,detail:String):SessionListRow {
         val tokens=members.fold(BigInteger.ZERO) {sum,row->sum+row.tokens}

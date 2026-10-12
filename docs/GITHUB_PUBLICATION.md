@@ -1,5 +1,15 @@
 # Native GitHub 发布记录
 
+## 0.2.55 会话混合排序正式发布
+
+2026-10-12，[v0.2.55 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.55)已正式发布，非草稿/非预发行；main和带注释Tag已推送，Tag产品提交a1ba688203684cbf58103fd8027f22ac38f343ef。开发分支fix/session-review-order-055基于已发布0.2.54，快进合入main，保留历史，无强制推送或remote变更。
+
+0.2.55/code64只修复Auto Review摘要未参与会话混合排序的问题；采用固定桌面0.69参考，原账目/成员、分页和详情保留。36 Release单元、15 Release UI及两阶段正式签名0.2.54→0.2.55合成加密记录/偏好升级通过；最终Release Lint0错误/93既有警告/1提示，无新增问题。没有实体手机、生产服务操作或GitHub Actions测试。详情见HANDOFF_0.2.55.md。
+
+正式APK SHA256为88589cbf84318ca426e38897430da1d2d93c36d4236eeb18bc47ad40c21e07fd，正式证书与0.2.53/0.2.54一致。APK、SHA256SUMS、release-manifest、VALIDATION四个资产全部uploaded；草稿阶段下载全部资产，与本地逐文件哈希一致，manifest commit与Tag一致；发布后再次下载APK校验一致。上传命令曾返回APK资产重名，但草稿资产完整且回读正确，未重传或覆盖资产，确认后发布。
+
+交付dist/release-0.2.55/，完整本地证据evidence/session-review-order-055/；不上传测试APK、截图、签名私钥或私人配置。旧Debug迁移、真机/公网和其他待办未扩大验收。本轮发布结束后停止。
+
 ## 0.2.54 双任务整合正式发布
 
 2026-10-12，[v0.2.54 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.54)已发布，非草稿、非预发行。main和带注释标签已推送；标签产品提交97f8d0adba5fa4d2619e539903fe1ca87f0c9c2e。大字体2070edf与历史验证55d682f完整合并，合并提交f517232。

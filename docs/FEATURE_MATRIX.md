@@ -1,5 +1,7 @@
 # 0.2.51 与桌面 v0.69.0 功能差异
 
+0.2.55增量：Auto Review摘要参与普通会话、关系/Grok摘要的统一混合排序；固定桌面0.69排序goldens、Release会话专项及正式签名模拟器升级通过。见HANDOFF_0.2.55.md；生产字段、真机与其他功能边界仍按各自证据。
+
 0.2.54增量：P1-10主页精确总量与近似值挤压、TOTAL裁切和百分比拆行已修复，保留字号、自动分行/增高，真实系统配置0.9/2.0浅深及375dp窄屏合成验证通过。新版真机待复核。P1-09两阶段测试/工具完整整合，统计/Hub合同/SSE产品行为未变，详见HANDOFF_0.2.54.md。
 
 审计日期2026-10-12。A=Android已支持；B=Android缺失但Hub已有所需数据；C=Android缺失且当前Hub不提供；D=仅桌面无需移植；E=证据不足。一个发布功能可拆为不同 wire/本地部分；不把目标Hub支持等同当前部署已有。
@@ -25,6 +27,7 @@
 | Cursor turn结束指示 | A通用turnEnded消费；生产端及时检测D，当前数据E | Android `HubData.kt:54`三态、`SessionDisplay.activity`；上游Cursor metadata新增完成检测 | 定向fixture确保显式true/false/缺失；不重新实现采集 |
 | 设备名称统一 | A共享名称resolver | Home/设备列表、详情、rate使用DeviceDisplay.name：本地别名→Hub displayName→id→hostname；空白与内部占位值不显示 | P2真机核对各入口一致；相关单元与UI回归见本轮交接 |
 | 导航Lucide图标 | A静态资源已对齐，不依赖Hub | 上游4129b5e修改model/session/status/tool/trends SVG；Android五项资源按固定v0.69源码更新 | P2仅资源/许可/尺寸更新；保留八入口及48dp触摸验收 |
+| Review/关系/Grok/普通会话混合排序 | A，0.2.55已对齐 | 上游groupSessionRows最后统一按时间、Token、费用、名称比较；固定源blob核对及10组goldens通过，36 Release单元/15 UI专项 | P2-04完成；只改最终排序，不改成员/聚合/统计或远端字段；真机未验证 |
 | Hub API/SSE协议 | A旧事件消费；客户端支持可选字段；部署仍E | diff未修改 `src/hub/server.js`；shared usage及Worker副本变更；事件仍snapshot/stats/freshness，stream v2 | P1验证生产产出，不能称“服务文件未改所以协议无变化” |
 | Home history重试与revision失效读取 | A客户端策略及当前NAS只读验证；旧r10归因E | 新校验器按周期检查4次预算/4000ms等待，记录脱敏目标变化、请求终态和桥接开始/结束；12校验器+7桥接+8Android定向通过，两轮75秒真实NAS观察通过。短间隔新revision由受控页面/逻辑fixture验证 | P1-09验证工具修复完成；真实观察没有复现1.685秒，旧运行无身份不能追溯，见 [P1-09交接](HANDOFF_P1_09_HISTORY_DIAGNOSIS.md)。不扩大为真机、公网或长期性能验收 |
 | Cursor活动驱动云端用量刷新 | D生产端 | 上游collector/source watch、自刷新节流；Android只看Hub | 不移植，不启动后台轮询 |
@@ -36,4 +39,4 @@
 
 用户授权按现有可选v0.69合同补客户端消费，生产字段存在性仍为E；客户端fixture支持不等于已部署。等待批准原因、零Token local overlay、Grok跨历史身份和Windows Dock受限，详见HANDOFF_DESKTOP_069_UI.md阶段A。
 
-V4实现与实测见 [本轮交接](HANDOFF_DESKTOP_069_UI.md)。A仅表示客户端行为，不证明生产Hub上传新字段。旧auto-review保留列表末尾，关系/Grok采用新排序；完整混合排序仍有局部差异。
+V4实现与实测见 [本轮交接](HANDOFF_DESKTOP_069_UI.md)。A仅表示客户端行为，不证明生产Hub上传新字段。历史auto-review末尾差异已在0.2.55按固定0.69完整混合排序修复，见HANDOFF_0.2.55.md。

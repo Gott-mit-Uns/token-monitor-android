@@ -8,6 +8,7 @@ import java.time.ZoneId
 
 class SessionListTest {
     private val fixture=Json.parseToJsonElement(javaClass.getResource("/session-list-parity.json")!!.readText()).jsonObject
+    private val ordering=Json.parseToJsonElement(javaClass.getResource("/session-group-order-069.json")!!.readText()).jsonObject
     private val zone=ZoneId.of("Asia/Shanghai")
     private fun snapshot(input:JsonElement)=HubParser.parse(buildJsonObject {put("periods",buildJsonObject {put("today",input)})}.toString())
     private fun JsonObject.string(key:String)=get(key)!!.jsonPrimitive.content
@@ -29,7 +30,7 @@ class SessionListTest {
     }
     @Test fun identifierAndReviewGroupMatchOriginal() {
         fixture["ids"]!!.jsonArray.forEach {item->val row=item.jsonObject;assertEquals(row.string("expected"),SessionListDisplay.idLabel(row.string("input")))}
-        fixture["groups"]!!.jsonArray.forEach {element->
+        fixture["groups"]!!.jsonArray.forEachIndexed {index,element->
             val case=element.jsonObject
             val clock=fixture["cases"]!!.jsonArray.first().jsonObject["now"]!!.jsonPrimitive.long
             val raw=SessionListDisplay.raw(snapshot(case["input"]!!).periods.getValue("today").sessions,clock,label={"Codex"},zone=zone)
@@ -38,11 +39,29 @@ class SessionListTest {
                 put("id",row.id);put("name",row.name);put("subtitle",row.subtitle);put("detail",row.detail);put("value",row.tokens.toLong());put("cost",row.cost);put("sortTime",row.sortTime);put("review",row.review);put("reviews",JsonArray(row.reviews.map {JsonPrimitive(it.id)}))
             }})
             // Decimal sums retain exact wire values; compare original amounts numerically rather than binary floating strings.
-            val expected=case["expected"]!!.jsonArray
+            // Retain every legacy value/member assertion; use the pinned 0.69 full-group
+            // ordering instead of the old background-review-only helper's append order.
+            val byId=case["expected"]!!.jsonArray.associateBy {it.jsonObject.string("id")}
+            val expected=ordering["legacyOrders"]!!.jsonArray[index].jsonArray.map {byId.getValue(it.jsonPrimitive.content)}
             assertEquals(expected.size,actual.size)
             actual.zip(expected).forEach {(a,b)->
                 assertEquals(b.jsonObject.string("cost").toDouble(),a.jsonObject.string("cost").toDouble(),1e-9)
                 assertEquals(JsonObject(b.jsonObject-"cost"),JsonObject(a.jsonObject-"cost"))
+            }
+        }
+    }
+    @Test fun mixedReviewRelationshipAndGrokOrderingMatchesPinnedDesktop069() {
+        val now=ordering["now"]!!.jsonPrimitive.long
+        ordering["cases"]!!.jsonArray.forEach {element->
+            val case=element.jsonObject
+            val raw=SessionListDisplay.raw(snapshot(case["input"]!!).periods.getValue("today").sessions,now)
+            val grouped=SessionListDisplay.grouped(raw,now=now)
+            val expected=case["expected"]!!.jsonArray
+            assertEquals(case.string("name"),expected.map {it.jsonObject.string("id")},grouped.map {it.id})
+            grouped.zip(expected).forEach {(actual,reference)->
+                assertEquals(BigInteger(reference.jsonObject["value"]!!.jsonPrimitive.content),actual.tokens)
+                assertEquals(0,java.math.BigDecimal(reference.jsonObject.string("cost")).compareTo(java.math.BigDecimal(actual.cost)))
+                assertEquals(reference.jsonObject["members"]!!.jsonArray.map {it.jsonPrimitive.content},actual.reviews.map {it.id})
             }
         }
     }
