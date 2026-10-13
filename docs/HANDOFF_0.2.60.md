@@ -1,5 +1,7 @@
 # 0.2.60 联合更新验收与发布交接
 
+发布完成回执：2026-10-13，0.2.60/69已正式发布，产品Commit `a8f0c05b02e9ab3bf1ba3b01d9911992fe0fa6c5`，APK SHA256 `7d9ddcc4395d9d87b5daa6d3c98b26cf627083c4d31b0b8e75f754a4fa0eab5f`；最终61定向/56窗口/12周期执行全部通过，四附件草稿回读及发布后APK校验一致。详见 GITHUB_PUBLICATION.md 和Release附件。本文件其余段落保留验收/封包时历史边界。
+
 2026-10-13，Asia/Shanghai。接续 `origin/release/0.2.60` 的 `6783284c6f4c116e70c072fb3c42026c458edb83`，使用独立 worktree；原 Mac main 及未跟踪 AGENTS-original.md 保留。候选统一为 **0.2.60 / code69**，正式包名仍为 `dev.bing.tokenmonitor.nativeclient`，不使用 tokenMonitorIsolatedTest。
 
 ## 交付变化

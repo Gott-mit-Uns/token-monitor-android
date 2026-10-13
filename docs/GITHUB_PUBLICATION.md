@@ -1,5 +1,19 @@
 # Token Monitor Android GitHub 发布记录
 
+## 0.2.60 — Windows/Mac 联合更新正式发布
+
+2026-10-13，[v0.2.60 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.60)已正式发布，非草稿、非预发行，版本 **0.2.60 / code69**。唯一annotated Tag固定产品提交 `a8f0c05b02e9ab3bf1ba3b01d9911992fe0fa6c5`，main已快进包含该提交，沿用既有正式证书与 `dev.bing.tokenmonitor.nativeclient` 包名，没有isolated标志。
+
+从指定 `6783284` 接续网络就绪/有限恢复、冷启动一次性路由、轻量字体和Dashboard刷新图标，补修LAN→公网pending-ready恢复预算；用户追加的固定周期日期说明/空白间距删除也纳入同一个版本。主任务和侧任务源码/验收历史完整保留，无重复合并、强推、历史Tag/Release覆盖或有数据应用卸载/清除。
+
+联合最终源码 **432 Release单元通过**；Lint **0错误/93警告/1提示**，67运行依赖与字体通知通过。最终APK **61次定向Android检查**、8组实际系统窗口 **56次执行**、4组320dp/系统2.0/App最大字号/中英文浅深主题周期补验 **12次执行** 全部通过；统计分别记录，不称为更多独立方法。正式68→69合成缓存/偏好升级保留UID、1份加密Hub缓存及4份偏好文件指纹；最终安装字节与发布字节相同。背景杀进程/force-stop另有PID和采样截图，真机/连续视频/性能边界明确。
+
+正式APK **15,183,070 bytes**，SHA256 `7d9ddcc4395d9d87b5daa6d3c98b26cf627083c4d31b0b8e75f754a4fa0eab5f`。同最终提交、版本、正式签名和Release参数的字体基线 **11,488,341 bytes**，全部字体增量 **3,694,729 bytes ≤ 5,000,000 bytes**。两包内嵌VCS提交相同；基线仅反向移除原17项字体差异，没有安装到设备。
+
+APK、SHA256SUMS.txt、release-manifest.json和VALIDATION.md四附件在草稿阶段全部完整下载，逐文件哈希与本地一致，随后正式发布；发布后再次完整下载APK，SHA256一致。回执位于 `evidence/unified-060/publication/`，交付 `dist/release-0.2.60/`；首次失败、截图、APK/测试指纹、侧任务Red及恢复过程均保留。范围见 [联合交接](HANDOFF_0.2.60.md) 与Release附件。
+
+未连接实体手机；新版蜂窝→Wi-Fi、真实Lucky/家庭LAN、持续锁屏/厂商后台、真机后台请求/SSE数与性能/FPS未验证。**原0.2.59 Xiaomi13Ultra蜂窝→Wi-Fi首次及两次复测失败、手动刷新恢复的结论不变**。未修改Hub/Lucky/NAS/Agent/路由器/桌面生产服务。本次仅此一个正式Release，发布后仅补本文档回执，固定Tag/APK不重建/覆盖，到此停止。
+
 ## 0.2.59 — V5 统一优化正式发布
 
 2026-10-13，[v0.2.59 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.59)已正式发布，非草稿、非预发行。版本0.2.59/code68，产品提交与固定Tag指向 `a509800a062732cb8ecd9820458d48440a199f3c`；main与feat/v5-unified-compact-trends均已推送。安全同步c04533e，保留历史及未跟踪AGENTS-original.md，没有覆盖未提交修改。
