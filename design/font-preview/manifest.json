@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-13",
+  "status": "design-assets-pending-integration",
+  "apk_added_font_budget_bytes": 5000000,
+  "measurement": "Raw file bytes; .NET DeflateStream CompressionLevel.Optimal estimate, not measured APK delta",
+  "fonts": [
+    {
+      "file": "fonts/Inter.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter%5Bopsz,wght%5D.ttf",
+      "license_file": "fonts/Inter-OFL.txt",
+      "license_source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt",
+      "bytes": 876576,
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "deflate_bytes": 471124
+    },
+    {
+      "file": "fonts/JetBrainsMono.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf",
+      "license_file": "fonts/JetBrainsMono-OFL.txt",
+      "license_source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/jetbrainsmono/OFL.txt",
+      "bytes": 187208,
+      "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+      "deflate_bytes": 92000
+    },
+    {
+      "file": "fonts/NotoSansSC.ttf",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanssc/NotoSansSC%5Bwght%5D.ttf",
+      "license_file": "fonts/NotoSansSC-OFL.txt",
+      "license_source_url": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanssc/OFL.txt",
+      "bytes": 17772300,
+      "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da",
+      "deflate_bytes": 11333827
+    }
+  ]
+}
