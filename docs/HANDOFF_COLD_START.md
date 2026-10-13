@@ -26,3 +26,21 @@
 Before merging/releasing with the next update, run the new two Android test classes plus existing HubLifecycleTest, NavigationStreamScreenTest and MainNavigationScreenTest. Run the relevant unit tests and Lint, inspect the captured startup screenshot in both themes, and verify actual force-stop/cold launch versus ordinary background return. Explicitly cover slow success, offline/failure/timeout, first-install configuration and Activity/process recreation. Use an isolated simulator with synthetic cache; do not clear user data or use production Hub credentials.
 
 The known Mac toolchain paths from prior V5 scripts are `/Users/bing/android-toolchain/jdk-17.0.20.1+1/Contents/Home` and `/Users/bing/android-toolchain/sdk`; connectivity and current availability were not verified in this session. Follow the normal signed release/upgrade gates when this is incorporated into a future version.
+
+## Remote follow-up
+
+UU remote desktop connection to the online BING-MAC was established on 2026-10-13; Finder's /Applications listing did not show Android Studio. No build or terminal input was executed. The Windows Computer Use runtime prohibits terminal automation; this is a tooling boundary, not a Mac/network failure.
+
+For a human or a Mac-local agent with shell access, start from the existing repository, fetch the staged branch and create a separate checkout without replacing its working tree:
+
+```sh
+git fetch origin
+git worktree add ../token-monitor-cold-start-verify origin/fix/cold-start-loading
+cd ../token-monitor-cold-start-verify
+export JAVA_HOME=/Users/bing/android-toolchain/jdk-17.0.20.1+1/Contents/Home
+export ANDROID_HOME=/Users/bing/android-toolchain/sdk
+export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH"
+bash ./gradlew :app:testDebugUnitTest :app:compileDebugAndroidTestKotlin :app:lintDebug --offline
+```
+
+This first check does not install anything or change existing phone/emulator data. After compilation, run the new Android classes and the listed regressions on an isolated emulator, with the normal signing/test-build setup. Preserve first-failure logs/APK fingerprints. Do not treat this unexecuted command block as a passing result.
