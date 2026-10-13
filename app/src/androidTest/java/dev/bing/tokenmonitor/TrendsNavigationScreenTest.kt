@@ -4,6 +4,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.*
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
@@ -206,7 +208,12 @@ class TrendsNavigationScreenTest {
             compose.onNodeWithTag("fixed-period-read").assertIsDisplayed().assertIsEnabled()
                 .assertTextEquals(if(english) "Read device history" else "读取设备历史")
             val read=compose.onNodeWithTag("fixed-period-read").getUnclippedBoundsInRoot()
-            assertTrue("The manual read target retains 48dp width and height",(read.right-read.left).value>=48f && (read.bottom-read.top).value>=48f)
+            val node=compose.onNodeWithTag("fixed-period-read").fetchSemanticsNode()
+            val pixels=node.boundsInRoot
+            val minimum=with(node.layoutInfo.density) {48.dp.roundToPx()}
+            println("PUBLIC_PERIOD_READ_GEOMETRY dpWidth=${(read.right-read.left).value} dpHeight=${(read.bottom-read.top).value} pixelWidth=${pixels.width} pixelHeight=${pixels.height} rawWidth=${node.size.width} rawHeight=${node.size.height} minimumPx=$minimum density=${compose.activity.resources.displayMetrics.density}")
+            save("$phase-before-size-assert")
+            assertTrue("The manual read target retains 48dp width and height in raw layout pixels",node.size.width>=minimum && node.size.height>=minimum)
             save(phase)
         }
         fun recovered(phase:String):Pair<Float,Float> {
@@ -240,12 +247,12 @@ class TrendsNavigationScreenTest {
         }}
         selectTrends()
         pending(if(english) "Some devices do not provide complete history. This range is unavailable." else "部分设备未提供完整历史，无法显示此范围。","missing")
-        compose.onNodeWithTag("fixed-period-read").performClick()
+        compose.onNodeWithTag("fixed-period-read").performTouchInput {click(Offset(center.x,1f))}
         val firstHeight=recovered("ready")
         assertEquals(1,actions.devices)
         compose.runOnIdle {state.value=state.value.copy(snapshot=sourceSnapshot.copy(deviceHistoryRevision="period-row-r2"))}
         pending(if(english) "Read each device’s retained history to calculate this range." else "读取每台设备的完整历史后，计算此范围。","revision-pending")
-        compose.onNodeWithTag("fixed-period-read").performClick()
+        compose.onNodeWithTag("fixed-period-read").performTouchInput {click(Offset(center.x,height.toFloat()-1f))}
         val secondHeight=recovered("ready-again")
         assertEquals("A second recovery restores the same complete Trends item height",firstHeight.first,secondHeight.first,0.01f)
         assertEquals("A second recovery restores the same chart height",firstHeight.second,secondHeight.second,0.01f)
