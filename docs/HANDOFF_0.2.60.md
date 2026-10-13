@@ -25,7 +25,7 @@
 | 实际系统窗口 | 320/411dp × 系统字号1.0/2.0 × 浅深主题，8组56项通过；最大系统组叠加最大 App 字号；字体检查每组均最大 App 字号，导航/语言另测中英及标准/最大 App 字号 |
 | 受影响 UI | 主趋势、Dashboard 柱/K线/概览、记录柱/K线/折线/行、轴完整及无重叠、Home大数值、八入口/语言、48dp刷新和设置中心/外缘真实触摸独立 |
 | 字形 | 混排、粗体、金额/小数/负号、动态长文本通过；系统与 Token UI 对龘(U+9F98)/𠮷(U+20BB7)在400/700均 hasGlyph=true；没有声称所有未知Unicode必然受每个厂商系统支持 |
-| 正式签名升级 | GitHub 0.2.59/68 → 0.2.60/69 覆盖成功；UID、五份合成加密文件SHA保持一致；连接地址/alternate/LAN关联、缓存/history/metadata、App/System/mono/custom四组字体、字号/主题/配色/语言保留 |
+| 正式签名升级 | GitHub 0.2.59/68 → 0.2.60/69 覆盖成功；UID、1份合成加密Hub缓存和4份偏好文件SHA保持一致；连接地址/alternate/LAN关联、缓存/history/metadata、App/System/mono/custom四组字体、字号/主题/配色/语言保留 |
 | 真实生产Activity/进程 | 未配置设置页；公开默认缓存配置的浅深主题Home；Settings经实际Activity.recreate/普通后台返回保留；另有外部后台杀进程与force-stop的PID/采样截图证据。默认公开进程fixture使用空认证字段，仅验证本地配置终态/缓存路由，HTTP慢成功/失败/超时由真实回环/延迟fixture测试独立验证 |
 
 证据位于 `evidence/unified-060/`：首失败与各轮应用/测试 APK 指纹、unit-results、core-run1、ui-harness-run2/run3、font-window-diagnostic-run2、matrix-run2、network-cache-run1、device-network-recovery-run1、upgrade、cold、process-restart。矩阵保存真实系统窗口参数；图表截图每组现场生成，累计尺寸表另保留原文和当前14行切片。
