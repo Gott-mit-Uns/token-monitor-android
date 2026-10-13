@@ -28,10 +28,11 @@ class DigitRoll070ScreenTest {
     @Test fun finiteRollKeepsWidthAndDoesNotRecomposeLongListEachFrame() {
         compose.mainClock.autoAdvance=false
         val value=mutableStateOf("1,099");val reduce=mutableStateOf("off");val scale=mutableFloatStateOf(1f)
+        val durationScale=mutableFloatStateOf(1f)
         val rollingDraws=AtomicInteger();val owners=AtomicInteger();val draws=AtomicInteger();val active=AtomicInteger();val layers=AtomicInteger()
         compose.activity.runOnUiThread {compose.activity.setContent {
             TokenTheme(true,LanguageChoice.ENGLISH,AppearancePreferences(reduceMotion=reduce.value)) {
-                CompositionLocalProvider(LocalDesktopAnimationClock provides clock,LocalDesktopSystemMotionScale provides scale.floatValue) {
+                CompositionLocalProvider(LocalDesktopAnimationClock provides clock,LocalDesktopSystemMotionScale provides scale.floatValue,LocalHeadlineMotionScale provides if(reduce.value=="on") 0f else durationScale.floatValue) {
                     SideEffect {owners.incrementAndGet()}
                     LazyColumn(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).testTag("roll-list")) {
                         items((0 until 2000).toList(),key={it}) {i->
@@ -59,10 +60,14 @@ class DigitRoll070ScreenTest {
         compose.runOnIdle {reduce.value="off";scale.floatValue=0f;value.value="1,091"};compose.mainClock.advanceTimeBy(32)
         compose.waitForIdle();assertEquals(0,active.get())
         compose.runOnIdle {scale.floatValue=1f;value.value="1,092"};compose.mainClock.advanceTimeBy(64)
+        compose.waitForIdle();assertEquals(1,active.get())
+        compose.runOnIdle {durationScale.floatValue=2f};compose.mainClock.advanceTimeBy(32)
+        compose.waitForIdle();assertEquals(0,active.get());compose.onNodeWithTag("roll-0").assertTextEquals("1,092")
+        compose.runOnIdle {value.value="1,093"};compose.mainClock.advanceTimeBy(64)
         compose.activityRule.scenario.moveToState(Lifecycle.State.CREATED)
         compose.activityRule.scenario.moveToState(Lifecycle.State.RESUMED);compose.mainClock.advanceTimeBy(32)
-        compose.waitForIdle();assertEquals(0,active.get());compose.onNodeWithTag("roll-0").assertTextEquals("1,092")
-        compose.mainClock.advanceTimeBy(1200)
+        compose.waitForIdle();assertEquals(0,active.get());compose.onNodeWithTag("roll-0").assertTextEquals("1,093")
+        compose.mainClock.advanceTimeBy(1400)
         compose.onNodeWithTag("roll-list").performScrollToIndex(1999)
         compose.onNodeWithTag("roll-1999").assertTextEquals("9,999")
         compose.mainClock.autoAdvance=true

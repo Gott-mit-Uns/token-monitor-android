@@ -283,7 +283,12 @@ class TrendsMainScreenTest {
         val large = compose.onNodeWithTag("trends-main").getUnclippedBoundsInRoot()
         val largeChart = compose.onNodeWithTag("trends-main-chart").getUnclippedBoundsInRoot()
         assertTrue("Compact content no longer fills unused viewport", (large.bottom-large.top).value < 600f)
-        assertEquals("Preferred plot height includes its padding", 160f, (largeChart.bottom-largeChart.top).value, 1f)
+        // The semantic 160dp base reserves eight rows of extra native axis room.
+        // Use Android's independent sp conversion, including API34+ non-linear scaling.
+        val metrics=compose.activity.resources.displayMetrics
+        val axisDp=android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_SP,10f,metrics)/metrics.density
+        val expectedHeight=160f+8f*(axisDp-10f).coerceAtLeast(0f)
+        assertEquals("Preferred plot includes the native system-font axis room", expectedHeight, (largeChart.bottom-largeChart.top).value, 1f)
 
         compose.runOnIdle {
             target.value = 160.dp

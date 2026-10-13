@@ -65,6 +65,9 @@ internal val LocalTokenRollFrameObserver=staticCompositionLocalOf<((Boolean,Int)
         val previous=motion.target.filter(Char::isDigit).toBigIntegerOrNull()
         val next=text.filter(Char::isDigit).toBigIntegerOrNull()
         val started=motion.retarget(text,next!=null && previous!=null && next>=previous,enabled && previous!=null && next!=null)
+        // A duration-scale/clock change cancels the old effect even when its target is unchanged.
+        // Settle its retained columns rather than leaving a stale running timeline behind.
+        if(!started && motion.running) motion.settle()
         tick=if(started) 0f else 1f
         if(started) {
             val start=clock.nowNanos()
