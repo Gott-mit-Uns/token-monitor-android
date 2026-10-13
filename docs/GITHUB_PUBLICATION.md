@@ -1,5 +1,21 @@
 # Token Monitor Android GitHub 发布记录
 
+## 0.2.61 — 四项手机功能与两项设置追加联合正式发布
+
+2026-10-13，[v0.2.61 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.61)已正式发布并标记最新，非草稿、非预发行。版本 **0.2.61 / code70**，唯一 annotated Tag 固定产品提交 `29121e4e4d36e98e56a389d22a1381a78a1a385f`。main与release/0.2.61已正常快进推送，正式包名和原证书保持；原源码工作区的NEXT_TASKS修改、AGENTS-original和REA审计未提交状态保留，开发在独立发布工作区完成。
+
+同版完成开关180ms续接与减少动态效果/真实零比例/后台收束、Android自身显式前台正式Release更新入口、只读加密缓存额度Widget，以及Dashboard日柱图和Records日柱/折线长按拖动逐日查看。用户后续明确确认的紧凑普通设置下拉和已内置两款字体菜单也合入本版。没有扩展导出、诊断、会话ID复制、7天Widget或采集功能。实现与范围见[联合交接](HANDOFF_0.2.61.md)。
+
+Release单元 **446项**通过，Lint **0错误/101警告/1提示**，67运行依赖通知和685中英文资源对校验通过。最终精确APK **27项定向Android回归**通过；320/411dp × 系统字号1.0/2.0 × 浅深主题8组窗口 **56次执行**全部通过，统计不当作更多独立方法。额度Widget实际系统宿主覆盖两主题、四个尺寸/字号场景，含280×360dp/font2的严格文字和48dp入口边界。图表验证普通滑动/横滚、缺失/零值、更新中拖动与零额外读取；更新页验证状态、目标链接和前后台取消。首失败、修正过程、每轮APK指纹和实际合成数据截图均保留。
+
+另一台全新任务专用API36模拟器直接执行GitHub正式 **0.2.60/69 → 最终0.2.61/70** 覆盖安装，不卸载、不清应用数据。UID、1份合成加密Hub缓存及4份偏好文件指纹保持，旧历史/连接关联/字体/字号/主题/语言/金额偏好解密一致，最终安装字节与发布字节相同；实际生产MainActivity启动成功。所有当前设备/UI证据均为模拟器，不称真机。
+
+正式APK **15,237,178 bytes**，SHA256 `deeb1d040a816dfb9f13ce9196cddca252c451513962a40204ac8cd1af47f398`；内嵌VCS提交与Tag一致，无isolated标志。四份TTF与0.2.60正式APK逐字节指纹一致，没有新增字体文件。
+
+APK、SHA256SUMS.txt、release-manifest.json、VALIDATION.md四附件草稿阶段完整回读，逐文件SHA一致后才转为正式发布。发布后通过正确资产API再次完整下载四附件，均与本地一致；公开无需认证的APK下载入口也完整下载并复核相同SHA。常规批量下载未完成的原记录保留；一次资产API误用GraphQL ID导致404已纠正为官方REST资产链接，草稿清单同字节重传未改变正式APK/Tag。没有将元数据digest当作完整下载证明。
+
+交付位于独立工作区 `work/token-monitor-four-features/dist/release-0.2.61/`，证据在该工作区 `evidence/four-features/`，发布回读在publication/。当前仅补文档回执，固定Tag/APK不重建、不覆盖。新版实体手机Launcher/厂商尺寸、拖动手感/边缘滚动、Android真实GitHub响应与手机浏览器下载安装、蜂窝/Wi-Fi、LAN/Lucky/真实Hub、锁屏/厂商后台和性能/FPS未执行；原0.2.59 Xiaomi蜂窝→Wi-Fi失败保持。未修改NAS、Hub、Agent、Lucky、路由器或桌面生产服务。本次联合正式版本完成，到此停止。
+
 ## 0.2.60 — Windows/Mac 联合更新正式发布
 
 2026-10-13，[v0.2.60 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.60)已正式发布，非草稿、非预发行，版本 **0.2.60 / code69**。唯一annotated Tag固定产品提交 `a8f0c05b02e9ab3bf1ba3b01d9911992fe0fa6c5`，main已快进包含该提交，沿用既有正式证书与 `dev.bing.tokenmonitor.nativeclient` 包名，没有isolated标志。
