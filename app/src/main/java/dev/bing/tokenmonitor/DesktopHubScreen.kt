@@ -64,13 +64,13 @@ private fun clock(value: String?) = value?.let { runCatching { DateTimeFormatter
 internal val LocalHubCalendarClock=staticCompositionLocalOf<java.time.Clock> {java.time.Clock.systemDefaultZone()}
 
 @Composable
-internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?) {
+internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null) {
     val renderObserver = LocalHeadlineRenderObserver.current
     if (renderObserver != null) SideEffect { renderObserver("hub") }
     val strings = LocalResources.current
     val numbers = NumberFormat.getIntegerInstance(strings.configuration.locales[0])
     val colors = MaterialTheme.colorScheme
-    var page by rememberSaveable { mutableStateOf(if (state.snapshot == null) HubPage.SETTINGS else HubPage.HOME) }
+    var page by rememberSaveable { mutableStateOf(initialPage ?: if (state.snapshot == null) HubPage.SETTINGS else HubPage.HOME) }
     var previousPage by rememberSaveable {mutableStateOf(HubPage.HOME)}
     val settingsPage=page in listOf(HubPage.SETTINGS,HubPage.PRICING,HubPage.SUBSCRIPTIONS)
     val mainPage=if(settingsPage) previousPage else page

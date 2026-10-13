@@ -36,6 +36,16 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     }
     private val mutable = MutableStateFlow(HubState(loading = true))
     val state = mutable.asStateFlow()
+    private val startupMutable = MutableStateFlow(HubStartup.LOADING)
+    val startup = startupMutable.asStateFlow()
+    // A fresh process must not restore an old Settings route. Activity recreation
+    // retains this ViewModel/key and therefore still preserves the current page.
+    val startupSessionId = java.util.UUID.randomUUID().toString()
+    private var startupStoreLoaded = false
+    private fun finishStartupIfIdle() {
+        if (startupStoreLoaded && foreground && !mutable.value.loading && startupMutable.value == HubStartup.LOADING)
+            startupMutable.value = if (currentHub == null) HubStartup.SETTINGS else HubStartup.HOME
+    }
     private val displayMutable = MutableStateFlow(runCatching { displayStore.load() }.getOrDefault(DisplayPreferences()))
     val display = displayMutable.asStateFlow()
     private val displayMutex = Mutex()
@@ -268,6 +278,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             if (!wasForeground && !tlsBlocked) selectPreferredEndpoint()
             enforceSecureEndpoint()
             if (!streamEligible && !authBlocked && !tlsBlocked && !mutable.value.loading) refreshSaved() else startStream()
+            finishStartupIfIdle()
         } else {
             cancelHistory()
             interruptConnectionValidation()
@@ -310,6 +321,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         if (!foreground) return
         if (networkScope?.available == false) {
             if (!authBlocked) mutable.value = mutable.value.copy(error = R.string.error_no_network)
+            finishStartupIfIdle()
             return
         }
         if (!authBlocked && !tlsBlocked) refreshSaved()
@@ -484,24 +496,35 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                     modelNamesBody = saved.modelNames
                     pricingBody = saved.pricing
                     mutable.value = restored!!.first
+                    startupStoreLoaded = true
                     val key = historyKey()
                     val cachedDays = mutable.value.history?.daily?.size?.takeIf { historySignature != null && historySignature == key.signature }
                     mutable.value = mutable.value.copy(historyReadReceipt = historyReads.target(key, cachedDays))
                     if (!foreground) return@onSuccess
                     refreshSaved()
-                } else mutable.value = HubState()
-            }.onFailure { mutable.value = HubState(error = R.string.error_decrypt) }
+                } else {
+                    mutable.value = HubState()
+                    startupStoreLoaded = true
+                    startupMutable.value = HubStartup.SETTINGS
+                }
+            }.onFailure {
+                mutable.value = HubState(error = R.string.error_decrypt)
+                startupStoreLoaded = true
+                startupMutable.value = HubStartup.SETTINGS
+            }
         }
     }
     override fun connect(address: String, credential: String, alternate: String) = refresh(address, credential, alternate,manual=true)
     override fun refreshSaved() = refreshSaved(false)
     override fun refreshSaved(forceHistory: Boolean) {
-        if (authBlocked || tlsBlocked) return
-        val base = preferredEndpoint() ?: run {
-            mutable.value = mutable.value.copy(error = localConnectionMessage()); return
-        }
-        val secret = credential ?: return
-        refresh(base, secret, if(base == currentHub) alternateHub else currentHub, forceHistory = forceHistory)
+        try {
+            if (authBlocked || tlsBlocked) return
+            val base = preferredEndpoint() ?: run {
+                mutable.value = mutable.value.copy(error = localConnectionMessage()); return
+            }
+            val secret = credential ?: return
+            refresh(base, secret, if(base == currentHub) alternateHub else currentHub, forceHistory = forceHistory)
+        } finally { finishStartupIfIdle() }
     }
     override fun switchEndpoint() {
         val alternate = alternateHub ?: return
@@ -773,6 +796,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 if (next != null) {
                     mutable.value = mutable.value.copy(loading = false)
                     refresh(next, secret, base, forceHistory = forceHistory, allowFallback = false)
+                    finishStartupIfIdle()
                     return@launch
                 }
             }
@@ -790,6 +814,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                     mutable.value.copy(loading = false, error = connectionMessage(error))
                 }
             )
+            finishStartupIfIdle()
             if (result.isSuccess) {
                 if (!saveCurrent()) mutable.value = mutable.value.copy(error = R.string.error_data_save)
                 if (ticket == requestToken) startStream()

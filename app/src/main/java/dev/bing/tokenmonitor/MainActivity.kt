@@ -62,12 +62,15 @@ class MainActivity : ComponentActivity() {
 private fun HubApp(model: HubViewModel, localAllowed: Boolean, requestLocal: () -> Unit, openLocalSettings: () -> Unit) {
     val state by model.state.collectAsStateWithLifecycle()
     val preferences by model.display.collectAsStateWithLifecycle()
-    HubScreen(state,model,localAllowed,requestLocal,preferences,model::changeDisplay,openLocalSettings)
+    val startup by model.startup.collectAsStateWithLifecycle()
+    key(model.startupSessionId) {
+        HubScreen(state,model,localAllowed,requestLocal,preferences,model::changeDisplay,openLocalSettings,startup)
+    }
 
 }
 
 @Composable
-fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true, requestLocal: (() -> Unit)? = null, preferences: DisplayPreferences = DisplayPreferences(), updateDisplay: ((DisplayChange) -> Unit)? = null, openLocalSettings: (() -> Unit)? = null) {
+fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true, requestLocal: (() -> Unit)? = null, preferences: DisplayPreferences = DisplayPreferences(), updateDisplay: ((DisplayChange) -> Unit)? = null, openLocalSettings: (() -> Unit)? = null, startup: HubStartup? = null) {
     val preview=remember {AppearancePreviewState()}
     val language=LocalDesktopBaseLanguage.current ?: preferences.language
     val inheritedDark=LocalDesktopBaseDark.current
@@ -97,7 +100,9 @@ fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true
     androidx.compose.runtime.CompositionLocalProvider(LocalUsageCurrency provides currency, LocalUsageCostLanguage provides costLanguage,
         LocalDesktopVendorPalette provides DesktopVendorPalette.resolve(effective.vendorColors),
         LocalDesktopToolIcons provides preferences.appearance.showToolIcons, LocalLimitDisplay provides preferences.limits,LocalMainDisplay provides preferences.main) {
-        DesktopHubScreen(state, model, localAllowed, requestLocal, preferences, updateDisplay, openLocalSettings)
+        if (startup == HubStartup.LOADING) HubStartupIcon()
+        else DesktopHubScreen(state, model, localAllowed, requestLocal, preferences, updateDisplay, openLocalSettings,
+            initialPage = startup?.let { if (it == HubStartup.SETTINGS) HubPage.SETTINGS else HubPage.HOME })
     }
     }
     }
