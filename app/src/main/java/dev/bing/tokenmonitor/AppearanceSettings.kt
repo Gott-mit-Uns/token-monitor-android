@@ -64,7 +64,7 @@ import kotlinx.coroutines.launch
     val current=DesktopAppearance.fontPreset(value,display)
     var custom by rememberSaveable(current) {mutableStateOf(current=="custom")}
     var draft by rememberSaveable(value) {mutableStateOf(if(current=="custom") value else "")}
-    val choices=buildList {if(display) add("follow" to R.string.appearance_font_follow);add("app" to R.string.appearance_font_app);add("system" to R.string.appearance_font_system);add("mono" to R.string.appearance_font_mono);add("custom" to R.string.appearance_custom)}
+    val choices=buildList {if(display) add("follow" to R.string.appearance_font_follow);add("app" to R.string.appearance_font_app);add("bundled-ui" to R.string.appearance_font_bundled_ui);add("bundled-data" to R.string.appearance_font_bundled_data);add("system" to R.string.appearance_font_system);add("mono" to R.string.appearance_font_mono);add("custom" to R.string.appearance_custom)}
     Text(strings.getString(if(display) R.string.appearance_display_font else R.string.appearance_interface_font),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
     Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         Column(Modifier.weight(1f)) {

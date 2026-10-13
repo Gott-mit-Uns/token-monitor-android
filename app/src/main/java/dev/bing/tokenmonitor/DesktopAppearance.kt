@@ -15,6 +15,8 @@ internal object DesktopAppearance {
     const val defaultInterfaceFont = "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"
     const val defaultDisplayFont = "-apple-system, BlinkMacSystemFont, \"SF Pro Display\", \"Segoe UI\", sans-serif"
     const val systemFont = "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+    const val bundledUiFont = "Token UI"
+    const val bundledDataFont = "JetBrains Mono"
     const val defaultNumberColor = "#f3fbf7"
     val presets = linkedMapOf(
         "default" to linkedMapOf("accent" to "#b7ead4","chart" to "#73bdf5","bg" to "#303438","text" to "#eef5fb","muted" to "#a3adbb"),
@@ -64,12 +66,14 @@ internal object DesktopAppearance {
         return result.takeIf { it.length in 1..160 && !Regex("[\\u0000-\\u001f\\u007f;{}<>]").containsMatchIn(it) } ?: ""
     }
     fun fontFor(preset: String, custom: String="", display: Boolean=false): String = when(preset) {
+        "bundled-ui" -> bundledUiFont; "bundled-data" -> bundledDataFont
         "custom" -> font(custom); "system" -> systemFont; "mono" -> defaultInterfaceFont
         "app" -> if(display) defaultDisplayFont else ""; else -> ""
     }
     fun fontPreset(value: String, display: Boolean=false): String {
         val normalized=font(value)
-        return when { display && normalized==defaultDisplayFont -> "app"; normalized==systemFont -> "system"
+        return when { normalized.equals(bundledUiFont,true) -> "bundled-ui"; normalized.equals(bundledDataFont,true) -> "bundled-data"
+            display && normalized==defaultDisplayFont -> "app"; normalized==systemFont -> "system"
             normalized==defaultInterfaceFont -> "mono"; normalized.isNotEmpty() -> "custom"; display -> "follow"; else -> "app" }
     }
     fun valid(value: AppearancePreferences) = value.textSize in sizes && cleanColors(value.colors)==value.colors &&
