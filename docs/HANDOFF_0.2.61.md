@@ -21,4 +21,6 @@ Release 单元 446 项通过。任务专用 API36 模拟器 emulator-5596，合�
 
 ## 必须保留的边界
 
+最终完整页面零额外读取测试还保留一次 Compose 虚拟/真实时间域未对齐的超时。按既有主数字/图表/菜单测试和 LocalDesktopAnimationClock 的明确要求，提供 mainClock 同域时钟；继续正常动画，不降低交互和读取计数断言，产品代码未改。后续统一封包与全部最终检查结果见四附件。
+
 新版实体手机的 Launcher 放置/厂商尺寸、图表拖动手感/边缘滚动、浏览器下载与 Android 安装流程、蜂窝/Wi-Fi、真实 Hub/LAN/Lucky、锁屏/厂商后台和性能/FPS均未执行。历史 0.2.59 Xiaomi13Ultra 签名升级/缓存、Lucky Wi-Fi/蜂窝、离线与前后台通过仅作历史背景；其蜂窝→Wi-Fi失败仍保留，不把0.2.60/61源码或模拟器声称为真机恢复。没有修改 NAS、Hub、Agent、Lucky、路由器或桌面。完成统一 Release 及下载回读后停止。

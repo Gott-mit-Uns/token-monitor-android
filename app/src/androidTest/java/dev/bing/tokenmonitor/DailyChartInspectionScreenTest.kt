@@ -184,13 +184,16 @@ class DailyChartInspectionScreenTest {
         override fun renameDevice(id: String, input: String) { reads++ }
     }
     @Test fun completeHubScreenDoesNotRequestNetworkForLongPressOrEachDraggedDate() {
+        val clock = DesktopAnimationClock { compose.mainClock.currentTime * 1_000_000L }
         val history = HubHistory(rows, emptyList())
         val actions = NetworkActions()
         val snapshot = HubParser.parse("""{ "periods": { "today": { "totalTokens": 10, "costUsd": 0.1 } } }""").copy(historyPreview = history)
         compose.activity.runOnUiThread { compose.activity.setContent {
             TokenTheme(false, LanguageChoice.ENGLISH) {
+                CompositionLocalProvider(LocalDesktopAnimationClock provides clock) {
                 HubScreen(HubState(snapshot = snapshot, history = history), actions,
                     preferences = DisplayPreferences(language = LanguageChoice.ENGLISH, theme = ThemeChoice.LIGHT))
+                }
             }
         } }
         compose.onNodeWithTag("hub-view-selector").performClick()
