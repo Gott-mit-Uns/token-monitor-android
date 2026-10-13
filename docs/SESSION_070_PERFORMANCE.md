@@ -1,3 +1,14 @@
+最终正式包的单元、窗口、升级与发布回读门槛均通过。最终冻结生产修复后又执行458 Release单元，10k原始配对数据见Release VALIDATION，以下新增最终测量表（macOS/JDK17 JVM，非手机FPS）：
+
+| 10,000 sessions stage | Old median ms | New median ms | Old P95 ms | New P95 ms |
+|---|---:|---:|---:|---:|
+| source | 84.197 | 5.369 | 91.880 | 6.515 |
+| recent | 82.789 | 4.158 | 85.111 | 5.665 |
+| title-projection | 29.000 | 21.375 | 36.340 | 23.266 |
+| independent-group | 2.535 | 1.481 | 3.157 | 1.814 |
+| related-review-group | 11.014 | 4.391 | 17.679 | 6.116 |
+
+
 # Desktop 0.70 会话展示与性能适配
 
 日期：2026-10-14。Android 基线：正式 0.2.61（versionCode 70）的会话投影。上游固定为 `ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`（v0.70.0），只比较 v0.69.0 → v0.70.0，不用 main。

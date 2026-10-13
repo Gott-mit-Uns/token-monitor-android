@@ -1,3 +1,5 @@
+2026-10-14 **Android 0.2.62/71已正式发布**：固定桌面0.70 commit ac4eeb2；客户端roll/count、近期/标题投影/分组分页、外观高级选项、CatPaw/本币余额支持已通过Release验收（458单元、55Android、8组96窗口及签名升级）。Tag源码`aefe855c700cb7cac69ab43dac4df64e8e8ff677`。已支持的客户端字段不证明生产已升级，core78/runtime5无新providers观察与全部依赖/未验证范围保留。
+
 # Android 0.2.62：桌面 v0.70.0 增量适配
 
 2026-10-14。本轮固定0.69→0.70源码差异与逐项验收见 [DESKTOP_070_DIFF.md](DESKTOP_070_DIFF.md)，当前实现、首失败和设备边界见 [HANDOFF_0.2.62.md](HANDOFF_0.2.62.md)。数字roll/count、外观高级选项、近期选择/列表CPU优化、CatPaw通用数据及MiniMax本币余额客户端已实现；数据生成/计费/额度刷新继续依赖Hub/Agent。DXP4800真实样本core78/runtime5且无新provider，不宣称生产新字段或全量对齐。此前矩阵作为历史记录保留。

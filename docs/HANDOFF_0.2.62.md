@@ -1,3 +1,5 @@
+发布完成：2026-10-14，0.2.62/71，Tag提交 `aefe855c700cb7cac69ab43dac4df64e8e8ff677`，APK SHA256 `1cf84bfef6633915a6d1cf26a65c548d61a5bc37fccd370023ca1b560b7cb08e`，四附件草稿/发布后及匿名APK下载校验通过。正式验收为458单元、55Android、8组96窗口、签名覆盖升级通过；真机/生产新字段未验证保留。详见GITHUB_PUBLICATION.md及Release四附件。下文保留实施与封包阶段历史记录。
+
 # Android 0.2.62 / 71 — Desktop 0.70 adaptation
 
 2026-10-14，Asia/Shanghai。Android 最新正式基线是 0.2.61/70，tag产品提交 `29121e4e4d36e98e56a389d22a1381a78a1a385f`，远端main文档提交 `7e85cb1`。原主目录仍为main/3731975，未提交NEXT_TASKS及未跟踪AGENTS-original、REA审计保留，未reset、stash或清理。独立开发分支 `feat/desktop-070-adaptation`，工作区 `../work/token-monitor-android-070`。

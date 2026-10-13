@@ -1,3 +1,21 @@
+# 0.2.62 / 71 发布完成回执
+
+2026-10-14，Asia/Shanghai。[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.62)，非草稿、非预发行，已标最新。唯一Tag `v0.2.62` 固定产品/验收提交 `aefe855c700cb7cac69ab43dac4df64e8e8ff677`；main和release/0.2.62已正常快进推送。APK内嵌Git提交与Tag一致，正式签名、包名和Code递增一致。原主目录的未提交NEXT_TASKS、AGENTS-original及REA审计仍保留，未reset/stash/覆盖。
+
+APK **15,238,714 bytes**，SHA256 `1cf84bfef6633915a6d1cf26a65c548d61a5bc37fccd370023ca1b560b7cb08e`。458 Release单元、Lint0错误/101警告/1提示、55项精确APK Android回归及320/411dp×真实系统font1/2×浅深8组96次窗口执行全部通过，67运行依赖与688中英文资源对通过。四份TTF与正式0.2.61完全相同，无R8/资源裁剪或瘦身实验。全新任务API36模拟器直接GitHub正式0.2.61/70→此最终0.2.62/71覆盖升级，UID、合成加密Hub缓存及四份偏好文件hash保持、旧历史和字体/设置可读、实际MainActivity启动，实际安装hash=发布hash；不卸载或清数据。
+
+新增roll/count选择、可见叶节点绘制与减少动效/后台/比例变化收束；近期/标题投影及分组/分页优化；外观高级选项归并；CatPaw已上传用量和MiniMax本币余额客户端适配。币种独立、缺失不作零、旧双周期保留。设置页参考0.70.0且明确部分对齐/Hub依赖，不是桌面全量移植。
+
+APK、SHA256SUMS.txt、release-manifest.json、VALIDATION.md四附件草稿阶段完整下载校验后才发布；正式发布后四附件再次下载均与本地一致，公开无需认证APK入口也完整下载并核对同SHA。提交/源码/测试pair/签名/安装/资产指纹均由`evidence/desktop-070/final/`回执及Release附件关联。发布Tag/正式APK固定，不因本次补文档重建或覆盖。
+
+生产Hub只读观察core78/runtime5、4设备，无CatPaw/MiniMax。本轮没有修改/升级/重启生产NAS/Hub/Agent。源端采集、标题SQL、Codex压缩/归档、Hermes计费、DeepSeek模型、StepFun刷新和Cursor长同步依赖保持。新版实体手机升级/缓存、蜂窝→Wi-Fi自动恢复、真实LAN/Lucky HTTPS、锁屏/厂商后台、Widget宿主和FPS/能耗未验证；旧0.2.59 Xiaomi换网失败不改写为通过。未自动安装到实体手机。
+
+当前必需门槛0失败；此前类型编译、旧名称fixture、虚拟/真实时钟域、图表160dp固定假设以及字形/取消边界的首失败及指纹保留，未删除/放宽断言或提高超时。详细经过与边界见HANDOFF_0.2.62.md及Release VALIDATION。
+
+回退先选Count up。保留旧0.2.61 Tag/APK；需要完整代码回退时，以固定旧源码构建更高versionCode的同证书恢复版并保留新工具/模式兼容，另立任务。不要卸载/清数据。
+
+本轮完成并停止，不推进历史待办。
+
 # Token Monitor Android GitHub 发布记录
 
 ## 0.2.61 — 四项手机功能与两项设置追加联合正式发布
