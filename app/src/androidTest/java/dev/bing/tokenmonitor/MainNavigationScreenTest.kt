@@ -31,7 +31,7 @@ class MainNavigationScreenTest {
     }
     @Test fun sharedPagesStayOutsideMainMenuAndBackReturnsThroughSettings() {
         val actions=Actions()
-        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,main=MainDisplayPreferences(viewOrder=listOf("pricing","sessions","subscriptions","home"),hiddenViews=setOf("subscriptions","pricing"))))
+        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(reduceMotion="on"),main=MainDisplayPreferences(viewOrder=listOf("pricing","sessions","subscriptions","home"),hiddenViews=setOf("subscriptions","pricing"))))
         val state=HubState(snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1000}}}"""),history=HubHistory(emptyList(),emptyList()),pricing=PricingParser.parse("""{"ok":true,"version":1,"revision":1,"value":[]}"""),subscriptions=emptyList(),modelNames=ModelNames(emptyMap(),"off"))
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
         compose.onNodeWithTag("hub-view-selector").performClick()

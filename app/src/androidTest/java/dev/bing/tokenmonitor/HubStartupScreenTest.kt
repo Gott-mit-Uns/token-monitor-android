@@ -41,7 +41,8 @@ class HubStartupScreenTest {
         val session = AtomicReference("first-process")
         val restoration = restorationHost()
         restoration.setContent {
-            key(session.get()) { HubScreen(state.value, actions, startup = startup.value) }
+            key(session.get()) { HubScreen(state.value, actions, startup = startup.value,
+                preferences = DisplayPreferences(appearance = AppearancePreferences(reduceMotion = "on"))) }
         }
         compose.onNodeWithTag("hub-startup-icon").assertIsDisplayed()
         compose.onNodeWithTag("hub-settings-toggle").assertDoesNotExist()

@@ -38,6 +38,7 @@
 - 新双入口 pending-ready 用例先失败再通过；没有把原失败XML改写为成功。
 - 一次并发Gradle写同unit binary目录发生EOF/NoSuchFile工具失败，记录保留；最终串行完整432项通过。
 - 最终封包复跑17项时 Appearance 有1项假设重建后自动显示Settings，在已有公开缓存时实际按约定回到Home；测试改为明确进入Settings后继续原断言。定向复跑另暴露真实System.nanoTime动画与Compose虚拟时钟不一致，测试等待idle失败；两个无动画断言的字体/偏好fixture设reduceMotion=on后2项通过，全部原断言保留。两次首失败日志、截图及当时APK指纹保留。
+- 最终整组run2中Appearance两项通过，冷启动页面与共享页导航两项出现同样虚拟/真实时钟等待失败；仅将两个无动画断言的合成fixture明确reduceMotion=on，保留路由、键盘导航、菜单布局和零额外读取检查，run2记录与当时APK另存。
 
 ## 字体体积与最终封包门槛
 
