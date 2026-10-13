@@ -27,6 +27,7 @@ class SessionListScreenTest {
         override fun forget() {}
         override fun renameDevice(id:String,input:String) {}
     }
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private val suffix get()=if(dark) "dark" else "light"
     private fun record(index:Int,now:Instant,review:Boolean=false,titled:Boolean=true)=buildJsonObject {
@@ -82,7 +83,7 @@ class SessionListScreenTest {
     @Test fun sourceRowsModelsContextPrivacyAndBackgroundReviewGroup() {
         val now=Instant.now();val actions=Actions();val state=mutableStateOf(HubState(snapshot=snapshot(now),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions")))
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state.value,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
         sessions();show("session-row-public:0")
         compose.onNodeWithTag("session-title-public:0",true).assertTextEquals("Public session 0")
         compose.onNodeWithTag("session-subtitle-public:0",true).assertTextEquals("Codex · 2 models")

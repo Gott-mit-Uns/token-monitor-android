@@ -2,6 +2,7 @@ package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
@@ -26,6 +27,7 @@ class HomeSessionScreenTest {
         override fun forget() {}
         override fun renameDevice(id:String,input:String) {}
     }
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     @Test fun originalHomeShowsFiveRecentPlusAllRunningModelsContextRevocationAndDirectHiddenView() {
         val now=Instant.now();val actions=Actions();val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
         fun snapshot(title:Boolean=true)=HubParser.parse(buildJsonObject {
@@ -45,7 +47,7 @@ class HomeSessionScreenTest {
         }.toString())
         val state=mutableStateOf(HubState(snapshot=snapshot(),live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions"),main=MainDisplayPreferences(hiddenViews=setOf("sessions"))))
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state.value,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
         fun show(id:String)=compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(id))
         show("home-sessions-jump");compose.onNodeWithTag("home-sessions-running",useUnmergedTree=true).assertTextEquals("3 running")
         compose.onNodeWithText("Duplicate today loses").assertDoesNotExist();compose.onNodeWithText("Wrong all-time source").assertDoesNotExist()
