@@ -1,5 +1,7 @@
 # 网络切换后的前台验证恢复修复稿
 
+2026-10-13 更新：Mac联合候选补修已关联LAN→pending公网→ready的HTTPS恢复上下文，新增定向Red/Green和真实Android恢复fixture回归；见 [HANDOFF_0.2.60.md](HANDOFF_0.2.60.md)。原0.2.59真机失败结论不变。
+
 2026-10-13，Asia/Shanghai。分支 `fix/network-revalidation`，基于已发布的 `a509800a062732cb8ecd9820458d48440a199f3c`。保留 0.2.59/code68；没有创建 Release、推送、合并其他待办或覆盖实体手机正式 APK。本修复稿不是新的正式版本。
 
 ## 问题与修复范围

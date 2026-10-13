@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -105,14 +106,33 @@ class CompactV5ScreenTest {
     @Test fun dashboardModesOverviewAndRecordChartsKeepFullData() {
         val ui=DashboardUiState().apply {selectTab(DashboardTab.TRENDS)}
         val preferences=DisplayPreferences(language=language,appearance=appearance)
+        var refreshes=0; var settings=0
         compose.activity.runOnUiThread {compose.activity.setContent {
             TokenTheme(dark, language, preferences.appearance) {
                 val model=remember(ui.range,ui.byModel,ui.mode,ui.chartWidth,ui.chartHeight) {
                     DashboardTrendProjection.project(history,ui.range,ui.byModel,ui.mode,ui.chartWidth,ui.chartHeight)
                 }
-                DesktopDashboardScreen(history,false,null,ui,model,today,preferences,null,{}, {}, {})
+                DesktopDashboardScreen(history,false,null,ui,model,today,preferences,null,{}, {refreshes++}, {settings++})
             }
         }}
+        val refresh=compose.onNodeWithTag("hub-refresh").assertIsDisplayed()
+        val setting=compose.onNodeWithTag("hub-settings-toggle").assertIsDisplayed()
+        val refreshBounds=refresh.getUnclippedBoundsInRoot()
+        val settingsBounds=setting.getUnclippedBoundsInRoot()
+        for(bounds in listOf(refreshBounds,settingsBounds)) {
+            assertTrue("Dashboard action retains a 48dp width",bounds.width.value>=47.5f)
+            assertTrue("Dashboard action retains a 48dp height",bounds.height.value>=47.5f)
+        }
+        assertTrue("Dashboard refresh and settings targets stay separate",refreshBounds.right<=settingsBounds.left)
+        // Inject real touches near the outer edges, beyond each icon's visual container.
+        refresh.performTouchInput {click(Offset(2f,center.y))}
+        compose.runOnIdle {assertEquals(1,refreshes);assertEquals(0,settings)}
+        setting.performTouchInput {click(Offset(center.x*2-2f,center.y))}
+        compose.runOnIdle {assertEquals(1,refreshes);assertEquals(1,settings)}
+        refresh.performTouchInput {click(center)}
+        setting.performTouchInput {click(center)}
+        compose.runOnIdle {assertEquals(2,refreshes);assertEquals(2,settings)}
+        record("dashboard-actions",listOf("hub-refresh","hub-settings-toggle"))
         compose.waitUntil(10000) {ui.committedChart!=null}
         assertEquals(30, ui.committedChart!!.daily.size)
         val rangeBounds=compose.onNodeWithTag("dashboard-range-30").getUnclippedBoundsInRoot()

@@ -4,14 +4,18 @@ import android.app.Application
 import androidx.lifecycle.ViewModelStore
 import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.Protocol
+import okhttp3.Call
+import okhttp3.EventListener
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.IOException
+import java.io.InterruptedIOException
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 class HubStartupTest {
     private fun await(condition: () -> Boolean) {
@@ -90,5 +94,53 @@ class HubStartupTest {
             assertEquals(R.string.error_no_network, model.state.value.error)
             assertEquals(123L, model.state.value.snapshot?.periods?.get("today")?.tokens)
         } finally { instrumentation.runOnMainSync { owner.clear() }; store.clear() }
+    }
+
+    @Test fun realHttpCallTimeoutEntersHomeAndRetainsEncryptedCache() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val app = instrumentation.targetContext.applicationContext as Application
+        val generated = UUID.randomUUID().toString()
+        val cached = """{"periods":{"today":{"totalTokens":123}},"devices":[]}"""
+        val peer = NetworkFixtureHub(generated, stats = cached.replace("123", "456"))
+        val gate = CountDownLatch(1)
+        peer.statsGate.set(gate)
+        val failedCall = AtomicReference<IOException?>()
+        val client = HubViewModel.defaultClient().newBuilder()
+            .callTimeout(2, TimeUnit.SECONDS)
+            .eventListener(object : EventListener() {
+                override fun callFailed(call: Call, ioe: IOException) { failedCall.set(ioe) }
+            })
+            .addInterceptor { chain ->
+                val request = chain.request()
+                chain.proceed(request.newBuilder().url(request.url.newBuilder().host("127.0.0.1").build()).build())
+            }.build()
+        val store = HubStore(app, "startup-timeout-${UUID.randomUUID()}.bin")
+        store.save(SavedHub("http://192.168.1.1:${peer.port}", generated, cached, 1))
+        val owner = ViewModelStore()
+        lateinit var model: HubViewModel
+        try {
+            instrumentation.runOnMainSync {
+                model = HubViewModel(app, store, client); owner.put("startup-timeout", model)
+                model.updateNetworkScope(fixtureLocalScope()); model.setForeground(true)
+            }
+            assertTrue("The slow fixture must reach the real stats socket", peer.statsEntered.await(8, TimeUnit.SECONDS))
+            assertEquals(HubStartup.LOADING, model.startup.value)
+            assertEquals(123L, model.state.value.snapshot?.periods?.get("today")?.tokens)
+            await { model.startup.value == HubStartup.HOME }
+            assertTrue("OkHttp must report a real timed-out call", failedCall.get() is InterruptedIOException)
+            assertNotNull(model.state.value.error)
+            assertFalse(model.state.value.loading)
+            assertFalse(model.state.value.live)
+            assertEquals(123L, model.state.value.snapshot?.periods?.get("today")?.tokens)
+            assertEquals(cached, store.load()?.snapshot)
+            assertEquals(0, peer.streams.get())
+            gate.countDown()
+            instrumentation.runOnMainSync { model.setForeground(false); model.setForeground(true) }
+            assertEquals("Later foreground return must not reopen startup", HubStartup.HOME, model.startup.value)
+        } finally {
+            gate.countDown()
+            instrumentation.runOnMainSync { owner.clear() }
+            client.dispatcher.cancelAll(); client.connectionPool.evictAll(); peer.close(); store.clear()
+        }
     }
 }

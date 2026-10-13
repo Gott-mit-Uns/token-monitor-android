@@ -1,7 +1,9 @@
 package dev.bing.tokenmonitor
 
+import android.view.ViewGroup
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
@@ -11,6 +13,16 @@ import java.util.concurrent.atomic.AtomicReference
 
 class HubStartupScreenTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+    private fun restorationHost(): StateRestorationTester {
+        // MainActivity installs production content in onCreate. The restoration tester
+        // owns a fresh Compose root and must not reuse or overlay that composition.
+        compose.activityRule.scenario.onActivity { activity ->
+            val content = activity.findViewById<ViewGroup>(android.R.id.content)
+            repeat(content.childCount) { index -> (content.getChildAt(index) as? ComposeView)?.disposeComposition() }
+            content.removeAllViews()
+        }
+        return StateRestorationTester(compose)
+    }
     private val actions = object : HubUiActions {
         override fun connect(address: String, credential: String, alternate: String) {}
         override fun refreshSaved() {}
@@ -27,7 +39,7 @@ class HubStartupScreenTest {
         val startup = mutableStateOf(HubStartup.LOADING)
         val state = mutableStateOf(HubState(snapshot = HubParser.parse("""{"periods":{"today":{"totalTokens":123}},"devices":[]}""")))
         val session = AtomicReference("first-process")
-        val restoration = StateRestorationTester(compose)
+        val restoration = restorationHost()
         restoration.setContent {
             key(session.get()) { HubScreen(state.value, actions, startup = startup.value) }
         }
@@ -39,20 +51,20 @@ class HubStartupScreenTest {
         compose.onNodeWithTag("hub-startup").assertDoesNotExist()
         compose.onNodeWithTag("hub-total-tokens").assertIsDisplayed()
         compose.onNodeWithTag("hub-settings-toggle").performClick()
-        compose.onNodeWithTag("connection-controls").assertExists()
+        compose.onNodeWithTag("settings-general-toggle").assertExists()
         // A later refresh and ordinary Activity state restoration retain Settings.
         compose.runOnIdle { state.value = state.value.copy(loading = true) }
         restoration.emulateSavedInstanceStateRestore()
-        compose.onNodeWithTag("connection-controls").assertExists()
+        compose.onNodeWithTag("settings-general-toggle").assertExists()
         compose.onNodeWithTag("hub-startup").assertDoesNotExist()
         // A new ViewModel/process has a new key, ignoring the previous route.
         session.set("second-process")
         restoration.emulateSavedInstanceStateRestore()
         compose.onNodeWithTag("hub-total-tokens").assertIsDisplayed()
-        compose.onNodeWithTag("connection-controls").assertDoesNotExist()
+        compose.onNodeWithTag("settings-general-toggle").assertDoesNotExist()
     }
     @Test fun firstInstallShowsConnectionConfiguration() {
-        val restoration = StateRestorationTester(compose)
+        val restoration = restorationHost()
         restoration.setContent { HubScreen(HubState(), actions, startup = HubStartup.SETTINGS) }
         compose.onNodeWithTag("connection-controls").assertExists()
         compose.onNodeWithTag("hub-startup").assertDoesNotExist()

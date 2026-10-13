@@ -391,7 +391,15 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         val secret = credential
         if (secure != null && secret != null) {
             if (authBlocked) { currentHub = secure; alternateHub = base; bindingToken++; streamEligible = false }
-            else if (!tlsBlocked) refresh(secure, secret, base)
+            else if (!tlsBlocked) {
+                // A pending default-network recovery owns this endpoint transition.
+                // Preserve its finite budget when readiness arrives for the same scope.
+                val recovery = networkRecovery
+                if (recovery != null && recovery.networkId == networkScope?.networkId && recovery.binding == bindingToken)
+                    refreshInScope(secure, secret, base, manual = false, forceHistory = recovery.forceHistory,
+                        allowFallback = true, recovery = recovery)
+                else refresh(secure, secret, base)
+            }
         }
         else if (!authBlocked) mutable.value = mutable.value.copy(error = localConnectionMessage())
     }

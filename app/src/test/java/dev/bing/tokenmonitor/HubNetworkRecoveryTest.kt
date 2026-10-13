@@ -101,6 +101,56 @@ class HubNetworkRecoveryTest {
         s.model.updateNetworkScope(s.scope(2)); s.advance(1)
         assertEquals(reads + 1, s.healthAttempts.get())
     }
+    @Test fun confirmedLanToPendingSecureNetworkKeepsItsTransientRecoveryBudget() = Scenario().use { s ->
+        RecoveryFixtureHub(s.secret).use { local ->
+            val localBase = "http://192.168.1.1:${local.port}"
+            val record = SavedHub(localBase, s.secret,
+                """{"periods":{"today":{"totalTokens":123}},"devices":[]}""", 1, alternate = s.base).also {
+                it.endpointsAssociated = true
+            }
+            val store = MemoryStore(s.app, record)
+            val client = s.client.newBuilder().addInterceptor { chain ->
+                val request = chain.request()
+                val mapped = if (request.url.scheme == "http")
+                    request.newBuilder().url(request.url.newBuilder().host("127.0.0.1").build()).build() else request
+                chain.proceed(mapped)
+            }.build()
+            val owner = ViewModelStore()
+            val model = HubViewModel(s.app, store, client).also { owner.put("dual-ready", it) }
+            try {
+                s.await("Associated LAN cache must load") { !model.state.value.loading }
+                model.updateNetworkScope(HubNetworkScope(true, false, listOf(LocalSubnet("192.168.1.2", 24)),
+                    networkId = 1, socketFactory = javax.net.SocketFactory.getDefault()))
+                model.setForeground(true)
+                s.await("The approved LAN must initially have the only live SSE") { model.state.value.live && local.streams.get() == 1 }
+                assertEquals("http", model.endpointType())
+                val reads = s.healthAttempts.get()
+                val localRequests = local.requests.get()
+                s.failures.set(1)
+                model.updateNetworkScope(s.scope(2, ready = false))
+                s.advance(1)
+                model.updateNetworkScope(s.scope(2, ready = false))
+                s.advance(1)
+                assertEquals("Pending details must not start HTTPS validation", reads, s.healthAttempts.get())
+                model.updateNetworkScope(s.scope(2))
+                s.await("The first secure validation must fail") {
+                    s.healthAttempts.get() == reads + 1 && !model.state.value.loading && !model.state.value.live
+                }
+                assertEquals(123L, model.state.value.snapshot?.periods?.get("today")?.tokens)
+                assertEquals(localRequests, local.requests.get())
+                s.await("The same ready secure network must retry automatically") { model.state.value.live }
+                assertEquals("https", model.endpointType())
+                assertEquals(reads + 2, s.healthAttempts.get())
+                s.await("Only the new secure stream may remain active") {
+                    local.closedStreams.get() == 1 && s.server.streams.get() - s.server.closedStreams.get() == 1
+                }
+                repeat(3) { model.updateNetworkScope(s.scope(2)) }
+                s.advance(15)
+                assertEquals("Repeated ready callbacks must not add another validation", reads + 2, s.healthAttempts.get())
+                assertEquals(0, local.badAuthentication.get()); assertEquals(0, s.server.badAuthentication.get())
+            } finally { owner.clear(); shadowOf(Looper.getMainLooper()).idle() }
+        }
+    }
     @Test fun firstHealthFailureRecoversOnSameNetworkWithoutUserRefresh() = Scenario().use { s ->
         s.online(); s.failures.set(1); val reads = s.healthAttempts.get()
         s.model.updateNetworkScope(s.scope(2))

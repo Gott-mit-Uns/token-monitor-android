@@ -1,5 +1,7 @@
 # Cold-start icon — staged for the next Android update
 
+2026-10-13 更新：Mac联合候选已编译/执行冷启动、真实HTTP超时、Activity恢复、实际进程重启及字体/导航验收；见 [HANDOFF_0.2.60.md](HANDOFF_0.2.60.md)。以下未执行描述属于原暂存阶段。
+
 2026-10-13: user requested this change be pushed to GitHub and included with the next other update. Keep versionName 0.2.59/versionCode 68; do not publish a separate APK, Tag or Release for this source change.
 
 ## Agreed behavior

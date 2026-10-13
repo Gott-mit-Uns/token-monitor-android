@@ -42,7 +42,7 @@ class HomeLargeFontScreenTest {
         val actions = Actions()
         val snapshot = HubParser.parse("""{"periods":{"today":{"totalTokens":199470859,"costUsd":32.78,"clients":{"codex":161571396,"deepseek":37899463}}}}""")
         val state = HubState(snapshot=snapshot,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"))
-        val prefs = DisplayPreferences(language=LanguageChoice.CHINESE,homeModules=listOf("tools"),main=MainDisplayPreferences(compactTotal=true,compactUnits="localized"),appearance=AppearancePreferences(reduceMotion="on"))
+        val prefs = DisplayPreferences(language=LanguageChoice.CHINESE,homeModules=listOf("tools"),main=MainDisplayPreferences(compactTotal=true,compactUnits="localized"),appearance=AppearancePreferences(reduceMotion="on",textSize=if(args.getString("v5Largest")=="true") "largest" else "standard"))
         var observed = 0f
         compose.activity.runOnUiThread { compose.activity.setContent {
             observed = LocalDensity.current.fontScale
