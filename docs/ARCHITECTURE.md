@@ -41,6 +41,8 @@ flowchart TD
 
 SSE 消费采用一个待处理帧槽、独立消费 Job 和 conflated 保存队列，避免无限协程积压。epoch 隔离旧流，requestToken 隔离旧 HTTP，bindingToken/cacheSequence 隔离旧缓存写入。普通 EOF 等待已收到帧消费后退避重连；新流基底从空开始，必须收到 full snapshot。认证失败关闭流和读取，自动生命周期变化不解封。
 
+2026-10-13网络恢复修复稿：默认网络替换立即撤销旧连接，新网络ready后验证；同一恢复会话的NETWORK失败额外最多三次前台退避验证，不依赖仍存活的旧SSE重连任务。恢复上下文绑定networkId、bindingToken与requestToken；网络/连接改变、用户刷新和后台会取消，重复ready回调不重置预算。其他首次读取保持既有触发策略，认证/TLS封锁及LAN准入不变。JVM状态机验证与待执行设备回归分开记录，见HANDOFF_NETWORK_RECOVERY.md。
+
 ## 页面索引
 
 `DesktopHubScreen.kt:45` 的 HubPage 有 11 个内部页面；主导航是已验收的八入口，不能将内部页数量当作菜单缺失。
@@ -79,7 +81,7 @@ SSE 消费采用一个待处理帧槽、独立消费 Job 和 conflated 保存队
 
 HubConnectionPolicy只负责候选排序、失败分类和回退准入；ViewModel仍独占SSE。SavedHub可选加密字段lanEnabled/endpointsAssociated，旧记录默认允许手动LAN，但未获自动双入口授权；默认字段省略以保持旧记录大小。地址/凭据改变撤销关联。
 
-HTTP绑定Network、无代理，connect/read/call上限3/5/8秒；SSE仍read45秒/call无限。单轮最多一次换址，LAN网络故障后60秒冷却。认证/TLS封锁不由生命周期解除。旧SSE响应释放后才开新流，代次继续隔离旧数据。断流继承2–60秒退避与Retry-After，再读取完整快照；普通恢复也可由新流full首帧同步。首次HTTP失败后无后台定时重试，等待用户/网络/生命周期重新评估。
+HTTP绑定Network、无代理，connect/read/call上限3/5/8秒；SSE仍read45秒/call无限。单轮最多一次换址，LAN网络故障后60秒冷却。认证/TLS封锁不由生命周期解除。旧SSE响应释放后才开新流，代次继续隔离旧数据。断流继承2–60秒退避与Retry-After，再读取完整快照；普通恢复也可由新流full首帧同步。首次HTTP失败后不做后台定时重试；仅网络切换恢复会话执行上述有限前台重试，其他失败等待用户/网络/生命周期重新评估。
 
 ## V4展示层增量
 
