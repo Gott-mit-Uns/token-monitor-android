@@ -29,6 +29,8 @@ CatPaw源端启用/采集；MiniMax按量地域与余额查询；T3标题SQL查�
 
 49项原回归首轮48通过，唯一路径名断言失败：旧MainDisplay速率fixture只有hostname，却按Public A/B断言，既有名称合同优先Hub displayName/id。另一个全新API36模拟器在GitHub正式0.2.61+原测试APK上复现相同失败；源resolver本轮未改。fixture明确提供displayName，保留名称、吞吐、前后台全部断言后定向复测。
 
+最终cfc9159包55项回归中54通过，201会话分页在初次进入后Compose idle超时，单独同包重现。其Breakdown进入动画起点使用System.nanoTime，而测试帧使用Compose mainClock，两个时钟域使有限entry不能结束。仅给此测试提供与既有动画专项相同的mainClock域后，原分页/SSE/零额外读取断言及正常动画保留，2.224秒通过；没有更改生产时钟、超时、断言或动画开关。第一次测试补测编译缺少导入已修正，旧测试APK误复跑的指纹/失败留存，不能当作新测试已执行。
+
 最终冻结源码后执行同Release配置的必要单元/Lint/UI/网络/缓存/Widget及窗口矩阵、实际已安装APK指纹和签名升级补验，结果与SHA以Release四附件VALIDATION.md/release-manifest.json及GITHUB_PUBLICATION.md回执为准。本源码交接不提前宣称发布完成。
 
 ## 未验证和回退

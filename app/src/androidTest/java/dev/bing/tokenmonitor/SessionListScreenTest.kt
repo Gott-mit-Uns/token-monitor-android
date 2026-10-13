@@ -2,6 +2,7 @@ package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
@@ -120,7 +121,8 @@ class SessionListScreenTest {
     @Test fun sourceHundredRowPagesClampOnSseAndReturnHome() {
         val now=Instant.now();val actions=Actions();val state=mutableStateOf(HubState(snapshot=snapshot(now,201,0),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions"))
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {HubScreen(state.value,actions,preferences=prefs)}}}
+        val clock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides clock) {HubScreen(state.value,actions,preferences=prefs)}}}}
         show("home-sessions-jump");compose.onNodeWithTag("home-sessions-jump").performClick()
         compose.onNodeWithTag("session-page-status").assertTextEquals("1–100 of 201")
         compose.onNodeWithTag("session-page-previous").assertIsNotEnabled();compose.onNodeWithTag("session-page-next").performClick()
