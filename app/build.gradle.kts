@@ -39,6 +39,7 @@ android {
     }
     testBuildType = if (providers.gradleProperty("tokenMonitorReleaseTest").orNull == "true") "release" else "debug"
     buildFeatures { compose = true }
+    testOptions { unitTests.isIncludeAndroidResources = true }
     bundle { language { enableSplit = false } }
     if (providers.gradleProperty("tokenMonitorLiveTest").orNull == "true") {
         sourceSets.getByName("androidTest").kotlin.directories.add("src/liveTest/java")
@@ -65,6 +66,9 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.squareup.okhttp3:okhttp:5.3.2")
     testImplementation("junit:junit:4.13.2")
+    // Exercise the real ViewModel recovery chain on Windows without replacing the configured phone APK.
+    testImplementation("org.robolectric:robolectric:4.17")
+    testImplementation("com.squareup.okhttp3:okhttp-tls:5.3.2")
     androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test:core:1.7.0")

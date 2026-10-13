@@ -111,6 +111,31 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private var streamSaver: Job? = null
     private var reconnect: Job? = null
     private var retryDelay = 2000L
+    private data class NetworkRecovery(val networkId: Long, var binding: Long,
+        val forceHistory: Boolean = false, var retries: Int = 0)
+    private var networkRecovery: NetworkRecovery? = null
+    private var networkRetry: Job? = null
+    private fun cancelNetworkRetry() { networkRetry?.cancel(); networkRetry = null }
+    private fun cancelNetworkRecovery() { cancelNetworkRetry(); networkRecovery = null }
+    private fun recoveryIsCurrent(recovery: NetworkRecovery): Boolean = networkRecovery === recovery &&
+        foreground && !authBlocked && !tlsBlocked && !committingConnection && recovery.binding == bindingToken &&
+        networkScope?.let { it.networkId == recovery.networkId && it.available && it.ready } == true
+    private fun retryNetworkValidation(recovery: NetworkRecovery?, ticket: Long, error: Throwable) {
+        if (recovery == null || networkRecovery !== recovery) return
+        if (HubConnectionPolicy.classify(error) != HubConnectionPolicy.Failure.NETWORK || recovery.retries >= 3) {
+            cancelNetworkRecovery(); return
+        }
+        if (!recoveryIsCurrent(recovery) || ticket != requestToken) return
+        val wait = (2000L shl recovery.retries++) + kotlin.random.Random.nextLong(500)
+        cancelNetworkRetry()
+        networkRetry = viewModelScope.launch {
+            delay(wait)
+            if (!recoveryIsCurrent(recovery) || ticket != requestToken || mutable.value.loading) return@launch
+            // Clear before refresh cancels outstanding jobs; retain this cycle's finite budget.
+            networkRetry = null
+            refreshSavedInScope(recovery.forceHistory, recovery)
+        }
+    }
     private val storageMutex = Mutex()
     @Volatile private var bindingToken = 0L
     @Volatile private var cacheSequence = 0L
@@ -179,6 +204,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     }
     /** The existing binding stays authoritative until the verified candidate is durably saved. */
     private fun replaceConnection(base:String,secret:String,alternate:String?) {
+        cancelNetworkRecovery()
         cancelHistory()
         stopStream()
         bindingToken++ // Fence older cache writes, without changing the saved binding.
@@ -269,6 +295,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             enforceSecureEndpoint()
             if (!streamEligible && !authBlocked && !tlsBlocked && !mutable.value.loading) refreshSaved() else startStream()
         } else {
+            cancelNetworkRecovery()
             cancelHistory()
             interruptConnectionValidation()
             stopStream()
@@ -294,10 +321,17 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         }
         enforceSecureEndpoint()
         val base = currentHub
+        val recovery = networkRecovery
+        if (previous?.ready == false && scope.ready && recovery != null && recoveryIsCurrent(recovery) &&
+            !mutable.value.loading && !streamEligible) {
+            refreshSavedInScope(recovery.forceHistory, recovery)
+            return
+        }
         if (foreground && !authBlocked && !mutable.value.loading && !mutable.value.live && scope.available && base != null &&
             ((previous?.available == false) || (base.startsWith("http://") && !permitsHttp(base, previous) && permitsHttp(base)))) refreshSaved()
     }
     private fun restartForNetwork() {
+        cancelNetworkRecovery()
         if(currentHub==null && manualValidationTicket==null) return
         cancelHistory()
         interruptConnectionValidation()
@@ -312,7 +346,11 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             if (!authBlocked) mutable.value = mutable.value.copy(error = R.string.error_no_network)
             return
         }
-        if (!authBlocked && !tlsBlocked) refreshSaved()
+        if (!authBlocked && !tlsBlocked) {
+            val recovery = NetworkRecovery(networkScope?.networkId ?: return, bindingToken)
+            networkRecovery = recovery
+            refreshSavedInScope(false, recovery)
+        }
     }
     private fun preferredEndpoint(): String? {
         val base = currentHub ?: return null
@@ -347,6 +385,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private fun connectionMessage(error: Throwable) = if (HubConnectionPolicy.classify(error) == HubConnectionPolicy.Failure.TLS) R.string.error_tls else (error as? HubReadException)?.display
         ?: if (error is java.io.IOException && !HubLocalPermission.granted(getApplication())) R.string.error_connection_local_check else R.string.error_connection
     private fun stopStream() {
+        cancelNetworkRetry()
         epoch++
         streamRestartPending = false
         streamCall?.cancel(); streamCall = null
@@ -496,12 +535,17 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     override fun connect(address: String, credential: String, alternate: String) = refresh(address, credential, alternate,manual=true)
     override fun refreshSaved() = refreshSaved(false)
     override fun refreshSaved(forceHistory: Boolean) {
+        cancelNetworkRecovery()
+        refreshSavedInScope(forceHistory, null)
+    }
+    private fun refreshSavedInScope(forceHistory: Boolean, recovery: NetworkRecovery?) {
         if (authBlocked || tlsBlocked) return
         val base = preferredEndpoint() ?: run {
             mutable.value = mutable.value.copy(error = localConnectionMessage()); return
         }
         val secret = credential ?: return
-        refresh(base, secret, if(base == currentHub) alternateHub else currentHub, forceHistory = forceHistory)
+        refreshInScope(base, secret, if(base == currentHub) alternateHub else currentHub,
+            manual = false, forceHistory = forceHistory, allowFallback = true, recovery = recovery)
     }
     override fun switchEndpoint() {
         val alternate = alternateHub ?: return
@@ -512,6 +556,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     override fun endpointsAssociated() = endpointsAssociated
     override fun configureLan(enabled: Boolean, confirmAssociation: Boolean) {
         if (!foreground || mutable.value.loading || committingConnection) return
+        cancelNetworkRecovery()
         val base = currentHub ?: return
         val secret = credential ?: return
         val local = listOfNotNull(base, alternateHub).firstOrNull { it.startsWith("http://") } ?: return
@@ -689,6 +734,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     override fun loadSubscriptions() { readPart("subscriptions", SubscriptionParser::parse) { state, value -> state.copy(subscriptions = value) } }
     override fun forget() {
         if (mutable.value.loading) return
+        cancelNetworkRecovery()
         mutable.value = mutable.value.copy(loading = true)
         stopStream()
         bindingToken++
@@ -711,7 +757,14 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         }
     }
     fun refresh(address: String, secret: String, alternateAddress: String? = alternateHub,manual:Boolean=false, forceHistory: Boolean = false, allowFallback: Boolean = true) {
+        cancelNetworkRecovery()
+        refreshInScope(address, secret, alternateAddress, manual, forceHistory, allowFallback, null)
+    }
+    private fun refreshInScope(address: String, secret: String, alternateAddress: String?, manual: Boolean,
+        forceHistory: Boolean, allowFallback: Boolean, recovery: NetworkRecovery?) {
         if (!foreground || mutable.value.loading || committingConnection) return
+        if (recovery != null && (networkRecovery !== recovery || recovery.binding != bindingToken ||
+                networkScope?.networkId != recovery.networkId)) return
         if (networkScope?.available == false) {
             mutable.value = mutable.value.copy(error = R.string.error_no_network)
             return
@@ -729,12 +782,18 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             return
         }
         if (base.startsWith("http://") && !permitsHttp(base)) {
-            if ((manual || endpointsAssociated) && alternate?.startsWith("https://") == true) refresh(alternate, secret, base,manual, forceHistory)
+            if ((manual || endpointsAssociated) && alternate?.startsWith("https://") == true)
+                refreshInScope(alternate, secret, base, manual, forceHistory, true, recovery)
             else mutable.value = mutable.value.copy(error = localConnectionMessage())
             return
         }
         if (alternate != null && (alternate == base || java.net.URI(alternate).scheme == java.net.URI(base).scheme)) {
             mutable.value = mutable.value.copy(error = R.string.error_dual_scheme)
+            return
+        }
+        if (!manual && base.startsWith("https://") && networkScope?.ready == false) {
+            // onAvailable revokes the old scope first; wait for this network's details.
+            if (recovery == null) networkRecovery = NetworkRecovery(networkScope!!.networkId, bindingToken, forceHistory)
             return
         }
         if(manual) {replaceConnection(base,secret,alternate);return}
@@ -748,6 +807,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             currentHub = base
         }
         credential = secret
+        if (recovery != null) recovery.binding = bindingToken
         streamEligible = false
         authBlocked = false
         alternateHub = alternate
@@ -772,7 +832,8 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                     alternate?.let(::permitsHttp) == true, failure)
                 if (next != null) {
                     mutable.value = mutable.value.copy(loading = false)
-                    refresh(next, secret, base, forceHistory = forceHistory, allowFallback = false)
+                    refreshInScope(next, secret, base, manual = false, forceHistory = forceHistory,
+                        allowFallback = false, recovery = recovery)
                     return@launch
                 }
             }
@@ -791,9 +852,10 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 }
             )
             if (result.isSuccess) {
+                if (networkRecovery === recovery) cancelNetworkRecovery()
                 if (!saveCurrent()) mutable.value = mutable.value.copy(error = R.string.error_data_save)
                 if (ticket == requestToken) startStream()
-            }
+            } else retryNetworkValidation(recovery, ticket, result.exceptionOrNull()!!)
         }
     }
     override fun onCleared() {
