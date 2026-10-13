@@ -80,6 +80,17 @@ class HubNetworkRecoveryTest {
             client.dispatcher.cancelAll(); client.connectionPool.evictAll(); server.close()
         }
     }
+    @Test fun coldStartWaitsForNetworkDetailsThenReachesHome() = Scenario().use { s ->
+        s.await("Seeded cache must load") { !s.model.state.value.loading }
+        s.model.updateNetworkScope(s.scope(1, ready = false)); s.model.setForeground(true)
+        s.advance(1)
+        assertEquals(HubStartup.LOADING, s.model.startup.value)
+        assertEquals(0, s.healthAttempts.get())
+        s.model.updateNetworkScope(s.scope(1))
+        s.await("Ready network must restore the initial snapshot") { s.model.state.value.live }
+        assertEquals(HubStartup.HOME, s.model.startup.value)
+        assertEquals(1, s.healthAttempts.get())
+    }
     @Test fun pendingHttpsNetworkWaitsForReadyThenValidatesOnce() = Scenario().use { s ->
         s.online(); val reads = s.healthAttempts.get()
         s.model.updateNetworkScope(s.scope(2, ready = false)); s.advance(1)

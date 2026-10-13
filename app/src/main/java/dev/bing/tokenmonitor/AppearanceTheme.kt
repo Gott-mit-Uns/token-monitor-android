@@ -33,13 +33,16 @@ internal fun hexColor(value:String)=Color(0xFF000000L or value.drop(1).toLong(16
 }
 @Composable internal fun effectiveTextScale() = LocalDensity.current.fontScale * LocalDesktopTextScale.current
 
-internal fun nativeFont(value:String, fallback:FontFamily=FontFamily.Monospace):FontFamily {
+internal fun nativeFont(value:String, fallback:FontFamily=BundledFonts.ui):FontFamily {
     val normalized=DesktopAppearance.font(value)
     if(normalized.isEmpty()) return fallback
     if(normalized==DesktopAppearance.defaultInterfaceFont) return FontFamily.Monospace
-    if(normalized==DesktopAppearance.defaultDisplayFont || normalized==DesktopAppearance.systemFont) return FontFamily.SansSerif
+    if(normalized==DesktopAppearance.defaultDisplayFont) return BundledFonts.ui
+    if(normalized==DesktopAppearance.systemFont) return FontFamily.SansSerif
     for (name in DesktopFontFamilies.candidates(normalized)) {
         when(name.lowercase(java.util.Locale.ROOT)) {
+            "inter", "noto sans sc", "notosanssc", "token ui" -> return BundledFonts.ui
+            "jetbrains mono", "jetbrainsmono", "token data" -> return BundledFonts.data
             "serif" -> return FontFamily.Serif
             "monospace","ui-monospace" -> return FontFamily.Monospace
             "sans-serif","system-ui","-apple-system","roboto" -> return FontFamily.SansSerif

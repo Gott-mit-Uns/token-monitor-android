@@ -1,0 +1,53 @@
+{
+  "generator": "fonttools 4.66.1",
+  "families": [
+    "Token UI (Inter + Noto Sans SC)",
+    "Token Data (JetBrains Mono)"
+  ],
+  "cjk": "GB2312, CJK/full-width punctuation, public resource strings",
+  "fallback": "Android system fonts for glyphs outside the bundled subset",
+  "sources": [
+    {
+      "file": "Inter.ttf",
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031"
+    },
+    {
+      "file": "JetBrainsMono.ttf",
+      "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda"
+    },
+    {
+      "file": "NotoSansSC.ttf",
+      "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da"
+    }
+  ],
+  "fonts": [
+    {
+      "file": "token_ui_regular.ttf",
+      "bytes": 2707668,
+      "sha256": "0b4605c88fca7c96ab3a9d5b136bd8d972822316227a4c526fc7c289a0e10de4",
+      "weight": 400,
+      "unicode_count": 10117
+    },
+    {
+      "file": "token_data_regular.ttf",
+      "bytes": 115020,
+      "sha256": "35cf4f2a880bc64ff160b18eae87f1d3d2a65a3a918c4f36295702323bc7ba10",
+      "weight": 400,
+      "unicode_count": 976
+    },
+    {
+      "file": "token_ui_bold.ttf",
+      "bytes": 2708312,
+      "sha256": "3caaeb9bbd50e6108e2dc886b9bc0975bd3c871494b4b30e0db0f59112e90b04",
+      "weight": 700,
+      "unicode_count": 10117
+    },
+    {
+      "file": "token_data_bold.ttf",
+      "bytes": 114964,
+      "sha256": "a82404b923bcec858bfb25ce30b58cc10f72d51660cee16b7940371ae312e8d5",
+      "weight": 700,
+      "unicode_count": 976
+    }
+  ]
+}

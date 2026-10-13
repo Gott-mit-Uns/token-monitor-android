@@ -13,7 +13,14 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-CACHE = Path(os.environ.get("GRADLE_USER_HOME", str(Path.home() / ".gradle"))) / "caches/modules-2/files-2.1"
+def local_path(value):
+    """Support Windows cache paths beyond MAX_PATH without moving user files."""
+    value = os.path.abspath(value)
+    if os.name == "nt" and not value.startswith("\\\\?\\"):
+        value = "\\\\?\\UNC\\" + value[2:] if value.startswith("\\\\") else "\\\\?\\" + value
+    return Path(value)
+
+CACHE = local_path(os.environ.get("GRADLE_USER_HOME", str(Path.home() / ".gradle"))) / "caches/modules-2/files-2.1"
 NS = {"m": "http://maven.apache.org/POM/4.0.0"}
 
 
@@ -59,7 +66,7 @@ def generate():
         if not info["licenses"] or any("apache.org/licenses/LICENSE-2.0" not in url for _, url in info["licenses"]):
             raise ValueError(f"Review new or unknown license before packaging: {coordinate}")
         entries.append((coordinate, info))
-        with zipfile.ZipFile(artifact) as archive:
+        with zipfile.ZipFile(local_path(artifact)) as archive:
             for filename, content in archive_notices(archive):
                 digest = hashlib.sha256(content.encode()).hexdigest()
                 record = bundled.setdefault(digest, {"text": content, "sources": []})
@@ -73,7 +80,8 @@ def generate():
              "No business source code from the previous Android fork is included.\n\n"
              "Token Monitor upstream MIT license\n\n")
     text = intro + (ROOT / "app/src/main/assets/token-monitor-upstream-MIT.txt").read_text()
-    text += "\n\n" + (ROOT / "app/src/main/assets/desktop-asset-notices.txt").read_text() + "\n\nRuntime dependencies\n\n"
+    text += "\n\n" + (ROOT / "app/src/main/assets/desktop-asset-notices.txt").read_text()
+    text += "\n\n" + (ROOT / "app/src/main/assets/font-notices.txt").read_text() + "\n\nRuntime dependencies\n\n"
     for coordinate, info in entries:
         attribution = ", ".join(info["developers"])
         text += coordinate + "\nApache License 2.0\n"
@@ -93,6 +101,10 @@ def generate():
            "| 运行依赖 | 许可 | 项目来源 |\n|---|---|---|\n")
     for coordinate, info in entries:
         doc += f"| {coordinate} | Apache-2.0 | {info['project']} |\n"
+    doc += ("\n另随包提供 Inter、JetBrains Mono、Noto Sans SC 的 SIL OFL 1.1 字体派生资源。"
+            "界面字体 Token UI 合并 Inter 与常用中文子集，数据字体 Token Data 来自 JetBrains Mono；"
+            "原始许可、版权和来源随 `assets/font-notices.txt` 及完整离线许可清单提供。"
+            "字体不是 Maven 运行依赖，不计入上表数量。指纹与覆盖见 `design/font-preview/bundled-manifest.json`。\n")
     doc += ("\n更新依赖后重新运行：\n\n```\n./gradlew :app:writeRuntimeInventory --offline\n"
             "python3 tools/update-third-party.py\npython3 tools/update-third-party.py --check\n```\n")
     return {ROOT / "app/src/main/assets/open-source-notices.txt": text, ROOT / "docs/DEPENDENCY_LICENSES.md": doc}, len(entries), len(bundled)

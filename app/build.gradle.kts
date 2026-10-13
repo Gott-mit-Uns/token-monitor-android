@@ -31,6 +31,10 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            // Public-fixture phone tests coexist with the user's signed production app.
+            if (providers.gradleProperty("tokenMonitorIsolatedTest").orNull == "true") applicationIdSuffix = ".acceptance"
+        }
         getByName("release") {
             if (releaseSigningAvailable) signingConfig = signingConfigs.getByName("release")
             // Keep the tested runtime behavior; shrinker tuning is a separate change.

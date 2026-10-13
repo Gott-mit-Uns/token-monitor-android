@@ -1,5 +1,7 @@
 # 字体预览与待集成资源
 
+2026-10-13 最新接续状态：轻量字体已接入 release/0.2.60 源码，默认界面/总量为 Inter + Noto 常用中文合成，数据为 JetBrains Mono；派生名称 Token UI/Token Data，指纹见 bundled-manifest.json。Windows 已完成单元、编译和 Lint，设备字形/布局、真实系统后备及同配置正式 APK ≤5 MB 增量尚待 Mac 验证；详见 docs/HANDOFF_UNIFIED_0.2.60_MAC.md。以下是原始暂存阶段的说明。
+
 日期：2026-10-13。状态：**用户已接受预览方案；资源入库，等待下次其他功能更新时一起集成。**
 
 本目录位于 Android 资源目录之外。当前 App 字体解析、版本号和发布 APK 没有变化；字体文件不会因放在此目录而进入 APK。不要将整目录直接复制到 `app/src/main/res/font`。

@@ -108,7 +108,7 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
     Box(Modifier.size(48.dp).clickable(enabled,role=Role.Button,onClick=click).testTag(tag)
         .semantics {contentDescription=label},contentAlignment=Alignment.Center) {
         Box(Modifier.size(26.dp).alpha(if(enabled) 1f else .4f).background(LocalDesktopOverlayColor.current.copy(alpha=.05f),RoundedCornerShape(6.dp)),
-            contentAlignment=Alignment.Center) {Icon(painterResource(icon),null,Modifier.size(12.dp),tint=text)}
+            contentAlignment=Alignment.Center) {Icon(painterResource(icon),null,if(icon==R.drawable.desktop_refresh) Modifier.size(8.3.dp,8.dp) else Modifier.size(12.dp),tint=text)}
     }
 }
 

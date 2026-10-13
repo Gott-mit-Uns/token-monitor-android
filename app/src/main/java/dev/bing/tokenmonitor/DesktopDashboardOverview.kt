@@ -235,8 +235,8 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                     drawRoundRect(color,size=Size(size.width*fraction,size.height),cornerRadius=CornerRadius(2.dp.toPx()))
                     motion?.recordPaintedWidth(key,trackWidth.toDouble(),fraction)
                 }
-                Text(DesktopCompactTokens.format(row.tokens.toDouble(),units,locale),Modifier.testTag("dashboard-ranking-$group-${row.key}-value"),style=quotaTextStyle(12).copy(fontFeatureSettings="tnum"),color=text.copy(alpha=.8f),maxLines=1,overflow=TextOverflow.Ellipsis)
-                Text("${row.percent}%",Modifier.testTag("dashboard-ranking-$group-${row.key}-percent"),style=quotaTextStyle(12).copy(fontFeatureSettings="tnum"),color=text.copy(alpha=.55f),maxLines=1,overflow=TextOverflow.Ellipsis)
+                Text(DesktopCompactTokens.format(row.tokens.toDouble(),units,locale),Modifier.testTag("dashboard-ranking-$group-${row.key}-value"),style=quotaDataTextStyle(12),color=text.copy(alpha=.8f),maxLines=1,overflow=TextOverflow.Ellipsis)
+                Text("${row.percent}%",Modifier.testTag("dashboard-ranking-$group-${row.key}-percent"),style=quotaDataTextStyle(12),color=text.copy(alpha=.55f),maxLines=1,overflow=TextOverflow.Ellipsis)
             }) {children,constraints->
                 val gap=12.dp.roundToPx()
                 val numericSpace=(constraints.maxWidth-gap*2-24.dp.roundToPx()).coerceAtLeast(0)

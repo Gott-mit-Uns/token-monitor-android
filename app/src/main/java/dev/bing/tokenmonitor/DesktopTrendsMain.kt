@@ -134,9 +134,9 @@ import kotlin.math.floor
         }
         Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(first, Modifier.weight(1f).testTag("trends-main-axis-start"),
-                style = quotaTextStyle(10).copy(fontFeatureSettings = "tnum"), color = text.copy(alpha = .45f))
+                style = quotaDataTextStyle(10), color = text.copy(alpha = .45f))
             Text(last, Modifier.weight(1f).testTag("trends-main-axis-end"),
-                style = quotaTextStyle(10).copy(fontFeatureSettings = "tnum"), color = text.copy(alpha = .45f),
+                style = quotaDataTextStyle(10), color = text.copy(alpha = .45f),
                 textAlign = androidx.compose.ui.text.style.TextAlign.End)
         }
         Column(verticalArrangement = Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {

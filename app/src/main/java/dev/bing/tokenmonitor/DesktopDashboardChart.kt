@@ -282,7 +282,7 @@ internal suspend fun prepareDashboardChart(
     val palette=LocalDesktopVendorPalette.current
     val line=LocalDesktopLineColor.current
     val textMeasurer=rememberTextMeasurer()
-    val textStyle=quotaTextStyle(10).copy(color=line.copy(alpha=.5f))
+    val textStyle=quotaDataTextStyle(10).copy(color=line.copy(alpha=.5f))
     fun compact(value:Double)=DesktopCompactTokens.format(value,display.compactUnits,DesktopCompactTokens.localeTag(locale))
     val ticks=remember(model.axisTicks,textStyle,textMeasurer,display.compactUnits,locale) {
         model.axisTicks.map {tick->tick to textMeasurer.measure(compact(tick.value.toDouble()),textStyle)}

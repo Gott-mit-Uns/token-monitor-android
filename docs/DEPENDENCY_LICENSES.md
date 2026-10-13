@@ -74,6 +74,8 @@
 | org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0 | Apache-2.0 | https://github.com/Kotlin/kotlinx.serialization |
 | org.jspecify:jspecify:1.0.0 | Apache-2.0 | http://jspecify.org/ |
 
+另随包提供 Inter、JetBrains Mono、Noto Sans SC 的 SIL OFL 1.1 字体派生资源。界面字体 Token UI 合并 Inter 与常用中文子集，数据字体 Token Data 来自 JetBrains Mono；原始许可、版权和来源随 `assets/font-notices.txt` 及完整离线许可清单提供。字体不是 Maven 运行依赖，不计入上表数量。指纹与覆盖见 `design/font-preview/bundled-manifest.json`。
+
 更新依赖后重新运行：
 
 ```

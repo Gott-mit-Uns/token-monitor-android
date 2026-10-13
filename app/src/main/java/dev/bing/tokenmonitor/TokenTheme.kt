@@ -17,6 +17,7 @@ fun TokenTheme(dark: Boolean = isSystemInDarkTheme(), language: LanguageChoice =
     val numberColor=androidx.compose.runtime.remember(dark,appearance.colors) { hexColor(DesktopAppearance.numberColor(appearance.colors,dark)) }
     val font=androidx.compose.runtime.remember(appearance.interfaceFont) { nativeFont(appearance.interfaceFont) }
     val displayFont=androidx.compose.runtime.remember(appearance.displayFont,font) { nativeFont(appearance.displayFont,font) }
+    val dataFont=if(appearance.interfaceFont.isEmpty()) BundledFonts.data else font
     val scale=DesktopAppearance.scale(appearance.textSize)
     val light=DesktopAppearance.light(palette.getValue("bg"))
     val motionScale=rememberAndroidMotionScale()
@@ -37,7 +38,8 @@ fun TokenTheme(dark: Boolean = isSystemInDarkTheme(), language: LanguageChoice =
             LocalDesktopOverlayColor provides tooltipOverlay,
             LocalDesktopLineColor provides if(light) Color(0xFF181C24) else Color(0xFFE8EEF4),
             LocalDesktopHeatColors provides DesktopAppearance.heatColors(palette.getValue("chart")).map(::hexColor),
-            LocalDesktopTextScale provides scale,LocalDesktopDisplayFont provides displayFont) { content() }
+            LocalDesktopTextScale provides scale,LocalDesktopDisplayFont provides displayFont,
+            LocalDesktopDataFont provides dataFont) { content() }
     }
     }
 }

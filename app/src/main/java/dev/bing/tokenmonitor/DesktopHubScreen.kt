@@ -390,7 +390,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val subscriptionContext=SubscriptionReadContext(state.subscriptions.orEmpty(),subscriptionAccounts,state.snapshot?.periods?.get("month")?.toolDetails.orEmpty().mapValues {it.value.cost},homeDay,strings.configuration.locales[0],currency)
     if(trendsDetail) {
         trendsHistoryUiState.SaveableStateProvider("dashboard") {
-            val dashboardFont=nativeFont(preferences.appearance.interfaceFont,androidx.compose.ui.text.font.FontFamily.SansSerif)
+            val dashboardFont=nativeFont(preferences.appearance.interfaceFont)
             val typography=MaterialTheme.typography
             MaterialTheme(typography=typography.copy(
                 bodySmall=typography.bodySmall.copy(fontFamily=dashboardFont),bodyMedium=typography.bodyMedium.copy(fontFamily=dashboardFont),bodyLarge=typography.bodyLarge.copy(fontFamily=dashboardFont),

@@ -62,11 +62,11 @@ import java.text.NumberFormat
             Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
                 Row(Modifier.weight(1f),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                     Text(label,Modifier.weight(1f,false),style=style,color=colors.onSurfaceVariant,maxLines=2,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
-                    if(showPercent) Text(percent ?: "—",Modifier.testTag("$tag-percent"),style=quotaTextStyle(10).copy(fontFamily=FontFamily.Monospace),color=colors.onSurfaceVariant.copy(alpha=0.6f))
+                    if(showPercent) Text(percent ?: "—",Modifier.testTag("$tag-percent"),style=quotaTextStyle(10).copy(fontFamily=LocalDesktopDataFont.current),color=colors.onSurfaceVariant.copy(alpha=0.6f))
                 }
-                if(!stacked) Text(value,Modifier.testTag("$tag-value"),style=style.copy(fontFamily=FontFamily.Monospace),color=colors.onSurface.copy(alpha=.85f))
+                if(!stacked) Text(value,Modifier.testTag("$tag-value"),style=style.copy(fontFamily=LocalDesktopDataFont.current),color=colors.onSurface.copy(alpha=.85f))
             }
-            if(stacked) Text(value,Modifier.fillMaxWidth().testTag("$tag-value"),style=style.copy(fontFamily=FontFamily.Monospace),color=colors.onSurface.copy(alpha=.85f),textAlign=androidx.compose.ui.text.style.TextAlign.End)
+            if(stacked) Text(value,Modifier.fillMaxWidth().testTag("$tag-value"),style=style.copy(fontFamily=LocalDesktopDataFont.current),color=colors.onSurface.copy(alpha=.85f),textAlign=androidx.compose.ui.text.style.TextAlign.End)
         }
     }
 }

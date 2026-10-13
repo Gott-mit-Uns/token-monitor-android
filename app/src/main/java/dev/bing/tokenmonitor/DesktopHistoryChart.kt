@@ -135,7 +135,7 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
             totals.forEach { (key, value) -> Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(8.dp).background(seriesColor(key, byModel,palette)).testTag("history-color-$key")); Spacer(Modifier.width(8.dp))
                 Text(if (key == HistoryAnalytics.UNATTRIBUTED) strings.getString(R.string.chart_unattributed) else if (byModel) key else toolLabel(key), Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
-                Text(numbers.format(value), style = MaterialTheme.typography.bodySmall)
+                Text(numbers.format(value), style = quotaDataTextStyle(12))
                 Text(if (grand.signum() > 0) " ${(value.toDouble() / grand.toDouble() * 100).let { String.format(strings.configuration.locales[0], "%.1f", it) }}%" else " —", style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
             } }
         }

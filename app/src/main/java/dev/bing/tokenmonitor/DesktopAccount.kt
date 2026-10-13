@@ -27,6 +27,9 @@ import java.time.Instant
     fontSize=(size*LocalDesktopTextScale.current).sp,lineHeight=(size*1.2f*LocalDesktopTextScale.current).sp,
     fontWeight=if(bold) FontWeight.SemiBold else FontWeight.Normal)
 
+@Composable internal fun quotaDataTextStyle(size:Int,bold:Boolean=false):TextStyle = quotaTextStyle(size,bold)
+    .copy(fontFamily=LocalDesktopDataFont.current,fontFeatureSettings="tnum")
+
 @Composable
 internal fun DesktopAccount(windows:List<Limit>,compact:Boolean=false,showAccount:Boolean=!compact,
     peers:List<Limit> = emptyList(),accountIndex:Int=0,showProvider:Boolean=true,now:Instant=Instant.now(),titleOverride:String?=null,

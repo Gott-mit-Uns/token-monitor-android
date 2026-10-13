@@ -62,8 +62,8 @@ fun HistoryTrend(history: HubHistory) {
         rows.drop(page * 20).take(20).forEach { row ->
             Column(Modifier.fillMaxWidth().heightIn(min = CompactUiTokens.InteractiveMinHeight).testTag("history-record-${row.date}")
                 .clickable { selected = row }.padding(vertical = CompactUiTokens.DetailRowPadding), verticalArrangement = Arrangement.spacedBy(CompactUiTokens.ChartTitleSpacing)) {
-                Text(row.date, style = MaterialTheme.typography.bodySmall)
-                Text("${row.tokens?.let { numbers.format(it) } ?: strings.getString(R.string.not_provided)} Token")
+                Text(row.date, style = quotaDataTextStyle(12))
+                Text("${row.tokens?.let { numbers.format(it) } ?: strings.getString(R.string.not_provided)} Token", style = quotaDataTextStyle(14))
             }
         }
         if (rows.size > 20) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
