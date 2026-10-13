@@ -80,7 +80,7 @@ class CompactSettingsDropdownScreenTest {
 
     @Test fun longLabelsGrowNaturallyAndConstrainedListScrollsWithAccessibleSelection() {
         val expanded=mutableStateOf(true);val selected=mutableStateOf("0")
-        val options=(0..11).map {DesktopMenuOption("$it",if(it==0) "这是一个需要完整显示的很长设置选项，保留所有文字并允许自然换行。This setting label remains complete." else "选项 $it","compact-$it")}
+        val options=(0..11).map {DesktopMenuOption("$it",if(it==0) "这是一个需要完整显示的很长设置选项，允许自然换行。\n保留所有文字，不缩字、不裁字。\nThis setting label remains complete." else "选项 $it","compact-$it")}
         content {Box(Modifier.size(48.dp)) {DesktopOptionMenu(expanded.value,options,selected.value,"compact-menu",width=140.dp,maxHeight=180.dp,compactSettings=true,dismiss={expanded.value=false}) {selected.value=it;expanded.value=false}}}
         labelFits("compact-0")
         val row=compose.onNodeWithTag("compact-0",useUnmergedTree=true).getUnclippedBoundsInRoot()
