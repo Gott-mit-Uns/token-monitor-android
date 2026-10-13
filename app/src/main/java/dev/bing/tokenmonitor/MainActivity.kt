@@ -38,19 +38,25 @@ import java.text.NumberFormat
 class MainActivity : ComponentActivity() {
     private val model: HubViewModel by viewModels()
     private val localAllowed = mutableStateOf(true)
+    private val quotaOpenRequest = mutableLongStateOf(0L)
     private val localPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { localAllowed.value = HubLocalPermission.granted(this) }
     private val networks by lazy { HubNetworkObserver(this, model::updateNetworkScope) }
     override fun onStart() { super.onStart(); localAllowed.value = HubLocalPermission.granted(this); networks.start(); model.setForeground(true) }
     override fun onStop() { networks.stop(); model.setForeground(false); super.onStop() }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent.getBooleanExtra(HubWidget.OPEN_AND_UPDATE, false)) model.refreshSaved()
+        if (intent.getBooleanExtra(HubQuotaWidget.OPEN_QUOTA_AND_UPDATE, false)) {
+            quotaOpenRequest.longValue++; model.refreshSaved()
+        } else if (intent.getBooleanExtra(HubWidget.OPEN_AND_UPDATE, false)) model.refreshSaved()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (intent.getBooleanExtra(HubQuotaWidget.OPEN_QUOTA_AND_UPDATE, false)) {
+            quotaOpenRequest.longValue++; intent.removeExtra(HubQuotaWidget.OPEN_QUOTA_AND_UPDATE)
+        }
         enableEdgeToEdge()
         setContent {
-            HubApp(model, localAllowed.value,
+            HubApp(model, localAllowed.value, quotaOpenRequest.longValue,
                 requestLocal = { localPermission.launch(HubLocalPermission.NAME) },
                 openLocalSettings = { startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)) })
@@ -59,18 +65,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun HubApp(model: HubViewModel, localAllowed: Boolean, requestLocal: () -> Unit, openLocalSettings: () -> Unit) {
+private fun HubApp(model: HubViewModel, localAllowed: Boolean, quotaOpenRequest: Long, requestLocal: () -> Unit, openLocalSettings: () -> Unit) {
     val state by model.state.collectAsStateWithLifecycle()
     val preferences by model.display.collectAsStateWithLifecycle()
     val startup by model.startup.collectAsStateWithLifecycle()
     key(model.startupSessionId) {
-        HubScreen(state,model,localAllowed,requestLocal,preferences,model::changeDisplay,openLocalSettings,startup)
+        HubScreen(state,model,localAllowed,requestLocal,preferences,model::changeDisplay,openLocalSettings,startup,quotaOpenRequest)
     }
 
 }
 
 @Composable
-fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true, requestLocal: (() -> Unit)? = null, preferences: DisplayPreferences = DisplayPreferences(), updateDisplay: ((DisplayChange) -> Unit)? = null, openLocalSettings: (() -> Unit)? = null, startup: HubStartup? = null) {
+fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true, requestLocal: (() -> Unit)? = null, preferences: DisplayPreferences = DisplayPreferences(), updateDisplay: ((DisplayChange) -> Unit)? = null, openLocalSettings: (() -> Unit)? = null, startup: HubStartup? = null, quotaOpenRequest: Long = 0L) {
     val preview=remember {AppearancePreviewState()}
     val language=LocalDesktopBaseLanguage.current ?: preferences.language
     val inheritedDark=LocalDesktopBaseDark.current
@@ -102,7 +108,7 @@ fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true
         LocalDesktopToolIcons provides preferences.appearance.showToolIcons, LocalLimitDisplay provides preferences.limits,LocalMainDisplay provides preferences.main) {
         if (startup == HubStartup.LOADING) HubStartupIcon()
         else DesktopHubScreen(state, model, localAllowed, requestLocal, preferences, updateDisplay, openLocalSettings,
-            initialPage = startup?.let { if (it == HubStartup.SETTINGS) HubPage.SETTINGS else HubPage.HOME })
+            quotaOpenRequest = quotaOpenRequest, initialPage = if(quotaOpenRequest>0L) HubPage.LIMITS else startup?.let { if (it == HubStartup.SETTINGS) HubPage.SETTINGS else HubPage.HOME })
     }
     }
     }

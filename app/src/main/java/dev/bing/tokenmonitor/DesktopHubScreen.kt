@@ -64,7 +64,7 @@ private fun clock(value: String?) = value?.let { runCatching { DateTimeFormatter
 internal val LocalHubCalendarClock=staticCompositionLocalOf<java.time.Clock> {java.time.Clock.systemDefaultZone()}
 
 @Composable
-internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null) {
+internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null, quotaOpenRequest: Long = 0L) {
     val renderObserver = LocalHeadlineRenderObserver.current
     if (renderObserver != null) SideEffect { renderObserver("hub") }
     val strings = LocalResources.current
@@ -83,8 +83,9 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val landing=HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,"home")}
     val visiblePages=MainDisplay.visible(preferences.main,directPage?.let {setOf(it)} ?: emptySet())
     fun openDirect(target:HubPage) {trendsHistoryOpen=false;directPage=target.name.lowercase();page=target}
-    LaunchedEffect(page,preferences.main.viewOrder,preferences.main.hiddenViews) {
-        if(!settingsPage && page.name.lowercase() !in visiblePages) {directPage=null;page=HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,page.name.lowercase())}}
+    LaunchedEffect(quotaOpenRequest) {if(quotaOpenRequest>0L) openDirect(HubPage.LIMITS)}
+    LaunchedEffect(page,directPage,preferences.main.viewOrder,preferences.main.hiddenViews) {
+        if(!settingsPage && page.name.lowercase() !in MainDisplay.visible(preferences.main,directPage?.let {setOf(it)} ?: emptySet())) {directPage=null;page=HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,page.name.lowercase())}}
     }
     val liveRate=rememberLiveTokenRate(state.snapshot,state.live,preferences.main,state.deviceAliases)
     val periodVisible=page !in listOf(HubPage.SETTINGS,HubPage.PRICING,HubPage.SUBSCRIPTIONS) && !trendsDetail

@@ -1,0 +1,4 @@
+<resources>
+    <string name="appearance_font_bundled_ui">Inter + Noto Sans SC</string>
+    <string name="appearance_font_bundled_data">JetBrains Mono</string>
+</resources>

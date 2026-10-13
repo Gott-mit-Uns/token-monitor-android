@@ -44,6 +44,7 @@ import kotlinx.coroutines.ensureActive
     var selectedBar by remember(history,ui.range,ui.byModel,ui.mode) {mutableStateOf<DashboardTrendBar?>(null)}
     var selectedCandle by remember(history,ui.range,ui.mode) {mutableStateOf<DashboardTrendCandle?>(null)}
     BackHandler(ui.tab==DashboardTab.RECORDS) {ui.closeRecords()}
+    ChartInspectionHost {
     Scaffold(Modifier.testTag("trends-history-detail"),containerColor=MaterialTheme.colorScheme.background,
         contentWindowInsets=WindowInsets.navigationBars,
         topBar={Column(Modifier.statusBarsPadding()) {
@@ -95,6 +96,7 @@ import kotlinx.coroutines.ensureActive
                     modifier=Modifier.testTag("dashboard-open-records")) {Text(strings.getString(R.string.dashboard_records),style=quotaTextStyle(11))}
             }
         }
+    }
     }
     selectedRow?.let {row->DashboardDayDialog(row,selectedBar) {selectedRow=null;selectedBar=null}}
     selectedCandle?.let {candle->DashboardCandleDialog(candle) {selectedCandle=null}}
@@ -177,6 +179,7 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
         if(committedChart!=null) DesktopDashboardChart(committedChart,chartModifier,onBar,onCandle,motion,
             prepared=ui.committedChartPreparation)
         else Spacer(chartModifier.testTag("dashboard-chart"))
+        if (model.mode == DashboardTrendMode.BARS && model.daily.isNotEmpty()) Text(strings.getString(R.string.daily_chart_inspect_hint), style = quotaTextStyle(11), color = text.copy(alpha = .55f))
         if(model.daily.isEmpty()) Text(strings.getString(R.string.dashboard_no_daily),style=quotaTextStyle(11),color=text.copy(alpha=.55f))
         if(model.hasUnknownData) Text(strings.getString(R.string.dashboard_chart_unknown),Modifier.testTag("dashboard-trend-unknown"),style=quotaTextStyle(11),color=text.copy(alpha=.55f))
         if(model.mode==DashboardTrendMode.BARS) DashboardLegend(model,Modifier.onSizeChanged {legendMeasured=true})

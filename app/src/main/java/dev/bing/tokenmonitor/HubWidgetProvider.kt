@@ -47,6 +47,7 @@ object HubWidget {
     fun updateAll(context: Context) {
         val manager = AppWidgetManager.getInstance(context)
         update(context, manager, manager.getAppWidgetIds(ComponentName(context, HubWidgetProvider::class.java)))
+        HubQuotaWidget.updateAll(context)
     }
 
     fun update(context: Context, manager: AppWidgetManager, ids: IntArray) = synchronized(updateLock) {

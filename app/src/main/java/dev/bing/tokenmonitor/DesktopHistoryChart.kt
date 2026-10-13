@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import java.math.BigInteger
@@ -52,6 +52,19 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
     }
     val peak = calendar.mapNotNull { it.tokens }.maxOrNull()
     val maximum = peak?.coerceAtLeast(1) ?: 1L
+    val inspection = rememberDailyChartInspection(calendar.map { it.date }, Triple(start, end, mode))
+    val latestCalendar by rememberUpdatedState(calendar)
+    val latestSelect by rememberUpdatedState(select)
+    var accessibleIndex by remember(start, end) { mutableIntStateOf(0) }
+    SideEffect {
+        inspection.date?.let { date -> calendar.indexOfFirst { it.date == date }.takeIf { it >= 0 }?.let { accessibleIndex = it } }
+    }
+    fun inspect(index: Int) {
+        if (mode != ChartMode.KLINE && calendar.isNotEmpty()) {
+            accessibleIndex = index.coerceIn(0, calendar.lastIndex)
+            inspection.date = calendar[accessibleIndex].date
+        }
+    }
     val scroll = rememberScrollState()
     LaunchedEffect(rows, mode, scroll.maxValue) { scroll.scrollTo(scroll.maxValue) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -66,23 +79,29 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(strings.getString(R.string.history_peak, peak?.let(numbers::format) ?: "—"), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
-            Text(strings.getString(R.string.chart_tap_detail), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
+            Text(strings.getString(if (mode == ChartMode.KLINE) R.string.chart_tap_detail else R.string.daily_chart_inspect_hint), Modifier.weight(1f).padding(start = 8.dp), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
         }
         BoxWithConstraints(Modifier.fillMaxWidth()) {
             val width = if (mode == ChartMode.BARS) maxOf(maxWidth, (calendar.size * 7).dp) else maxWidth
             val bucketDays = if (calendar.size <= 10) 2 else maxOf(3, (calendar.size / maxOf(8, (maxWidth.value / 24).roundToInt()).toFloat()).roundToInt())
             val candles = remember(rows, bucketDays) { HistoryAnalytics.candles(rows, bucketDays) }
             val chartMax = if (mode == ChartMode.KLINE) candles.maxOfOrNull { it.high }?.coerceAtLeast(1) ?: 1L else maximum
-            Row(Modifier.fillMaxWidth().horizontalScroll(scroll)) {
+            Row(Modifier.fillMaxWidth().testTag("history-chart-viewport").horizontalScroll(scroll)) {
                 Canvas(Modifier.width(width).height(CompactUiTokens.chartHeight(secondary = mode == ChartMode.LINE)).testTag("desktop-history-chart").semantics {
                     contentDescription = strings.getString(R.string.history_chart_description, start, end)
-                }.pointerInput(calendar, candles, mode, byModel) {
-                    detectTapGestures { point ->
-                        if (mode == ChartMode.KLINE) {
-                            candles.getOrNull((point.x / size.width * candles.size).toInt().coerceIn(0, (candles.size - 1).coerceAtLeast(0)))?.let { candleDetail = it }
-                        } else calendar.getOrNull((point.x / size.width * calendar.size).toInt().coerceIn(0, calendar.lastIndex))?.let(select)
+                    if (mode != ChartMode.KLINE && calendar.isNotEmpty()) {
+                        onClick(strings.getString(R.string.chart_tap_detail)) { select(calendar[accessibleIndex.coerceIn(0, calendar.lastIndex)]); true }
+                        customActions = listOf(
+                            CustomAccessibilityAction(strings.getString(R.string.dashboard_previous_record)) { inspect(accessibleIndex - 1); true },
+                            CustomAccessibilityAction(strings.getString(R.string.dashboard_next_record)) { inspect(accessibleIndex + 1); true })
                     }
-                }) {
+                }.dailyChartGestures(inspection, hit = { point, w, h, clamp ->
+                    if (mode == ChartMode.KLINE || (!clamp && (point.y < 0 || point.y > h))) null
+                    else dailyChartIndex(point.x, 0f, w.toFloat(), latestCalendar.size, clamp)?.let { latestCalendar[it].date }
+                }, tap = { point, w, _ ->
+                    if (mode == ChartMode.KLINE) candles.getOrNull(dailyChartIndex(point.x, 0f, w.toFloat(), candles.size, false) ?: -1)?.let { candleDetail = it }
+                    else dailyChartIndex(point.x, 0f, w.toFloat(), latestCalendar.size, false)?.let { latestSelect(latestCalendar[it]) }
+                })) {
                     val top = 8.dp.toPx(); val bottom = size.height - 8.dp.toPx(); val height = bottom - top
                     repeat(4) { tick -> val y = bottom - tick * height / 3
                         drawLine(colors.outlineVariant.copy(alpha = 0.5f), Offset(0f, y), Offset(size.width, y), 1.dp.toPx()) }
@@ -124,9 +143,22 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
                             }
                         }
                     }
+                    inspection.date?.let { date ->
+                        val index = calendar.indexOfFirst { it.date == date }
+                        if (index >= 0) {
+                            val x = (index + .5f) / calendar.size * size.width
+                            drawLine(colors.onSurfaceVariant, Offset(x, top), Offset(x, bottom), 1.dp.toPx())
+                        }
+                    }
                 }
             }
+            inspection.date?.let { date -> calendar.firstOrNull { it.date == date }?.let { row ->
+                Box(Modifier.align(Alignment.TopEnd).padding(4.dp)) {
+                    DailyChartInspectionCard(inspection, row, byModel, "history-inspection")
+                }
+            } }
         }
+
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(start.toString(), style = MaterialTheme.typography.labelSmall); Text(end.toString(), style = MaterialTheme.typography.labelSmall)
         }

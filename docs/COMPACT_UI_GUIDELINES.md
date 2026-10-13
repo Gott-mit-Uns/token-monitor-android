@@ -32,3 +32,11 @@ Before V5, `DesktopTrendsMain.kt` derived spark height as `maxOf(48.dp + padding
 
 ## Acceptance evidence
 Record old/new main and secondary chart heights and metric row heights, screenshots from identical fixtures, readable axis labels, 48dp touch targets, full/empty data, window/font/locale matrices, scrolling, and non-regression. Distinguish simulation from physical-device evidence. Do not claim V5 complete until Hub, performance, networking and UI checks all meet their individual gates; release only once.
+
+## Settings dropdown exception (user approved 2026-10-13)
+
+All ordinary setting-value dropdowns use the shared `DesktopSettingSelect` → `DesktopOptionMenu(compactSettings=true)` path. Expanded option rows have a 36dp minimum height, 4dp vertical padding per edge, zero row gap and 4dp menu outer padding. Actual height is max(36dp, natural text height + 8dp); each padding edge is rounded separately in pixel geometry. Long labels wrap and large system/App text may grow individual rows without shrinking, clipping or ellipsis. Existing 11-level typography, horizontal geometry, selected background and icons remain.
+
+This is an explicit user-approved exception to the general 48dp interactive minimum for popup option rows. Adjacent targets must not overlap. The settings row and collapsed dropdown control retain their existing 48dp targets. Navigation, period and business menus keep their existing geometry and typography. Shared popup anchoring, visible screen/IME bounds, height cap, scrolling, dismissal, keyboard navigation and selected/accessibility semantics are preserved. No search, grouping or extra motion is added.
+
+Gate: `CompactSettingsDropdownScreenTest` checks real popup geometry, selected semantics, exact adjacent touch edges, complete natural text, long-list scroll and keyboard/outside dismissal; capture both themes at narrow/ordinary widths and standard/large system font. Added tests are not executed evidence until the combined release coordinator runs them. Evidence and APK fingerprints belong with the combined four-feature release.

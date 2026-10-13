@@ -1,5 +1,7 @@
 # Android 架构与模块索引
 
+2026-10-13 / 0.2.61 增量：`SettingSwitchMotion*` 只管理设置开关视觉与前台生命周期；`AndroidUpdate*` 为独立匿名、手动、可取消的正式发行查询，不耦合Hub状态；`HubQuotaWidget` 只读既有HubStore和额度投影，updatePeriodMillis=0；`DailyChartInspection` 只消费现有日数据与图表坐标，长按前不消费滑动，不新增数据读取。Widget入口通过原Activity前台额度导航，既有缓存/SSE协议不改。两处设置追加复用菜单及字体偏好。验收/边界见[联合交接](HANDOFF_0.2.61.md)。下文是历史架构审计。
+
 状态：2026-10-12 定向源码审计；基线 0.2.51-dev/code60。源码包目录下述文件均位于 `app/src/main/java/dev/bing/tokenmonitor/`。构建、测试和风险结论见 [接管报告](TAKEOVER_AUDIT_0.2.51.md)。
 
 ```mermaid

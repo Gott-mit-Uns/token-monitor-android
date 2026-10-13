@@ -45,7 +45,7 @@ internal val LocalMainDisplay=staticCompositionLocalOf {MainDisplayPreferences()
                 DesktopTextButton(onClick={deviceMenu=true},modifier=Modifier.heightIn(min=LocalDesktopSettingsRowHeight.current).testTag("main-rate-device")) {
                     Text(if(main.rateDevice.isEmpty()) strings.getString(R.string.main_rate_all) else name?.let {strings.getString(R.string.main_rate_selected,it)} ?: strings.getString(R.string.main_rate_missing),style=quotaTextStyle(10))
                 }
-                DesktopOptionMenu(deviceMenu,listOf(DesktopMenuOption("",strings.getString(R.string.main_rate_all),"main-rate-all"))+devices.distinctBy {it.id}.filter {it.id.isNotBlank()}.mapIndexed {index,device->DesktopMenuOption(device.id,device.name,"main-rate-device-$index")},main.rateDevice,"main-rate-device-menu",dismiss={deviceMenu=false}) {id->change(DisplayChange.LiveRateDevice(id));deviceMenu=false}
+                DesktopOptionMenu(deviceMenu,listOf(DesktopMenuOption("",strings.getString(R.string.main_rate_all),"main-rate-all"))+devices.distinctBy {it.id}.filter {it.id.isNotBlank()}.mapIndexed {index,device->DesktopMenuOption(device.id,device.name,"main-rate-device-$index")},main.rateDevice,"main-rate-device-menu",compactSettings=true,dismiss={deviceMenu=false}) {id->change(DisplayChange.LiveRateDevice(id));deviceMenu=false}
             }
         }
         MainDisplayOption(strings.getString(R.string.main_swap_actions),main.swapActions,"main-swap-actions") {change(DisplayChange.SwapMainActions(it))}

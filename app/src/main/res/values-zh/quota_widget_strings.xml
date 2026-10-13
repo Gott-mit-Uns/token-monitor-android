@@ -1,0 +1,22 @@
+<resources>
+    <string name="quota_widget_name">缓存额度</string>
+    <string name="quota_widget_title">额度 · 已保存缓存</string>
+    <string name="quota_widget_description">显示缓存中的额度账户和周期，打开应用刷新，不发起后台网络请求。</string>
+    <string name="quota_widget_open">打开额度并刷新</string>
+    <string name="quota_widget_empty">没有已保存的额度缓存，请先在应用中连接。</string>
+    <string name="quota_widget_missing">额度数据缺失，请打开应用查看。</string>
+    <string name="quota_widget_cache_age">已保存缓存 · 绘制时已过 %1$d 分钟
+保存于 %2$s</string>
+    <string name="quota_widget_stale_age">缓存已过期 · 绘制时已过 %1$d 分钟
+保存于 %2$s · 打开刷新</string>
+    <string name="quota_widget_source_stale">来源过期 / 时间未知</string>
+    <string name="quota_widget_more_periods">另有 %1$d 个周期，应用内查看</string>
+    <string name="quota_widget_more_accounts">另有 %1$d 个账户，应用内查看</string>
+    <string name="quota_widget_add">添加额度小组件</string>
+    <string name="quota_widget_settings_note">只显示已有的加密缓存，邮箱始终遮蔽。各账户保留独立周期，旧数据明确标记。点按打开额度页，在前台刷新。</string>
+    <string name="quota_widget_compact_title">额度 · 缓存</string>
+    <string name="quota_widget_compact_age">缓存已过 %1$d 分钟\n%2$s</string>
+    <string name="quota_widget_compact_stale">旧缓存 · %1$d 分钟\n%2$s</string>
+    <string name="quota_widget_compact_more">+%1$d 个账户 · 打开应用</string>
+    <string name="quota_widget_compact_open">打开额度</string>
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="android_update_heading">Android 客户端更新</string>
+    <string name="android_update_manual_note">仅在点击时检查 GitHub；下载与安装由浏览器和 Android 系统完成。</string>
+    <string name="android_update_check">检查更新</string>
+    <string name="android_update_current_notes">当前版本说明</string>
+    <string name="android_update_releases">Android 发行页</string>
+    <string name="android_update_checking">正在检查 Android 发行版本…</string>
+    <string name="android_update_current">Android 客户端已是最新版。</string>
+    <string name="android_update_available">发现 Android 新版本 %1$s。</string>
+    <string name="android_update_access_failed">无法访问 Android 发行接口。可在浏览器打开 Android 发行页；无需在 App 中输入 GitHub 令牌。</string>
+    <string name="android_update_rate_failed">GitHub 暂时限制了更新检查。请稍后重试，或打开 Android 发行页。</string>
+    <string name="android_update_release_failed">无法确认正式 Android 发行版本及对应 APK。请打开 Android 发行页查看可用下载。</string>
+    <string name="android_update_network_failed">Android 更新检查失败。请检查网络后重试，或打开 Android 发行页。已有 Hub 数据不受影响。</string>
+    <string name="android_update_browser_failed">无法打开浏览器。请启用浏览器以查看 Android 发行页和下载 APK。</string>
+    <string name="android_update_new_notes">查看发行说明</string>
+    <string name="android_update_apk">下载 Android APK</string>
+</resources>

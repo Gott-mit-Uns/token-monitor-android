@@ -1,0 +1,17 @@
+<resources>
+    <string name="android_update_heading">Android client updates</string>
+    <string name="android_update_manual_note">Checks GitHub only when tapped. Downloads and installation use your browser and Android.</string>
+    <string name="android_update_check">Check for updates</string>
+    <string name="android_update_current_notes">Current version notes</string>
+    <string name="android_update_releases">Android releases</string>
+    <string name="android_update_checking">Checking Android releases…</string>
+    <string name="android_update_current">The Android client is up to date.</string>
+    <string name="android_update_available">Android %1$s is available.</string>
+    <string name="android_update_access_failed">Cannot access the Android release API. Open Android releases in your browser; no GitHub token is required in this app.</string>
+    <string name="android_update_rate_failed">GitHub has limited update checks. Try again later or open Android releases.</string>
+    <string name="android_update_release_failed">Could not verify an official Android release and its APK. Open Android releases to review available downloads.</string>
+    <string name="android_update_network_failed">Android update check failed. Check your network and try again, or open Android releases. Hub data is unchanged.</string>
+    <string name="android_update_browser_failed">Unable to open the browser. Enable a browser to view Android releases and download the APK.</string>
+    <string name="android_update_new_notes">View release notes</string>
+    <string name="android_update_apk">Download Android APK</string>
+</resources>

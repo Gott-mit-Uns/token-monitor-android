@@ -112,7 +112,7 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
                     DesktopDisclosure(menu)
                 }
             }
-            DesktopOptionMenu(menu,choices.map {(id,label)->DesktopMenuOption(id,label,"$tag-$id")},selected, "$tag-menu",width=menuWidth,dismiss={menu=false}) {id->change(id);menu=false}
+            DesktopOptionMenu(menu,choices.map {(id,label)->DesktopMenuOption(id,label,"$tag-$id")},selected, "$tag-menu",width=menuWidth,compactSettings=true,dismiss={menu=false}) {id->change(id);menu=false}
         }
     }
     BoxWithConstraints(Modifier.fillMaxWidth().testTag("$tag-row")) {
@@ -131,13 +131,14 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
 @Composable internal fun DesktopSettingSwitch(label:String,checked:Boolean,tag:String,enabled:Boolean=true,change:(Boolean)->Unit) {
     val colors=MaterialTheme.colorScheme
     val sunken=LocalDesktopSunkenColor.current.copy(alpha=.55f)
-    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).toggleable(checked,enabled=enabled,role=Role.Checkbox,onValueChange=change).testTag(tag),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+    val pose=rememberSettingSwitchMotion(checked,enabled,colors.primary.copy(alpha=.88f),sunken,colors.primary.copy(alpha=.5f),colors.onSurface.copy(alpha=.16f),colors.surfaceContainer,colors.onSurfaceVariant)
+    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).toggleable(checked,enabled=enabled,role=Role.Checkbox,onValueChange=change).testTag(tag).semantics {this[SettingSwitchPosition]=pose.position;this[SettingSwitchPlaying]=pose.running},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         Text(label,Modifier.weight(1f),style=quotaTextStyle(11))
         Canvas(Modifier.size(34.dp,20.dp).alpha(if(enabled) 1f else .38f)) {
             val shape=androidx.compose.ui.geometry.CornerRadius(10.dp.toPx())
-            drawRoundRect(if(checked) colors.primary.copy(alpha=.88f) else sunken,cornerRadius=shape)
-            drawRoundRect(if(checked) colors.primary.copy(alpha=.5f) else colors.onSurface.copy(alpha=.16f),cornerRadius=shape,style=Stroke(1.dp.toPx()))
-            drawCircle(if(checked) colors.surfaceContainer else colors.onSurfaceVariant,radius=7.dp.toPx(),center=Offset((if(checked) 24 else 10).dp.toPx(),10.dp.toPx()))
+            drawRoundRect(pose.background,cornerRadius=shape)
+            drawRoundRect(pose.border,cornerRadius=shape,style=Stroke(1.dp.toPx()))
+            drawCircle(pose.thumb,radius=7.dp.toPx(),center=Offset((10f+14f*pose.position).dp.toPx(),10.dp.toPx()))
         }
     }
 }

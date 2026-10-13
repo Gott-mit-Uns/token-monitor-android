@@ -6,6 +6,8 @@
 
 [下载最新版 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [全部版本](https://github.com/Gott-mit-Uns/token-monitor-android/releases) · [来源与许可](THIRD_PARTY_NOTICES.md)
 
+0.2.61 增加关于页 Android 自身更新入口、只读缓存额度小组件，以及 Dashboard/记录日图的长按拖动逐日查看。设置开关支持短过渡，普通设置下拉更紧凑，字体菜单可直接选用已有的 Inter + Noto Sans SC 和 JetBrains Mono。小组件标注缓存时间与过期信息，点按后在 App 前台刷新；下载与安装交给浏览器和 Android 系统。具体范围与验收边界见[联合更新交接](docs/HANDOFF_0.2.61.md)。
+
 ## 界面预览
 
 ### 主页

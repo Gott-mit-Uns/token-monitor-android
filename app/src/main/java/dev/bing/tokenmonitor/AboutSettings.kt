@@ -28,6 +28,10 @@ fun AboutSettings(hubBuild:HubBuildInfo?=null) {
         context.packageManager.getPackageInfo(context.packageName, 0).let {it.versionName.orEmpty()+" ("+(if(android.os.Build.VERSION.SDK_INT>=28) it.longVersionCode else it.versionCode.toLong())+")"}
     }
     var opened by remember { mutableStateOf(false) }
+    val androidVersion = remember(context) {
+        @Suppress("DEPRECATION")
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty()
+    }
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(strings.getString(R.string.about_heading),Modifier.fillMaxWidth(), style = quotaTextStyle(11,true))
         Text(strings.getString(R.string.app_version, version),Modifier.fillMaxWidth().testTag("about-android-version"), style = quotaTextStyle(11))
@@ -42,6 +46,7 @@ fun AboutSettings(hubBuild:HubBuildInfo?=null) {
             "current"->R.string.hub_build_current;"updateAvailable","legacy"->R.string.hub_build_older
             "remoteNewer"->R.string.hub_build_newer;else->R.string.hub_build_unverified
         }),Modifier.fillMaxWidth().testTag("about-hub-build-status"),style=quotaTextStyle(11))}
+        AndroidUpdateSettings(androidVersion)
         DesktopActionButton(onClick = { opened = true }) { Text(strings.getString(R.string.open_licenses),style=quotaTextStyle(11)) }
     }
     if (opened) {

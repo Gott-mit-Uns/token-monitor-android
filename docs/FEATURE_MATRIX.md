@@ -1,5 +1,7 @@
 # 0.2.51 与桌面 v0.69.0 功能差异
 
+2026-10-13 / 0.2.61 手机增量：设置开关补齐180ms桌面视觉过渡；Android自身更新入口与Hub构建状态独立；缓存额度Widget和日图长按拖动为手机增强，不扩展采集职责。Dashboard日柱图、Records日柱/折线接入；多日K线/二维热图/导航预览/月记录维持既有交互。用户追加紧凑普通设置下拉及已内置字体菜单，同版验收发布。候选检查与未执行真机边界见[联合交接](HANDOFF_0.2.61.md)，最终交付以发布回执为准；下文历史矩阵不代表新增功能均有真机证据。
+
 2026-10-13 V5当前部署增量：Mac实际安装桌面0.69.0；DXP4800与Lucky公开构建及鉴权stats均为core78/runtime5、4设备，已只读取得真实history/shared数据。真实样本观察到waitingForInput/nativeSessionId/parentSessionId；liveActivity/t3ThreadId在该样本未出现，不能据此推断不支持。详细字段、Android解析及网络验收见HANDOFF_V5_NETWORK.md及HUB_API_CONTRACT.md。下文core74是2026-10-12历史快照，不代表本轮当前部署；未观察的生产事件仍保留E。
 
 0.2.56统一增量：标准字号精确Token与缩写适配、选择菜单间距、已有health公开构建信息及缓存展示、来源许可更正已整合；继承0.2.55混合排序。构建状态不是软件SemVer或生产字段验收，仍保留本表部署E及真机边界。验证/来源见HANDOFF_0.2.56.md及两项专项交接。

@@ -1,0 +1,22 @@
+<resources>
+    <string name="quota_widget_name">Cached quotas</string>
+    <string name="quota_widget_title">Quotas · Saved cache</string>
+    <string name="quota_widget_description">Cached quota accounts and periods. Open the app to refresh. No background network requests.</string>
+    <string name="quota_widget_open">Open quotas and refresh</string>
+    <string name="quota_widget_empty">No saved quota cache. Connect in the app.</string>
+    <string name="quota_widget_missing">Quota data unavailable. Open the app.</string>
+    <string name="quota_widget_cache_age">Saved cache · %1$d min old at render
+Saved %2$s</string>
+    <string name="quota_widget_stale_age">Stale cache · %1$d min old at render
+Saved %2$s · Open to refresh</string>
+    <string name="quota_widget_source_stale">Source stale / age unknown</string>
+    <string name="quota_widget_more_periods">+%1$d periods in app</string>
+    <string name="quota_widget_more_accounts">+%1$d accounts in app</string>
+    <string name="quota_widget_add">Add quota widget</string>
+    <string name="quota_widget_settings_note">Shows existing encrypted cache only. Email addresses are masked. Each account keeps its own periods; old data is labelled. Tap to open Quotas and refresh in the foreground.</string>
+    <string name="quota_widget_compact_title">Quotas · Cache</string>
+    <string name="quota_widget_compact_age">Cache %1$dm old\n%2$s</string>
+    <string name="quota_widget_compact_stale">Stale cache %1$dm\n%2$s</string>
+    <string name="quota_widget_compact_more">+%1$d accounts · Open app</string>
+    <string name="quota_widget_compact_open">Open quotas</string>
+</resources>

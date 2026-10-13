@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.os.Build
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -336,6 +338,21 @@ internal suspend fun prepareDashboardChart(
             val bar=model.bars[accessibleIndex];onBar(bar,model.daily[accessibleIndex])
         } else onCandle(model.candles[accessibleIndex])
     }
+    val inspection = rememberDailyChartInspection(model.daily.map { it.date }, model.range to model.mode)
+    SideEffect {
+        inspection.date?.let { date -> model.daily.indexOfFirst { it.date == date }.takeIf { it >= 0 }?.let { accessibleIndex = it } }
+    }
+    val latestModel by rememberUpdatedState(model)
+    val latestChoose by rememberUpdatedState<(Int) -> Unit>({ choose(it) })
+    fun indexAt(point: Offset, width: Int, height: Int, clamp: Boolean): Int? {
+        val current = latestModel
+        val x = point.x / width * current.width.toFloat()
+        val y = point.y / height * current.height.toFloat()
+        if (!clamp && (y < current.plot.y || y > current.plot.y + current.plot.height)) return null
+        return dailyChartIndex(x, current.plot.x.toFloat(), current.plot.width.toFloat(),
+            if (current.mode == DashboardTrendMode.BARS) current.bars.size else current.candles.size, clamp)
+    }
+    Box(Modifier.fillMaxWidth()) {
     Canvas(modifier.fillMaxWidth().onSizeChanged {axisPixelSize=it}.testTag("dashboard-chart").semantics {
         this[DashboardAxisBounds]=(tickPlacements+dates).map {it.bounds}
         stateDescription=dates.joinToString(" – ") {it.text}
@@ -346,16 +363,10 @@ internal suspend fun prepareDashboardChart(
                 CustomAccessibilityAction(strings.getString(R.string.dashboard_previous_record)) {choose(accessibleIndex-1);true},
                 CustomAccessibilityAction(strings.getString(R.string.dashboard_next_record)) {choose(accessibleIndex+1);true})
         }
-    }.pointerInput(model,onBar,onCandle) {
-        detectTapGestures {point->
-            val x=point.x/size.width*model.width
-            val y=point.y/size.height*model.height
-            if(count>0 && x>=model.plot.x && x<=model.plot.x+model.plot.width &&
-                y>=model.plot.y && y<=model.plot.y+model.plot.height) {
-                choose(((x-model.plot.x)/model.plot.width*count).toInt().coerceIn(0,count-1))
-            }
-        }
-    }) {
+    }.dailyChartGestures(inspection, hit = { point, width, height, clamp ->
+        if (latestModel.mode != DashboardTrendMode.BARS) null
+        else indexAt(point, width, height, clamp)?.let { latestModel.daily.getOrNull(it)?.date }
+    }, tap = { point, width, height -> indexAt(point, width, height, false)?.let { latestChoose(it) } }) ) {
         val sx=size.width/model.width.toFloat();val sy=size.height/model.height.toFloat()
         fun point(x:Double,y:Double)=Offset(x.toFloat()*sx,y.toFloat()*sy)
         fun roundedPoint(x:Double,y:Double)=point(DashboardTrendProjection.svgRound(x),DashboardTrendProjection.svgRound(y))
@@ -421,6 +432,20 @@ internal suspend fun prepareDashboardChart(
                 }
             }
         }
+        inspection.date?.let { date -> model.bars.firstOrNull { it.label == date }?.let { bar ->
+            val x = bar.x + bar.width / 2
+            drawLine(line, point(x, model.plot.y), point(x, model.plot.y + model.plot.height), 1.dp.toPx())
+        } }
         dates.forEach {drawText(it.layout,topLeft=it.bounds.topLeft)}
     }
+    inspection.date?.let { date ->
+        model.daily.firstOrNull { it.date == date }?.let { row ->
+            Box(Modifier.align(Alignment.TopEnd).padding(4.dp)) {
+                DailyChartInspectionCard(inspection, row, model.byModel, "dashboard-inspection",
+                    model.bars.firstOrNull { it.label == date })
+            }
+        }
+    }
+    }
+
 }

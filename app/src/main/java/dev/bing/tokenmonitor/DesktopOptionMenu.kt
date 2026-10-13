@@ -74,7 +74,7 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
 }
 
 /** Original popup treatment shared by navigation, periods and local option menus. */
-@Composable internal fun DesktopOptionMenu(expanded:Boolean,options:List<DesktopMenuOption>,selected:String?=null,tag:String,width:Dp=200.dp,above:Boolean=false,wrapNavigation:Boolean=false,horizontalNavigation:Boolean=false,animate:Boolean=false,maxHeight:Dp?=280.dp,compactNavigation:Boolean=false,dismiss:()->Unit,choose:(String)->Unit) {
+@Composable internal fun DesktopOptionMenu(expanded:Boolean,options:List<DesktopMenuOption>,selected:String?=null,tag:String,width:Dp=200.dp,above:Boolean=false,wrapNavigation:Boolean=false,horizontalNavigation:Boolean=false,animate:Boolean=false,maxHeight:Dp?=280.dp,compactNavigation:Boolean=false,compactSettings:Boolean=false,dismiss:()->Unit,choose:(String)->Unit) {
     val frame=rememberMenuMotion(expanded,animate,dismiss)
     if(!expanded && !frame.running && frame.value<=0f) return
     var lastExpandedOptions by remember {mutableStateOf(options)}
@@ -84,6 +84,10 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
     val density=LocalDensity.current
     val containerSize=LocalWindowInfo.current.containerSize
     val hostView=LocalView.current
+    // Settings share compact geometry without inheriting navigation typography.
+    val compactRows=compactNavigation || compactSettings
+    val rowMinimum=if(compactRows) 36.dp else 48.dp
+    val rowVerticalPadding=if(compactRows) 4.dp else 0.dp
     val labelStyle=quotaTextStyle(if(compactNavigation) 12 else 11)
     val textMeasurer=rememberTextMeasurer()
     val labelWidths=rememberDesktopLabelWidths(renderedOptions.map {it.label},labelStyle)
@@ -98,14 +102,14 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
     val naturalWidth=renderedOptions.indices.maxOfOrNull {index->labelWidths[index]+chrome+if(renderedOptions[index].icon!=null) iconSpace else 0} ?: chrome
     val widthPx=maxOf(with(density) {width.roundToPx()},with(density) {48.dp.roundToPx()},naturalWidth)
         .coerceAtMost((windowWidth-2*gutter).coerceAtLeast(1))
-    val naturalHeight=remember(renderedOptions,labelStyle,density,textMeasurer,widthPx,chrome,iconSpace,compactNavigation) {
-        val rowMinimum=with(density) {(if(compactNavigation) 36.dp else 48.dp).roundToPx()}
+    val naturalHeight=remember(renderedOptions,labelStyle,density,textMeasurer,widthPx,chrome,iconSpace,compactRows) {
+        val rowMinimumPx=with(density) {rowMinimum.roundToPx()}
         val outerPadding=with(density) {2*4.dp.roundToPx()}
         val rowGap=0
         outerPadding+rowGap*(renderedOptions.size-1).coerceAtLeast(0)+renderedOptions.sumOf {option->
             val textWidth=(widthPx-chrome-if(option.icon!=null) iconSpace else 0).coerceAtLeast(1)
             val textHeight=textMeasurer.measure(option.label,labelStyle,softWrap=true,constraints=Constraints(maxWidth=textWidth)).size.height
-            maxOf(rowMinimum,textHeight+with(density) {if(compactNavigation) 8.dp.roundToPx() else 0})
+            maxOf(rowMinimumPx,textHeight+with(density) {2*rowVerticalPadding.roundToPx()})
         }
     }
     val explicitHeight=maxHeight?.let {with(density) {it.roundToPx().coerceAtLeast(1)}}
@@ -169,7 +173,7 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
             renderedOptions.forEachIndexed {index,option->
                 val active=selected!=null && option.id==selected
                 var focused by remember(option.id) {mutableStateOf(false)}
-                Row(Modifier.fillMaxWidth().heightIn(min=if(compactNavigation) 36.dp else 48.dp).focusRequester(focus[index])
+                Row(Modifier.fillMaxWidth().heightIn(min=rowMinimum).focusRequester(focus[index])
                     .onFocusChanged {focused=it.isFocused}
                     .onPreviewKeyEvent {event->
                         if(!expanded) true else if(event.key==Key.Escape) {
@@ -207,9 +211,9 @@ private data class DesktopMenuGeometry(val widthPx:Int,val maxHeightPx:Int)
                     .semantics {role=if(selected!=null) Role.RadioButton else Role.Button;if(selected!=null) this.selected=active;if(!option.enabled) disabled();onClick {if(option.enabled && expanded) {choose(option.id);true} else false}}
                     .focusable(enabled=option.enabled && expanded)
                     .testTag(option.tag),verticalAlignment=Alignment.CenterVertically) {
-                    Row(Modifier.fillMaxWidth().heightIn(min=if(compactNavigation) 36.dp else 48.dp)
+                    Row(Modifier.fillMaxWidth().heightIn(min=rowMinimum)
                         .background(if(active) colors.primary.copy(alpha=.12f) else if(focused) LocalDesktopOverlayColor.current.copy(alpha=.07f) else androidx.compose.ui.graphics.Color.Transparent,RoundedCornerShape(5.dp))
-                        .padding(horizontal=7.dp,vertical=if(compactNavigation) 4.dp else 0.dp),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
+                        .padding(horizontal=7.dp,vertical=rowVerticalPadding),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
                         option.icon?.let {Icon(painterResource(it),null,Modifier.size(14.dp),tint=if(active) colors.primary else colors.onSurfaceVariant)}
                         Text(option.label,Modifier.weight(1f).testTag("${option.tag}-label"),style=labelStyle,color=(if(active) colors.primary else colors.onSurfaceVariant).copy(alpha=if(option.enabled) 1f else .5f))
                     }
