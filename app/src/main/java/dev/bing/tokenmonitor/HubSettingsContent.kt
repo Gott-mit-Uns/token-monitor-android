@@ -63,11 +63,11 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
                 val preset=DesktopAppearance.presets.entries.firstOrNull {it.value==palette}?.key
                 DesktopSettingSection("appearance",strings.getString(R.string.appearance_title),R.drawable.desktop_settings_appearance,strings.getString(labels[preset] ?: R.string.appearance_custom),section=="appearance","appearance-toggle",toggle={selectSection("appearance")}) {
                     DesktopSettingInlineChoices(strings.getString(R.string.settings_theme_mode),listOf(ThemeChoice.SYSTEM.name to strings.getString(R.string.follow_system),ThemeChoice.LIGHT.name to strings.getString(R.string.theme_light),ThemeChoice.DARK.name to strings.getString(R.string.theme_dark)),preferences.theme.name,"settings-theme") {updateDisplay(DisplayChange.Theme(ThemeChoice.valueOf(it)))}
-                    AppearanceVisibilityControls(preferences,updateDisplay)
                     MainDisplaySettings(preferences,state.snapshot?.devices.orEmpty(),updateDisplay,embedded=true,appearanceOnly=true)
                     BackgroundImageControl()
                     DesktopSettingInlineChoices(strings.getString(R.string.settings_reduce_motion),listOf("system" to strings.getString(R.string.follow_system),"on" to strings.getString(R.string.settings_motion_on),"off" to strings.getString(R.string.settings_motion_off)),preferences.appearance.reduceMotion,"settings-motion") {updateDisplay(DisplayChange.ReduceMotion(it))}
                     Text(strings.getString(R.string.settings_motion_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    DesktopSettingSelect(strings.getString(R.string.token_number_animation),listOf("roll" to strings.getString(R.string.token_animation_roll),"count" to strings.getString(R.string.token_animation_count)),preferences.appearance.tokenNumberAnimation,"token-number-animation") {updateDisplay(DisplayChange.TokenNumberAnimation(it))}
                     AppearanceSettings(preferences,updateDisplay,embedded=true)
                 }
             }

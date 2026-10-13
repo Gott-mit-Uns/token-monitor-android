@@ -21,6 +21,9 @@ internal data class SessionListPage(val rows:List<SessionListRow>,val page:Int,v
 /** Pure display projections of immutable sessionRows.js and breakdownRenderPolicy.js. */
 internal object SessionListDisplay {
     private val numbers=NumberFormat.getIntegerInstance(Locale.US)
+    private val uuidPattern=Regex("[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}",RegexOption.IGNORE_CASE)
+    private val rolloutPattern=Regex("^rollout-\\d{4}-\\d{2}-\\d{2}T\\d{2}[:-]\\d{2}[:-]\\d{2}-(.+)$")
+    private val datePattern=Regex("^\\d{4}-\\d{2}-\\d{2}T\\d{2}[:-]\\d{2}")
     private fun integer(value:Double)=numbers.format(floor(value+0.5))
     fun time(value:Long,now:Long,zone:ZoneId=ZoneId.systemDefault()):String {
         if(value==0L) return ""
@@ -33,11 +36,11 @@ internal object SessionListDisplay {
         val lowered=raw.lowercase(Locale.ROOT)
         if(lowered.startsWith("reasonix:")) return raw.substring(9).takeUnless {it.lowercase(Locale.ROOT).startsWith("reasonix-stats:")}.orEmpty()
         if(lowered.startsWith("reasonix-stats:")) return ""
-        val uuids=Regex("[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}",RegexOption.IGNORE_CASE).findAll(raw).map {it.value}.toList()
+        val uuids=uuidPattern.findAll(raw).map {it.value}.toList()
         if(uuids.size>1) return uuids.joinToString(" · ")
-        val rollout=Regex("^rollout-\\d{4}-\\d{2}-\\d{2}T\\d{2}[:-]\\d{2}[:-]\\d{2}-(.+)$").matchEntire(raw)
+        val rollout=rolloutPattern.matchEntire(raw)
         if(rollout!=null) return uuids.firstOrNull() ?: rollout.groupValues[1]
-        if(Regex("^\\d{4}-\\d{2}-\\d{2}T\\d{2}[:-]\\d{2}").containsMatchIn(raw)) return ""
+        if(datePattern.containsMatchIn(raw)) return ""
         return raw
     }
     private fun synthetic(row:UsageRow):Boolean {
@@ -45,7 +48,7 @@ internal object SessionListDisplay {
         val id=row.session?.sessionId.orEmpty().trim().lowercase(Locale.ROOT);val key=row.id.trim().lowercase(Locale.ROOT)
         return row.session?.excludedFromHubList==true || client in listOf("reasonix","reasonix-stats") || id.startsWith("reasonix:") || id.startsWith("reasonix-stats:") || key.startsWith("reasonix:") || key.contains("reasonix-stats:")
     }
-    fun modelLabel(row:UsageRow,names:ModelNames?=null,observed:Collection<String> = SessionDisplay.models(row).keys)=SessionDisplay.displayModels(row,names,observed).keys.sorted().let {when(it.size) {0->"";1->it.single();else->"${it.size} models"}}
+    fun modelLabel(row:UsageRow,names:ModelNames?=null,observed:Collection<String> = SessionDisplay.models(row).keys)=SessionDisplay.displayModels(row,names,observed).keys.let {when(it.size) {0->"";1->it.single();else->"${it.size} models"}}
     fun cachePercent(row:UsageRow):Double? {
         val a=row.session?.accounting ?: return null
         val read=a.cacheRead.coerceAtLeast(0.0);val write=a.cacheWrite.coerceAtLeast(0.0)
@@ -74,10 +77,13 @@ internal object SessionListDisplay {
     /** Full display rows and all summaries share the desktop's mixed-list ordering. */
     fun sorted(rows:List<SessionListRow>):List<SessionListRow> {
         val collator=Collator.getInstance(Locale.ENGLISH)
-        return rows.sortedWith {a,b->
+        val order=Comparator<SessionListRow> {a,b->
             b.sortTime.compareTo(a.sortTime).takeIf {it!=0} ?: b.tokens.compareTo(a.tokens).takeIf {it!=0}
             ?: BigDecimal(b.cost).compareTo(BigDecimal(a.cost)).takeIf {it!=0} ?: collator.compare(a.name,b.name)
         }
+        // Raw rows already carry this order. Grouping must not sort/copy that whole list again.
+        for(index in 1 until rows.size) if(order.compare(rows[index-1],rows[index])>0) return rows.sortedWith(order)
+        return rows
     }
     fun grouped(rows:List<SessionListRow>,label:String="Codex Auto Review",count:(Int)->String={"$it sessions"},latest:(String)->String={"Latest $it"},compact:(BigInteger)->String={it.toString()},now:Long,zone:ZoneId=ZoneId.systemDefault(),grokLabel:String="Grok Bot",subagentCount:(Int)->String={"$it subagents"}):List<SessionListRow> = HubWorkTrace.trace(HubWorkStage.SESSION_GROUP,units=rows.size.toLong()) {
         val reviews=rows.filter {it.source?.session?.kind?.trim()=="background-review"}.sortedByDescending {it.sortTime}
@@ -89,7 +95,7 @@ internal object SessionListDisplay {
     }
     fun page(rows:List<SessionListRow>,requested:Int):SessionListPage = HubWorkTrace.trace(HubWorkStage.SESSION_PAGE,units=rows.size.toLong()) {
         val count=((rows.size+99)/100).coerceAtLeast(1);val page=requested.coerceIn(0,count-1);val start=page*100
-        SessionListPage(rows.drop(start).take(100),page,count,if(rows.isEmpty()) 0 else start+1,minOf(rows.size,start+100),rows.size)
+        SessionListPage(rows.subList(start,minOf(rows.size,start+100)).toList(),page,count,if(rows.isEmpty()) 0 else start+1,minOf(rows.size,start+100),rows.size)
     }
     fun bar(value:BigInteger,max:BigInteger):Float=if(value.signum()<=0 || max.signum()<=0) 0f else (value.toDouble()/max.toDouble()).toFloat().coerceIn(.02f,1f)
 }

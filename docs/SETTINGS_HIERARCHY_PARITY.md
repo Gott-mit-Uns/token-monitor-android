@@ -1,3 +1,7 @@
+# 0.2.62 / desktop 0.70 hierarchy update
+
+实时指示器、工具图标、标题图标现在归外观高级自定义；字段和已保存选择保留。Token数字动画选择放在外观基本区域，减少动效仍在同一区域。其他紧凑菜单、字体、主界面/额度分组沿用既有实现。以下为历史结构记录。
+
 # 桌面设置结构与 Android 本机偏好
 
 基准是桌面 v0.68.0 固定提交 `5d2db368d8313415763860d594de00e46a663418`，读取原始 `renderer/index.html`、`app.js`、`styles.css`、`motionPreference.js` 与 `usageAttributionRows.js`。源代码、资源和参考 HTML 的结构直接读取；转换为 Markdown 会丢失控件标识和动态结构，因此不做文件转换。仅使用公开模拟值生成比较数据和截图。

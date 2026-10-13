@@ -47,6 +47,8 @@ import kotlinx.coroutines.launch
             Text(if(advanced) "⌃" else "⌄",style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
         if(advanced) {
+            AppearanceVisibilityControls(preferences,::commit)
+            DesktopSettingSwitch(strings.getString(R.string.main_title_icon),preferences.main.titleIconOnly,"main-title-icon") {commit(DisplayChange.TitleIconOnly(it))}
             DesktopAppearance.colorKeys.forEach {key->ColorControl(key,palette.getValue(key),preferences.appearance.colors.containsKey(key),::commit)}
             HorizontalDivider(color=desktopEditLine(),thickness=1.dp)
             DesktopSettingSelect(strings.getString(R.string.appearance_text_size),listOf("standard" to strings.getString(R.string.appearance_size_standard),"larger" to strings.getString(R.string.appearance_size_larger),"largest" to strings.getString(R.string.appearance_size_largest)),preferences.appearance.textSize,"appearance-size") {commit(DisplayChange.TextSize(it))}

@@ -1,5 +1,6 @@
 // Generated desktop v0.68.0 presentation data; no collector or Android fork code.
 // Source licenses: THIRD_PARTY_NOTICES.md. Regenerate with tools/import-desktop-marks.cjs.
+// CatPaw id/label added from fixed desktop v0.70.0 clientCatalog; generic mark fallback.
 package dev.bing.tokenmonitor
 
 internal val desktopToolLabels = mapOf(
@@ -39,6 +40,7 @@ internal val desktopToolLabels = mapOf(
     "fx" to "fx",
     "mcode" to "MiniMax Code",
     "gemini" to "Gemini",
+    "catpaw" to "CatPaw",
 )
 
 internal val desktopManagedToolIds = listOf(
@@ -77,6 +79,7 @@ internal val desktopManagedToolIds = listOf(
     "devin",
     "fx",
     "mcode",
+    "catpaw",
 )
 
 internal val desktopProviderLabels = mapOf(

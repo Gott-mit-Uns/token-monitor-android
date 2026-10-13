@@ -25,7 +25,8 @@ private class BreakdownRunner(var job:Job?=null) {
     targets:List<BreakdownRowSpec>?,connectionKey:Long,mainViewKey:String,periodKey:String,
     periodEvent:BreakdownPeriodEvent,visible:Boolean,preference:String="system"
 ):State<BreakdownMotionFrame> {
-    val motion=remember {BreakdownMotion()}
+    val numberAnimation=LocalTokenNumberAnimation.current
+    val motion=remember(numberAnimation) {BreakdownMotion()}
     val output=remember {mutableStateOf(motion.frame)}
     val lifecycle=LocalLifecycleOwner.current.lifecycle
     var foreground by remember(lifecycle) {mutableStateOf(lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))}
@@ -46,7 +47,7 @@ private class BreakdownRunner(var job:Job?=null) {
     val shown=visible && foreground
     SideEffect {
         val replaced=motion.render(targets,connectionKey,mainViewKey,periodKey,periodEvent,clock.nowNanos(),
-            animate=shown && scale>0f,shown=shown,durationScale=scale)
+            animate=shown && scale>0f,shown=shown,durationScale=scale,countNumbers=numberAnimation=="count")
         output.value=motion.frame
         if(replaced) runner.cancel()
         if(shown && scale>0f && motion.running) {
@@ -71,5 +72,5 @@ private class BreakdownRunner(var job:Job?=null) {
     val displayed=remember(target,motion,key) {derivedStateOf {motion?.value?.number(key,target) ?: target}}
     val observer=LocalHeadlineRenderObserver.current
     SideEffect {observer?.invoke("breakdown-number:$key")}
-    Text(format.format(displayed.value),modifier,style=style,color=color,maxLines=maxLines)
+    TokenNumberText(format.format(if(LocalTokenNumberAnimation.current=="roll") target else displayed.value),modifier,style=style,color=color,maxLines=maxLines )
 }

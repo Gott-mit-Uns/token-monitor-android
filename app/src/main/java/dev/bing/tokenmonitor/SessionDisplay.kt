@@ -56,7 +56,7 @@ internal data class SessionContext(val tokens:Double,val window:Double,val left:
 internal data class SessionCache(val expiresAt:Long,val ttlSeconds:Int,val minutes:Int)
 internal data class SessionModelShare(val name:String,val tokens:BigInteger,val share:String)
 
-/** Ports sessionLive.js and the Home's recentSessionRows(...,5,includeRunningBeyondCap). */
+/** Ports sessionLive.js and the Home's recentSessionRows(...,5,includeRunningBeyondCap), including waiting in 0.70. */
 internal object SessionDisplay {
     const val runningWindow=600_000L
     const val liveWindow=30_000L
@@ -64,23 +64,43 @@ internal object SessionDisplay {
         runCatching {Instant.parse(it).toEpochMilli()}.getOrNull()
             ?: runCatching {LocalDate.parse(it).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()}.getOrNull()
     }
+    private data class DatedRow(val row:UsageRow,val at:Long,val order:Int)
+    private val recentOrder=compareByDescending<DatedRow> {it.at}.thenBy {it.order}
+    /** Parse each eligible timestamp once, preserving month priority and insertion-order ties. */
+    private fun datedSource(snapshot:Snapshot?):List<DatedRow> {
+        val selected=linkedMapOf<String,DatedRow>()
+        for(period in listOf("month","today")) for(row in snapshot?.periods?.get(period)?.sessions.orEmpty()) {
+            if(row.id in selected || row.session?.kind=="background-review") continue
+            val at=timestamp(row.lastUsed ?: row.session?.startedAt) ?: continue
+            selected[row.id]=DatedRow(row,at,selected.size)
+        }
+        return selected.values.toList()
+    }
     fun source(snapshot:Snapshot?):List<UsageRow> = HubWorkTrace.trace(HubWorkStage.HOME_SOURCE,
         units=(snapshot?.periods?.get("month")?.sessions?.size ?: 0).toLong()+(snapshot?.periods?.get("today")?.sessions?.size ?: 0)) {
-        val selected=linkedMapOf<String,UsageRow>()
-        for(period in listOf("month","today")) for(row in snapshot?.periods?.get(period)?.sessions.orEmpty()) {
-            if(row.id in selected || row.session?.kind=="background-review" || timestamp(row.lastUsed ?: row.session?.startedAt)==null) continue
-            selected[row.id]=row
-        }
-        selected.values.sortedByDescending {timestamp(it.lastUsed ?: it.session?.startedAt)}
+        datedSource(snapshot).sortedWith(recentOrder).map {it.row}
     }
-    fun recent(snapshot:Snapshot?,now:Long,cap:Int=5)=HubWorkTrace.trace(HubWorkStage.HOME_RECENT,
+    fun recent(snapshot:Snapshot?,now:Long,cap:Int=5):List<UsageRow> = HubWorkTrace.trace(HubWorkStage.HOME_RECENT,
         units=(snapshot?.periods?.get("month")?.sessions?.size ?: 0).toLong()+(snapshot?.periods?.get("today")?.sessions?.size ?: 0)) {
-        source(snapshot).filterIndexed {index,row->index<cap || activity(row,now)=="running"}
+        // Only the recent cap and currently running/waiting conversations need display ordering.
+        // The heap holds the oldest candidate first; a tie keeps the original source order.
+        val limit=cap.coerceAtLeast(0)
+        val top=java.util.PriorityQueue<DatedRow>(recentOrder.reversed())
+        val active=mutableListOf<DatedRow>()
+        for(entry in datedSource(snapshot)) {
+            if(activityAt(entry.row,now,entry.at.takeIf {entry.row.lastUsed!=null},true) in listOf("running","waiting")) active+=entry
+            if(limit>0) {
+                if(top.size<limit) top+=entry
+                else if(recentOrder.compare(entry,top.peek())<0) {top.poll();top+=entry}
+            }
+        }
+        (active+top).distinctBy {it.row.id}.sortedWith(recentOrder).map {it.row}
     }
-    fun activity(row:UsageRow,now:Long):String {
+    fun activity(row:UsageRow,now:Long):String=activityAt(row,now,null)
+    private fun activityAt(row:UsageRow,now:Long,lastUsed:Long?,timestampKnown:Boolean=false):String {
         if(row.session?.archived==true) return "idle"
         row.session?.liveActivity?.takeIf {it.state!="unknown" && it.observedAt<=now && now-it.observedAt<liveWindow}?.let {return it.state}
-        val last=timestamp(row.lastUsed)?.takeIf {it!=0L} ?: return "idle"
+        val last=(if(timestampKnown) lastUsed else timestamp(row.lastUsed))?.takeIf {it!=0L} ?: return "idle"
         val recent=now.toDouble()-last.toDouble()<=runningWindow
         return if(!recent) "idle" else if(row.turnEnded==true) "ended"
             else if(row.tool=="codex" && row.session?.waitingForInput==true) "waiting" else "running"

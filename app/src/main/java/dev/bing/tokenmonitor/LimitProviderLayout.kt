@@ -241,6 +241,16 @@ internal object LimitProviderLayout {
                     row(w,name,tone=if(id=="zed") 0.95 else if(id=="kiro" && w.flag("showMeter")==false) 0.6 else 0.68,wide=true,value=line.value,detail=line.detail,noReset=(id=="kiro" && w.flag("showMeter")==false)||(id=="zed" && w.s("limitId")=="zed.edit-predictions" && w.s("detail").equals("unlimited",true))) }
             }
             "commandcode","kimi" -> rates(true)
+            "minimax" -> {
+                // Token Plan retains its independent session and weekly readings.
+                // Pay-as-you-go exposes native-currency funds, without a quota denominator.
+                rates()
+                windows.filter {it.s("metric")=="credits"}.forEach {credit ->
+                    row(edited(credit,"showMeter" to JsonPrimitive(false)),credit.s("label") ?: "Balance",
+                        tone=0.95,wide=true,value=money(credit.n("remaining"),credit.s("currency")),
+                        noReset=true,itemId="credits")
+                }
+            }
             "volcengine" -> listOf("session","daily","weekly","billing").mapNotNull {first(it)}.forEach {row(it,tone=when(it.s("kind")){"session"->0.95;"daily"->0.78;else->0.68})}
             "alibaba","stepfun" -> {row(first("billing"),wide=true);rates()}
             "ollama" -> rates()

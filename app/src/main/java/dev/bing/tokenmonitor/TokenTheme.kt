@@ -30,6 +30,7 @@ fun TokenTheme(dark: Boolean = isSystemInDarkTheme(), language: LanguageChoice =
             LocalDesktopNumberColor provides numberColor,
             LocalDesktopSuccessColor provides if(light) Color(0xFF18794E) else Color(0xFFB7EAD4),
             LocalDesktopSystemMotionScale provides motionScale,
+            LocalTokenNumberAnimation provides TokenNumberAnimationMode.normalize(appearance.tokenNumberAnimation),
             LocalDesktopMotionScale provides DesktopMotionPreference.scale(appearance.reduceMotion,motionScale),
             LocalDesktopPanelColor provides if(light) Color.White else Color(0xFF10151E),
             LocalDesktopSunkenColor provides if(DesktopAppearance.light(palette.getValue("bg"))) Color(0xFFBCC4CE) else Color(0xFF04080D),

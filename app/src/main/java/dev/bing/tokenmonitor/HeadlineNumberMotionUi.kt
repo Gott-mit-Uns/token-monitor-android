@@ -40,8 +40,12 @@ internal val LocalDesktopAnimationClock = staticCompositionLocalOf<DesktopAnimat
 
 /** Only display frames while this screen is foreground. No timers, reads or background work. */
 @Composable internal fun rememberHeadlineNumber(target: Long?, period: String, visible: Boolean,preference:String="system",
-    suppressInitial:Boolean=false,detailUnavailable:Boolean=false): State<HeadlineFrame> {
-    val motion = remember { HeadlineNumberMotion(null) }
+    suppressInitial:Boolean=false,detailUnavailable:Boolean=false,numberAnimation:String="count"): State<HeadlineFrame> {
+    var previousNumberMode by remember {mutableStateOf(numberAnimation)}
+    val switchedMode=previousNumberMode!=numberAnimation
+    SideEffect {previousNumberMode=numberAnimation}
+    if(numberAnimation!="count") return rememberUpdatedState(HeadlineFrame(target,target,false))
+    val motion = remember { HeadlineNumberMotion(if(switchedMode) target else null) }
     // The owner keeps the timeline across pages, but must not read the per-frame value.
     // Reading the State only in DesktopTotal confines frame invalidation to that region.
     val frame = remember { mutableStateOf(HeadlineFrame(target, target, false)) }
@@ -64,7 +68,7 @@ internal val LocalDesktopAnimationClock = staticCompositionLocalOf<DesktopAnimat
         lifecycle.addObserver(observer)
         onDispose { lifecycle.removeObserver(observer); motion.settle() }
     }
-    LaunchedEffect(target, period, visible, foreground, scaleOverride, androidScale,preference,detailUnavailable,clock) {
+    LaunchedEffect(target, period, visible, foreground, scaleOverride, androidScale,preference,detailUnavailable,clock,numberAnimation) {
         val duration = if (period != previousPeriod) 800 else 1000
         previousPeriod = period
         fun scale() = scaleOverride ?: DesktopMotionPreference.scale(preference,androidScale)
@@ -75,7 +79,7 @@ internal val LocalDesktopAnimationClock = staticCompositionLocalOf<DesktopAnimat
             publish()
             return@LaunchedEffect
         }
-        val started = motion.retarget(target, !suppressionPending && visible && foreground && scale() > 0f)
+        val started = motion.retarget(target, numberAnimation=="count" && !suppressionPending && visible && foreground && scale() > 0f)
         suppressionPending = false
         if (started) timeline.start(clock.nowNanos(),duration)
         if (!visible || !foreground || scale() <= 0f) motion.settle()

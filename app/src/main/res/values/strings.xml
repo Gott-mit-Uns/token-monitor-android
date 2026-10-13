@@ -687,7 +687,7 @@
     <string name="session_group_main">Main conversation / continuation</string>
     <string name="session_group_subagent">Subagent</string>
     <string name="desktop_reference_version">Desktop reference: v%1$s</string>
-    <string name="desktop_parity_partial">Desktop parity: partially aligned (supported Hub fields only)</string>
+    <string name="desktop_parity_partial">Desktop 0.70: token animation, recent session display and optional provider fields aligned. Collection, billing fixes and quota refresh depend on Hub / Agent.</string>
     <string name="hub_version_unknown">Hub build: not reported by server</string>
     <plurals name="session_subagent_count"><item quantity="one">%1$d subagent</item><item quantity="other">%1$d subagents</item></plurals>
     <string name="hub_version_pending">Hub build: waiting for connection verification</string>
@@ -697,4 +697,7 @@
     <string name="hub_build_newer">Newer than desktop reference 0.69.0</string>
     <string name="hub_build_unverified">Build identity could not be verified against desktop reference 0.69.0</string>
     <string name="tool_settings_mobile_note">Controls tool visibility, pinning, order and search on this phone. Model rules and pricing come from the Hub; this phone does not collect usage or configure tools.</string>
+    <string name="token_number_animation">Token number animation</string>
+    <string name="token_animation_roll">Digit roll</string>
+    <string name="token_animation_count">Count up</string>
 </resources>

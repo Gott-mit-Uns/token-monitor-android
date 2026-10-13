@@ -33,7 +33,7 @@ class HeadlineMotionScreenTest {
 
     @Test fun homeCountChangesInterruptAndPeriodChangeUsesDesktopTiming() {
         val state=mutableStateOf(HubState(snapshot=snapshot(999999999),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
-        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("devices"),main=MainDisplayPreferences(compactTotal=true))
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(tokenNumberAnimation="count"),homeModules=listOf("devices"),main=MainDisplayPreferences(compactTotal=true))
         val actions=Actions()
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock,LocalHeadlineMotionScale provides 1f) {HubScreen(state.value,actions,preferences=prefs)}}}}
         compose.onNodeWithTag("hub-total-tokens").assertTextEquals("999,999,999")
@@ -68,7 +68,7 @@ class HeadlineMotionScreenTest {
     @Test fun androidReducedMotionSettlesMidAnimationAndExactCountsNeverLoseLastDigit() {
         val state=mutableStateOf(HubState(snapshot=snapshot(1000),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val scale=mutableStateOf(1f)
-        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=emptyList())
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(tokenNumberAnimation="count"),homeModules=emptyList())
         val actions=Actions()
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock,LocalHeadlineMotionScale provides scale.value) {HubScreen(state.value,actions,preferences=prefs)}}}}
         compose.onNodeWithTag("hub-total-tokens").assertTextEquals("1,000")
@@ -93,7 +93,7 @@ class HeadlineMotionScreenTest {
 
     @Test fun publicRenderedFramesAndBackgroundReturnSettleWithoutReplaying() {
         val state=mutableStateOf(HubState(snapshot=snapshot(999999999),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
-        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("devices"),main=MainDisplayPreferences(compactTotal=true))
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(tokenNumberAnimation="count"),homeModules=listOf("devices"),main=MainDisplayPreferences(compactTotal=true))
         val actions=Actions()
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock,LocalHeadlineMotionScale provides 1f) {HubScreen(state.value,actions,preferences=prefs)}}}}
         compose.onNodeWithTag("hub-total-tokens").assertTextEquals("999,999,999")
@@ -127,7 +127,7 @@ class HeadlineMotionScreenTest {
 
     @Test fun actualAndroidAnimationScaleIsRespectedWithoutAnOverride() {
         val state=mutableStateOf(HubState(snapshot=snapshot(1000),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
-        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=emptyList())
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(tokenNumberAnimation="count"),homeModules=emptyList())
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,Actions(),preferences=prefs)}}}}
         compose.onNodeWithTag("hub-total-tokens").assertTextEquals("1,000")
         compose.mainClock.autoAdvance=false

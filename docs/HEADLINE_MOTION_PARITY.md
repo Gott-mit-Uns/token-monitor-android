@@ -1,3 +1,7 @@
+# 0.2.62 / desktop 0.70 update
+
+Default token animation is now roll; count remains the original interruptible timeline below. Roll uses one finite 650ms draw-only timeline per clipped visible reading, bounded two layers per character, stable digit slots for the selected user font, and native Text semantics. Unknown/first available values and mode switches settle; wrapped/unsupported-locale readings retain native Text. Amounts and static widgets are not animated. Source and validation: HANDOFF_0.2.62.md / DigitRoll070ScreenTest. Older count-specific tests explicitly choose count without weakening their value/timing assertions.
+
 # 主页Token总量变化动效
 
 当前用户指令：撤销此前额外强调该动效的要求。该功能按统一桌面复刻目标规划，不再每轮固定导出或强调33帧。用户反馈效果不佳、帧率低，须检查实际运行表现；下面33帧历史证据为32ms采样，不证明运行帧率或流畅度。当前继续核对固定桌面原始 requestAnimationFrame 数字过渡与安卓实现。

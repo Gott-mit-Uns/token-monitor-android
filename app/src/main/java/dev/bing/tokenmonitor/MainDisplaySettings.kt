@@ -32,7 +32,6 @@ internal val LocalMainDisplay=staticCompositionLocalOf {MainDisplayPreferences()
     DesktopAccordion(expanded || embedded,"main-display-motion",kind=DesktopDisclosureKind.MAIN_SETTINGS) {
     Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         if(!viewsOnly) {
-        MainDisplayOption(strings.getString(R.string.main_title_icon),main.titleIconOnly,"main-title-icon") {change(DisplayChange.TitleIconOnly(it))}
         MainDisplayOption(strings.getString(R.string.main_compact_total),main.compactTotal,"main-compact-total") {change(DisplayChange.CompactTotal(it))}
         MainDisplayOption(strings.getString(R.string.main_live_rate),main.showLiveRate,"main-live-rate") {change(DisplayChange.ShowLiveRate(it))}
         if(main.showLiveRate) Text(strings.getString(R.string.main_live_rate_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)

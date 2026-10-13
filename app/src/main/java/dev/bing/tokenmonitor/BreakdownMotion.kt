@@ -54,7 +54,7 @@ internal class BreakdownMotion {
     fun render(
         targets:List<BreakdownRowSpec>?,connectionKey:Long,mainViewKey:String,periodKey:String,
         periodEvent:BreakdownPeriodEvent,nowNanos:Long,animate:Boolean,shown:Boolean,
-        durationScale:Float=1f
+        durationScale:Float=1f,countNumbers:Boolean=true
     ):Boolean {
         val sourceChanged=this.connectionKey!=null && this.connectionKey!=connectionKey
         if(sourceChanged) {
@@ -140,6 +140,7 @@ internal class BreakdownMotion {
             if(oldBar!=null && abs(oldBar.target-target.barScale)<.001f) bars[key]=oldBar
             else if(abs(target.barScale-fromBar)>=.001f)
                 bars[key]=BarTween(fromBar,target.barScale,nowNanos,delay,(duration-delay).coerceAtLeast(1))
+            if(!countNumbers) continue
             val oldNumber=previousNumbers[key]
             val fromNumber=if(old==null) BigDecimal.ZERO else previousNumberValues[key]
                 ?: previous.number(key,old.number ?: target.number).toBigDecimal()

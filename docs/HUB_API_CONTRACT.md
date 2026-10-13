@@ -1,3 +1,7 @@
+# v0.70 可选供应商字段增量
+
+2026-10-14。CatPaw沿用`clients.catpaw`、clientModels及session client，不新增必需字段；MiniMax按量余额是billing/credits窗口的`remaining`金额及`currency`（CNY/USD），不是Token限额或百分比。不跨币种加总、不转换余额、缺失不作零；旧Hub无字段保留原展示。全量/HTTP/SSE/freshness/旧缓存兼容和生产无provider观察见HUB_070_DEPENDENCIES.md。以下原合同保留。
+
 # Android Hub API 合同与 v0.69 增量
 
 2026-10-12。此文件是当前入口/新字段的增量合同；既有完整规则继续引用 [PROTOCOL.md](PROTOCOL.md)，不替代旧验证。上游依据 [固定v0.69 API](https://github.com/Javis603/token-monitor/blob/3f106ae3d4712b26cced8272f0d488eaab0de1e6/docs/API.md)、`src/hub/server.js`、`src/shared/usage.js`、`worker/src/shared/usage.js`。Android依据HubHttp、HubStream、HubParser、HubViewModel。

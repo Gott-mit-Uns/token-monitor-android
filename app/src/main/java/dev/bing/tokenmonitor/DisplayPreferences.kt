@@ -23,6 +23,7 @@ data class DisplayPreferences(val theme: ThemeChoice = ThemeChoice.SYSTEM, val h
 
 sealed interface DisplayChange {
     data class ReduceMotion(val mode:String):DisplayChange
+    data class TokenNumberAnimation(val mode:String):DisplayChange
     data class ModelRanking(val metric:String):DisplayChange
     data class MainViewVisible(val id:String,val visible:Boolean):DisplayChange
     data class MainViewMove(val id:String,val direction:Int):DisplayChange
@@ -92,6 +93,7 @@ sealed interface DisplayChange {
         is LiveRateMode -> if(mode !in listOf("speed","burn")) current else current.copy(main=current.main.copy(rateMode=mode))
         is LiveRateDevice -> if(device.length>256 || device.any(Char::isISOControl)) current else current.copy(main=current.main.copy(rateDevice=device))
         is SwapMainActions -> current.copy(main=current.main.copy(swapActions=enabled))
+        is TokenNumberAnimation -> current.copy(appearance=current.appearance.copy(tokenNumberAnimation=TokenNumberAnimationMode.normalize(mode)))
         is ReduceMotion -> current.copy(appearance=current.appearance.copy(reduceMotion=DesktopMotionPreference.normalize(mode)))
         is ModelRanking -> current.copy(modelRanking=if(metric=="cost") "cost" else "tokens")
         is Theme -> current.copy(theme = choice, appearance = current.appearance.copy(colors = emptyMap()))
@@ -146,17 +148,25 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
     // AtomicFile has no cross-instance lock; widget reads and app writes share this process.
     companion object { private val diskLock = Any(); internal const val maxBytes=3*1024*1024 }
     private val file = AtomicFile(File(context.noBackupFilesDir, name))
+    // Independent optional choice: keep the V16 record readable by previous releases.
+    private val numberAnimationFile = AtomicFile(File(context.noBackupFilesDir, name+".number-animation"))
+    private fun numberAnimation():String = runCatching {
+        require(numberAnimationFile.baseFile.length()==2L)
+        val bytes=numberAnimationFile.readFully()
+        if(bytes.contentEquals(byteArrayOf(1,1))) "count" else "roll"
+    }.getOrDefault("roll")
+    private fun withNumberAnimation(value:DisplayPreferences)=value.copy(appearance=value.appearance.copy(tokenNumberAnimation=numberAnimation()))
     fun load(): DisplayPreferences = synchronized(diskLock) {
-        if (!file.baseFile.exists()) return DisplayPreferences()
+        if (!file.baseFile.exists()) return withNumberAnimation(DisplayPreferences())
         require(file.baseFile.length() <= maxBytes)
         val bytes = file.readFully()
         if(bytes.firstOrNull() !in setOf(11.toByte(),12.toByte(),13.toByte(),14.toByte(),15.toByte(),16.toByte())) require(bytes.size<=4096)
-        if (bytes.firstOrNull() in setOf(4.toByte(), 5.toByte(), 6.toByte(), 7.toByte(), 8.toByte(), 9.toByte(), 10.toByte(),11.toByte(),12.toByte(),13.toByte(),14.toByte(),15.toByte(),16.toByte())) return decodeModern(bytes)
+        if (bytes.firstOrNull() in setOf(4.toByte(), 5.toByte(), 6.toByte(), 7.toByte(), 8.toByte(), 9.toByte(), 10.toByte(),11.toByte(),12.toByte(),13.toByte(),14.toByte(),15.toByte(),16.toByte())) return withNumberAnimation(decodeModern(bytes))
         require((bytes.size == 3 && bytes[0] == 1.toByte()) || (bytes.size == 4 && bytes[0] == 2.toByte()) || (bytes.size in 6..11 && bytes[0] == 3.toByte() && bytes.size == bytes[4].toInt() + 5))
         require(bytes[2] in 0..1)
         val language = if (bytes[0] == 1.toByte()) LanguageChoice.CHINESE else LanguageChoice.entries.getOrNull(bytes[3].toInt()) ?: error("Invalid language")
         val modules = if (bytes[0] == 3.toByte()) bytes.drop(5).map { homeModuleIds.getOrNull(it.toInt()) ?: error("Invalid home module") }.also { require(it.distinct().size == it.size) } else defaultHomeModules
-        return DisplayPreferences(ThemeChoice.entries.getOrNull(bytes[1].toInt()) ?: error("Invalid preference"), bytes[2] == 1.toByte(), language, modules)
+        return withNumberAnimation(DisplayPreferences(ThemeChoice.entries.getOrNull(bytes[1].toInt()) ?: error("Invalid preference"), bytes[2] == 1.toByte(), language, modules))
     }
     private fun decodeModern(bytes: ByteArray): DisplayPreferences = DataInputStream(ByteArrayInputStream(bytes)).use { input ->
         val version = input.readUnsignedByte().also { require(it in 4..16) }
@@ -290,6 +300,12 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
             output.write(bytes)
             file.finishWrite(output)
         } catch (error: Exception) { file.failWrite(output); throw error }
+        if(TokenNumberAnimationMode.normalize(preferences.appearance.tokenNumberAnimation)=="roll") numberAnimationFile.delete()
+        else {
+            val modeOutput=numberAnimationFile.startWrite()
+            try {modeOutput.write(byteArrayOf(1,1));numberAnimationFile.finishWrite(modeOutput)}
+            catch(error:Exception) {numberAnimationFile.failWrite(modeOutput);throw error}
+        }
     }
-    fun clear() = synchronized(diskLock) { file.delete() }
+    fun clear() = synchronized(diskLock) { file.delete();numberAnimationFile.delete() }
 }

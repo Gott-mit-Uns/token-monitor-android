@@ -683,7 +683,7 @@
     <string name="session_group_main">主对话 / 续接</string>
     <string name="session_group_subagent">子代理</string>
     <string name="desktop_reference_version">桌面参考版本：v%1$s</string>
-    <string name="desktop_parity_partial">桌面对齐状态：部分对齐（仅支持的 Hub 字段）</string>
+    <string name="desktop_parity_partial">桌面 0.70：已适配数字动画、近期会话展示及可选供应商字段。采集、计费修复和额度刷新仍依赖 Hub／Agent。</string>
     <string name="hub_version_unknown">Hub 构建：服务端未报告</string>
     <plurals name="session_subagent_count"><item quantity="other">%1$d 个子代理</item></plurals>
     <string name="hub_version_pending">Hub 构建：等待连接验证</string>
@@ -693,4 +693,7 @@
     <string name="hub_build_newer">构建比桌面参考 0.69.0 更新</string>
     <string name="hub_build_unverified">无法按桌面参考 0.69.0 验证构建标识</string>
     <string name="tool_settings_mobile_note">仅调整本机的工具展示：显隐、置顶、排序与搜索。模型规则和价格表来自 Hub，不在手机上采集或配置工具。</string>
+    <string name="token_number_animation">Token 数字动画</string>
+    <string name="token_animation_roll">逐位滚动</string>
+    <string name="token_animation_count">数值递增</string>
 </resources>

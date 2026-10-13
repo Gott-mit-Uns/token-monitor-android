@@ -99,7 +99,7 @@ class Desktop069UiScreenTest {
             compose.runOnIdle {dark.value=theme;language.value=lang}
             compose.waitForIdle()
             val strings=observed!!
-            complete(strings.getString(R.string.desktop_reference_version,"0.69.0"))
+            complete(strings.getString(R.string.desktop_reference_version,"0.70.0"))
             complete(strings.getString(R.string.desktop_parity_partial))
             complete(strings.getString(R.string.hub_version_pending))
             @Suppress("DEPRECATION") val packageInfo=compose.activity.packageManager.getPackageInfo(compose.activity.packageName,0)

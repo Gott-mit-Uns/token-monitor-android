@@ -20,6 +20,11 @@ internal object SessionRelationshipGroups {
         val rows=input.distinctBy {it.id}
         val bots=rows.filter(::bot)
         val eligible=rows.filterNot(::bot).filter {it.source!=null && it.source.session?.kind!="background-review"}
+        // Upstream 0.70 fast path: independent conversations have no aliases or parent walks.
+        // Unknown/missing parents and repeated native identities still use the full algorithm.
+        val identities=hashSetOf<String>()
+        val needsGrouping=eligible.any {row->row.source?.session?.parentSessionId!=null || !identities.add(identity(row))}
+        if(bots.isEmpty() && !needsGrouping) return SessionListDisplay.sorted(rows)
         val byKey=eligible.associateBy {it.id}
         val aliases=eligible.groupBy(::identity).mapValues {(_,members)->members.minBy {it.id}}
         fun parentKey(row:SessionListRow)=row.source?.session?.let {meta->meta.parentSessionId?.let {"${meta.parentClient ?: row.source.tool}:$it"}}

@@ -1,3 +1,7 @@
+# 本轮固定上游 v0.70.0
+
+2026-10-14。固定compare起点`3f106ae3d4712b26cced8272f0d488eaab0de1e6`、终点`ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`，不使用main。完整分类、源码链接和验收在DESKTOP_070_DIFF.md，Hub真实新字段边界在HUB_070_DEPENDENCIES.md。以下是历史0.69审计，保留可追溯性。
+
 # 上游同步方法与本次差异证据
 
 2026-10-12接管；只分析v0.68→v0.69，未修改生产实现或生成APK。

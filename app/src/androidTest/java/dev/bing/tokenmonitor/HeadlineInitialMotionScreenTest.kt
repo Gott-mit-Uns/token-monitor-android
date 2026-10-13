@@ -36,7 +36,7 @@ class HeadlineInitialMotionScreenTest {
     private fun mount(content:@Composable () -> Unit) {
         compose.mainClock.autoAdvance = false
         compose.activity.runOnUiThread { compose.activity.setContent {
-            TokenTheme(false) { CompositionLocalProvider(
+            TokenTheme(false,appearance=AppearancePreferences(tokenNumberAnimation="count")) { CompositionLocalProvider(
                 LocalDesktopAnimationClock provides animationClock,
                 LocalHeadlineMotionScale provides 1f,
             ) { content() } }
@@ -56,7 +56,7 @@ class HeadlineInitialMotionScreenTest {
     @Test fun actualHomeColdValidCountUsesElapsedFirstFrameAndSourceQuart() {
         val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1000}}}""")
         val actions=Actions()
-        val preferences=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=emptyList())
+        val preferences=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(tokenNumberAnimation="count"),homeModules=emptyList())
         mount { HubScreen(HubState(snapshot=snapshot,history=HubHistory(emptyList(),emptyList()),
             modelNames=ModelNames(emptyMap(),"off")),actions,preferences=preferences) }
         // Source first RAF includes elapsed time. Neither the private zero nor the
@@ -95,7 +95,7 @@ class HeadlineInitialMotionScreenTest {
         val ready=DeviceHistoryParser.parse(DeviceHistoryParser.project(payload,FixedPeriods.signature(snapshot)))
         val state=mutableStateOf(HubState(snapshot=snapshot,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val actions=Actions()
-        val preferences=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=emptyList(),lastPeriod="last7",monthMode="last7")
+        val preferences=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(tokenNumberAnimation="count"),homeModules=emptyList(),lastPeriod="last7",monthMode="last7")
         mount { HubScreen(state.value,actions,preferences=preferences) }
         compose.onNodeWithTag("hub-total-tokens").assertTextEquals("—")
         compose.runOnIdle { state.value=state.value.copy(deviceHistories=ready) }

@@ -4,7 +4,7 @@ package dev.bing.tokenmonitor
 data class AppearancePreferences(val colors: Map<String,String> = emptyMap(), val textSize: String = "standard",
     val interfaceFont: String = "", val displayFont: String = DesktopAppearance.defaultDisplayFont,
     val vendorColors: Map<String,String> = emptyMap(), val showToolIcons: Boolean = true, val showLiveDot: Boolean = true,
-    val reduceMotion:String = "system")
+    val reduceMotion:String = "system", val tokenNumberAnimation:String = "roll")
 
 internal data class ThemeCodeResult(val colors: Map<String,String>? = null, val reason: String? = null)
 

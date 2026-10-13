@@ -188,7 +188,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val currency = LocalUsageCurrency.current
     val period = remember(rawPeriod, currency) { rawPeriod?.let { UsageAttribution.period(it, currency) } }
     val headline = rememberHeadlineNumber(period?.tokens,range,page !in listOf(HubPage.SETTINGS,HubPage.SUBSCRIPTIONS,HubPage.PRICING) && !trendsDetail,preferences.appearance.reduceMotion,
-        detailUnavailable=FixedPeriods.derived(range) && mainPage in listOf(HubPage.SESSIONS,HubPage.PROJECTS))
+        numberAnimation=preferences.appearance.tokenNumberAnimation,detailUnavailable=FixedPeriods.derived(range) && mainPage in listOf(HubPage.SESSIONS,HubPage.PROJECTS))
     var sessionPage by rememberSaveable {mutableStateOf(0)}
     var selectedSessionGroup by rememberSaveable(state.connectionRevision) {mutableStateOf<String?>(null)}
     val reviewGroupOpen=selectedSessionGroup!=null
@@ -780,19 +780,15 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
             }
             val fittedWidth = measurer.measure(AnnotatedString(widest),numberStyle).size.width / density.density
             val stacked = fittedWidth + suffixWidth + 1f > maxWidth.value
-            @Composable fun number(modifier:Modifier) {
-                Text(value,color=LocalDesktopNumberColor.current,style=numberStyle,
-                    softWrap=stacked,maxLines=if(stacked) Int.MAX_VALUE else 1,
-                    modifier=modifier.testTag("hub-total-tokens").heightIn(min=48.dp).wrapContentHeight().clickable(interactionSource=remember {androidx.compose.foundation.interaction.MutableInteractionSource()},indication=null,enabled=period!=null,onClickLabel=strings.getString(R.string.token_components)) {details=true})
-            }
+            val numberModifier=Modifier.testTag("hub-total-tokens").heightIn(min=48.dp).wrapContentHeight().clickable(interactionSource=remember {androidx.compose.foundation.interaction.MutableInteractionSource()},indication=null,enabled=period!=null,onClickLabel=strings.getString(R.string.token_components)) {details=true}
             @Composable fun approximation(modifier:Modifier=Modifier) {
                 compact?.let {Text(it,modifier=modifier.then(if(stacked) Modifier.fillMaxWidth() else Modifier.width((suffixWidth-4f+1f).dp)).testTag("hub-total-compact"),style=compactStyle,color=MaterialTheme.colorScheme.onSurfaceVariant)}
             }
             if(stacked) Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
-                number(Modifier.fillMaxWidth())
+                TokenNumberText(value,Modifier.fillMaxWidth().then(numberModifier),style=numberStyle,color=LocalDesktopNumberColor.current,softWrap=true)
                 approximation()
             } else Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Bottom,horizontalArrangement=Arrangement.spacedBy(4.dp)) {
-                number(Modifier.weight(1f).alignByBaseline())
+                TokenNumberText(value,Modifier.weight(1f).alignByBaseline().then(numberModifier),style=numberStyle,color=LocalDesktopNumberColor.current,softWrap=false,maxLines=1)
                 approximation(Modifier.alignByBaseline())
             }
         }

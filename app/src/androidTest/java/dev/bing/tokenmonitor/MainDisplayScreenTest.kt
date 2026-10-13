@@ -58,14 +58,14 @@ class MainDisplayScreenTest {
     @Test fun originalMainSettingsControlsSaveLocallyAndOrderResetIsSeparateFromShowAll() {
         val name="main-controls-${java.util.UUID.randomUUID()}.bin";val store=DisplayPreferenceStore(compose.activity,name)
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions")))
-        val source=HubParser.parse("""{"periods":{"today":{"totalTokens":12345}},"devices":[{"deviceId":"a","hostname":"Public A"},{"deviceId":"b","hostname":"Public B"}]}""")
+        val source=HubParser.parse("""{"periods":{"today":{"totalTokens":12345}},"devices":[{"deviceId":"a","displayName":"Public A","hostname":"Public A"},{"deviceId":"b","displayName":"Public B","hostname":"Public B"}]}""")
         val state=HubState(snapshot=source,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"));val actions=Actions()
         try {
             store.save(prefs.value)
             compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={store.save(it.apply(prefs.value));prefs.value=store.load()})}}}
             compose.onNodeWithTag("hub-settings-toggle").performClick()
             fun click(tag:String) {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(tag));compose.onNodeWithTag(tag).performClick()}
-            openSettingsSection(compose,"appearance");click("main-title-icon");click("main-compact-total");click("main-live-rate")
+            openSettingsSection(compose,"appearance");click("appearance-colors-toggle");click("main-title-icon");click("main-compact-total");click("main-live-rate")
             click("main-units-localized");click("main-rate-device");compose.onNodeWithTag("main-rate-device-1").performClick()
             click("main-swap-actions")
             compose.onNodeWithTag("hub-live-rate").assertDoesNotExist() // Original settings panel hides this footer indicator.
@@ -83,7 +83,7 @@ class MainDisplayScreenTest {
     }
     @Test fun realPerDeviceDeltasTapModeHoldModelsScopeAndForegroundReset() {
         var clock=0L;val now:()->Long={clock};val actions=Actions()
-        fun snapshot(a:Int,b:Int)=HubParser.parse("""{"periods":{"today":{"totalTokens":50000}},"devices":[{"deviceId":"a","hostname":"Public A","stale":false,"periods":{"today":{"timedTokens":${100+a*20},"timedOutputTokens":${40+a*10},"timedDurationMs":${1000+a*200},"modelThroughput":{"public-alpha":{"timedTokens":${100+a*20},"timedOutputTokens":${40+a*10},"timedDurationMs":${1000+a*200}}}}}},{"deviceId":"b","hostname":"Public B","stale":false,"periods":{"today":{"timedTokens":${200+b*50},"timedOutputTokens":${80+b*25},"timedDurationMs":${2000+b*500},"modelThroughput":{"public-beta":{"timedTokens":${200+b*50},"timedOutputTokens":${80+b*25},"timedDurationMs":${2000+b*500}}}}}}]}""")
+        fun snapshot(a:Int,b:Int)=HubParser.parse("""{"periods":{"today":{"totalTokens":50000}},"devices":[{"deviceId":"a","displayName":"Public A","hostname":"Public A","stale":false,"periods":{"today":{"timedTokens":${100+a*20},"timedOutputTokens":${40+a*10},"timedDurationMs":${1000+a*200},"modelThroughput":{"public-alpha":{"timedTokens":${100+a*20},"timedOutputTokens":${40+a*10},"timedDurationMs":${1000+a*200}}}}}},{"deviceId":"b","displayName":"Public B","hostname":"Public B","stale":false,"periods":{"today":{"timedTokens":${200+b*50},"timedOutputTokens":${80+b*25},"timedDurationMs":${2000+b*500},"modelThroughput":{"public-beta":{"timedTokens":${200+b*50},"timedOutputTokens":${80+b*25},"timedDurationMs":${2000+b*500}}}}}}]}""")
         val state=mutableStateOf(HubState(snapshot=snapshot(0,0),live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("sessions"),main=MainDisplayPreferences(showLiveRate=true)))
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalRateNow provides now) {HubScreen(state.value,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
