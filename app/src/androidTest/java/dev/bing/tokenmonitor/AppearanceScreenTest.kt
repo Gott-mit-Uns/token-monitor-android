@@ -40,7 +40,10 @@ class AppearanceScreenTest {
     }
     @Test fun presetsCustomChartAndDesktopCodesUpdateActualThemeWithoutChangingHubData() {
         val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-        val prefs=mutableStateOf(DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT))
+        // Font/layout/storage checks use a stable fixture, including production Activity recreation.
+        // System.nanoTime animations cannot advance with the Compose virtual frame clock.
+        val prefs=mutableStateOf(DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT,
+            appearance=AppearancePreferences(reduceMotion="on")))
         val today=LocalDate.now().toString()
         val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":123456789,"costUsd":12.5}},"historyPreview":{"daily":[{"date":"$today","tokens":100,"cost":1}],"monthly":[]}}""")
         val state=HubState(snapshot=snapshot,savedAt=System.currentTimeMillis());val actions=Actions()
@@ -74,7 +77,10 @@ class AppearanceScreenTest {
     }
     @Test fun textAndIndependentFontsKeepTotalSizeAndActualActivityRestoresAllChoices() {
         val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-        val prefs=mutableStateOf(DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT))
+        // Font/layout/storage checks use a stable fixture, including production Activity recreation.
+        // System.nanoTime animations cannot advance with the Compose virtual frame clock.
+        val prefs=mutableStateOf(DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT,
+            appearance=AppearancePreferences(reduceMotion="on")))
         val state=HubState(snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":123456789,"costUsd":12.5}}}"""))
         val actions=Actions();var labelSize=0f
         compose.activity.runOnUiThread { compose.activity.setContent { TokenTheme(dark,prefs.value.language,prefs.value.appearance) { val size=MaterialTheme.typography.bodyMedium.fontSize.value;SideEffect {labelSize=size};HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)}) } } }
@@ -95,6 +101,12 @@ class AppearanceScreenTest {
             val saved=prefs.value.copy(language=LanguageChoice.ENGLISH,currency="CNY",currencyRates=mapOf("CNY" to "7"),appearance=prefs.value.appearance.copy(colors=DesktopAppearance.presets.getValue("obsidian")))
             compose.activityRule.scenario.onActivity { ViewModelProvider(it)[HubViewModel::class.java].updateDisplay(saved) }
             compose.waitUntil(5000) { store.load()==saved };compose.activityRule.scenario.recreate()
+            // Production restoration may legitimately land on Home when a cached Hub exists.
+            // Establish Settings explicitly before checking the unchanged preference controls.
+            compose.waitUntil(5000) { compose.onAllNodesWithTag("hub-startup").fetchSemanticsNodes().isEmpty() }
+            if (compose.onAllNodesWithTag("settings-general-toggle").fetchSemanticsNodes().isEmpty())
+                compose.onNodeWithTag("hub-settings-toggle").performClick()
+            compose.onNodeWithTag("settings-general-toggle").assertIsDisplayed()
             openSettingsSection(compose,"appearance");click("appearance-colors-toggle");click("appearance-size-select");compose.onNodeWithTag("appearance-size-largest").assertIsSelected();compose.onNodeWithTag("appearance-size-largest").performClick()
             show("appearance-interface-custom-field");compose.onNodeWithTag("appearance-interface-custom-field").assertTextContains(familyList)
             click("appearance-display-select");compose.onNodeWithTag("appearance-display-mono").assertIsSelected();compose.onNodeWithTag("appearance-display-mono").performClick()

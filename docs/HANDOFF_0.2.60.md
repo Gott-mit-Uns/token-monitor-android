@@ -37,6 +37,7 @@
 - 实际系统1.0短数值 Text 的语义重建使用父最大宽度，而节点为内容自然宽度，didOverflowWidth假阳性；断言前截图文字完整。测试使用分配窗口宽度使绘制/语义约束一致，原溢出/字体/点击断言全部保留。
 - 新双入口 pending-ready 用例先失败再通过；没有把原失败XML改写为成功。
 - 一次并发Gradle写同unit binary目录发生EOF/NoSuchFile工具失败，记录保留；最终串行完整432项通过。
+- 最终封包复跑17项时 Appearance 有1项假设重建后自动显示Settings，在已有公开缓存时实际按约定回到Home；测试改为明确进入Settings后继续原断言。定向复跑另暴露真实System.nanoTime动画与Compose虚拟时钟不一致，测试等待idle失败；两个无动画断言的字体/偏好fixture设reduceMotion=on后2项通过，全部原断言保留。两次首失败日志、截图及当时APK指纹保留。
 
 ## 字体体积与最终封包门槛
 
