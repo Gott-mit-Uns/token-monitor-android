@@ -9,6 +9,7 @@
 - 冷进程启动显示既有图标一次；已配置等待初始终态后 Home，未配置进 Hub 设置。Activity 重建与普通后台返回保留页面，新的进程忽略旧 Settings 路由。
 - 默认界面/总量用 Token UI（Inter + Noto Sans SC 常用中文），对齐数据用 Token Data（JetBrains Mono），400/700 两字重；保留明确 System、monospace、自定义字体偏好。旧“App”预设跟随新的默认字体，存储字符串不重写。
 - Dashboard 刷新图标绘制为 8.3×8dp，48dp 独立触点保持。
+- 用户追加的主页固定周期日期说明删除已整合；正常完整周期不插入空状态项，趋势页仅在有数据缺失提示时扣状态高度。算法、缺失原因、读取按钮及设备来源窗口保留，侧任务证据见 HANDOFF_HOME_PERIOD_ROW_0.2.60.md。
 
 ## Mac 实际执行证据
 
@@ -44,7 +45,9 @@
 
 四派生字体原始合计5,645,964 bytes不是APK增量。初期同版本/正式签名Release测量为3,694,729 bytes，但worktree与archive的AGP VCS错误字段不同，仅作前期证据。
 
-正式交付必须从相同最终提交的两个普通本地Git clone构建，detached HEAD让AGP正确内嵌源码SHA。基线只反向移除原17项字体资源/角色/通知差异，保留网络、冷启动、刷新及后续最小修复；版本、签名和Release参数相同，不安装基线。最终两包VCS字段须相同，APK增量≤5,000,000 bytes；最终精确字节、SHA、候选与验收包运行条目等价检查及最终APK再安装结果以四附件 `release-manifest.json` / `VALIDATION.md` 为准。
+正式交付必须从相同最终提交的两个普通本地Git clone构建，detached HEAD让AGP正确内嵌源码SHA。基线只反向移除原17项字体资源/角色/通知差异，保留网络、冷启动、刷新及后续最小修复；版本、签名和Release参数相同，不安装基线。最终两包VCS字段须相同，APK增量≤5,000,000 bytes；最终精确字节、SHA、新联合最终APK完整定向回归、窗口矩阵及再安装结果以四附件 `release-manifest.json` / `VALIDATION.md` 为准。
+
+用户在首次冻结候选53项通过后追加固定周期显示修改，已要求一起发布0.2.60/69；原冻结候选的APK指纹不能代替新联合最终包。侧任务4项周期单元、13次UI执行与首Red保留；主任务联合补验、最终全部回归和窗口矩阵统计以四附件为准。
 
 本文件写入产品提交时，最终提交封包、唯一annotated Tag、四附件草稿回读和正式发布仍须按既定顺序执行；不得把此源码文档作为已发布回执。发布完成后在 GITHUB_PUBLICATION.md 补只改文档的回执，固定Tag与APK不重建/覆盖。
 

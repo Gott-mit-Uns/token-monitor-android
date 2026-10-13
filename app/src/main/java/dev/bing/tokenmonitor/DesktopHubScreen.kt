@@ -493,7 +493,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                             item { Text(strings.getString(R.string.not_connected)) }
                             item { Button(onClick = { page = HubPage.SETTINGS }) { Text(strings.getString(R.string.connect_hub)) } }
                         } else {
-                            if (periodVisible && fixed != null) item {
+                            if (periodVisible && fixed?.issue != null) item {
                                 Box(Modifier.onSizeChanged {if(page==HubPage.TRENDS) trendsStatusHeight=it.height}) {
                                     FixedPeriodStatus(fixed, state.deviceHistories?.signature == state.snapshot?.let(FixedPeriods::signature), state.loading, model::loadDeviceHistory)
                                 }
@@ -661,7 +661,8 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                 }
                                 HubPage.TRENDS -> {
                                         trendsMain?.let {overview->item {
-                                            val height=with(LocalDensity.current) {(trendsViewportHeight-trendsStatusHeight).toDp()} - rowGap - 8.dp - (if(fixed!=null) rowGap else 0.dp) - (if(overview.points.isEmpty()) 48.dp+rowGap else 0.dp)
+                                            val statusHeight=if(fixed?.issue!=null) trendsStatusHeight else 0
+                                            val height=with(LocalDensity.current) {(trendsViewportHeight-statusHeight).toDp()} - rowGap - 8.dp - (if(fixed?.issue!=null) rowGap else 0.dp) - (if(overview.points.isEmpty()) 48.dp+rowGap else 0.dp)
                                             DesktopTrendsMain(overview,onOpenHistory=::openDashboard,availableHeight=height.coerceAtLeast(0.dp).takeIf {trendsViewportHeight>0},barMotion=trendsBarMotion)
                                         }}
                                         // Android has no desktop tray dashboard entry. Its independent

@@ -325,7 +325,6 @@
     <string name="fixed_period_window">部分设备缺少日期窗口或时区，无法计算此范围。</string>
     <string name="fixed_period_inventory">历史与当前设备清单不一致，请重新读取。</string>
     <string name="fixed_period_size">此范围超过支持的计数大小，已保存的数据仍保留。</string>
-    <string name="fixed_period_dates">%1$s – %2$s · 按设备本地日期汇总</string>
     <string name="fixed_period_no_details">历史没有提供此范围的项目或会话归属。</string>
     <string name="fixed_period_activity">所选周期活动</string>
     <string name="home_heatmap_metric">热力图颜色</string>

@@ -5,7 +5,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import java.time.Clock
@@ -41,10 +43,10 @@ class TrendsNavigationScreenTest {
 
     @Test fun mainPeriodAndDashboardRangeStayIndependentAcrossBackAndSettings() {
         val actions=Actions()
-        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH))
+        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(reduceMotion="on")))
         compose.activity.runOnUiThread {compose.activity.setContent {
             CompositionLocalProvider(LocalHubCalendarClock provides Clock.fixed(Instant.parse("2026-10-09T08:00:00Z"),ZoneId.of("Asia/Shanghai"))) {
-                TokenTheme(true,prefs.value.language) {HubScreen(HubState(snapshot=snapshot,history=history),actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}
+                TokenTheme(true,prefs.value.language,prefs.value.appearance) {HubScreen(HubState(snapshot=snapshot,history=history),actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}
             }
         }}
         selectTrends()
@@ -113,6 +115,7 @@ class TrendsNavigationScreenTest {
         val coordinator=HistoryReadCoordinator()
         val state=mutableStateOf(HubState(snapshot=sourceSnapshot,modelNames=ModelNames(emptyMap(),"off"),
             historyReadReceipt=coordinator.target(HistoryReadKey(0,homeHistorySignature(sourceSnapshot)))))
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=emptyList(),appearance=AppearancePreferences(reduceMotion="on"))
         var requestId=0L
         val actions=object:Actions() {
             override fun loadHistory() {loadHistory(false)}
@@ -129,7 +132,7 @@ class TrendsNavigationScreenTest {
         }
         compose.activity.runOnUiThread {compose.activity.setContent {
             CompositionLocalProvider(LocalHubCalendarClock provides Clock.fixed(Instant.parse("2026-10-09T08:00:00Z"),ZoneId.of("Asia/Shanghai"))) {
-                TokenTheme(true,LanguageChoice.ENGLISH) {HubScreen(state.value,actions,preferences=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=emptyList()))}
+                TokenTheme(true,prefs.language,prefs.appearance) {HubScreen(state.value,actions,preferences=prefs)}
             }
         }}
         selectTrends()
@@ -168,5 +171,86 @@ class TrendsNavigationScreenTest {
         compose.onNodeWithTag("trends-history-detail").assertDoesNotExist()
         compose.onNodeWithText("No usage history yet").assertIsDisplayed()
         assertEquals(1,actions.histories);assertEquals(0,actions.devices)
+    }
+
+    @Test fun fixedRangeHistoryRecoveryRemovesStatusAndRestoresFullChartHeight() {
+        val args=InstrumentationRegistry.getArguments()
+        val english=args.getString("periodEnglish")=="true"
+        val dark=args.getString("visualDark")!="false"
+        val prefs=DisplayPreferences(language=if(english) LanguageChoice.ENGLISH else LanguageChoice.CHINESE,
+            homeModules=emptyList(),lastPeriod="last7",monthMode="last7",
+            appearance=AppearancePreferences(reduceMotion="on",textSize=if(args.getString("periodLargest")=="true") "largest" else "standard"))
+        val sourceSnapshot=HubParser.parse("""{"deviceHistoryRevision":"period-row-r1","periods":{"today":{"totalTokens":500,"costUsd":0.5},"month":{"totalTokens":6000,"costUsd":6},"allTime":{"totalTokens":90000,"costUsd":90}},"devices":[{"deviceId":"public","hostname":"Public Desktop","periodWindows":{"timeZone":"Etc/UTC","today":{"key":"2026-10-09","endsAt":"2999-10-10T00:00:00Z"}},"periods":{"today":{"totalTokens":500,"costUsd":0.5},"allTime":{"totalTokens":90000}}}]}""").copy(historyPreview=history)
+        val retained="""{"devices":[{"deviceId":"public","historyAvailable":true,"history":{"daily":[{"date":"2026-10-03","tokens":100,"cost":0.1},{"date":"2026-10-08","tokens":200,"cost":0.2},{"date":"2026-10-09","tokens":50,"cost":0.05}]}}]}"""
+        val state=mutableStateOf(HubState(snapshot=sourceSnapshot,deviceHistories=DeviceHistories(
+            FixedPeriods.signature(sourceSnapshot),listOf(DeviceHistory("public",false,null)))))
+        val actions=object:Actions() {
+            override fun loadDeviceHistory() {
+                super.loadDeviceHistory()
+                state.value=state.value.copy(deviceHistories=DeviceHistoryParser.parse(
+                    DeviceHistoryParser.project(retained,FixedPeriods.signature(state.value.snapshot!!))))
+            }
+        }
+        val suffix="${if(english) "en" else "zh"}-${if(dark) "dark" else "light"}"
+        fun save(phase:String) {
+            compose.waitForIdle()
+            saveVisualEvidence(compose.activity,compose.onRoot(),"fixed-trends-recovery-$phase-$suffix.png")
+        }
+        fun pending(message:String,phase:String) {
+            compose.onNodeWithTag("hub-total-tokens").assertTextEquals("—")
+            compose.onNodeWithTag("fixed-period-range").assertDoesNotExist()
+            compose.onNodeWithTag("trends-main-chart").assertDoesNotExist()
+            show("fixed-period-unavailable")
+            compose.onNodeWithTag("fixed-period-unavailable").assertIsDisplayed().assertTextEquals(message)
+            show("fixed-period-read")
+            compose.onNodeWithTag("fixed-period-read").assertIsDisplayed().assertIsEnabled()
+                .assertTextEquals(if(english) "Read device history" else "读取设备历史")
+            val read=compose.onNodeWithTag("fixed-period-read").getUnclippedBoundsInRoot()
+            assertTrue("The manual read target retains 48dp width and height",(read.right-read.left).value>=48f && (read.bottom-read.top).value>=48f)
+            save(phase)
+        }
+        fun recovered(phase:String):Pair<Float,Float> {
+            compose.onNodeWithTag("hub-total-tokens").assertTextEquals("800")
+            compose.onNodeWithTag("hub-total-cost").assertTextEquals("$0.8000")
+            compose.onNodeWithTag("fixed-period-unavailable").assertDoesNotExist()
+            compose.onNodeWithTag("fixed-period-read").assertDoesNotExist()
+            compose.onNodeWithTag("fixed-period-range").assertDoesNotExist()
+            compose.onNodeWithTag("hub-content").performScrollToIndex(0)
+            compose.onNodeWithTag("trends-main-chart").assertIsDisplayed()
+            val viewport=compose.onNodeWithTag("hub-content").getUnclippedBoundsInRoot()
+            val main=compose.onNodeWithTag("trends-main").getUnclippedBoundsInRoot()
+            val chart=compose.onNodeWithTag("trends-main-chart").getUnclippedBoundsInRoot()
+            assertEquals("A recovered range leaves only the normal top inset, without a status row or gap",12f,(main.top-viewport.top).value,1f)
+            assertTrue("Recovered chart retains its full preferred height",(chart.bottom-chart.top).value>=159.5f)
+            compose.onNodeWithTag("trends-main-axis-start").assertTextEquals("2026-09")
+            compose.onNodeWithTag("trends-main-axis-end").assertTextEquals("2026-10")
+            show("trends-main-active-days")
+            compose.onNodeWithTag("trends-main-active-days").assertTextEquals("106")
+            compose.onNodeWithTag("trends-main-streak").assertTextEquals("14")
+            assertEquals(history,state.value.snapshot!!.historyPreview)
+            assertEquals(500L,state.value.snapshot!!.periods.getValue("today").tokens)
+            compose.onNodeWithTag("hub-content").performScrollToIndex(0)
+            save(phase)
+            return (main.bottom-main.top).value to (chart.bottom-chart.top).value
+        }
+        compose.activity.runOnUiThread {compose.activity.setContent {
+            CompositionLocalProvider(LocalHubCalendarClock provides Clock.fixed(Instant.parse("2026-10-09T08:00:00Z"),ZoneId.of("Asia/Shanghai"))) {
+                TokenTheme(dark,prefs.language,prefs.appearance) {HubScreen(state.value,actions,preferences=prefs)}
+            }
+        }}
+        selectTrends()
+        pending(if(english) "Some devices do not provide complete history. This range is unavailable." else "部分设备未提供完整历史，无法显示此范围。","missing")
+        compose.onNodeWithTag("fixed-period-read").performClick()
+        val firstHeight=recovered("ready")
+        assertEquals(1,actions.devices)
+        compose.runOnIdle {state.value=state.value.copy(snapshot=sourceSnapshot.copy(deviceHistoryRevision="period-row-r2"))}
+        pending(if(english) "Read each device’s retained history to calculate this range." else "读取每台设备的完整历史后，计算此范围。","revision-pending")
+        compose.onNodeWithTag("fixed-period-read").performClick()
+        val secondHeight=recovered("ready-again")
+        assertEquals("A second recovery restores the same complete Trends item height",firstHeight.first,secondHeight.first,0.01f)
+        assertEquals("A second recovery restores the same chart height",firstHeight.second,secondHeight.second,0.01f)
+        assertEquals(2,actions.devices)
+        assertEquals(0,actions.histories)
+        assertEquals(0,actions.snapshots)
     }
 }

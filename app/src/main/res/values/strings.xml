@@ -327,7 +327,6 @@
     <string name="fixed_period_window">A device date window or time zone is unavailable. This range cannot be calculated.</string>
     <string name="fixed_period_inventory">Device history and the current device list differ. Read history again.</string>
     <string name="fixed_period_size">This range exceeds the supported count size. The saved data is retained.</string>
-    <string name="fixed_period_dates">%1$s – %2$s · Device local dates</string>
     <string name="fixed_period_no_details">History does not include project or session attribution for this range.</string>
     <string name="fixed_period_activity">Selected period activity</string>
     <string name="home_heatmap_metric">Heatmap color</string>

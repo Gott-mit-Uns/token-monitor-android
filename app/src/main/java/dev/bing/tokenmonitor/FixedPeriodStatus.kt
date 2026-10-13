@@ -13,8 +13,6 @@ import androidx.compose.ui.unit.dp
 @Composable internal fun FixedPeriodStatus(view: FixedPeriodView, historyLoaded: Boolean, loading: Boolean, read: () -> Unit) {
     val strings = LocalResources.current
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        view.range?.let { dates -> Text(strings.getString(R.string.fixed_period_dates, dates.start.toString(), dates.end.toString()),
-            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.testTag("fixed-period-range")) }
         view.issue?.let { issue ->
             val message = when (issue) {
                 FixedPeriodIssue.HISTORY -> if (historyLoaded) R.string.fixed_period_history else R.string.fixed_period_pending
