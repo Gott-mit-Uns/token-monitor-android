@@ -52,3 +52,9 @@ Evidence is in `evidence/desktop-071/`; final candidate acceptance and retained 
 - 新versionName为上游与Android组合；更新解析器同时支持纯Android及组合标签，比较Android序列。0.2.64等已安装旧解析器无法识别新的组合Tag，正式发布时须选兼容渠道/命名或明确手动APK升级；本轮未创建Tag/Release，候选自身发行说明Tag链接也尚不存在。
 - 本轮手机未安装，实体手机覆盖升级、真实LAN/公网HTTPS/蜂窝恢复、OEM后台锁屏与性能未验收。API26/31等额外平台矩阵未重新执行。
 - 代码推送/合并完成后更新下方Git回执。正式Release、正式Tag及手机安装均等待用户确认；不将候选声称为已发布或全部对齐。
+
+## Git delivery receipt (2026-10-15 Asia/Shanghai)
+
+[PR #3](https://github.com/Gott-mit-Uns/token-monitor-android/pull/3) is merged into GitHub main. Merge commit: `5680a4aeb4a6f56bc78b0bbd235a7dcba1d0f17e`, validated head `46a84d580636eb9bba7893def723345e1842601d`. This follow-up changes only delivery documentation. The source checkout's original uncommitted NEXT_TASKS and untracked AGENTS-original/REA audit files remain protected; it was not reset or overwritten.
+
+Latest formal Release was rechecked as v0.2.64. No new release/tag, phone installation, NAS operation or third-party credential action occurred. APK SHA remains `039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4`; byte content is unchanged from all candidate device checks. Product source remains `6cf7a0c`; final native test source is `6f149ff`.
