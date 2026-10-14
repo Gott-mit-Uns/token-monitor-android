@@ -1,3 +1,19 @@
+# 0.2.64 / 73 发布完成回执
+
+2026-10-15 04:35:56（Asia/Shanghai），[正式 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.64)已发布，非草稿、非预发行，已标最新。用户明确授权合并、推送及正式发布；手机用户自行安装，NAS 不动。通过独立 `release/0.2.64` 工作区正常快进推送至 GitHub main 和同名分支，唯一 annotated Tag `v0.2.64` 固定发布提交 `a7d509903a46223af5c0ecb6f82937aee16108b3`。原主目录的 NEXT_TASKS 修改、AGENTS-original.md 和历史 REA 审计未提交状态保持，未 reset、stash、强推或覆盖历史 Tag／Release。
+
+本版彻底删除 Android 桌面小组件、相关注册／代码／资源及常规设置；多设备同步采集设备等宽两列，保留真实设备字段和角色区分。关于四入口、双协议地址与当前／上次实际成功端点、主页／趋势／额度／缓存与现有字体继续保留。此前 0.2.63 小组件对齐已按实际试用反馈取消，没有单独发布 0.2.63，也没有合入 R8／资源瘦身实验。
+
+正式 APK **15,238,142 bytes / 14.53 MiB**，SHA-256 `df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56`。沿用既有 `dev.bing.tokenmonitor.nativeclient` 包名与正式证书，版本 **0.2.64 / code73**，Release 非 debuggable。APK 为精确已验收候选字节，仅改正式文件名，未重建。原产品构建提交 `ab9a6acee07ddee302f23dd7e033cd19803e9f2e`、最终测试提交 `fc206065daf9b9fc29fd1c9b3136b619f83ae2bf` 和 Tag 发布提交由 manifest 分开记录；主源码树 `5e4703784f62bc2e59735c6283b9c54cb1ff6dfe`、Gradle 构建输入与原构建一致。APK 内嵌 VCS 为 `NO_VALID_GIT_FOUND`，不声称内嵌 Tag 提交；通过源树和外部指纹关联。
+
+455 Release 单元通过；Lint 0错误／96警告／1提示。精确最终产品原功能回归49/49、浅色布局10/10、深色网格／统一设置范围10方法、删除及真实常规2/2、网络／设置范围18方法、语言修复后5/5、真实系统旧绑定及缓存偏好保留升级2方法通过。失败整组、首失败指纹和后续定向复测分别保留，未把原深色12项或网络23项失败整组写成全绿。升级实测为正式签名0.2.63候选→0.2.64，不声称新做0.2.62直接升级。全部本轮运行界面／安装为模拟器，详见 [交接](HANDOFF_0.2.64.md)及 Release VALIDATION.md。
+
+APK、SHA256SUMS.txt、release-manifest.json、VALIDATION.md **四附件草稿阶段完整下载**，逐文件大小及 SHA 一致后才正式发布；发布后四附件再次完整下载一致，公开无需认证 APK 及校验文件也完整下载核对。已核验 release/latest、Tag 指向和 main 包含 Tag。草稿按 Tag 查询首次404的错误保留，改用官方 Release ID 413156120 查询成功并完成下载核验，没有绕过失败。证据 `evidence/publication-064/draft-full-readback.json`、`final-full-readback.json`、两轮资产下载和公开下载；本地交付 `dist/release-0.2.64/`。发布后仅补文档回执，不改变固定 Tag／APK／四附件。
+
+对 The-Minion-oOo 项目正式 APK 的实测比较和未来优化提示词已保存为 [包体积调查](APK_SIZE_COMPARISON_064.md)、[优化提示词](APK_SIZE_OPTIMIZATION_PROMPT.md)。对方2,483,408 bytes，DEX与字体解释双方差额约92.9%；对方代码／资源缩减和系统界面字体是核实的差异，但没有据此承诺同源收益或直接改变本版。新优化仍为后续任务，旧实验保持隔离。
+
+实体小米、OEM桌面残留占位清理、新版真实LAN／HTTPS／蜂窝、锁屏／厂商后台和性能未验证，历史失败不改写。手机用户自装，未安装实体手机；未修改、部署或重启 NAS、Hub、Agent、Lucky、路由或其他生产服务。本轮完成并停止，不推进历史待办。
+
 # 0.2.62 / 71 发布完成回执
 
 2026-10-14，Asia/Shanghai。[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.62)，非草稿、非预发行，已标最新。唯一Tag `v0.2.62` 固定产品/验收提交 `aefe855c700cb7cac69ab43dac4df64e8e8ff677`；main和release/0.2.62已正常快进推送。APK内嵌Git提交与Tag一致，正式签名、包名和Code递增一致。原主目录的未提交NEXT_TASKS、AGENTS-original及REA审计仍保留，未reset/stash/覆盖。
