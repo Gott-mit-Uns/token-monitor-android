@@ -1,6 +1,9 @@
 package dev.bing.tokenmonitor
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -8,6 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.CollectionInfo
+import androidx.compose.ui.semantics.CollectionItemInfo
+import androidx.compose.ui.semantics.collectionInfo
+import androidx.compose.ui.semantics.collectionItemInfo
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 /** Read-only phone, Hub and uploaded collectors keep separate identities and status meanings. */
@@ -33,9 +41,20 @@ import androidx.compose.ui.unit.dp
         Text(strings.getString(R.string.sync_collectors_heading),style=quotaTextStyle(11,true))
         val devices=SyncSettingsPresentation.devices(state.snapshot?.devices.orEmpty())
         if(devices.isEmpty()) Text(strings.getString(R.string.sync_devices_empty),Modifier.testTag("sync-devices-empty"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-        devices.forEachIndexed {index,device->
-            val key=device.id.ifEmpty {index.toString()}
-            Column(Modifier.fillMaxWidth().testTag("sync-device-$key"),verticalArrangement=Arrangement.spacedBy(3.dp)) {
+        Column(Modifier.fillMaxWidth().testTag("sync-device-grid").semantics {
+            collectionInfo=CollectionInfo((devices.size+1)/2,2)
+        },verticalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
+        devices.chunked(2).forEachIndexed {rowIndex,pair->
+            Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).testTag("sync-device-row-$rowIndex"),
+                horizontalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
+            pair.forEachIndexed {columnIndex,device->
+                val key=device.id.ifEmpty {(rowIndex*2+columnIndex).toString()}
+                val shape=RoundedCornerShape(8.dp)
+                Column(Modifier.weight(1f).fillMaxHeight().testTag("sync-device-$key").semantics {
+                    collectionItemInfo=CollectionItemInfo(rowIndex,1,columnIndex,1)
+                }.border(1.dp,colors.outlineVariant,shape)
+                    .background(LocalDesktopOverlayColor.current.copy(alpha=.025f),shape)
+                    .padding(CompactUiTokens.CardContentPadding),verticalArrangement=Arrangement.spacedBy(3.dp)) {
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                     val icon=DeviceDisplay.icon(device.rawPlatform ?: device.platform.orEmpty())
                     Icon(painterResource(when(icon) {"apple"->R.drawable.brand_os_apple;"windows"->R.drawable.brand_os_windows;"linux"->R.drawable.brand_os_linux;else->R.drawable.desktop_view_device}),null,Modifier.padding(top=1.dp).size(14.dp))
@@ -50,8 +69,13 @@ import androidx.compose.ui.unit.dp
                 })
                 val age=DeviceDisplay.age(SyncSettingsPresentation.syncedAt(device),now)?.let {(unit,value)->strings.getString(when(unit) {"minutes"->R.string.device_age_minutes;"hours"->R.string.device_age_hours;"days"->R.string.device_age_days;else->R.string.device_age_now},value)}
                 Text("$status · ${age?.let {strings.getString(R.string.device_synced,it)} ?: strings.getString(R.string.sync_time_missing)}",Modifier.fillMaxWidth().testTag("sync-device-status-$key"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-                if(index<devices.lastIndex) HorizontalDivider(Modifier.padding(top=5.dp),color=colors.outlineVariant.copy(alpha=.6f))
+                }
             }
+            // An odd last collector keeps the same column width as every other
+            // collector; its empty peer carries no data or accessibility label.
+            if(pair.size==1) Spacer(Modifier.weight(1f))
+            }
+        }
         }
     }
 }

@@ -38,11 +38,11 @@ data class SavedHub(val address: String, val credential: String, val snapshot: S
     override fun toString() = "SavedHub(private connection and cached data)"
 }
 
-/** One authenticated atomic record; readers, including widgets, never migrate it. */
+/** One authenticated atomic record; readers never migrate it. */
 open class HubStore(context: Context, recordName: String = "hub-state.bin", private val maxRecordBytes: Int = MAX_RECORD_BYTES,
     private val maxExpandedBytes: Int = MAX_EXPANDED_BYTES) {
     companion object {
-        // AtomicFile does not provide a cross-instance lock for app and widget access.
+        // AtomicFile does not provide a cross-instance lock for separate store instances.
         private val diskLock = Any()
         private const val MAX_RECORD_BYTES = 10 * 1024 * 1024
         private const val MAX_EXPANDED_BYTES = 32 * 1024 * 1024

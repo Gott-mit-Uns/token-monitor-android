@@ -234,22 +234,6 @@
     <plurals name="billing_years">
         <item quantity="other">年</item>
     </plurals>
-    <string name="widget_name">Hub 用量</string>
-    <string name="widget_description">显示已保存的 Hub 用量，点击打开应用更新。</string>
-    <string name="widget_period">Hub 今日 Token · 已保存</string>
-    <string name="widget_empty">先在应用中连接并保存快照。</string>
-    <string name="widget_unreadable">无法读取已保存数据，请打开应用处理。</string>
-    <string name="widget_cost">估算成本：USD %1$s</string>
-    <string name="widget_cost_partial">仅已知价格成本：USD %1$s</string>
-    <string name="widget_cost_unknown">估算成本：未知</string>
-    <string name="widget_times">Hub：%1$s\n读取：%2$s</string>
-    <string name="widget_open">打开并更新</string>
-    <string name="widget_brand">Token Monitor</string>
-    <string name="widget_no_value">—</string>
-    <string name="widget_settings_note">显示上次保存的 Hub 用量和读取时间。后台保持离线，点击小组件打开应用更新；不显示名称或标题。</string>
-    <string name="widget_add">添加到主屏幕</string>
-    <string name="widget_add_manually">长按主屏幕，进入小组件列表，选择 Token Monitor Android → Hub 用量。</string>
-    <string name="widget_tokens_accessible">Token：%1$s</string>
     <string name="error_no_network">当前没有可用网络。已保存数据会保留，恢复联网后更新。</string>
     <string name="about_heading">关于应用</string>
     <string name="app_version">版本 %1$s</string>
@@ -342,8 +326,6 @@
     <string name="known_cost_formatted">已知估算费用：%1$s</string>
     <string name="estimated_cost_formatted">估算费用：%1$s</string>
     <string name="history_known_cost_formatted">已知估算费用：%1$s（费用可用 %2$s 天）</string>
-    <string name="widget_cost_formatted">估算费用：%1$s</string>
-    <string name="widget_cost_partial_formatted">仅已知费用：%1$s</string>
     <string name="home_activity_day">查看当天详情</string>
     <string name="home_activity_previous_day">上一天</string>
     <string name="home_activity_next_day">下一天</string>

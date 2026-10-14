@@ -119,9 +119,8 @@ class ActivityNetworkTest {
             assertEquals(3, streams.get())
             assertEquals(LanguageChoice.ENGLISH, model!!.display.value.language)
             awaitFocus(currentScenario)
-            // Same foreground Activity receives the widget intent and performs an explicit refresh.
-            context.startActivity(Intent(context, MainActivity::class.java).putExtra(HubWidget.OPEN_AND_UPDATE, true)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+            // Explicit foreground refresh still replaces the previous stream after restoration.
+            currentScenario.onActivity { model?.refreshSaved() }
             assertTrue(fourth.await(10, TimeUnit.SECONDS))
             await { model?.state?.value?.live == true }
             assertEquals(4, streams.get())

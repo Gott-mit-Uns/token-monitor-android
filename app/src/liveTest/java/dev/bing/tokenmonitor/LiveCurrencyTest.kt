@@ -3,8 +3,6 @@ package dev.bing.tokenmonitor
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.os.Bundle
-import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.compose.ui.test.*
@@ -62,14 +60,6 @@ class LiveCurrencyTest {
             await { model.display.value.currency=="CNY" && model.display.value.currencyRates["CNY"]=="7" }
             compose.onNodeWithTag("hub-settings-toggle").performClick()
             val currency=UsageCurrency("CNY",mapOf("CNY" to "7"));verifyHeader(currency)
-            val cached=widgetUsage(model.state.value.snapshot!!,System.currentTimeMillis())
-            compose.runOnIdle {
-                val prefs=model.display.value;val localized=HubWidget.localizedContext(context,prefs.language)
-                val widget=HubWidget.render(localized,prefs,WidgetCache.Ready(cached),8004).apply(localized,FrameLayout(localized))
-                val expected=localized.getString(if (cached.unpriced) R.string.widget_cost_partial_formatted else R.string.widget_cost_formatted,
-                    currency.headline(cached.cost,if(cached.unpriced) 1L else 0L))
-                assertTrue("Offline widget uses selected currency",widget.findViewById<TextView>(R.id.widget_cost).text.toString()==expected)
-            }
             stage("usage_verified")
             assertTrue(instrumentation.uiAutomation.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME))
             await { !model.state.value.live && compose.activityRule.scenario.state!=Lifecycle.State.RESUMED }

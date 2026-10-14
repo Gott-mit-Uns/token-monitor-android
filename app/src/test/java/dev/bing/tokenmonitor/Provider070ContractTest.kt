@@ -3,12 +3,9 @@ package dev.bing.tokenmonitor
 import kotlinx.serialization.json.*
 import org.junit.Assert.*
 import org.junit.Test
-import java.time.Instant
-import java.util.Locale
 
 /** Fixed v0.70 producer contract; never derives accounting or provider credentials. */
 class Provider070ContractTest {
-    private val now = Instant.parse("2026-10-14T08:00:00Z")
     private fun obj(value: String) = Json.parseToJsonElement(value).jsonObject
     private fun provider(amount: String = "12.34", currency: String = "USD") = obj("""{
       "provider":"minimax","status":"ok","updatedAt":"2026-10-14T07:59:00Z",
@@ -33,10 +30,6 @@ class Provider070ContractTest {
             assertTrue(rows.all { it.percent == null && it.motion == null && it.noReset && it.item == "credits" })
             assertEquals(listOf("12.34", "56.78"), parsed.limits.map { it.amount })
         }
-        val widget = quotaWidgetAccounts(parsed, LimitDisplayPreferences(showUsed = true), Locale.US, now)
-        assertEquals(2, widget.size)
-        assertEquals(listOf("Balance: ¥12.34", "Balance: $56.78"), widget.map { it.lines.single() })
-        assertTrue(widget.none { it.stale })
         assertEquals(900L, parsed.periods.getValue("today").tokens)
         assertEquals("0.125", parsed.periods.getValue("today").cost)
         assertEquals(7L, parsed.periods.getValue("today").unpriced)
@@ -52,8 +45,6 @@ class Provider070ContractTest {
         windows.forEach { assertNull(LimitProviderLayout.project(it).single().percent) }
         val missing = obj("""{"provider":"minimax","status":"ok","windows":[{"kind":"billing","metric":"credits","label":"Balance","currency":"CNY"}]}""")
         assertEquals("—", LimitProviderLayout.project(missing).single().value)
-        val widget = quotaWidgetAccounts(HubParser.parse(stats(listOf(missing)).toString()), LimitDisplayPreferences(), Locale.US, now)
-        assertEquals(listOf("Balance: Quota unavailable"), widget.single().lines)
         assertEquals("$0.00", LimitProviderLayout.project(provider("0")).single().value)
         val unknown = obj("""{"provider":"minimax","status":"future-status","windows":[{"kind":"future-window","metric":"future-metric"}]}""")
         assertTrue(LimitProviderLayout.project(unknown).isEmpty())

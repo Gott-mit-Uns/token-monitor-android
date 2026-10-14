@@ -6,8 +6,6 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.test.platform.app.InstrumentationRegistry
-import android.widget.FrameLayout
-import android.widget.TextView
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -29,7 +27,7 @@ class CurrencyScreenTest {
         override fun forget() {}
         override fun renameDevice(id: String,input: String) {}
     }
-    @Test fun sharedCurrencyUpdatesEveryUsageViewAndOfflineWidgetWithoutChangingSourceUnits() {
+    @Test fun sharedCurrencyUpdatesEveryUsageViewWithoutChangingSourceUnits() {
         val body="""{"periods":{"today":{"totalTokens":200,"costUsd":0.8,"unpricedTokens":40,"cacheReadTokens":50,"cacheWriteTokens":9,"outputTokens":10,"unclassifiedTokens":20,"capabilities":{"tokenComponents":false},
             "clients":{"codex":100},"clientCosts":{"codex":0.5},"clientUnpricedTokens":{"codex":20},"clientCacheReads":{"codex":50},"clientCacheWrites":{"codex":9},"clientOutputs":{"codex":10},"clientUnclassifiedTokens":{"codex":20},
             "models":{"vendor/public":60,"public":40},"modelCosts":{"vendor/public":0.3,"public":0.2,"cost-only":0.1},"modelUnpricedTokens":{"vendor/public":10,"public":10},
@@ -85,12 +83,6 @@ class CurrencyScreenTest {
             saveVisualEvidence(compose.activity,compose.onRoot(),"usage-history-${if(dark) "dark" else "light"}.png")
             compose.onNodeWithTag("trends-history-back").performClick()
             compose.onNodeWithTag("hub-view-selector").assertIsDisplayed()
-            val localized=HubWidget.localizedContext(compose.activity,prefs.value.language)
-            val cache=WidgetCache.Ready(widgetUsage(source,System.currentTimeMillis()))
-            compose.runOnIdle {
-                val widget=HubWidget.render(localized,prefs.value,cache,8004).apply(localized,FrameLayout(localized))
-                assertEquals("仅已知费用：¥5.60",widget.findViewById<TextView>(R.id.widget_cost).text.toString())
-            }
             assertEquals("0.8",source.periods.getValue("today").cost)
             assertEquals(40L,source.periods.getValue("today").unpriced)
             assertEquals("EUR",source.limits.single().currency)

@@ -1,9 +1,5 @@
 package dev.bing.tokenmonitor
 
-import android.content.res.Configuration
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.*
 import org.junit.Test
@@ -13,16 +9,11 @@ import java.io.File
 import java.time.Instant
 import java.util.UUID
 
-/** Synthetic Release cache/RemoteViews compatibility, independent of production credentials. */
+/** Synthetic Release cache/provider compatibility, independent of production credentials. */
 class Provider070CacheTest {
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val context = instrumentation.targetContext
-    private fun texts(view: View): List<String> = buildList {
-        if (view is TextView) add(view.text.toString())
-        if (view is ViewGroup) for (index in 0 until view.childCount) addAll(texts(view.getChildAt(index)))
-    }
-
-    @Test fun encryptedNewProviderCacheRetainsUnknownFieldsAndRendersDistinctCurrenciesAtLargeFont() {
+    @Test fun encryptedNewProviderCacheRetainsUnknownFieldsAndDistinctCurrencies() {
         val name = "provider070-cache-${UUID.randomUUID()}.bin"
         val store = HubStore(context, name)
         val now = Instant.parse("2026-10-14T08:00:00Z")
@@ -36,30 +27,18 @@ class Provider070CacheTest {
             val saved = HubStore(context, name).load()!!
             assertEquals(body, saved.snapshot)
             assertFalse(File(context.noBackupFilesDir, name).readBytes().toString(Charsets.ISO_8859_1).contains("publicSchema"))
-            val cached = HubQuotaWidget.load(HubStore(context, name)) as QuotaWidgetCache.Ready
-            assertEquals(900L, cached.snapshot.periods.getValue("today").tokens)
-            assertEquals(400L, cached.snapshot.periods.getValue("today").tools["catpaw"])
-            val preferences = DisplayPreferences(language = LanguageChoice.ENGLISH)
-            for (scale in listOf(1f, 2f)) {
-                val localized = HubWidget.localizedContext(context, LanguageChoice.ENGLISH).let { base ->
-                    base.createConfigurationContext(Configuration(base.resources.configuration).apply { fontScale = scale })
-                }
-                lateinit var rendered: View
-                instrumentation.runOnMainSync {
-                    rendered = HubQuotaWidget.render(localized, preferences, cached, 7070, now = now).apply(localized, null)
-                }
-                val visible = texts(rendered).joinToString("\n")
-                assertTrue(visible.contains("¥12.34"))
-                if (scale == 1f) assertTrue(visible.contains("$56.78"))
-                assertFalse(visible.contains("100%"))
-                assertFalse(visible.contains("$0.00"))
-            }
+            val cached = saved.parsedSnapshot!!
+            assertEquals(900L, cached.periods.getValue("today").tokens)
+            assertEquals(400L, cached.periods.getValue("today").tools["catpaw"])
+            val amounts = LimitDisplay.groups(cached.limits).take(2).map { LimitProviderLayout.project(LimitProviderLayout.record(it)).single() }
+            assertEquals(listOf("¥12.34", "$56.78"), amounts.map { it.value })
+            assertTrue(amounts.all { it.percent == null })
+            assertTrue(amounts.none { it.value == "$0.00" })
             val old = """{"periods":{"today":{"totalTokens":900}},"limits":{"providers":[{"provider":"minimax","status":"ok","windows":[{"kind":"session","remainingPercent":62},{"kind":"weekly","remainingPercent":84}]}]}}"""
             store.save(saved.copy(snapshot = old))
-            val oldCache = HubQuotaWidget.load(HubStore(context, name)) as QuotaWidgetCache.Ready
-            val oldRows = quotaWidgetAccounts(oldCache.snapshot, LimitDisplayPreferences(), java.util.Locale.US, now)
-            assertTrue(oldRows.single().lines[0].contains("62% left"))
-            assertTrue(oldRows.single().lines[1].contains("84% left"))
+            val oldCache = HubStore(context, name).load()!!.parsedSnapshot!!
+            val oldRows = LimitProviderLayout.project(LimitProviderLayout.record(oldCache.limits))
+            assertEquals(listOf("62% left", "84% left"), oldRows.map { it.value })
         } finally { store.clear() }
     }
 

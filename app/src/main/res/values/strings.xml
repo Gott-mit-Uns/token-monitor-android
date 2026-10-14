@@ -236,22 +236,6 @@
         <item quantity="one">year</item>
         <item quantity="other">years</item>
     </plurals>
-    <string name="widget_name">Hub usage</string>
-    <string name="widget_description">Saved Hub usage. Tap to open the app and update.</string>
-    <string name="widget_period">Hub today tokens · Saved</string>
-    <string name="widget_empty">Connect in the app to save a snapshot.</string>
-    <string name="widget_unreadable">Saved data could not be read. Open the app.</string>
-    <string name="widget_cost">Estimated cost: USD %1$s</string>
-    <string name="widget_cost_partial">Known cost only: USD %1$s</string>
-    <string name="widget_cost_unknown">Estimated cost: Unknown</string>
-    <string name="widget_times">Hub: %1$s\nRead: %2$s</string>
-    <string name="widget_open">Open and update</string>
-    <string name="widget_brand">Token Monitor</string>
-    <string name="widget_no_value">—</string>
-    <string name="widget_settings_note">Shows the last saved Hub usage and reading time. It stays offline in the background; tap the widget to open the app and update. Names and titles are omitted.</string>
-    <string name="widget_add">Add to home screen</string>
-    <string name="widget_add_manually">Long-press the home screen, open Widgets, and choose Token Monitor Android → Hub usage.</string>
-    <string name="widget_tokens_accessible">Tokens: %1$s</string>
     <string name="error_no_network">No network is available. Saved data is kept; reconnect to update.</string>
     <string name="about_heading">About this app</string>
     <string name="app_version">Version %1$s</string>
@@ -344,8 +328,6 @@
     <string name="known_cost_formatted">Known estimated cost: %1$s</string>
     <string name="estimated_cost_formatted">Estimated cost: %1$s</string>
     <string name="history_known_cost_formatted">Known estimated cost: %1$s (days with cost data: %2$s)</string>
-    <string name="widget_cost_formatted">Estimated cost: %1$s</string>
-    <string name="widget_cost_partial_formatted">Known cost only: %1$s</string>
     <string name="home_activity_day">View day details</string>
     <string name="home_activity_previous_day">Previous day</string>
     <string name="home_activity_next_day">Next day</string>

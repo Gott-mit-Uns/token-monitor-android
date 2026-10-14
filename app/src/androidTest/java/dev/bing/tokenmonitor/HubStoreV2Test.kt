@@ -38,7 +38,6 @@ class HubStoreV2Test {
         fun reject(bytes: ByteArray) {
             file.writeBytes(bytes)
             assertTrue("Invalid cache must not publish a record", runCatching { HubStore(context, name).load() }.isFailure)
-            assertTrue(HubWidget.load(HubStore(context, name)) is WidgetCache.Unreadable)
         }
     }
 
@@ -54,10 +53,7 @@ class HubStoreV2Test {
             assertEquals(listOf("visible-model"), loaded.parsedSnapshot!!.observedModelIds)
             assertEquals(5000000123L, loaded.parsedSnapshot!!.periods.getValue("today").tokens)
             assertEquals("0.000000000123", loaded.parsedSnapshot!!.periods.getValue("today").cost)
-            val widget = HubWidget.load(HubStore(f.context, f.name)) as WidgetCache.Ready
-            assertEquals(5000000123L, widget.usage.tokens)
-            assertEquals("0.000000000123", widget.usage.cost)
-            assertTrue("App and widget loads must remain read-only", legacy.contentEquals(f.file.readBytes()))
+            assertTrue("App loads must remain read-only", legacy.contentEquals(f.file.readBytes()))
             assertTrue(runCatching { HubStore(f.context, f.name, 16 * 1024, 1).save(loaded) }.isFailure)
             assertTrue("Failed upgrade must retain the exact v1 record", legacy.contentEquals(f.file.readBytes()))
             f.store.save(loaded)
@@ -79,7 +75,6 @@ class HubStoreV2Test {
             assertEquals(loaded.observedModelIds, loaded.parsedSnapshot!!.observedModelIds)
             assertEquals("", loaded.historySignature)
             assertTrue("Copy should use the fake-store fallback instead of copying hidden parsed state", loaded.copy().parsedSnapshot == null)
-            assertTrue(HubWidget.load(HubStore(f.context, f.name)) is WidgetCache.Ready)
             assertTrue(bytes.contentEquals(f.file.readBytes()))
             f.store.save(record.copy(observedModelIds = emptyList()))
             val empty = HubStore(f.context, f.name).load()!!

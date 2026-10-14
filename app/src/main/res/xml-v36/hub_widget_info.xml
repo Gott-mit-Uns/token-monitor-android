@@ -1,7 +1,0 @@
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="180dp" android:minHeight="280dp"
-    android:minResizeWidth="180dp" android:minResizeHeight="280dp"
-    android:targetCellWidth="2" android:targetCellHeight="3"
-    android:initialLayout="@layout/hub_widget" android:previewLayout="@layout/hub_widget"
-    android:resizeMode="horizontal|vertical" android:widgetCategory="home_screen|not_keyguard"
-    android:description="@string/widget_description" android:updatePeriodMillis="1800000" android:configure="dev.bing.tokenmonitor.WidgetConfigurationActivity" android:widgetFeatures="reconfigurable|configuration_optional" />

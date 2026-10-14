@@ -159,7 +159,7 @@ try:
         print("Actual home chart values, source preview/history and retained encrypted cache: PASS", flush=True)
     if args.case == "usage":
         wait(lambda: has_stage("usage_verified"), "Actual Hub currency/control/cache proof unavailable", 45)
-        print("Actual currency/rate controls, real headline and offline widget, retained USD source: PASS", flush=True)
+        print("Actual currency/rate controls, real headline, retained USD source: PASS", flush=True)
     if args.case == "limits":
         wait(lambda: has_stage("limits_verified"), "Actual quota/source/privacy proof unavailable", 60)
         wait(lambda: has_stage("provider_copy_verified"), "Reported provider/account proof unavailable", 10)
@@ -329,7 +329,7 @@ try:
         report = (f"Android API{sdk}; final application APK SHA256: {digest}\n"
                   "Actual MainActivity/default network/client and real NAS Hub: PASS\n"
                   "Actual USD/CNY controls and manual rate update real usage headline: PASS\n"
-                  "Offline widget uses same currency; encrypted Hub snapshot/history retains USD: PASS\n"
+                  "Encrypted Hub snapshot/history retains USD: PASS\n"
                   "Local currency/rate survives Home/Launcher; 6s background no reads: PASS\n"
                   "Exactly 6 GETs: health/stats/history/modelAliases and two streams, both ended; rate editing adds no read.\n"
                   "No private value, name, response, screenshot or UI tree archived.\n\n"
@@ -401,7 +401,7 @@ try:
               "One continuous stream across at least two upstream heartbeats; no reconnect: PASS\n"
               "Real stats/device periods/history/subscriptions/modelAliases/pricing: PASS\n"
               "Background: upstream processes closed within 3 seconds; no new reads: PASS\n"
-              "Foreground return: exactly one new stream; cache/widget projection matches: PASS\n"
+              "Foreground return: exactly one new stream; cache restoration matches: PASS\n"
               "Final: both streams ended, zero active read processes, test cache cleared: PASS\n"
               + (f"Home history read offsets (seconds, aggregate only): {final.get('readTimes',{}).get('history',[])}\n"
                  if args.case == "home" else "")

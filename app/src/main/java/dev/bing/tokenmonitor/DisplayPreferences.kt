@@ -145,7 +145,7 @@ sealed interface DisplayChange {
 
 /** Only presentation choices, never connection data or credentials. Excluded from backups. */
 class DisplayPreferenceStore(context: Context, name: String = "display-preferences.bin") {
-    // AtomicFile has no cross-instance lock; widget reads and app writes share this process.
+    // AtomicFile has no cross-instance lock; preference store instances share this process.
     companion object { private val diskLock = Any(); internal const val maxBytes=3*1024*1024 }
     private val file = AtomicFile(File(context.noBackupFilesDir, name))
     // Independent optional choice: keep the V16 record readable by previous releases.

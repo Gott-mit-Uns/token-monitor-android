@@ -38,32 +38,15 @@ import java.text.NumberFormat
 class MainActivity : ComponentActivity() {
     private val model: HubViewModel by viewModels()
     private val localAllowed = mutableStateOf(true)
-    private val quotaOpenRequest = mutableLongStateOf(0L)
-    private val widgetOpenRequest = mutableStateOf(WidgetOpenRequest())
     private val localPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { localAllowed.value = HubLocalPermission.granted(this) }
     private val networks by lazy { HubNetworkObserver(this, model::updateNetworkScope) }
     override fun onStart() { super.onStart(); localAllowed.value = HubLocalPermission.granted(this); networks.start(); model.setForeground(true) }
     override fun onStop() { networks.stop(); model.setForeground(false); super.onStop() }
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        if (consumeWidgetIntent(intent)) model.refreshSaved()
-    }
-    private fun consumeWidgetIntent(source: Intent): Boolean {
-        val quota = source.getBooleanExtra(HubQuotaWidget.OPEN_QUOTA_AND_UPDATE, false)
-        if (!quota && !source.getBooleanExtra(HubWidget.OPEN_AND_UPDATE, false)) return false
-        val mode = if (quota) "quota" else source.getStringExtra(HubWidget.MODE)?.takeIf { it in WidgetConfiguration.modes } ?: "summary"
-        val period = source.getStringExtra(HubWidget.PERIOD)?.takeIf { it in WidgetConfiguration.periods } ?: "today"
-        widgetOpenRequest.value = WidgetOpenRequest(widgetOpenRequest.value.revision + 1, mode, period, source.getIntExtra(HubWidget.INSTANCE, 0))
-        if (quota) quotaOpenRequest.longValue++
-        source.removeExtra(HubQuotaWidget.OPEN_QUOTA_AND_UPDATE); source.removeExtra(HubWidget.OPEN_AND_UPDATE)
-        return true
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        consumeWidgetIntent(intent)
         enableEdgeToEdge()
         setContent {
-            HubApp(model, localAllowed.value, quotaOpenRequest.longValue, widgetOpenRequest.value,
+            HubApp(model, localAllowed.value,
                 requestLocal = { localPermission.launch(HubLocalPermission.NAME) },
                 openLocalSettings = { startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)) })
@@ -72,18 +55,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun HubApp(model: HubViewModel, localAllowed: Boolean, quotaOpenRequest: Long, widgetOpenRequest: WidgetOpenRequest, requestLocal: () -> Unit, openLocalSettings: () -> Unit) {
+private fun HubApp(model: HubViewModel, localAllowed: Boolean, requestLocal: () -> Unit, openLocalSettings: () -> Unit) {
     val state by model.state.collectAsStateWithLifecycle()
     val preferences by model.display.collectAsStateWithLifecycle()
     val startup by model.startup.collectAsStateWithLifecycle()
     key(model.startupSessionId) {
-        HubScreen(state,model,localAllowed,requestLocal,preferences,model::changeDisplay,openLocalSettings,startup,quotaOpenRequest,widgetOpenRequest)
+        HubScreen(state,model,localAllowed,requestLocal,preferences,model::changeDisplay,openLocalSettings,startup)
     }
 
 }
 
 @Composable
-fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true, requestLocal: (() -> Unit)? = null, preferences: DisplayPreferences = DisplayPreferences(), updateDisplay: ((DisplayChange) -> Unit)? = null, openLocalSettings: (() -> Unit)? = null, startup: HubStartup? = null, quotaOpenRequest: Long = 0L, widgetOpenRequest: WidgetOpenRequest = WidgetOpenRequest()) {
+fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true, requestLocal: (() -> Unit)? = null, preferences: DisplayPreferences = DisplayPreferences(), updateDisplay: ((DisplayChange) -> Unit)? = null, openLocalSettings: (() -> Unit)? = null, startup: HubStartup? = null) {
     val preview=remember {AppearancePreviewState()}
     val language=LocalDesktopBaseLanguage.current ?: preferences.language
     val inheritedDark=LocalDesktopBaseDark.current
@@ -115,7 +98,7 @@ fun HubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean = true
         LocalDesktopToolIcons provides preferences.appearance.showToolIcons, LocalLimitDisplay provides preferences.limits,LocalMainDisplay provides preferences.main) {
         if (startup == HubStartup.LOADING) HubStartupIcon()
         else DesktopHubScreen(state, model, localAllowed, requestLocal, preferences, updateDisplay, openLocalSettings,
-            quotaOpenRequest = quotaOpenRequest, widgetOpenRequest = widgetOpenRequest, initialPage = if(widgetOpenRequest.revision>0) widgetOpenRequest.page else if(quotaOpenRequest>0L) HubPage.LIMITS else startup?.let { if (it == HubStartup.SETTINGS) HubPage.SETTINGS else HubPage.HOME })
+            initialPage = startup?.let { if (it == HubStartup.SETTINGS) HubPage.SETTINGS else HubPage.HOME })
     }
     }
     }

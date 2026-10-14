@@ -64,7 +64,7 @@ private fun clock(value: String?) = value?.let { runCatching { DateTimeFormatter
 internal val LocalHubCalendarClock=staticCompositionLocalOf<java.time.Clock> {java.time.Clock.systemDefaultZone()}
 
 @Composable
-internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null, quotaOpenRequest: Long = 0L, widgetOpenRequest: WidgetOpenRequest = WidgetOpenRequest()) {
+internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null) {
     val renderObserver = LocalHeadlineRenderObserver.current
     if (renderObserver != null) SideEffect { renderObserver("hub") }
     val strings = LocalResources.current
@@ -83,7 +83,6 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val landing=HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,"home")}
     val visiblePages=MainDisplay.visible(preferences.main,directPage?.let {setOf(it)} ?: emptySet())
     fun openDirect(target:HubPage) {trendsHistoryOpen=false;directPage=target.name.lowercase();page=target}
-    LaunchedEffect(quotaOpenRequest) {if(quotaOpenRequest>0L) openDirect(HubPage.LIMITS)}
     LaunchedEffect(page,directPage,preferences.main.viewOrder,preferences.main.hiddenViews) {
         if(!settingsPage && page.name.lowercase() !in MainDisplay.visible(preferences.main,directPage?.let {setOf(it)} ?: emptySet())) {directPage=null;page=HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,page.name.lowercase())}}
     }
@@ -121,14 +120,6 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     LaunchedEffect(preferences.monthMode) {if(FixedPeriods.slot(range)=="month" && range!=preferences.monthMode) {
         recordBreakdownPeriod(false);range=preferences.monthMode
     }}
-    LaunchedEffect(widgetOpenRequest.revision) {
-        if (widgetOpenRequest.revision > 0) {
-            openDirect(widgetOpenRequest.page)
-            range = widgetOpenRequest.period.takeIf { it in WidgetConfiguration.periods } ?: "today"
-            if (range == "month") monthMode = "month"
-            recordBreakdownPeriod(false)
-        }
-    }
     var periodMenu by remember { mutableStateOf(false) }
     val calendarClock=LocalHubCalendarClock.current
     var calendarNow by remember(calendarClock) { mutableStateOf(calendarClock.instant()) }

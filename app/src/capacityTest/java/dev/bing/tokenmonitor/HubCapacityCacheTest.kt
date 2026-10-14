@@ -65,7 +65,7 @@ class HubCapacityCacheTest {
     @Test fun completeEightDeviceStatsAnd370DayHistorySurviveIndependentV2CacheBoundary() = runScenario(
         Shape("combined-cache-8-devices", 8, 180, 20, 370, 13, projected = false, emptySignature = true))
 
-    @Test fun projectedSixteenDeviceTopLevelDetailsAndOrderedMetadataSurviveColdWidgetRestore() = runScenario(
+    @Test fun projectedSixteenDeviceTopLevelDetailsAndOrderedMetadataSurviveColdRestore() = runScenario(
         Shape("transport-16-devices", 16, 300, 20, 31, 2, projected = true, emptySignature = false))
 
     private fun runScenario(shape: Shape) {
@@ -150,7 +150,7 @@ class HubCapacityCacheTest {
             assertTrue(cipherBytes in 30L..10L * MIB)
             cacheFile.inputStream().use { assertEquals(2, it.read()) }
             val beforeReadHash = hash(cacheFile)
-            phase = "cold-widget-store-read"
+            phase = "cold-store-read"
             var restored: SavedHub? = null
             var readerCalls = 0
             var writerCalls = 0
@@ -161,7 +161,7 @@ class HubCapacityCacheTest {
                 }
                 override fun save(record: SavedHub) {
                     writerCalls++
-                    error("Widget cache path attempted a write")
+                    error("Cold cache read attempted a write")
                 }
             }
             val coldStarted = SystemClock.elapsedRealtimeNanos()
@@ -176,17 +176,7 @@ class HubCapacityCacheTest {
             }
             timings.put("coldStoreReadMs", elapsedMs(coldStarted))
             assertTrue(restored === record)
-            var widgetReadCalls = 0
-            val widgetReader = object : HubStore(context, name) {
-                override fun load(): SavedHub { widgetReadCalls++; return record }
-                override fun save(record: SavedHub) { writerCalls++; error("Widget cache path attempted a write") }
-            }
-            val widgetStarted = SystemClock.elapsedRealtimeNanos()
-            val widget = HubWidget.load(widgetReader)
-            timings.put("widgetParsedSnapshotProjectionMs", elapsedMs(widgetStarted))
-            assertTrue("Cold widget must use the already authenticated complete record", widget is WidgetCache.Ready)
             assertEquals(1, readerCalls)
-            assertEquals(1, widgetReadCalls)
             assertEquals(0, writerCalls)
             assertTrue(record.credential == secret)
             assertEquals(CACHED_ADDRESS, record.address)
@@ -202,14 +192,8 @@ class HubCapacityCacheTest {
             val names = ModelNamesParser.parse(record.modelNames ?: error("Alias settings were lost"))
             assertEquals(facts.aliasProjection, names.project(snapshot.periods.getValue("today").models, snapshot.observedModelIds))
             assertHistory(HistoryParser.parse(record.history ?: error("History was lost")), expected)
-            val usage = (widget as WidgetCache.Ready).usage
-            assertEquals(expected.business("exactTodayTokens").toLong(), usage.tokens)
-            money(expected.business("exactTodayCost"), usage.cost)
-            assertTrue(usage.unpriced)
-            assertEquals(snapshot.updated, usage.updated)
-            assertEquals(SAVED_AT, usage.savedAt)
             hashUnchanged = beforeReadHash == hash(cacheFile)
-            assertTrue("Widget and cold restore must leave ciphertext unchanged", hashUnchanged)
+            assertTrue("Cold restore must leave ciphertext unchanged", hashUnchanged)
             timings.put("completeColdBusinessChecksMs", elapsedMs(checksStarted))
             passed = true
             phase = "complete"
@@ -234,7 +218,7 @@ class HubCapacityCacheTest {
                     .put("v2CipherBytes", cipherBytes).put("retainedStatsUtf8Bytes", retainedStatsBytes)
                     .put("sourcePayloads", payloads).put("observedModelIds", observedIds)
                     .put("historySignatureKind", if (shape.emptySignature) "explicit-empty" else "snapshot-revision")
-                    .put("ciphertextUnchangedByColdWidgetRead", hashUnchanged)
+                    .put("ciphertextUnchangedByColdRead", hashUnchanged)
                     .put("measurementScope", "Runtime used heap samples and Android Debug memory; no frame or physical-phone measurement")
                 reportFile.writeText(report.toString(2))
             } finally {

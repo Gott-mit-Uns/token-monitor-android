@@ -60,7 +60,6 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             val result = withContext(Dispatchers.IO) { displayMutex.withLock {
                 if (displayMutable.value == preferences) runCatching {
                     displayStore.save(preferences)
-                    runCatching { HubWidget.updateAll(getApplication()) }
                 } else Result.success(Unit)
             } }
             if (result.isFailure) mutable.value = mutable.value.copy(error = R.string.error_preferences_save)
@@ -297,7 +296,6 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             else if (stillValid?.invoke() == false) true // Invalidated work is a no-op, not a storage failure.
             else runCatching {
                 store.save(record)
-                runCatching { HubWidget.updateAll(getApplication()) }
             }.isSuccess
             } } finally { if (!acquired) queued.end(success = false) }
         }
@@ -783,7 +781,6 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) { storageMutex.withLock { runCatching {
                 store.clear()
-                runCatching { HubWidget.updateAll(getApplication()) }
             } } }
             if (result.isSuccess) {
                 currentHub = null

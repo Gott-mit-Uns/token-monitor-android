@@ -131,8 +131,6 @@ class LiveHubTest {
             Thread.sleep(6000)
             assertFalse(model.state.value.live)
             assertTrue("Private snapshot should restore without logging it", store.load()?.snapshot != null)
-            val widget = (HubWidget.load(store) as? WidgetCache.Ready)?.usage
-            assertTrue("Widget should read the same saved totals without logging them", widget != null && widget.tokens == HubParser.parse(store.load()!!.snapshot).periods["today"]?.tokens)
             app.startActivity(Intent(Intent.ACTION_MAIN).setClass(app, MainActivity::class.java)
                 .addCategory(Intent.CATEGORY_LAUNCHER).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED))
             await { model.state.value.live && focused() }

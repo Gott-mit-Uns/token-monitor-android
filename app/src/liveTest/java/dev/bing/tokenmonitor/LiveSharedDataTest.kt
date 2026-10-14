@@ -22,7 +22,7 @@ class LiveSharedDataTest {
     @Test fun realSharedPagesRefreshTheirOwnDataRetainEncryptedSourcesAndStopInBackground() {
         val instrumentation=InstrumentationRegistry.getInstrumentation();val context=instrumentation.targetContext
         val port=InstrumentationRegistry.getArguments().getString("liveHubPort")!!.toInt();val store=HubStore(context)
-        val strings=HubWidget.localizedContext(context,LanguageChoice.CHINESE).resources
+        val strings=context.createConfigurationContext(android.content.res.Configuration(context.resources.configuration).apply {setLocale(java.util.Locale.SIMPLIFIED_CHINESE)}).resources
         assertNull(store.load());lateinit var model:HubViewModel
         compose.activityRule.scenario.onActivity {model=ViewModelProvider(it)[HubViewModel::class.java]}
         fun await(condition:()->Boolean) {
