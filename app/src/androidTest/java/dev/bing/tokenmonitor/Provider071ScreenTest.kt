@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
@@ -39,7 +40,7 @@ class Provider071ScreenTest {
             TokenTheme(dark.value,LanguageChoice.ENGLISH) {
                 CompositionLocalProvider(LocalDesktopAnimationClock provides clock) {
                     scroll=rememberScrollState()
-                    Column(Modifier.fillMaxSize().verticalScroll(scroll).testTag("provider071-scroll")) {
+                    Column(Modifier.fillMaxWidth().height(400.dp).verticalScroll(scroll).testTag("provider071-scroll")) {
                         LimitDisplay.groups(limits.value).forEachIndexed {i,windows ->
                             key(windows.first().presentation.identity.key) {DesktopAccount(windows,peers=LimitDisplay.groups(limits.value).map {it.first()},accountIndex=i,now=Instant.parse("2026-10-15T00:00:00Z"))}
                         }
