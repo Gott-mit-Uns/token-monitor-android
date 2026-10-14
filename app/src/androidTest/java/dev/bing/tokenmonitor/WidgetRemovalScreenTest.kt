@@ -79,7 +79,9 @@ class WidgetRemovalScreenTest {
             compose.onNodeWithTag("hub-settings-toggle").performClick()
             openSettingsSection(compose, "general")
             compose.onNodeWithTag("settings-details-general").assertExists()
-            compose.onNodeWithTag("settings-language").assertExists()
+            // Expanding the section preserves its header anchor; locate the lazy body before asserting its control.
+            compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("settings-language"))
+            compose.onNodeWithTag("settings-language").assertIsDisplayed()
             listOf("小组件", "widget", "Hub 用量", "Hub usage", "缓存额度", "Cached quotas").forEach { text ->
                 compose.onAllNodes(hasText(text, substring = true, ignoreCase = true), useUnmergedTree = true)
                     .assertCountEquals(0)
