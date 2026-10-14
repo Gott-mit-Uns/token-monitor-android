@@ -18,7 +18,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-internal data class WidgetQuotaAccount(val title: String, val lines: List<String>, val stale: Boolean, val omittedPeriods: Int, val compactTitle: String, val compactLines: List<String>)
+internal data class WidgetQuotaAccount(val title: String, val lines: List<String>, val stale: Boolean, val omittedPeriods: Int, val compactTitle: String, val compactLines: List<String>, val id: String = "")
 internal sealed interface QuotaWidgetCache {
     data object Empty : QuotaWidgetCache
     data object Unreadable : QuotaWidgetCache
@@ -64,15 +64,23 @@ internal fun quotaWidgetAccounts(snapshot: Snapshot, preferences: LimitDisplayPr
                 val value = row.value.takeIf { it.isNotBlank() && it != "—" } ?: if(locale.language == "zh") "缺失" else "Unavailable"
                 LimitDisplay.text("$label: $value", true)
             }.ifEmpty { listOf(if(locale.language == "zh") "额度缺失" else "Quota unavailable") }
-            WidgetQuotaAccount(title, lines, staleSource, (rows.size - 2).coerceAtLeast(0), compactTitle, compactLines)
+            WidgetQuotaAccount(title, lines, staleSource, (rows.size - 2).coerceAtLeast(0), compactTitle, compactLines, widgetQuotaAccountId(windows))
         }
     }.take(preferences.homeAccountCount)
+}
+
+internal fun selectedQuotaWidgetAccounts(snapshot: Snapshot, preferences: LimitDisplayPreferences, locale: Locale, now: Instant,
+    configuration: WidgetConfiguration): List<WidgetQuotaAccount> {
+    val groups = widgetQuotaGroups(snapshot, configuration, now)
+    val byId = quotaWidgetAccounts(snapshot,
+        preferences.copy(showUsed = false, hiddenHomeProviders = emptySet(), hiddenItems = emptyMap(), homeAccountCount = Int.MAX_VALUE), locale, now).associateBy { it.id }
+    return groups.mapNotNull { byId[widgetQuotaAccountId(it)] }.take(2)
 }
 
 /** Cache-only widget. No workers, timers, network client or foreground/background service. */
 object HubQuotaWidget {
     const val OPEN_QUOTA_AND_UPDATE = "dev.bing.tokenmonitor.widget.OPEN_QUOTA_AND_UPDATE"
-    internal const val STALE_AFTER_MS = 15 * 60 * 1000L
+    internal const val STALE_AFTER_MS = 20 * 60 * 1000L
     internal fun load(store: HubStore): QuotaWidgetCache = runCatching {
         store.load()?.let { QuotaWidgetCache.Ready(it.parsedSnapshot ?: HubParser.parse(it.snapshot, it.observedModelIds), it.savedAt) } ?: QuotaWidgetCache.Empty
     }.getOrDefault(QuotaWidgetCache.Unreadable)
@@ -86,10 +94,11 @@ object HubQuotaWidget {
         val cache = load(HubStore(context))
         val prefs = runCatching { DisplayPreferenceStore(context).load() }.getOrDefault(DisplayPreferences())
         val localized = HubWidget.localizedContext(context, prefs.language)
-        ids.forEach { id -> manager.updateAppWidget(id, render(localized, prefs, cache, id, manager.getAppWidgetOptions(id))) }
+        val configurations = WidgetConfigurationStore(context)
+        ids.forEach { id -> manager.updateAppWidget(id, render(localized, prefs, cache, id, manager.getAppWidgetOptions(id), configuration = configurations.load(id, true))) }
     }
     internal fun capacity(heightDp: Int, fontScale: Float): Int = ((heightDp - 112 * fontScale.coerceAtLeast(1f)) / (86 * fontScale.coerceAtLeast(1f))).toInt().coerceIn(1, 3)
-    internal fun render(context: Context, preferences: DisplayPreferences, cache: QuotaWidgetCache, id: Int, options: Bundle = Bundle(), now: Instant = Instant.now()): RemoteViews {
+    internal fun render(context: Context, preferences: DisplayPreferences, cache: QuotaWidgetCache, id: Int, options: Bundle = Bundle(), now: Instant = Instant.now(), configuration: WidgetConfiguration = WidgetConfiguration(mode = "quota")): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.hub_quota_widget)
         val dark = when (preferences.theme) { ThemeChoice.DARK -> true; ThemeChoice.LIGHT -> false; ThemeChoice.SYSTEM -> context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES }
         views.setInt(R.id.quota_widget_root, "setBackgroundResource", if (dark) R.drawable.widget_dark_background else R.drawable.widget_light_background)
@@ -100,6 +109,8 @@ object HubQuotaWidget {
         views.setTextColor(R.id.quota_widget_open, context.getColor(if (dark) R.color.widget_dark_accent else R.color.widget_light_accent))
         views.setTextViewText(R.id.quota_widget_title, context.getString(R.string.quota_widget_title))
         views.setTextViewText(R.id.quota_widget_open, context.getString(R.string.quota_widget_open))
+        views.setTextColor(R.id.quota_widget_configure, context.getColor(if (dark) R.color.widget_dark_accent else R.color.widget_light_accent))
+        views.setOnClickPendingIntent(R.id.quota_widget_configure, HubWidget.configurationPending(context, id))
         val rowIds = listOf(R.id.quota_widget_account_1, R.id.quota_widget_account_2, R.id.quota_widget_account_3)
         rowIds.forEach { views.setTextColor(it, text); views.setViewVisibility(it, View.GONE) }
         var message = context.getString(if (cache == QuotaWidgetCache.Unreadable) R.string.widget_unreadable else R.string.quota_widget_empty)
@@ -111,7 +122,7 @@ object HubQuotaWidget {
             // The timestamp remains truthful even while a launcher retains a RemoteViews snapshot.
             message = context.getString(if (stale) R.string.quota_widget_stale_age else R.string.quota_widget_cache_age, age / 60000, saved)
             views.setContentDescription(R.id.quota_widget_time, message)
-            val accounts = quotaWidgetAccounts(cache.snapshot, preferences.limits, context.resources.configuration.locales[0], now)
+            val accounts = selectedQuotaWidgetAccounts(cache.snapshot, preferences.limits, context.resources.configuration.locales[0], now, configuration)
             val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 360)
             val compact = context.resources.configuration.fontScale >= 1.5f
             val shown = accounts.take(capacity(height, context.resources.configuration.fontScale))
@@ -131,16 +142,14 @@ object HubQuotaWidget {
                 views.setTextViewText(rowIds[index], if(compact) (listOf(account.compactTitle) + account.compactLines).joinToString("\n") else fullText)
                 views.setContentDescription(rowIds[index], fullText)
             }
-            if (accounts.isEmpty()) views.setTextViewText(R.id.quota_widget_more, context.getString(R.string.quota_widget_missing))
+            if (accounts.isEmpty()) views.setTextViewText(R.id.quota_widget_more, context.getString(if(configuration.quotaAutomatic) R.string.quota_widget_missing else R.string.widget_align_account_missing))
             else if (accounts.size > shown.size) views.setTextViewText(R.id.quota_widget_more,
                 context.getString(if(compact) R.string.quota_widget_compact_more else R.string.quota_widget_more_accounts, accounts.size - shown.size))
             else if (compact && shown.any { it.omittedPeriods > 0 }) views.setTextViewText(R.id.quota_widget_more,
                 context.getString(R.string.quota_widget_more_periods, shown.sumOf { it.omittedPeriods }))
         }
         views.setTextViewText(R.id.quota_widget_time, message)
-        val intent = Intent(context, MainActivity::class.java).putExtra(OPEN_QUOTA_AND_UPDATE, true)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        val open = PendingIntent.getActivity(context, id, intent.setAction(OPEN_QUOTA_AND_UPDATE), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val open = HubWidget.openPending(context, id, configuration.copy(mode = "quota"))
         views.setOnClickPendingIntent(R.id.quota_widget_root, open)
         views.setOnClickPendingIntent(R.id.quota_widget_open, open)
         rowIds.forEach { views.setOnClickPendingIntent(it, open) }
@@ -149,8 +158,10 @@ object HubQuotaWidget {
 }
 
 class HubQuotaWidgetProvider : AppWidgetProvider() {
-    override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) = updateAsync(context, manager, ids)
-    override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: Bundle) = updateAsync(context, manager, intArrayOf(id))
+    override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray): Unit { updateAsync(context, manager, ids) }
+    override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: Bundle): Unit { updateAsync(context, manager, intArrayOf(id)) }
+    override fun onDeleted(context: Context, ids: IntArray) { ids.forEach { WidgetConfigurationStore(context).delete(it) } }
+    override fun onRestored(context: Context, oldIds: IntArray, newIds: IntArray) { WidgetConfigurationStore(context).restore(oldIds, newIds, true); updateAsync(context, AppWidgetManager.getInstance(context), newIds) }
     private fun updateAsync(context: Context, manager: AppWidgetManager, ids: IntArray) {
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {

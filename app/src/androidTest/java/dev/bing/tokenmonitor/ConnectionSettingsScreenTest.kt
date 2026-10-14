@@ -42,7 +42,7 @@ class ConnectionSettingsScreenTest {
     private fun click(tag:String) {compose.onNodeWithTag(tag).performScrollTo().performClick()}
     @Test fun firstConnectionThenCancelRetainAndReplaceHaveSeparateActions() {
         val state=mutableStateOf(HubState());val draft=HubConnectionDraft();val actions=Actions()
-        actions.accepted={state.value=HubState(snapshot=snapshot,live=true,connectionAttempt=actions.calls.toLong(),connectionRevision=actions.calls.toLong())}
+        actions.accepted={state.value=HubState(snapshot=snapshot,live=true,connectionAttempt=actions.calls.toLong(),connectionRevision=actions.calls.toLong(),lastSuccessfulEndpoint=actions.urls.firstOrNull(),connectedEndpoint=actions.urls.firstOrNull())}
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH) {
             Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(20.dp).imePadding().verticalScroll(rememberScrollState())) {HubConnectionSettings(state.value,actions,true,null,null,{},draft)}
         }}}
@@ -55,7 +55,9 @@ class ConnectionSettingsScreenTest {
         click("connection-save")
         compose.waitUntil {actions.calls==1 && !draft.editing && draft.secret.isEmpty()}
         compose.onNodeWithTag("connection-status").assertTextEquals("Connected")
-        compose.onNodeWithTag("connection-endpoint").assertTextEquals("public.example.invalid")
+        compose.onNodeWithTag("sync-endpoint-address-https").assertTextEquals("https://public.example.invalid")
+        compose.onNodeWithTag("sync-endpoint-https").assertIsSelected()
+        compose.onNodeWithTag("sync-endpoint-status-https").assertTextEquals("Current connection")
         compose.onNodeWithTag("connection-secret").assertDoesNotExist();save("connected")
         click("connection-edit");compose.onNodeWithTag("connection-address").assertTextEquals("https://public.example.invalid")
         compose.onNodeWithTag("connection-secret").assertDoesNotExist()
@@ -76,7 +78,7 @@ class ConnectionSettingsScreenTest {
     @Test fun actualSettingsKeepsFailedDraftAndShowsSummaryAfterSuccessfulConnection() {
         val state=mutableStateOf(HubState());val actions=Actions()
         var success=false
-        actions.accepted={state.value=if(success) HubState(snapshot=snapshot,live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"),connectionAttempt=actions.calls.toLong(),connectionRevision=actions.calls.toLong()) else HubState(error=R.string.error_read,connectionAttempt=actions.calls.toLong())}
+        actions.accepted={state.value=if(success) HubState(snapshot=snapshot,live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"),connectionAttempt=actions.calls.toLong(),connectionRevision=actions.calls.toLong(),lastSuccessfulEndpoint=actions.urls.firstOrNull(),connectedEndpoint=actions.urls.firstOrNull()) else HubState(error=R.string.error_read,connectionAttempt=actions.calls.toLong())}
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH) {HubScreen(state.value,actions,preferences=DisplayPreferences(language=LanguageChoice.ENGLISH))}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick()
         fun field(tag:String,value:String) {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(tag));compose.onNodeWithTag(tag).performTextReplacement(value)}
@@ -92,6 +94,8 @@ class ConnectionSettingsScreenTest {
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"sync")
         compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("connection-status"))
         compose.onNodeWithTag("connection-status").assertTextEquals("Connected")
+        compose.onNodeWithTag("sync-endpoint-https").assertIsSelected()
+        compose.onNodeWithTag("sync-endpoint-address-http").assertTextEquals("Not configured")
         compose.onNodeWithTag("connection-secret").assertDoesNotExist();assertEquals(2,actions.calls);assertTrue(actions.replacement=="public-fixture-value");save("host-connected")
         compose.onNodeWithTag("connection-edit").performClick()
         compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("connection-credential-mode-replace"))
@@ -107,9 +111,15 @@ class ConnectionSettingsScreenTest {
             Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(20.dp).verticalScroll(rememberScrollState())) {HubConnectionSettings(state.value,actions,false,{permission++},{system++},{forgot++},draft)}
         }}}
         compose.onNodeWithTag("connection-status").assertTextEquals("连接中…");compose.onNodeWithTag("connection-edit").assertIsNotEnabled()
-        compose.onNodeWithTag("connection-switch").assertIsNotEnabled();save("pending")
+        compose.onNodeWithTag("connection-switch").assertDoesNotExist()
+        compose.onNodeWithTag("sync-endpoint-address-https").assertTextEquals("https://public.example.invalid")
+        compose.onNodeWithTag("sync-endpoint-address-http").assertTextEquals("http://192.168.1.1:17321")
+        save("pending")
         compose.runOnIdle {state.value=state.value.copy(loading=false,error=R.string.error_read)}
-        compose.onNodeWithTag("connection-status").assertTextEquals("无法连接到 Hub");save("failed")
+        compose.onNodeWithTag("connection-status").assertTextEquals("无法连接到 Hub")
+        compose.onNodeWithTag("sync-endpoint-address-https").assertTextEquals("https://public.example.invalid")
+        compose.onNodeWithTag("sync-endpoint-address-http").assertTextEquals("http://192.168.1.1:17321")
+        save("failed")
         click("connection-permission");click("connection-system-settings");assertEquals(1,permission);assertEquals(1,system);assertEquals(0,actions.calls)
         click("connection-edit");assertTrue(draft.editing)
         compose.onNodeWithTag("connection-save").performScrollTo().assertIsNotEnabled()

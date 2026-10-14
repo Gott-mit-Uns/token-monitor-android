@@ -1,0 +1,19 @@
+<resources>
+    <string name="sync_endpoint_current">Current connection</string>
+    <string name="sync_endpoint_previous">Last connection</string>
+    <string name="sync_endpoint_missing">Not configured</string>
+    <string name="sync_devices_heading">Devices and Hub</string>
+    <string name="sync_viewer_role">This phone · read-only viewer</string>
+    <string name="sync_viewer_note">Views Hub data; this phone is not a collection device.</string>
+    <string name="sync_hub_connected">This phone is connected to the Hub.</string>
+    <string name="sync_hub_cached">Hub connection is unconfirmed; showing the saved snapshot.</string>
+    <string name="sync_collectors_heading">Collection devices</string>
+    <string name="sync_devices_empty">No collection devices reported.</string>
+    <string name="sync_version_missing">Collection version not provided</string>
+    <string name="sync_time_missing">Sync time not provided</string>
+    <string name="sync_device_online">Online</string>
+    <string name="sync_device_offline">Offline</string>
+    <string name="sync_device_online_cached">Online at last report</string>
+    <string name="sync_device_offline_cached">Offline at last report</string>
+    <string name="sync_device_unknown">Online status unknown</string>
+</resources>

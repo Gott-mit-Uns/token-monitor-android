@@ -1,0 +1,19 @@
+<resources>
+    <string name="sync_endpoint_current">当前使用</string>
+    <string name="sync_endpoint_previous">上次连接</string>
+    <string name="sync_endpoint_missing">未配置</string>
+    <string name="sync_devices_heading">设备与 Hub</string>
+    <string name="sync_viewer_role">本机 · 只读查看手机</string>
+    <string name="sync_viewer_note">查看 Hub 数据；此手机不是采集设备。</string>
+    <string name="sync_hub_connected">此手机已连接 Hub。</string>
+    <string name="sync_hub_cached">Hub 连接尚未确认，显示已保存的快照。</string>
+    <string name="sync_collectors_heading">采集设备</string>
+    <string name="sync_devices_empty">尚未提供采集设备。</string>
+    <string name="sync_version_missing">采集版本未提供</string>
+    <string name="sync_time_missing">同步时间未提供</string>
+    <string name="sync_device_online">在线</string>
+    <string name="sync_device_offline">离线</string>
+    <string name="sync_device_online_cached">在线（上次报告）</string>
+    <string name="sync_device_offline_cached">离线（上次报告）</string>
+    <string name="sync_device_unknown">在线状态未知</string>
+</resources>

@@ -27,7 +27,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 data class HubState(val snapshot: Snapshot? = null, val loading: Boolean = false, val error: Int? = null, val savedAt: Long? = null, val history: HubHistory? = null, val subscriptions: List<Subscription>? = null, val live: Boolean = false, val deviceAliases: Map<String, String> = emptyMap(), val modelNames: ModelNames? = null, val pricing: HubPricing? = null, val deviceHistories: DeviceHistories? = null, val connectionFailure:Int? = null, val connectionRevision:Long = 0, val connectionAttempt:Long = 0,
     // A successful read is a Dashboard render event even if its history equals the previous payload.
     val historyRenderRevision:Long = 0,
-    val historyReadReceipt:HistoryReadReceipt? = null, val lanPolicyRevision:Long = 0, val hubBuild:HubBuildInfo? = null)
+    val historyReadReceipt:HistoryReadReceipt? = null, val lanPolicyRevision:Long = 0, val hubBuild:HubBuildInfo? = null,
+    // Set only after an accepted authenticated read. Configuration order is never connection evidence.
+    val lastSuccessfulEndpoint:String? = null, val connectedEndpoint:String? = null)
 class HubViewModel @JvmOverloads constructor(application: Application, private val store: HubStore = HubStore(application),
     private val client: OkHttpClient = defaultClient(), private val displayStore: DisplayPreferenceStore = DisplayPreferenceStore(application)) : AndroidViewModel(application), HubUiActions {
     companion object {
@@ -162,7 +164,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private fun currentRecord(): SavedHub? {
         return SavedHub(currentHub ?: return null, credential ?: return null,
             latestBody ?: return null, mutable.value.savedAt ?: System.currentTimeMillis(), alternateHub, historyBody, subscriptionsBody, mutable.value.deviceAliases, modelNamesBody, pricingBody, deviceHistoryBody, historySignature,
-            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated; it.hubBuild=mutable.value.hubBuild }
+            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated; it.hubBuild=mutable.value.hubBuild; it.lastSuccessfulEndpoint=mutable.value.lastSuccessfulEndpoint }
     }
     private suspend fun saveCurrent(stillValid: (() -> Boolean)? = null): Boolean {
         val record = currentRecord() ?: return false
@@ -247,6 +249,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             val sameHub=secret==credential && (base==currentHub || (endpointsAssociated && base==alternateHub))
             val baseline=if(sameHub) mutable.value.copy(connectionFailure=null) else HubState()
             val next=refreshedSnapshot(baseline,parsed,false).copy(loading=false,connectionFailure=null,hubBuild=build,
+                lastSuccessfulEndpoint=base,connectedEndpoint=base.takeIf {foreground && ticket==requestToken},
                 connectionRevision=mutable.value.connectionRevision + if(sameHub) 0 else 1,
                 connectionAttempt=mutable.value.connectionAttempt)
             val record=SavedHub(base,secret,body,next.savedAt!!,alternate,
@@ -255,6 +258,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 historySignature.takeIf {next.history!=null}, parsed.observedModelIds).also {
                 it.lanEnabled = lanEnabled
                 it.hubBuild = build
+                it.lastSuccessfulEndpoint = base
                 it.endpointsAssociated = endpointsAssociated && secret == credential && setOf(base, alternate) == setOf(currentHub, alternateHub)
             }
             // Lifecycle/network changes stop all reads immediately. During the local atomic write,
@@ -269,7 +273,8 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 modelNamesBody=record.modelNames;pricingBody=record.pricing;deviceHistoryBody=record.deviceHistory
                 authBlocked=false;tlsBlocked=false;streamEligible=ticket==requestToken
                 historyReads.revalidated()
-                mutable.value=next.copy(historyReadReceipt=historyReads.target(historyKey(next)))
+                mutable.value=next.copy(historyReadReceipt=historyReads.target(historyKey(next)),
+                    connectedEndpoint=next.connectedEndpoint.takeIf {foreground && ticket==requestToken})
             } else mutable.value=mutable.value.copy(loading=false,connectionFailure=R.string.error_data_save,
                 error=if(currentHub!=null) R.string.error_connection_change else R.string.error_data_save)
             if(foreground && ticket!=requestToken) {
@@ -416,7 +421,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
         streamSaves?.cancel(); streamSaves = null
         streamSaver?.cancel(); streamSaver = null
         reconnect?.cancel(); reconnect = null
-        mutable.value = mutable.value.copy(live = false)
+        mutable.value = mutable.value.copy(live = false, connectedEndpoint = null)
     }
     private fun startStream() {
         if (!foreground || !streamEligible || tlsBlocked || streamCall != null || mutable.value.loading || authBlocked || networkScope?.available == false || streamConsumer?.isActive == true) return
@@ -465,6 +470,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 previous = parsed
                 retryDelay = 2000L
                 acceptSnapshot(parsed, frame.body, live = transportActive.get())
+                mutable.value=mutable.value.copy(lastSuccessfulEndpoint=base,connectedEndpoint=base.takeIf {transportActive.get()})
                 if (!transportActive.get()) mutable.value = mutable.value.copy(error = R.string.error_stream_retry)
                 currentRecord()?.let { saves.trySend(StreamSave(it, bindingToken, ++cacheSequence)) }
             }
@@ -494,7 +500,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 http.cancel()
                 mutable.value = mutable.value.copy(loading = false)
             }
-            mutable.value = mutable.value.copy(live = false, error = if (unauthorized) R.string.error_stream_auth else if(ending.tlsFailure) R.string.error_tls else R.string.error_stream_retry)
+            mutable.value = mutable.value.copy(live = false, connectedEndpoint = null, error = if (unauthorized) R.string.error_stream_auth else if(ending.tlsFailure) R.string.error_tls else R.string.error_stream_retry)
             if (ending.tlsFailure) tlsBlocked = true
             if (ending.tlsFailure || !ending.recoverable) streamEligible = false
             if (!unauthorized && !ending.tlsFailure && ending.recoverable) reconnect = viewModelScope.launch {
@@ -522,7 +528,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 store.load()?.let { saved ->
                     val snapshot = saved.parsedSnapshot ?: HubParser.parse(saved.snapshot, saved.observedModelIds)
                     val history = saved.history?.let { runCatching { HistoryParser.parse(it) }.getOrNull() }
-                    HubState(snapshot = snapshot, savedAt = saved.savedAt, deviceAliases = saved.deviceAliases, hubBuild=saved.hubBuild,
+                    HubState(snapshot = snapshot, savedAt = saved.savedAt, deviceAliases = saved.deviceAliases, hubBuild=saved.hubBuild,lastSuccessfulEndpoint=saved.lastSuccessfulEndpoint,
                         modelNames = saved.modelNames?.let { runCatching { ModelNamesParser.parse(it) }.getOrNull() },
                         pricing = saved.pricing?.let { runCatching { PricingParser.parse(it) }.getOrNull() },
                         deviceHistories = saved.deviceHistory?.let { runCatching { DeviceHistoryParser.parse(it).takeIf { value -> value.signature == FixedPeriods.signature(snapshot) } }.getOrNull() },
@@ -718,6 +724,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 }
                 val finished = historyStart?.let { historyReads.finish(it, phase) }
                 mutable.value = mutable.value.copy(loading = false,
+                    connectedEndpoint = null,
                     error = (error as? HubReadException)?.display ?: R.string.error_read,
                     historyReadReceipt = finished ?: mutable.value.historyReadReceipt)
                 resumeStreamAfterRead()
@@ -740,7 +747,8 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 else -> modelNamesBody = body
             }
             // Keep the serial queue occupied until the accepted record's save is settled.
-            mutable.value = apply(mutable.value, value).copy(historyReadReceipt = finished ?: mutable.value.historyReadReceipt)
+            mutable.value = apply(mutable.value, value).copy(historyReadReceipt = finished ?: mutable.value.historyReadReceipt,
+                lastSuccessfulEndpoint=base,connectedEndpoint=base)
             val saved = saveCurrent {
                 !authBlocked && binding == bindingToken && (finished == null ||
                     (mutable.value.historyReadReceipt == finished && historyKey(mutable.value) == finished.key))
@@ -875,7 +883,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 { (parsed, text, build) ->
                     streamEligible = true
                     historyReads.revalidated()
-                    mutable.value=mutable.value.copy(hubBuild=build)
+                    mutable.value=mutable.value.copy(hubBuild=build,lastSuccessfulEndpoint=base,connectedEndpoint=base)
                     acceptSnapshot(parsed, text, live = false, forceHistory = forceHistory)
                     mutable.value.copy(loading = false)
                 },

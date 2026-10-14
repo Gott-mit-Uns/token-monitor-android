@@ -67,7 +67,12 @@ class HubFailoverTest {
             await("cache loaded") {!model.state.value.loading}
         }
         fun start(scope:HubNetworkScope=home) {main {model.updateNetworkScope(scope);model.setForeground(true)}}
-        fun live(type:String) = await("live $type") {model.state.value.live && model.endpointType()==type && !model.state.value.loading}
+        fun live(type:String) {
+            await("live $type") {model.state.value.live && model.endpointType()==type && !model.state.value.loading}
+            val expected=if(type=="http") local else secure
+            assertEquals(expected,model.state.value.connectedEndpoint)
+            assertEquals(expected,model.state.value.lastSuccessfulEndpoint)
+        }
         override fun close() {
             gate.countDown();main {owner.clear()};await("all streams released") {streams.active.get()==0}
             client.dispatcher.cancelAll();client.connectionPool.evictAll();http.close();https.close();store.clear()
@@ -80,6 +85,8 @@ class HubFailoverTest {
             assertEquals(0,h.http.streams.get());assertEquals(1,h.https.streams.get())
             val reads=h.http.requests.get()
             main {h.model.setForeground(false)};await("background closed") {h.streams.active.get()==0}
+            assertNull(h.model.state.value.connectedEndpoint)
+            assertEquals(h.secure,h.model.state.value.lastSuccessfulEndpoint)
             main {h.model.setForeground(true)};h.live("https")
             assertEquals(reads,h.http.requests.get());assertEquals(123L,h.model.state.value.snapshot?.periods?.get("today")?.tokens)
             assertTrue(h.store.load()!!.endpointsAssociated)
@@ -105,6 +112,8 @@ class HubFailoverTest {
         Harness().use {h->
             h.http.acceptedCredential.set(UUID.randomUUID().toString())
             h.start();await("auth error") {!h.model.state.value.loading && h.model.state.value.error==R.string.error_auth}
+            assertNull(h.model.state.value.connectedEndpoint)
+            assertNull(h.model.state.value.lastSuccessfulEndpoint)
             assertEquals(0,h.https.requests.get());assertEquals(17L,h.model.state.value.snapshot?.periods?.get("today")?.tokens)
             val reads=h.http.requests.get()
             main {h.model.setForeground(false);h.model.updateNetworkScope(h.mobile);h.model.setForeground(true)}
@@ -115,6 +124,8 @@ class HubFailoverTest {
     @Test fun tlsFailureAndExternalNetworkFailureNeverDowngrade() {
         Harness(tlsTrusted=false).use {h->
             h.start(h.mobile);await("TLS distinct") {!h.model.state.value.loading && h.model.state.value.error==R.string.error_tls}
+            assertNull(h.model.state.value.connectedEndpoint)
+            assertNull(h.model.state.value.lastSuccessfulEndpoint)
             assertEquals(0,h.http.requests.get());assertEquals(17L,h.model.state.value.snapshot?.periods?.get("today")?.tokens)
             main {h.model.setForeground(false);h.model.updateNetworkScope(h.home);h.model.setForeground(true)}
             Thread.sleep(150);assertEquals(0,h.http.requests.get())

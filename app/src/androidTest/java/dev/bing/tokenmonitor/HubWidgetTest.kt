@@ -72,11 +72,14 @@ class HubWidgetTest {
         view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
         view.layout(0, 0, width, height)
         val open = view.findViewById<TextView>(R.id.widget_open)
-        assertTrue("Widget open target must be at least 48dp", open.height >= (48 * density).toInt())
+        val target = if (open.visibility == View.VISIBLE) open else view.findViewById<View>(R.id.widget_root)
+        assertTrue("Widget open target must be at least 48dp", target.height >= (48 * density).toInt())
         fun checkVisible(child: View) {
+            if (child.visibility != View.VISIBLE) return
             if (child is TextView && child.text.isNotEmpty()) {
-                assertTrue("Widget text was clipped vertically", child.layout?.height?.let { it <= child.height - child.totalPaddingTop - child.totalPaddingBottom } != false)
-                assertTrue("Widget content extends beyond host height", child.bottom <= view.height)
+                val diagnostic = "id=${child.resources.getResourceEntryName(child.id)} text=${child.text} size=${child.width}x${child.height} natural=${child.layout?.height} padding=${child.totalPaddingTop}+${child.totalPaddingBottom} font=${context.resources.configuration.fontScale}"
+                assertTrue("Widget text was clipped vertically: $diagnostic", child.layout?.height?.let { it <= child.height - child.totalPaddingTop - child.totalPaddingBottom } != false)
+                assertTrue("Widget content extends beyond host height: $diagnostic", child.bottom <= view.height)
             }
             if (child is ViewGroup) for (index in 0 until child.childCount) checkVisible(child.getChildAt(index))
         }
@@ -98,7 +101,7 @@ class HubWidgetTest {
         try {
             displayStore.save(DisplayPreferences(theme = ThemeChoice.LIGHT, language = LanguageChoice.ENGLISH))
             withHost { view, id, info ->
-                assertEquals(0, info.updatePeriodMillis)
+                assertEquals(1_800_000, info.updatePeriodMillis)
                 assertTrue(info.widgetCategory and AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN != 0)
                 if (android.os.Build.VERSION.SDK_INT >= 36) assertTrue(info.widgetCategory and AppWidgetProviderInfo.WIDGET_CATEGORY_NOT_KEYGUARD != 0)
                 assertFalse(context.packageManager.getReceiverInfo(ComponentName(context, HubWidgetProvider::class.java), 0).exported)
@@ -108,11 +111,12 @@ class HubWidgetTest {
                 val body = """{"updatedAt":"2026-10-08T00:00:00Z","periods":{"today":{"totalTokens":9223372036854775807,"costUsd":"0.1234567890123456789","unpricedTokens":12,"projects":{"secret-project":{"label":"private fixture project"}}}},"devices":[{"deviceId":"a","hostname":"private fixture device"}]}"""
                 store.save(SavedHub("http://$address:${server.localPort}", generated, body, 1791507600000))
                 HubWidget.updateAll(context)
-                await { onMain { texts(view).contains("9,223,372,036,854,775,807") } }
+                await { onMain { texts(view).contains("9223372036.9B") } }
                 assertEquals("Tokens: 9,223,372,036,854,775,807", onMain { view.findViewById<TextView>(R.id.widget_tokens).contentDescription.toString() })
                 val rendered = onMain { texts(view).joinToString("\n") }
-                assertTrue(rendered.contains("Known cost only: $0.1235"))
-                assertTrue(rendered.contains("2026-10-08"))
+                assertTrue(rendered.contains("$0.12 + ?"))
+                assertTrue(onMain { view.findViewById<TextView>(R.id.widget_cost).contentDescription.toString() }.contains("Known cost only"))
+                assertTrue(rendered.contains("10-09"))
                 assertFalse(rendered.contains("private fixture"))
                 assertFalse(rendered.contains(address))
                 assertFalse(rendered.contains(generated))
@@ -121,11 +125,11 @@ class HubWidgetTest {
                 // Changing options uses the system broadcast and the provider's asynchronous local read.
                 displayStore.save(DisplayPreferences(theme = ThemeChoice.DARK, language = LanguageChoice.CHINESE))
                 manager.updateAppWidgetOptions(id, Bundle().apply { putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 280); putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 360) })
-                await { onMain { texts(view).contains("Hub 今日 Token · 已保存") } }
+                await { onMain { texts(view).contains("今日") } }
                 capture(view, "visual-widget-chinese-$suffix.png", 280, 360)
                 store.clear(); HubWidget.updateAll(context)
                 await { onMain { texts(view).any { it.contains("先在应用中连接") } } }
-                assertFalse(onMain { texts(view).contains("9,223,372,036,854,775,807") })
+                assertFalse(onMain { texts(view).contains("9223372036.9B") })
                 assertTrue("Widget update unexpectedly made a network connection", runCatching { server.accept().close() }.exceptionOrNull() is java.net.SocketTimeoutException)
             }
         } finally { store.clear(); displayStore.save(original); server.close() }
@@ -139,11 +143,11 @@ class HubWidgetTest {
             val generated = UUID.randomUUID().toString()
             fun save(body: String) = store.save(SavedHub("https://example.invalid", generated, body, 0))
             save("""{"periods":{"allTime":{"totalTokens":123}}}""")
-            assertTrue(rendered(HubWidget.load(store)).contains("Unknown"))
+            assertTrue(rendered(HubWidget.load(store)).contains("—"))
             assertFalse(rendered(HubWidget.load(store)).contains("123"))
             save("""{"periods":{"today":{"totalTokens":0,"costUsd":0}}}""")
             assertTrue(rendered(HubWidget.load(store)).contains("0"))
-            assertTrue(rendered(HubWidget.load(store)).contains("Estimated cost: $0.0000"))
+            assertTrue(rendered(HubWidget.load(store)).contains("$0.00"))
             val file = File(context.noBackupFilesDir, "widget-fixture.bin")
             val bytes = file.readBytes(); bytes[bytes.lastIndex] = (bytes.last().toInt() xor 1).toByte(); file.writeBytes(bytes)
             assertTrue(rendered(HubWidget.load(store)).any { it.contains("could not be read") })
@@ -192,15 +196,15 @@ class HubWidgetTest {
                 await { !model.state.value.loading }
                 onMain { model.updateNetworkScope(fixtureLocalScope()); model.setForeground(true); model.refresh("http://192.168.1.1:17321", UUID.randomUUID().toString()) }
                 // No direct widget update here: saving via the real ViewModel must publish it.
-                await { onMain { texts(view).contains("1,234,567") } }
+                await { onMain { texts(view).contains("1.2M") } }
                 onMain { model.setForeground(false) }
                 val backgroundCalls = calls.get()
                 onMain { model.changeDisplay(DisplayChange.Language(LanguageChoice.ENGLISH)) }
-                await { onMain { texts(view).contains("Hub today tokens · Saved") } }
+                await { onMain { texts(view).contains("Today") } }
                 assertEquals(backgroundCalls, calls.get())
                 onMain { model.forget() }
                 await { onMain { texts(view).any { it.contains("Connect in the app") } } }
-                assertFalse(onMain { texts(view).contains("1,234,567") })
+                assertFalse(onMain { texts(view).contains("1.2M") })
                 assertEquals(backgroundCalls, calls.get())
             }
         } finally {

@@ -1,9 +1,25 @@
 package dev.bing.tokenmonitor
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,7 +35,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
-@Composable internal fun AndroidUpdateSettings(currentVersion: String, source: AndroidReleaseSource? = null) {
+@Composable internal fun AndroidUpdateSettings(currentVersion: String, source: AndroidReleaseSource? = null,onLicenses:(()->Unit)?=null) {
     val scope = rememberCoroutineScope()
     val releaseSource = remember(source) {source ?: GitHubAndroidReleaseSource()}
     val controller = remember(currentVersion, releaseSource, scope) {AndroidUpdateController(currentVersion, releaseSource, scope)}
@@ -33,22 +49,22 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
     }
     val uri = LocalUriHandler.current
     var browserFailed by remember {mutableStateOf(false)}
-    AndroidUpdateContent(currentVersion, state, controller::check) {url ->
+    AndroidUpdateContent(currentVersion, state, controller::check, {url ->
         browserFailed = runCatching {uri.openUri(url)}.isFailure
-    }
+    },onLicenses)
     if (browserFailed) Text(LocalResources.current.getString(R.string.android_update_browser_failed), style = quotaTextStyle(11), color = MaterialTheme.colorScheme.error)
 }
 
-@Composable internal fun AndroidUpdateContent(currentVersion: String, state: AndroidUpdateState, check: () -> Unit, open: (String) -> Unit) {
+@Composable internal fun AndroidUpdateContent(currentVersion: String, state: AndroidUpdateState, check: () -> Unit, open: (String) -> Unit,onLicenses:(()->Unit)?=null) {
     val strings = LocalResources.current
     Column(Modifier.fillMaxWidth().testTag("about-android-updates"), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(strings.getString(R.string.android_update_heading), style = quotaTextStyle(11, true))
+        val actions=listOf(
+            AboutAction("android-update-check",strings.getString(R.string.android_update_check),R.drawable.desktop_refresh,state!=AndroidUpdateState.Checking,check),
+            AboutAction("android-update-current-notes",strings.getString(R.string.android_update_current_notes),R.drawable.desktop_view_session,true) {open(AndroidReleases.currentNotes(currentVersion))},
+            AboutAction("android-update-releases",strings.getString(R.string.android_update_releases),R.drawable.desktop_arrow_right,true) {open(AndroidReleases.releasesUrl)}
+        ) + listOfNotNull(onLicenses?.let {AboutAction("about-open-licenses",strings.getString(R.string.open_licenses),R.drawable.desktop_project_row,true,it)})
+        AboutActionGroup(actions)
         Text(strings.getString(R.string.android_update_manual_note), style = quotaTextStyle(10), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            DesktopActionButton(onClick = check, enabled = state != AndroidUpdateState.Checking, modifier = Modifier.testTag("android-update-check")) {Text(strings.getString(R.string.android_update_check), style = quotaTextStyle(11))}
-            DesktopActionButton(onClick = {open(AndroidReleases.currentNotes(currentVersion))}, modifier = Modifier.testTag("android-update-current-notes")) {Text(strings.getString(R.string.android_update_current_notes), style = quotaTextStyle(11))}
-            DesktopActionButton(onClick = {open(AndroidReleases.releasesUrl)}, modifier = Modifier.testTag("android-update-releases")) {Text(strings.getString(R.string.android_update_releases), style = quotaTextStyle(11))}
-        }
         val message = when (state) {
             AndroidUpdateState.Idle -> null
             AndroidUpdateState.Checking -> strings.getString(R.string.android_update_checking)
@@ -66,6 +82,35 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
         if (state is AndroidUpdateState.Available) FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             DesktopActionButton(onClick = {open(state.release.notesUrl)}, modifier = Modifier.testTag("android-update-new-notes")) {Text(strings.getString(R.string.android_update_new_notes), style = quotaTextStyle(11))}
             DesktopActionButton(onClick = {open(state.release.apkUrl)}, modifier = Modifier.testTag("android-update-apk")) {Text(strings.getString(R.string.android_update_apk), style = quotaTextStyle(11))}
+        }
+    }
+}
+
+private data class AboutAction(val tag:String,val label:String,val icon:Int,val enabled:Boolean,val click:()->Unit)
+
+/** Four fixed peer actions stay in one row on a phone; large text gets two natural-height columns. */
+@Composable private fun AboutActionGroup(actions:List<AboutAction>) {
+    val density=LocalDensity.current
+    val scale=density.fontScale*LocalDesktopTextScale.current
+    val style=quotaTextStyle(11)
+    val measurer=rememberTextMeasurer()
+    BoxWithConstraints(Modifier.fillMaxWidth().testTag("about-actions")) {
+        val columns=if(maxWidth<280.dp || scale>1.3f) 2 else actions.size
+        val labelWidth=with(density) {((maxWidth-4.dp*(columns-1))/columns-6.dp).roundToPx().coerceAtLeast(1)}
+        val labelHeight=with(density) {actions.maxOf {measurer.measure(AnnotatedString(it.label),style,constraints=Constraints(maxWidth=labelWidth)).size.height}.toDp()}
+        Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+            actions.chunked(columns).forEach {chunk->
+                Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(4.dp)) {
+                    chunk.forEach {action->
+                        TextButton(onClick=action.click,enabled=action.enabled,modifier=Modifier.weight(1f).heightIn(min=48.dp).widthIn(min=48.dp).testTag(action.tag),contentPadding=PaddingValues(horizontal=3.dp,vertical=6.dp)) {
+                            Column(Modifier.fillMaxWidth(),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                                Icon(painterResource(action.icon),null,Modifier.size(14.dp))
+                                Text(action.label,Modifier.fillMaxWidth().heightIn(min=labelHeight),style=style,textAlign=TextAlign.Center)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

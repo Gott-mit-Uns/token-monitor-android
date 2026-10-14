@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 
 @Composable
-internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:Boolean,requestLocal:(()->Unit)?,preferences:DisplayPreferences,updateDisplay:((DisplayChange)->Unit)?,openLocalSettings:(()->Unit)?,section:String,selectSection:(String)->Unit,scroll:LazyListState,today:LocalDate,onSubscription:(String)->Unit,openShared:(HubPage)->Unit,connectionDraft:HubConnectionDraft=remember {HubConnectionDraft()},onForgot:()->Unit) {
+internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:Boolean,requestLocal:(()->Unit)?,preferences:DisplayPreferences,updateDisplay:((DisplayChange)->Unit)?,openLocalSettings:(()->Unit)?,section:String,selectSection:(String)->Unit,scroll:LazyListState,today:LocalDate,onSubscription:(String)->Unit,openShared:(HubPage)->Unit,connectionDraft:HubConnectionDraft=remember {HubConnectionDraft()},syncNow:Long=LocalHubCalendarClock.current.instant().toEpochMilli(),onForgot:()->Unit) {
     val strings=LocalResources.current
     var toolQuery by rememberSaveable {mutableStateOf("")}
     LaunchedEffect(state.connectionAttempt,state.loading,state.error,state.connectionFailure,state.snapshot,connectionDraft.submitted) {
@@ -28,7 +28,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
         }
     }
     val connectionContent: @Composable () -> Unit = {
-        HubConnectionSettings(state,model,localAllowed,requestLocal,openLocalSettings,onForgot,connectionDraft)
+        HubConnectionSettings(state,model,localAllowed,requestLocal,openLocalSettings,onForgot,connectionDraft,syncNow)
     }
 
     val scrollAnchor = rememberDesktopSettingsScrollAnchor(scroll, section)
@@ -108,7 +108,10 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
             }
         }
         if(state.snapshot!=null) item(key="settings-sync") {
-            DesktopSettingSection("sync",strings.getString(R.string.settings_hub_connection),R.drawable.desktop_settings_sync,model.endpointType().uppercase(),section=="sync","settings-sync-toggle",last=true,toggle={selectSection("sync")}) {
+            val connectionSummary=state.connectedEndpoint?.substringBefore(':')?.uppercase()
+                ?: state.lastSuccessfulEndpoint?.substringBefore(':')?.uppercase()?.let {"$it · ${strings.getString(R.string.sync_endpoint_previous)}"}
+                ?: strings.getString(if(state.loading) R.string.connection_pending else R.string.unknown)
+            DesktopSettingSection("sync",strings.getString(R.string.settings_hub_connection),R.drawable.desktop_settings_sync,connectionSummary,section=="sync","settings-sync-toggle",last=true,toggle={selectSection("sync")}) {
                 connectionContent()
             }
         }

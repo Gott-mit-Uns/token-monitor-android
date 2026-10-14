@@ -73,7 +73,7 @@ class QuotaWidgetHostTest {
             assertTrue(manager.bindAppWidgetIdIfAllowed(id, ComponentName(context, HubQuotaWidgetProvider::class.java)))
             instrumentation.uiAutomation.dropShellPermissionIdentity()
             val info = manager.getAppWidgetInfo(id)!!
-            assertEquals(0, info.updatePeriodMillis)
+            assertEquals(1_800_000, info.updatePeriodMillis)
             assertFalse(context.packageManager.getReceiverInfo(ComponentName(context, HubQuotaWidgetProvider::class.java), 0).exported)
             val snapshot = HubParser.parse("""{"periods":{},"limits":{"providers":[
                 {"provider":"codex","status":"ok","accountEmail":"very.long.personal.account@long.organization.example.invalid","updatedAt":"2026-10-13T11:59:00Z","windows":[{"kind":"session","remainingPercent":15},{"kind":"weekly","remainingPercent":70}]},

@@ -2,4 +2,4 @@
     android:minWidth="280dp" android:minHeight="360dp" android:minResizeWidth="280dp" android:minResizeHeight="360dp"
     
     android:initialLayout="@layout/hub_quota_widget" android:resizeMode="horizontal|vertical" android:widgetCategory="home_screen"
-    android:description="@string/quota_widget_description" android:updatePeriodMillis="0" />
+    android:description="@string/quota_widget_description" android:updatePeriodMillis="1800000" android:configure="dev.bing.tokenmonitor.WidgetConfigurationActivity" android:widgetFeatures="reconfigurable|configuration_optional" />

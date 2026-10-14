@@ -34,12 +34,19 @@ class HubStoreTest {
             assertEquals(1234L, loaded.savedAt)
             assertTrue(loaded.lanEnabled)
             assertFalse(loaded.endpointsAssociated)
+            assertNull(loaded.lastSuccessfulEndpoint) // Existing records do not invent a successful connection.
+            record.lastSuccessfulEndpoint=record.alternate
             record.lanEnabled = false
             record.endpointsAssociated = true
             store.save(record)
             val policy = HubStore(context, name).load()!!
             assertFalse(policy.lanEnabled)
             assertTrue(policy.endpointsAssociated)
+            assertEquals(record.alternate,policy.lastSuccessfulEndpoint)
+            record.lastSuccessfulEndpoint="https://not-configured.example.invalid"
+            store.save(record)
+            assertNull(HubStore(context,name).load()!!.lastSuccessfulEndpoint)
+            record.lastSuccessfulEndpoint=record.address
             assertEquals("http://192.168.31.12:17321", loaded.alternate)
             assertEquals(123L, HistoryParser.parse(loaded.history!!).daily.single().tokens)
             assertTrue(SubscriptionParser.parse(loaded.subscriptions!!).isEmpty())

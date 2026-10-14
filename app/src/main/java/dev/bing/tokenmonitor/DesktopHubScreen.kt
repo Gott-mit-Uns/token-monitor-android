@@ -64,7 +64,7 @@ private fun clock(value: String?) = value?.let { runCatching { DateTimeFormatter
 internal val LocalHubCalendarClock=staticCompositionLocalOf<java.time.Clock> {java.time.Clock.systemDefaultZone()}
 
 @Composable
-internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null, quotaOpenRequest: Long = 0L) {
+internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed: Boolean, requestLocal: (() -> Unit)?, preferences: DisplayPreferences, updateDisplay: ((DisplayChange) -> Unit)?, openLocalSettings: (() -> Unit)?, initialPage: HubPage? = null, quotaOpenRequest: Long = 0L, widgetOpenRequest: WidgetOpenRequest = WidgetOpenRequest()) {
     val renderObserver = LocalHeadlineRenderObserver.current
     if (renderObserver != null) SideEffect { renderObserver("hub") }
     val strings = LocalResources.current
@@ -121,6 +121,14 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     LaunchedEffect(preferences.monthMode) {if(FixedPeriods.slot(range)=="month" && range!=preferences.monthMode) {
         recordBreakdownPeriod(false);range=preferences.monthMode
     }}
+    LaunchedEffect(widgetOpenRequest.revision) {
+        if (widgetOpenRequest.revision > 0) {
+            openDirect(widgetOpenRequest.page)
+            range = widgetOpenRequest.period.takeIf { it in WidgetConfiguration.periods } ?: "today"
+            if (range == "month") monthMode = "month"
+            recordBreakdownPeriod(false)
+        }
+    }
     var periodMenu by remember { mutableStateOf(false) }
     val calendarClock=LocalHubCalendarClock.current
     var calendarNow by remember(calendarClock) { mutableStateOf(calendarClock.instant()) }
@@ -131,7 +139,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val homeCalendarVisible = page == HubPage.HOME && homeHistory?.daily?.isNotEmpty() == true && preferences.homeModules.any { it in listOf("activity", "trends") }
     val trendsCalendarVisible=page==HubPage.TRENDS && !trendsDetail
     val dashboardCalendarVisible=trendsDetail
-    val deviceClockVisible=page==HubPage.DEVICES
+    val deviceClockVisible=page==HubPage.DEVICES || (page==HubPage.SETTINGS && settingsSection=="sync")
     val sessionsVisible=page==HubPage.SESSIONS || (page==HubPage.HOME && "sessions" in preferences.homeModules)
     val sessionSource=remember(state.snapshot) {SessionDisplay.source(state.snapshot)}
     val homeSessions=remember(state.snapshot,calendarNow) {SessionDisplay.recent(state.snapshot,calendarNow.toEpochMilli())}
@@ -142,7 +150,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                 val boundaries = buildList {
                     if (FixedPeriods.derived(range)) addAll(state.snapshot.devices.mapNotNull { device -> runCatching { Instant.parse(device.periods["today"]?.ends) }.getOrNull() })
                     if (homeCalendarVisible || trendsCalendarVisible || dashboardCalendarVisible || sharedCalendarVisible) add(calendarNow.atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
-                    if(deviceClockVisible) addAll(state.snapshot.devices.mapNotNull {DeviceDisplay.nextAgeAt(it.updated,calendarNow.toEpochMilli())?.let(Instant::ofEpochMilli)})
+                    if(deviceClockVisible) addAll(state.snapshot.devices.mapNotNull {DeviceDisplay.nextAgeAt(if(page==HubPage.SETTINGS) SyncSettingsPresentation.syncedAt(it) else it.updated,calendarNow.toEpochMilli())?.let(Instant::ofEpochMilli)})
                     if(sessionsVisible) SessionDisplay.nextStatusAt(if(page==HubPage.SESSIONS) state.snapshot?.periods?.get(range)?.sessions.orEmpty() else sessionSource,calendarNow.toEpochMilli())?.let {add(Instant.ofEpochMilli(it))}
                 }
                 val next = boundaries.filter { it > calendarNow }.minOrNull()
@@ -707,7 +715,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                     }
                     }
                     DesktopSettingsPane(page == HubPage.SETTINGS) {
-                        HubSettingsContent(state, model, localAllowed, requestLocal, preferences, updateDisplay, openLocalSettings,settingsSection,{settingsSection=if(settingsSection==it) "" else it},settingsContentScroll,calendarNow.atZone(ZoneId.systemDefault()).toLocalDate(),{selectedSubscription=it}, {target->directPage=null;page=target},settingsConnectionDraft) { opened = false }
+                        HubSettingsContent(state, model, localAllowed, requestLocal, preferences, updateDisplay, openLocalSettings,settingsSection,{settingsSection=if(settingsSection==it) "" else it},settingsContentScroll,calendarNow.atZone(ZoneId.systemDefault()).toLocalDate(),{selectedSubscription=it}, {target->directPage=null;page=target},settingsConnectionDraft,calendarNow.toEpochMilli()) { opened = false }
                     }
                 }
             }

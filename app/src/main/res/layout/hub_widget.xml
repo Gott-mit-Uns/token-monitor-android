@@ -1,18 +1,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="16dp" android:background="@drawable/widget_light_background">
-    <TextView android:id="@+id/widget_title" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="@string/widget_brand" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/widget_light_text" />
+    android:orientation="vertical" android:padding="12dp" android:background="@drawable/widget_light_background">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/widget_title" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+            android:text="@string/widget_brand" android:textSize="12sp" android:textStyle="bold" android:maxLines="2" />
+        <TextView android:id="@+id/widget_configure" android:layout_width="48dp" android:layout_height="48dp" android:gravity="center"
+            android:text="@string/widget_align_edit_short" android:textSize="11sp" android:contentDescription="@string/widget_align_edit" />
+    </LinearLayout>
     <TextView android:id="@+id/widget_period" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:text="@string/widget_period" android:textSize="14sp" android:textColor="@color/widget_light_secondary" />
+        android:text="@string/widget_period" android:textSize="12sp" android:maxLines="2" />
     <TextView android:id="@+id/widget_tokens" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="4dp" android:text="@string/widget_no_value" android:textSize="22sp" android:fontFamily="monospace"
-        android:textStyle="bold" android:textColor="@color/widget_light_text" />
+        android:layout_marginTop="2dp" android:text="@string/widget_no_value" android:textSize="34sp"
+        android:fontFamily="sans-serif" android:textStyle="bold" android:maxLines="1" />
     <TextView android:id="@+id/widget_cost" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="4dp" android:text="@string/widget_empty" android:textSize="14sp" android:textColor="@color/widget_light_secondary" />
+        android:layout_marginTop="2dp" android:text="@string/widget_empty" android:textSize="13sp" />
+    <ImageView android:id="@+id/widget_trend" android:layout_width="match_parent" android:layout_height="34dp"
+        android:layout_marginTop="6dp" android:scaleType="fitXY" android:visibility="gone" />
+    <LinearLayout android:id="@+id/widget_quota_section" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:layout_marginTop="8dp" android:visibility="gone">
+        <TextView android:id="@+id/widget_quota_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/widget_align_quota" android:textSize="11sp" android:textStyle="bold" />
+        <TextView android:id="@+id/widget_quota_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" android:layout_marginTop="4dp" />
+        <TextView android:id="@+id/widget_quota_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" android:layout_marginTop="4dp" />
+    </LinearLayout>
+    <TextView android:id="@+id/widget_detail_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:textSize="11sp" android:textStyle="bold" android:visibility="gone" />
+    <LinearLayout android:id="@+id/widget_row_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="6dp" android:visibility="gone">
+        <ImageView android:id="@+id/widget_icon_1" android:layout_width="14dp" android:layout_height="14dp" android:layout_marginEnd="6dp" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:id="@+id/widget_detail_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:maxLines="2" android:ellipsize="end" />
+        <TextView android:id="@+id/widget_value_1" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/widget_row_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="6dp" android:visibility="gone">
+        <ImageView android:id="@+id/widget_icon_2" android:layout_width="14dp" android:layout_height="14dp" android:layout_marginEnd="6dp" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:id="@+id/widget_detail_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:maxLines="2" android:ellipsize="end" />
+        <TextView android:id="@+id/widget_value_2" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/widget_row_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="6dp" android:visibility="gone">
+        <ImageView android:id="@+id/widget_icon_3" android:layout_width="14dp" android:layout_height="14dp" android:layout_marginEnd="6dp" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:id="@+id/widget_detail_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:maxLines="2" android:ellipsize="end" />
+        <TextView android:id="@+id/widget_value_3" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/widget_row_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="6dp" android:visibility="gone">
+        <ImageView android:id="@+id/widget_icon_4" android:layout_width="14dp" android:layout_height="14dp" android:layout_marginEnd="6dp" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:id="@+id/widget_detail_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:maxLines="2" android:ellipsize="end" />
+        <TextView android:id="@+id/widget_value_4" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <TextView android:id="@+id/widget_activity_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:textSize="11sp" android:textStyle="bold" android:visibility="gone" />
+    <ImageView android:id="@+id/widget_activity" android:layout_width="match_parent" android:layout_height="70dp"
+        android:layout_marginTop="4dp" android:scaleType="fitXY" android:visibility="gone" />
     <TextView android:id="@+id/widget_time" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" android:textSize="12sp" android:textColor="@color/widget_light_secondary" />
+        android:layout_marginTop="6dp" android:textSize="10sp" />
     <TextView android:id="@+id/widget_open" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
-        android:minHeight="48dp" android:gravity="bottom|start" android:paddingTop="8dp" android:paddingBottom="8dp"
-        android:text="@string/widget_open" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/widget_light_accent" />
+        android:minHeight="48dp" android:gravity="bottom|start" android:paddingTop="6dp" android:paddingBottom="6dp"
+        android:text="@string/widget_open" android:textSize="12sp" android:textStyle="bold" />
 </LinearLayout>

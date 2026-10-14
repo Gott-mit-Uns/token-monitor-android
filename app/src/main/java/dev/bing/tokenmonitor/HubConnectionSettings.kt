@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,7 +36,7 @@ internal class HubConnectionDraft {
 
 /** Desktop client connection surface. Draft credentials are never saved as UI state. */
 @Composable internal fun HubConnectionSettings(state:HubState,model:HubUiActions,localAllowed:Boolean,
-    requestLocal:(()->Unit)?,openLocalSettings:(()->Unit)?,onForgot:()->Unit,draft:HubConnectionDraft) {
+    requestLocal:(()->Unit)?,openLocalSettings:(()->Unit)?,onForgot:()->Unit,draft:HubConnectionDraft,now:Long=LocalHubCalendarClock.current.instant().toEpochMilli()) {
     val strings=LocalResources.current
     var confirmLan by remember { mutableStateOf(false) }
     val endpoints=model.connectionEndpoints()
@@ -72,8 +73,9 @@ internal class HubConnectionDraft {
     Column(Modifier.fillMaxWidth().testTag("connection-controls"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
         if(configured) {
             Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                val status=when {state.live->R.string.connection_live;state.error!=null->R.string.connection_disconnected;else->R.string.connection_pending}
-                ConnectionSignal(!state.live && state.error==null,state.live,state.error!=null)
+                val connected=state.connectedEndpoint!=null || state.live
+                val status=when {connected->R.string.connection_live;state.error!=null->R.string.connection_disconnected;else->R.string.connection_pending}
+                ConnectionSignal(!connected && state.error==null,connected,state.error!=null && !connected)
                 Text(strings.getString(status),Modifier.weight(1f).testTag("connection-status").semantics {liveRegion=LiveRegionMode.Polite},style=quotaTextStyle(11).copy(fontWeight=FontWeight.Medium))
                 if(!editing) DesktopActionButton(onClick={
                     address=endpoints.firstOrNull().orEmpty();alternate=endpoints.getOrNull(1).orEmpty();secret="";replacing=false;editing=true
@@ -82,7 +84,7 @@ internal class HubConnectionDraft {
                     Spacer(Modifier.width(5.dp));Text(strings.getString(R.string.connection_edit),style=quotaTextStyle(10))
                 }
             }
-            if(!editing) Text(ConnectionDisplay.endpoint(endpoints.firstOrNull()) ?: model.endpointType().uppercase(),Modifier.padding(start=22.dp).testTag("connection-endpoint"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
+            SyncEndpointAddresses(endpoints,state)
         } else {
             Text(strings.getString(R.string.settings_hub_connection),style=quotaTextStyle(11).copy(fontWeight=FontWeight.Medium))
             Text(strings.getString(R.string.connection_readonly_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
@@ -126,10 +128,7 @@ internal class HubConnectionDraft {
                     ConnectionButton(strings.getString(R.string.lan_associate),"connection-lan-associate",!state.loading && model.lanEnabled()) {confirmLan=true}
                 if(model.endpointsAssociated()) Text(strings.getString(R.string.lan_associated),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            if(model.hasAlternate()) {
-                Text(strings.getString(R.string.current_endpoint,strings.getString(if(model.endpointType()=="https") R.string.endpoint_https else R.string.endpoint_http)),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-                ConnectionButton(strings.getString(R.string.switch_endpoint),"connection-switch",!state.loading) {model.switchEndpoint()}
-            }
+            HubSyncDevices(state,now)
             ConnectionButton(strings.getString(R.string.forget_connection),"connection-forget",!state.loading) {clearDraft();model.forget();onForgot()}
         }
     }
@@ -138,6 +137,27 @@ internal class HubConnectionDraft {
         text={Column(Modifier.heightIn(max=320.dp).verticalScroll(rememberScrollState())) {Text(strings.getString(R.string.lan_association_warning),Modifier.testTag("connection-lan-warning"))}},
         confirmButton={TextButton(onClick={confirmLan=false;model.configureLan(true,true)},modifier=Modifier.testTag("connection-lan-confirm")) {Text(strings.getString(R.string.lan_confirm))}},
         dismissButton={TextButton(onClick={confirmLan=false}) {Text(strings.getString(R.string.connection_cancel))}})
+}
+
+@Composable internal fun SyncEndpointAddresses(endpoints:List<String>,state:HubState) {
+    val strings=LocalResources.current;val colors=MaterialTheme.colorScheme
+    Column(Modifier.fillMaxWidth().testTag("sync-endpoints"),verticalArrangement=Arrangement.spacedBy(6.dp)) {
+        SyncSettingsPresentation.endpoints(endpoints,state).forEach {row->
+            val current=row.status==SyncEndpointStatus.CURRENT
+            val shape=RoundedCornerShape(8.dp)
+            Column(Modifier.fillMaxWidth().testTag("sync-endpoint-${row.protocol}")
+                .semantics {selected=current}
+                .border(if(current) 2.dp else 1.dp,if(current) colors.primary else colors.outlineVariant,shape)
+                .background(if(current) colors.primary.copy(alpha=.10f) else LocalDesktopOverlayColor.current.copy(alpha=.025f),shape)
+                .padding(horizontal=10.dp,vertical=8.dp),verticalArrangement=Arrangement.spacedBy(3.dp)) {
+                Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                    Text(row.protocol.uppercase(),Modifier.weight(1f),style=quotaTextStyle(11,true))
+                    if(row.status!=SyncEndpointStatus.CONFIGURED) Text(strings.getString(if(current) R.string.sync_endpoint_current else R.string.sync_endpoint_previous),Modifier.testTag("sync-endpoint-status-${row.protocol}"),style=quotaTextStyle(10,true),color=if(current) colors.primary else colors.onSurfaceVariant)
+                }
+                Text(row.address ?: strings.getString(R.string.sync_endpoint_missing),Modifier.fillMaxWidth().testTag("sync-endpoint-address-${row.protocol}"),style=quotaTextStyle(11),color=colors.onSurfaceVariant)
+            }
+        }
+    }
 }
 
 @Composable private fun ConnectionField(label:String,field:@Composable ()->Unit) {

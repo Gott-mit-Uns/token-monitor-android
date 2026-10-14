@@ -35,9 +35,9 @@ class ConnectionTransactionScreenTest {
         override fun renameDevice(id:String,input:String) {}
     }
     @Test fun failedDraftSurvivesHealthyOldStreamUpdatesAndCancelRestoresOldSummary() {
-        val state=mutableStateOf(HubState(snapshot=snapshot(123),live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
+        val state=mutableStateOf(HubState(snapshot=snapshot(123),live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"),lastSuccessfulEndpoint="https://public-old.example.invalid",connectedEndpoint="https://public-old.example.invalid"))
         val actions=object:Actions() {
-            override fun editConnection(address:String,alternate:String,replacementCredential:String?) {super.editConnection(address,alternate,replacementCredential);state.value=state.value.copy(loading=true,live=false,connectionAttempt=state.value.connectionAttempt+1)}
+            override fun editConnection(address:String,alternate:String,replacementCredential:String?) {super.editConnection(address,alternate,replacementCredential);state.value=state.value.copy(loading=true,live=false,connectedEndpoint=null,connectionAttempt=state.value.connectionAttempt+1)}
             override fun dismissConnectionFailure() {state.value=state.value.copy(connectionFailure=null,error=null)}
         }
         val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH)
@@ -55,7 +55,7 @@ class ConnectionTransactionScreenTest {
         compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("connection-change-error"));compose.onNodeWithTag("connection-change-error").assertExists()
         save("failed")
         // A healthy previous stream or detail read can update data and clear its own error.
-        compose.runOnIdle {state.value=state.value.copy(snapshot=snapshot(124),live=true,error=null,savedAt=2)}
+        compose.runOnIdle {state.value=state.value.copy(snapshot=snapshot(124),live=true,error=null,savedAt=2,connectedEndpoint=actions.old.first())}
         assertEquals(R.string.error_auth,state.value.connectionFailure)
         compose.onNodeWithTag("settings-details-sync").assertExists()
         compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("connection-secret"))
@@ -65,7 +65,8 @@ class ConnectionTransactionScreenTest {
         compose.onNodeWithTag("connection-change-error").assertExists();save("old-live")
         click("connection-cancel")
         compose.onNodeWithTag("connection-secret").assertDoesNotExist();compose.onNodeWithTag("connection-change-error").assertDoesNotExist()
-        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("connection-endpoint"));compose.onNodeWithTag("connection-endpoint").assertTextEquals("public-old.example.invalid")
+        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("sync-endpoint-address-https"));compose.onNodeWithTag("sync-endpoint-address-https").assertTextEquals("https://public-old.example.invalid")
+        compose.onNodeWithTag("sync-endpoint-https").assertIsSelected()
         save("cancel");assertEquals(actions.old,actions.connectionEndpoints());assertEquals(0,actions.reads)
     }
     @Test fun committedSourceRevisionReloadsSameRevisionHistoryWithoutRetainingOldReadGuard() {

@@ -2,7 +2,7 @@
     android:id="@+id/quota_widget_root" android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical" android:padding="12dp" android:background="@drawable/widget_light_background">
     <TextView android:id="@+id/quota_widget_title" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="@string/quota_widget_title" android:textSize="16sp" android:textStyle="bold" />
+        android:text="@string/quota_widget_title" android:textSize="14sp" android:textStyle="bold" />
     <TextView android:id="@+id/quota_widget_time" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="4dp" android:text="@string/quota_widget_empty" android:textSize="12sp" />
     <TextView android:id="@+id/quota_widget_account_1" android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -13,7 +13,10 @@
         android:layout_marginTop="8dp" android:minHeight="48dp" android:textSize="14sp" android:visibility="gone" />
     <TextView android:id="@+id/quota_widget_more" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="4dp" android:textSize="12sp" />
-    <TextView android:id="@+id/quota_widget_open" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:minHeight="48dp" android:gravity="center_vertical|start" android:paddingTop="6dp" android:paddingBottom="6dp"
-        android:text="@string/quota_widget_open" android:textSize="14sp" android:textStyle="bold" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/quota_widget_open" android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent"
+            android:minHeight="48dp" android:gravity="center_vertical|start" android:paddingTop="6dp" android:paddingBottom="6dp"
+            android:text="@string/quota_widget_open" android:textSize="14sp" android:textStyle="bold" />
+        <TextView android:id="@+id/quota_widget_configure" android:layout_width="48dp" android:layout_height="48dp" android:gravity="center" android:text="@string/widget_align_edit_short" android:textSize="11sp" android:contentDescription="@string/widget_align_edit" />
+    </LinearLayout>
 </LinearLayout>
