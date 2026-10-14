@@ -239,15 +239,28 @@ class LauncherWidgetLifecycleTest {
                     nodes().any { it.isVisibleToUser && exactText(it, removeLabels) }
                 }
                 describeNodes("actual-owned-remove-drop-target id=$id")
-                val target = nodes().first { it.isVisibleToUser && exactText(it, removeLabels) }
-                val destination = Rect().also(target::getBoundsInScreen)
-                assertFalse("Observed Remove target has empty bounds", destination.isEmpty)
-                // Both ends come from the current real UI tree. No launcher screen
-                // coordinates, grid positions or unrelated host IDs are assumed.
-                assertTrue("Drag to observed Remove target failed", injectTouch(MotionEvent.ACTION_MOVE, destination.exactCenterX(), destination.exactCenterY(), down))
-                Thread.sleep(150)
-                assertTrue("Observed Remove drop failed", injectTouch(MotionEvent.ACTION_UP, destination.exactCenterX(), destination.exactCenterY(), down))
-                record("actual-remove-drag id=$id source=$source target=$destination")
+                // The observed Nexus long-press state adds Remove to this exact
+                // host's actions. Prefer that newly exposed native operation.
+                val freshAction = widgetNode(quota)?.let { launcherAction(it, removeLabels) }
+                if (freshAction != null) {
+                    record("actual-remove-after-longpress-return=${freshAction.first.performAction(freshAction.second)} id=$id action=${freshAction.second}")
+                } else {
+                    val target = nodes().first { it.isVisibleToUser && exactText(it, removeLabels) }
+                    val destination = Rect().also(target::getBoundsInScreen)
+                    assertFalse("Observed Remove target has empty bounds", destination.isEmpty)
+                    // Both ends come from the current real UI tree. No launcher
+                    // screen coordinates or unrelated host IDs are assumed.
+                    repeat(10) { step ->
+                        val fraction = (step + 1) / 10f
+                        assertTrue("Drag to observed Remove target failed", injectTouch(MotionEvent.ACTION_MOVE,
+                            source.exactCenterX() + (destination.exactCenterX() - source.exactCenterX()) * fraction,
+                            source.exactCenterY() + (destination.exactCenterY() - source.exactCenterY()) * fraction, down))
+                        Thread.sleep(20)
+                    }
+                    Thread.sleep(150)
+                    assertTrue("Observed Remove drop failed", injectTouch(MotionEvent.ACTION_UP, destination.exactCenterX(), destination.exactCenterY(), down))
+                    record("actual-remove-drag id=$id source=$source target=$destination")
+                }
             } finally {
                 injectTouch(MotionEvent.ACTION_CANCEL, source.exactCenterX(), source.exactCenterY(), down)
             }
