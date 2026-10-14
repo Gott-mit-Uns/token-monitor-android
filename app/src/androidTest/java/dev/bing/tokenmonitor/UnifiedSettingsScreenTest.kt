@@ -13,6 +13,8 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert.*
 import org.junit.Rule
@@ -24,6 +26,40 @@ class UnifiedSettingsScreenTest {
     private val tags=listOf("android-update-check","android-update-current-notes","android-update-releases","about-open-licenses")
     @Test fun fourOriginalAboutActionsShareOneRowAndKeepEveryDestination() = aboutActions(353,1f,false)
     @Test fun narrowLargeTextUsesTwoColumnsWithoutShrinkingOrClipping() = aboutActions(240,2f,true)
+    @Test fun narrowLargeTextKeepsLongAddressAndDeviceNameCompleteAndMissingFieldsUnknown() {
+        val address="https://very-long-public-host-for-widget-acceptance.example.invalid:9443"
+        val name="Fixture office workstation with a deliberately long uploaded display name 长设备名称完整显示"
+        val snapshot=HubParser.parse("""{"periods":{"today":{}},"devices":[{"deviceId":"long-fixture","displayName":"$name"}]}""")
+        val state=HubState(snapshot=snapshot,lastSuccessfulEndpoint=address,error=R.string.error_no_network)
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
+            val density=LocalDensity.current
+            CompositionLocalProvider(LocalDensity provides Density(density.density,2f)) {
+                Column(Modifier.width(240.dp).background(MaterialTheme.colorScheme.background).verticalScroll(rememberScrollState()).padding(8.dp)) {
+                    SyncEndpointAddresses(listOf(address),state)
+                    HubSyncDevices(state,java.time.Instant.parse("2026-10-14T04:00:00Z").toEpochMilli())
+                }
+            }
+        }}}
+        fun complete(tag:String,expected:String,wrap:Boolean=false) {
+            val node=compose.onNodeWithTag(tag).performScrollTo().assertTextEquals(expected)
+            val layouts=mutableListOf<TextLayoutResult>()
+            node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(layouts)}
+            val layout=layouts.single()
+            assertEquals(expected,layout.layoutInput.text.text)
+            assertFalse("$tag paints complete natural text",layout.hasVisualOverflow)
+            if(wrap) assertTrue("$tag wraps rather than shrinking a long label",layout.lineCount>1)
+        }
+        complete("sync-endpoint-address-https",address,true)
+        compose.onNodeWithTag("sync-endpoint-https").assertIsNotSelected()
+        compose.onNodeWithTag("sync-endpoint-status-https").assertTextEquals("上次连接")
+        complete("sync-endpoint-address-http","未配置")
+        saveVisualEvidence(compose.activity,compose.onRoot(),"settings063-sync-long-address-font2-${if(dark) "dark" else "light"}.png")
+        complete("sync-device-name-long-fixture",name,true)
+        complete("sync-device-platform-long-fixture","未提供")
+        complete("sync-device-version-long-fixture","采集版本未提供")
+        complete("sync-device-status-long-fixture","在线状态未知 · 同步时间未提供")
+        saveVisualEvidence(compose.activity,compose.onRoot(),"settings063-sync-long-device-font2-${if(dark) "dark" else "light"}.png")
+    }
     private fun aboutActions(width:Int,font:Float,twoColumns:Boolean) {
         val opened=mutableListOf<String>();var checks=0;var licenses=0
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {

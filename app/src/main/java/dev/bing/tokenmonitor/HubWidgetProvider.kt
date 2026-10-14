@@ -136,14 +136,46 @@ object HubWidget {
         val effectiveHeight = height / scale
         val large = effectiveHeight >= 510 && width >= 280
         val small = effectiveHeight < 300
-        val compactFont = scale >= 1.5f && height < 480
+        val compactHeight = effectiveHeight < 220
+        val compactFont = (scale >= 1.5f && height < 480) || compactHeight
         if (compactFont) {
             views.setViewVisibility(R.id.widget_period, View.GONE)
             views.setViewVisibility(R.id.widget_open, View.GONE)
             views.setTextViewText(R.id.widget_title, if (config.mode in listOf("summary", "dashboard")) context.getString(periodTitle(config.period)) else context.getString(modeTitle(config.mode)))
             views.setContentDescription(R.id.widget_root, "${context.getString(modeTitle(config.mode))}. ${context.getString(R.string.widget_open)}")
         }
-        views.setTextViewTextSize(R.id.widget_tokens, TypedValue.COMPLEX_UNIT_SP, if (width < 220 || scale >= 1.5f) 26f else 37f)
+        val metricSize = if (width < 220 || scale >= 1.5f || (compactHeight && height < 180)) 26f else if (compactHeight) 30f else 37f
+        if (compactHeight) {
+            val inset = (8 * context.resources.displayMetrics.density).toInt()
+            views.setViewPadding(R.id.widget_root, inset, inset, inset, inset)
+        }
+        views.setTextViewTextSize(R.id.widget_tokens, TypedValue.COMPLEX_UNIT_SP, metricSize)
+        if (compactHeight && cache !is WidgetCache.Ready) {
+            views.setTextViewText(R.id.widget_cost, context.getString(if (cache == WidgetCache.Unreadable) R.string.widget_align_unreadable_short else R.string.widget_align_empty_short))
+            views.setContentDescription(R.id.widget_cost, context.getString(if (cache == WidgetCache.Unreadable) R.string.widget_unreadable else R.string.widget_empty))
+            views.setTextViewText(R.id.widget_time, "")
+            views.setContentDescription(R.id.widget_time, context.getString(R.string.widget_align_scope))
+        }
+        // Old launcher instances can retain pre-update sizes below today's minimum.
+        // At font 2 and <240dp there is no room for core values plus a 48dp edit target.
+        // Show a truthful state and enlarge hint instead of squeezing unreadable text.
+        if (scale >= 1.5f && height < 240) {
+            views.setViewVisibility(R.id.widget_tokens, View.GONE)
+            views.setViewVisibility(R.id.widget_cost, View.GONE)
+            val state = if (cache is WidgetCache.Ready) {
+                val usage = cache.snapshot?.let { widgetUsage(it, cache.usage.savedAt, config.period) } ?: cache.usage
+                val saved = usage.savedAt.takeIf { it in 1..now.toEpochMilli() }?.let {
+                    DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(it))
+                }
+                saved?.let { context.getString(if(widgetStale(usage, now)) R.string.widget_align_compact_stale else R.string.widget_align_compact_cache, it) }
+                    ?: context.getString(R.string.widget_align_compact_unknown)
+            } else context.getString(if(cache == WidgetCache.Unreadable) R.string.widget_align_unreadable_short else R.string.widget_align_empty_short)
+            views.setTextViewText(R.id.widget_time, state + context.getString(R.string.widget_align_expand_short))
+            views.setContentDescription(R.id.widget_time, "$state. ${context.getString(R.string.widget_align_expand)}. ${context.getString(R.string.widget_align_scope)}")
+            views.setOnClickPendingIntent(R.id.widget_root, openPending(context, id, config))
+            views.setOnClickPendingIntent(R.id.widget_configure, configurationPending(context, id))
+            return views
+        }
         if (cache is WidgetCache.Ready) {
             val snapshot = cache.snapshot
             val usage = snapshot?.let { widgetUsage(it, cache.usage.savedAt, config.period) } ?: cache.usage
@@ -151,7 +183,7 @@ object HubWidget {
             val exact = usage.tokens?.let { NumberFormat.getIntegerInstance(locale).format(it) } ?: context.getString(R.string.unknown)
             val compactTokens = widgetCompactTokens(usage.tokens, preferences.main.compactUnits == "localized", locale)
             views.setTextViewText(R.id.widget_tokens, compactTokens)
-            val nominal = if (width < 220 || scale >= 1.5f) 26f else 37f
+            val nominal = metricSize
             val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, nominal, context.resources.displayMetrics)
             val paint = android.graphics.Paint().apply { textSize = px; typeface = android.graphics.Typeface.DEFAULT_BOLD }
             val measured = paint.measureText(compactTokens).coerceAtLeast(1f)
@@ -218,9 +250,12 @@ object HubWidget {
                 }
             }
             if (config.mode == "dashboard" && !large) status += "\n" + context.getString(R.string.widget_align_expand)
-            val compactStatus = if (compactFont && saved != null) context.getString(if (widgetStale(usage, now)) R.string.widget_align_compact_stale else R.string.widget_align_compact_cache, saved.takeLast(5)) else status
-            views.setTextViewText(R.id.widget_time, compactStatus + if (compactFont && config.mode == "dashboard" && !large) "\n" + context.getString(R.string.widget_align_expand) else "")
-            views.setContentDescription(R.id.widget_time, "$status. ${context.getString(R.string.widget_align_scope)}")
+            val compactStatus = if (compactFont) saved?.let { context.getString(if (widgetStale(usage, now)) R.string.widget_align_compact_stale else R.string.widget_align_compact_cache, it.takeLast(5)) }
+                ?: context.getString(R.string.widget_align_compact_unknown) else status
+            views.setTextViewText(R.id.widget_time, compactStatus + if (compactFont && config.mode == "dashboard" && !large)
+                (if (compactHeight) context.getString(R.string.widget_align_expand_short) else "\n" + context.getString(R.string.widget_align_expand)) else "")
+            val exactSaved = usage.savedAt.takeIf { it in 1..now.toEpochMilli() }?.let { Instant.ofEpochMilli(it).toString() }
+            views.setContentDescription(R.id.widget_time, "$status. ${exactSaved.orEmpty()}. ${context.getString(R.string.widget_align_scope)}")
         }
         val open = openPending(context, id, config)
         views.setOnClickPendingIntent(R.id.widget_root, open); views.setOnClickPendingIntent(R.id.widget_open, open)

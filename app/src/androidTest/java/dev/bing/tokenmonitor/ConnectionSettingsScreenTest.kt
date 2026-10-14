@@ -20,6 +20,7 @@ import org.junit.Test
 /** Public-only fields; actual drafts, cancellation and saved-credential choices. */
 class ConnectionSettingsScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1000}},"devices":[]}""")
     private class Actions:HubUiActions {
@@ -79,7 +80,7 @@ class ConnectionSettingsScreenTest {
         val state=mutableStateOf(HubState());val actions=Actions()
         var success=false
         actions.accepted={state.value=if(success) HubState(snapshot=snapshot,live=true,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"),connectionAttempt=actions.calls.toLong(),connectionRevision=actions.calls.toLong(),lastSuccessfulEndpoint=actions.urls.firstOrNull(),connectedEndpoint=actions.urls.firstOrNull()) else HubState(error=R.string.error_read,connectionAttempt=actions.calls.toLong())}
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH) {HubScreen(state.value,actions,preferences=DisplayPreferences(language=LanguageChoice.ENGLISH))}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=DisplayPreferences(language=LanguageChoice.ENGLISH))}}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick()
         fun field(tag:String,value:String) {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(tag));compose.onNodeWithTag(tag).performTextReplacement(value)}
         fun submit() {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("connection-save"));compose.onNodeWithTag("connection-save").performClick()}

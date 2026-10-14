@@ -15,6 +15,10 @@
     <string name="widget_align_cache">已保存 %1$s · 打开更新</string>
     <string name="widget_align_compact_cache">已保存 %1$s</string>
     <string name="widget_align_compact_stale">已过期 %1$s</string>
+    <string name="widget_align_compact_unknown">时间未知</string>
+    <string name="widget_align_empty_short">等待已保存数据</string>
+    <string name="widget_align_unreadable_short">缓存不可读</string>
+    <string name="widget_align_expand_short"> · 放大</string>
     <string name="widget_align_stale">缓存已过期 · 已保存 %1$s</string>
     <string name="widget_align_age_unknown">保存时间未知 · 打开更新</string>
     <string name="widget_align_missing_history">历史未缓存 · 打开趋势</string>

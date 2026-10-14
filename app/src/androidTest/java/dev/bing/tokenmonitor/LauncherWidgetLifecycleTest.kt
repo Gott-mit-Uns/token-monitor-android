@@ -114,7 +114,7 @@ class LauncherWidgetLifecycleTest {
         context.startActivity(Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
         await("foreground app before system pin request") { automation.rootInActiveWindow?.packageName?.toString() == context.packageName }
         scenario.onActivity { activity -> assertTrue("Current HOME host refused requestPinAppWidget", AppWidgetManager.getInstance(activity).requestPinAppWidget(provider, null, null)) }
-        val addLabels = setOf("add", "add automatically", "add widget", "添加", "自动添加", "添加小组件", "添加到主屏幕")
+        val addLabels = setOf("add", "add automatically", "add widget", "add to home screen", "添加", "自动添加", "添加小组件", "添加到主屏幕")
         await("Launcher Add confirmation") { nodes().any { exactText(it, addLabels) && it.isVisibleToUser } }
         saveScreen(if (quota) "launcher-quota-add-confirmation" else "launcher-usage-add-confirmation")
         val add = nodes().first { exactText(it, addLabels) && it.isVisibleToUser }
@@ -155,18 +155,24 @@ class LauncherWidgetLifecycleTest {
         assertTrue("Launcher Resize action failed", action.first.performAction(action.second))
         val changes = setOf("increase width", "decrease width", "increase height", "decrease height", "增加宽度", "减少宽度", "增加高度", "减少高度")
         var resizeControl: AccessibilityNodeInfo? = null
+        var resizeAction: Pair<AccessibilityNodeInfo,Int>? = null
         val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
-        while (System.nanoTime() < until && resizeControl == null) {
-            resizeControl = nodes().firstOrNull { it.isVisibleToUser && exactText(it, changes) }
-            if (resizeControl == null) Thread.sleep(100)
+        while (System.nanoTime() < until && resizeControl == null && resizeAction == null) {
+            val visible = nodes().filter {it.isVisibleToUser}
+            resizeAction = visible.firstNotNullOfOrNull { item ->
+                item.actionList.firstOrNull {it.label?.toString()?.trim()?.lowercase() in changes}?.let {item to it.id}
+            }
+            resizeControl = visible.firstOrNull {exactText(it, changes)}
+            if (resizeControl == null && resizeAction == null) Thread.sleep(100)
         }
-        if (resizeControl == null) {
+        if (resizeControl == null && resizeAction == null) {
             saveScreen("launcher-resize-frame-unverified")
             record("resize NOT VERIFIED: Resize entered but no accessible size-change control; no guessed handle coordinates used")
             automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
             return
         }
-        assertTrue("Real resize control failed", click(resizeControl))
+        val changed = resizeAction?.let {it.first.performAction(it.second)} ?: resizeControl?.let(::click) ?: false
+        assertTrue("Real resize control/action failed", changed)
         await("real host changed its options") { options(id) != before }
         record("resize VERIFIED id=$id before=$before after=${options(id)}")
         showWidget(false)
@@ -207,8 +213,13 @@ class LauncherWidgetLifecycleTest {
     }
     @Test fun actualLauncherPinsRendersOpensAndDeletesOwnInstances() {
         assertTrue("Launcher lifecycle test is restricted to the task emulator", Build.HARDWARE in setOf("ranchu", "goldfish") || Build.MODEL.startsWith("sdk_"))
-        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-        launcherPackage = requireNotNull(context.packageManager.resolveActivity(homeIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName) { "No resolvable HOME launcher" }
+        assertTrue("System HOME action unavailable", automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME))
+        await("actual HOME active window after system action") {
+            automation.rootInActiveWindow?.packageName?.toString()?.let { it != context.packageName && it != "com.android.systemui" && it != "android" } == true
+        }
+        // Observe the actual foreground HOME. The first run's resolveActivity metadata
+        // reported a different package from the system's default HOME, so it cannot prove the host.
+        launcherPackage = requireNotNull(automation.rootInActiveWindow?.packageName?.toString())
         record("HOME=$launcherPackage emulator=${Build.MODEL}")
         assertTrue("Default HOME does not support requestPinAppWidget; actual pin acceptance is blocked", manager.isRequestPinAppWidgetSupported)
         assertTrue("Dedicated launcher test found preexisting usage instances; refusing to risk removing unowned widgets", manager.getAppWidgetIds(usageProvider).isEmpty())

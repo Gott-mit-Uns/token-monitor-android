@@ -63,15 +63,19 @@ class WidgetConfigurationActivity : ComponentActivity() {
 @Composable internal fun WidgetConfigurationContent(initial: WidgetConfiguration, snapshot: Snapshot?, quota: Boolean,
     onCancel: () -> Unit, onSave: (WidgetConfiguration) -> Unit) {
     val strings = LocalResources.current
-    var config by remember(initial) { mutableStateOf(initial.normalized(quota)) }
+    val selections = remember(snapshot) { snapshot?.let(::widgetQuotaSelections).orEmpty() }
+    var config by remember(initial, snapshot) { mutableStateOf(initial.normalized(quota).let { value ->
+        value.copy(quotaAccounts = value.quotaAccounts.map { id -> resolveWidgetQuotaSelection(selections, id)?.id ?: id }.distinct().take(2))
+    }) }
     val accounts = remember(snapshot) {
-        val groups = LimitDisplay.groups(snapshot?.limits.orEmpty())
-        val peers = groups.groupBy { it.first().provider }
-        groups.map { windows ->
+        val peers = selections.groupBy { it.windows.first().provider }
+        selections.map { selection ->
+            val windows = selection.windows
             val first = windows.first()
-            val providerPeers = peers.getValue(first.provider).map { it.first() }
-            val index = providerPeers.indexOf(first)
-            widgetQuotaAccountId(windows) to listOf(providerLabel(first.provider), LimitDisplay.accountTitle(first, providerPeers, index, true)).filter { it.isNotBlank() }.joinToString(" · ")
+            val providerSelections = peers.getValue(first.provider)
+            val providerPeers = providerSelections.map { it.windows.first() }
+            val index = providerSelections.indexOfFirst { it.id == selection.id }
+            selection.id to listOf(providerLabel(first.provider), LimitDisplay.accountTitle(first, providerPeers, index, true)).filter { it.isNotBlank() }.joinToString(" · ")
         }
     }
     Surface(Modifier.fillMaxSize()) {

@@ -31,12 +31,13 @@ internal sealed interface QuotaWidgetCache {
 /** Presentation from the same account grouping, compact windows and row formatter as the app.
  * Never averages accounts or periods. Email masking is always enabled on the home screen. */
 internal fun quotaWidgetAccounts(snapshot: Snapshot, preferences: LimitDisplayPreferences, locale: Locale, now: Instant): List<WidgetQuotaAccount> {
-    val groups = LimitDisplay.groups(snapshot.limits).groupBy { it.first().provider }
+    val groups = widgetQuotaSelections(snapshot).groupBy { it.windows.first().provider }
     val order = LimitPreferences.order(preferences.homeProviderOrder.ifEmpty { preferences.providerOrder }) + groups.keys.filter { it !in LimitPreferences.providers }
     return order.filter { it !in preferences.hiddenHomeProviders }.flatMap { provider ->
         val accounts = groups[provider].orEmpty()
-        val peers = accounts.map { it.first() }
-        accounts.mapIndexedNotNull { index, windows ->
+        val peers = accounts.map { it.windows.first() }
+        accounts.mapIndexedNotNull { index, selection ->
+            val windows = selection.windows
             val first = windows.first()
             val rows = LimitPreferences.filter(
                 LimitProviderLayout.project(LimitProviderLayout.compactRecord(windows), preferences.showUsed, locale, now),
@@ -64,17 +65,17 @@ internal fun quotaWidgetAccounts(snapshot: Snapshot, preferences: LimitDisplayPr
                 val value = row.value.takeIf { it.isNotBlank() && it != "—" } ?: if(locale.language == "zh") "缺失" else "Unavailable"
                 LimitDisplay.text("$label: $value", true)
             }.ifEmpty { listOf(if(locale.language == "zh") "额度缺失" else "Quota unavailable") }
-            WidgetQuotaAccount(title, lines, staleSource, (rows.size - 2).coerceAtLeast(0), compactTitle, compactLines, widgetQuotaAccountId(windows))
+            WidgetQuotaAccount(title, lines, staleSource, (rows.size - 2).coerceAtLeast(0), compactTitle, compactLines, selection.id)
         }
     }.take(preferences.homeAccountCount)
 }
 
 internal fun selectedQuotaWidgetAccounts(snapshot: Snapshot, preferences: LimitDisplayPreferences, locale: Locale, now: Instant,
     configuration: WidgetConfiguration): List<WidgetQuotaAccount> {
-    val groups = widgetQuotaGroups(snapshot, configuration, now)
+    val selected = selectedWidgetQuotaSelections(snapshot, configuration, now)
     val byId = quotaWidgetAccounts(snapshot,
         preferences.copy(showUsed = false, hiddenHomeProviders = emptySet(), hiddenItems = emptyMap(), homeAccountCount = Int.MAX_VALUE), locale, now).associateBy { it.id }
-    return groups.mapNotNull { byId[widgetQuotaAccountId(it)] }.take(2)
+    return selected.mapNotNull { byId[it.id] }.take(2)
 }
 
 /** Cache-only widget. No workers, timers, network client or foreground/background service. */

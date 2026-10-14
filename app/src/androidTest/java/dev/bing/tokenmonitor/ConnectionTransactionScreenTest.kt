@@ -1,6 +1,7 @@
 package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.SemanticsActions
@@ -14,6 +15,7 @@ import java.time.LocalDate
 
 class ConnectionTransactionScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private fun snapshot(tokens:Int)=HubParser.parse("""{"periods":{"today":{"totalTokens":$tokens}},"devices":[]}""")
     private fun click(tag:String) {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(tag));compose.onNodeWithTag(tag).performClick()}
@@ -41,7 +43,7 @@ class ConnectionTransactionScreenTest {
             override fun dismissConnectionFailure() {state.value=state.value.copy(connectionFailure=null,error=null)}
         }
         val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH)
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {HubScreen(state.value,actions,preferences=prefs)}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs)}}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"sync");click("connection-edit")
         compose.onNodeWithTag("connection-address").performTextReplacement("https://public-new.example.invalid")
         // This test verifies transaction retention rather than IME touch timing.
@@ -91,7 +93,7 @@ class ConnectionTransactionScreenTest {
             }
         }
         val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("activity"))
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {HubScreen(state.value,actions,preferences=prefs)}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.language,prefs.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs)}}}}
         compose.waitUntil(5000) {actions.reads==1 && state.value.history!=null}
         historyTokens=777
         compose.runOnIdle {

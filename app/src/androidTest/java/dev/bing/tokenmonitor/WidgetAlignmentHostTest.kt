@@ -86,6 +86,60 @@ class WidgetAlignmentHostTest {
             }
         } finally { instrumentation.uiAutomation.dropShellPermissionIdentity(); onMain { host.deleteHost() } }
     }
+    @Test fun retainedOldLauncherOptionsUseCompactContentWithinActualHostPadding() {
+        val manager = AppWidgetManager.getInstance(context)
+        lateinit var host: AppWidgetHost
+        onMain { host = AppWidgetHost(context, 71909) }
+        val id = host.allocateAppWidgetId()
+        try {
+            instrumentation.uiAutomation.adoptShellPermissionIdentity(Manifest.permission.BIND_APPWIDGET)
+            assertTrue(manager.bindAppWidgetIdIfAllowed(id, ComponentName(context, HubWidgetProvider::class.java)))
+            instrumentation.uiAutomation.dropShellPermissionIdentity()
+            val info = requireNotNull(manager.getAppWidgetInfo(id))
+            val cache = WidgetCache.Ready(widgetUsage(snapshot, now.minusSeconds(60).toEpochMilli()), snapshot, history)
+            // First two retain old min160/max200 choices. The real host still supplies
+            // its standard padding; neither the host nor assertions waive clipping.
+            val cases = listOf(listOf(390, 190, 160, 1), listOf(390, 160, 160, 1), listOf(180, 280, 280, 2), listOf(390, 190, 160, 2))
+            for (language in listOf(LanguageChoice.ENGLISH, LanguageChoice.CHINESE)) for (case in cases) {
+                val (width, actualHeight, minimum, scale) = case
+                val localized = HubWidget.localizedContext(context, language).let { base -> base.createConfigurationContext(Configuration(base.resources.configuration).apply { fontScale = scale.toFloat() }) }
+                val preferences = DisplayPreferences(theme = ThemeChoice.DARK, language = language, main = MainDisplayPreferences(compactUnits = "localized"))
+                val options = Bundle().apply { putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, width); putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, minimum); putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 200) }
+                onMain {
+                    val view = host.createView(localized, id, info)
+                    view.updateAppWidget(HubWidget.render(localized, preferences, cache, id, options, WidgetConfiguration(), now))
+                    val density = localized.resources.displayMetrics.density
+                    val w = (width * density).toInt(); val h = (actualHeight * density).toInt()
+                    view.measure(View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.EXACTLY)); view.layout(0, 0, w, h)
+                    fun check(child: View) {
+                        if(child.visibility != View.VISIBLE) return
+                        if(child is TextView && child.text.isNotEmpty()) {
+                            val infoText = "language=$language host=$width x $actualHeight min=$minimum font=$scale id=${child.resources.getResourceEntryName(child.id)} size=${child.width}x${child.height} natural=${child.layout?.height} text=${child.text}"
+                            assertTrue("Old instance text fits: $infoText", child.layout?.height?.let { it <= child.height-child.totalPaddingTop-child.totalPaddingBottom } != false)
+                            assertTrue("Old instance stays inside parent: $infoText", child.bottom <= (child.parent as View).height)
+                        }
+                        if(child is ViewGroup) for(index in 0 until child.childCount) check(child.getChildAt(index))
+                    }
+                    check(view)
+                    val root = view.findViewById<View>(R.id.widget_root)
+                    assertTrue("System host padding must stay applied", root.height < view.height)
+                    val edit = view.findViewById<View>(R.id.widget_configure)
+                    assertTrue(edit.height >= (48*density).toInt()); assertTrue(edit.width >= (48*density).toInt())
+                    val status = view.findViewById<TextView>(R.id.widget_time)
+                    assertTrue(status.height > 0); assertTrue(status.contentDescription.contains("10-14" ) || minimum < 240 && scale == 2)
+                    if(minimum < 240 && scale == 2) {
+                        assertEquals(View.GONE, view.findViewById<View>(R.id.widget_tokens).visibility)
+                        assertTrue(status.text.contains(if(language == LanguageChoice.CHINESE) "放大" else "Enlarge"))
+                    } else {
+                        assertEquals(View.VISIBLE, view.findViewById<View>(R.id.widget_tokens).visibility)
+                        assertEquals("$14.86", view.findViewById<TextView>(R.id.widget_cost).text.toString())
+                    }
+                    val bitmap = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888); view.draw(Canvas(bitmap))
+                    File(context.getExternalFilesDir(null), "visual-widget-legacy-min$minimum-host$actualHeight-font$scale-$language.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG,100,it) }; bitmap.recycle()
+                }
+            }
+        } finally { instrumentation.uiAutomation.dropShellPermissionIdentity(); onMain {host.deleteHost()} }
+    }
     @Test fun instanceMetadataCancellationDeletionRestoreAndPendingIntentTargetsStayIsolated() {
         val manager = AppWidgetManager.getInstance(context)
         lateinit var host: AppWidgetHost

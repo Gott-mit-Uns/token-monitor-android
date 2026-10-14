@@ -5,6 +5,10 @@ import android.content.Context
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.Locale
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 /** Instance metadata only. Business data still comes from the authenticated encrypted Hub cache. */
 internal data class WidgetConfiguration(
@@ -57,16 +61,82 @@ internal fun widgetQuotaAccountId(windows: List<Limit>): String {
     return MessageDigest.getInstance("SHA-256").digest("${first.provider}:$account".toByteArray()).joinToString("") { "%02x".format(it) }
 }
 
+internal data class WidgetQuotaSelection(val id: String, val windows: List<Limit>, val legacyAliases: Set<String> = emptySet())
+
+/** Record identity contains no readings, timestamps, reset boundaries or credentials.
+ * Concrete product/source ids survive reordering. Indistinguishable legacy records
+ * use an ordinal plus cardinality, so removing a record cannot substitute a peer. */
+internal fun widgetQuotaSelections(snapshot: Snapshot): List<WidgetQuotaSelection> {
+    data class Record(val windows: List<Limit>, val base: String, val primary: String, val secondary: String)
+    fun hash(value: String) = MessageDigest.getInstance("SHA-256").digest(value.toByteArray()).joinToString("") { "%02x".format(it) }
+    fun identityHints(windows: List<Limit>): Pair<String, String> {
+        val first = windows.first()
+        val record = first.presentation.providerRecord
+        fun scalar(value: kotlinx.serialization.json.JsonElement?): String? = (value as? JsonPrimitive)?.contentOrNull?.trim()?.takeIf { it.isNotEmpty() && it.length <= 512 }
+        val fields = linkedMapOf<String, String>()
+        listOf("profileId", "adapterId", "source", "sourceDetail", "sourceDeviceId", "workspaceLabel", "workspaceKind").forEach { key ->
+            scalar(record?.get(key))?.let { fields[key] = it }
+        }
+        // These are actual product labels used by the existing Hub/Mac contract.
+        if ((first.provider == "mimo" && first.account in listOf("Console", "Desktop Membership", "Membership")) ||
+            (first.provider == "opencode" && first.account in listOf("Go", "Zen"))) fields["product"] = first.account!!
+        val rawWindows = record?.get("windows") as? JsonArray
+        val signatures = (rawWindows?.mapNotNull { it as? JsonObject }?.map { window ->
+            listOf("kind", "metric", "limitId", "quotaId", "id", "model", "group").mapNotNull { key -> scalar(window[key])?.let { "$key=${it.length}:$it" } }.joinToString("|")
+        } ?: windows.map { window -> listOfNotNull(window.kind?.let { "kind=${it.length}:$it" }, window.metric?.let { "metric=${it.length}:$it" }, window.presentation.limitId?.let { "limitId=${it.length}:$it" }).joinToString("|") })
+            .filter(String::isNotEmpty).distinct().sorted()
+        return fields.entries.joinToString("|") { (key, value) -> "$key=${value.length}:$value" } to signatures.joinToString(";")
+    }
+    val records = LimitDisplay.groups(snapshot.limits).map { windows -> identityHints(windows).let { (primary, secondary) -> Record(windows, widgetQuotaAccountId(windows), primary, secondary) } }
+    val counts = records.groupingBy { it.base }.eachCount()
+    val primaryCounts = records.groupingBy { it.base to it.primary }.eachCount()
+    fun hint(record: Record): String = when {
+        record.primary.isNotEmpty() && primaryCounts.getValue(record.base to record.primary) == 1 -> record.primary
+        record.primary.isNotEmpty() && record.secondary.isNotEmpty() -> "${record.primary}|windows:${record.secondary}"
+        record.primary.isNotEmpty() -> record.primary
+        record.secondary.isNotEmpty() -> "windows:${record.secondary}"
+        else -> ""
+    }
+    val hints = records.groupingBy { it.base to hint(it) }.eachCount()
+    val ordinals = mutableMapOf<Pair<String, String>, Int>()
+    return records.map { record ->
+        val identity = hint(record)
+        val group = record.base to identity
+        val ordinal = (ordinals[group] ?: 0) + 1
+        ordinals[group] = ordinal
+        val identical = hints.getValue(group)
+        val id = when {
+            identity.isNotEmpty() && identical == 1 -> hash("${record.base}:record:$identity")
+            counts.getValue(record.base) == 1 -> record.base
+            else -> hash("${record.base}:legacy:$identity:$identical:$ordinal")
+        }
+        val aliases = buildSet {
+            if (counts.getValue(record.base) == 1 && id != record.base) add(record.base)
+            // A disambiguated surviving record keeps its prior id after its peer disappears.
+            if (record.primary.isNotEmpty() && record.secondary.isNotEmpty() && primaryCounts.getValue(record.base to record.primary) == 1)
+                add(hash("${record.base}:record:${record.primary}|windows:${record.secondary}"))
+        } - id
+        WidgetQuotaSelection(id, record.windows, aliases)
+    }
+}
+
+internal fun resolveWidgetQuotaSelection(selections: List<WidgetQuotaSelection>, id: String): WidgetQuotaSelection? =
+    selections.singleOrNull { it.id == id || id in it.legacyAliases }
+
 /** Stable identity selection; missing custom accounts stay missing, never replaced by another account. */
 internal fun widgetQuotaGroups(snapshot: Snapshot, configuration: WidgetConfiguration, now: Instant): List<List<Limit>> {
-    val groups = LimitDisplay.groups(snapshot.limits)
+    return selectedWidgetQuotaSelections(snapshot, configuration, now).map { it.windows }
+}
+
+internal fun selectedWidgetQuotaSelections(snapshot: Snapshot, configuration: WidgetConfiguration, now: Instant): List<WidgetQuotaSelection> {
+    val selections = widgetQuotaSelections(snapshot)
     if (!configuration.quotaAutomatic) {
-        val byId = groups.associateBy(::widgetQuotaAccountId)
-        return configuration.quotaAccounts.mapNotNull(byId::get).take(2)
+        return configuration.quotaAccounts.mapNotNull { resolveWidgetQuotaSelection(selections, it) }.distinctBy { it.id }.take(2)
     }
     // Match the Mac automatic resolver: usable data, provider status, freshness;
     // stable input order breaks ties. Never rank unrelated accounts by a mean.
-    return groups.sortedBy { rows ->
+    return selections.sortedBy { selection ->
+        val rows = selection.windows
         val first = rows.first()
         val hasData = rows.any { it.kind != null || it.amount != null || it.presentation.balanceAmount != null }
         val stamp = first.updated?.let { runCatching { Instant.parse(it) }.getOrNull() }

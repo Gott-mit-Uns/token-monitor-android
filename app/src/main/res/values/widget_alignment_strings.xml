@@ -15,6 +15,10 @@
     <string name="widget_align_cache">Saved %1$s · Open to update</string>
     <string name="widget_align_compact_cache">Saved %1$s</string>
     <string name="widget_align_compact_stale">Stale %1$s</string>
+    <string name="widget_align_compact_unknown">Time unknown</string>
+    <string name="widget_align_empty_short">Waiting for saved data</string>
+    <string name="widget_align_unreadable_short">Cache unreadable</string>
+    <string name="widget_align_expand_short"> · Enlarge</string>
     <string name="widget_align_stale">Stale cache · Saved %1$s</string>
     <string name="widget_align_age_unknown">Saved time unknown · Open to update</string>
     <string name="widget_align_missing_history">History not cached · Open Trends</string>
