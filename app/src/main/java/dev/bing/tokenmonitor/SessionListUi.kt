@@ -65,8 +65,8 @@ import java.util.Locale
     val fallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFFD97BC4L,0xFFF0D66AL,0xFFF06A7BL)
     val color=if(reviewRun) Color(0xFF6AB4F0) else palette[client]?.let {Color(it)} ?: if(modelLabel.isNotEmpty()) modelColor(modelLabel,palette) else Color(fallbackColors[(kotlin.math.abs(display.id.hashCode().toLong())%fallbackColors.size).toInt()])
     val shownName=if(reviewRun) listOf(modelLabel,SessionListDisplay.time(display.sortTime,now)).filter(String::isNotEmpty).joinToString(" · ").ifEmpty {strings.getString(R.string.session_review_group)} else display.name
-    val shownSubtitle=if(reviewRun) display.detail else if(display.review && display.groupKind!="review") modelLabel else display.subtitle
-    val shownActivity=if(reviewRun) "" else display.activity
+    val shownSubtitle=if(reviewRun) display.detail else if(display.review && display.groupKind!="review") modelLabel else display.subtitle.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))
+    val shownActivity=if(reviewRun) "" else display.activity.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))
     val shownDetail=if(reviewRun) "" else display.detail
     val sunkenContext=LocalDesktopSunkenColor.current.copy(alpha=.46f)
     val lineColor=LocalDesktopLineColor.current
@@ -139,6 +139,6 @@ import java.util.Locale
         Text(strings.getString(R.string.session_hub_summary),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
         Text("${numbers.format(display.tokens)} Token · ${usageCostText(display.cost,display.unpricedTotal)}",style=quotaTextStyle(11))
         Text(display.detail,style=quotaTextStyle(10))
-        Text(listOf(display.subtitle,display.activity).filter(String::isNotEmpty).joinToString("\n"),style=quotaTextStyle(10))
+        Text(listOf(display.subtitle,display.activity).map {it.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))}.filter(String::isNotEmpty).joinToString("\n"),style=quotaTextStyle(10))
     }
 }

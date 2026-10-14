@@ -1,5 +1,10 @@
 2026-10-15 **Android 0.2.64/73 已正式发布**：按用户明确要求不再提供 Android 桌面小组件或常规中的相关设置，旧组件功能矩阵与测试证据仅保留为历史。多设备同步采集设备等宽两列，字段、离线/未知语义不变；关于四入口与真实双协议端点改进保留。Tag `v0.2.64` / `a7d509903a46223af5c0ecb6f82937aee16108b3` 已在 GitHub main；四附件及公开下载核对见 [发布回执](GITHUB_PUBLICATION.md)，最终范围与验收见 [HANDOFF_0.2.64.md](HANDOFF_0.2.64.md)。客户端发布不补齐真机或生产字段证据。下列 0.2.63 Widget 实现声明不适用于当前版本。
 
+## Fixed desktop v0.71.0 candidate increment
+
+Goose/goose-db health, Notion rolling 6-hour and monthly non-monetary allowances with independent hashed accounts, and WorkBuddy identity/failure/display-total rules are adapted and tested. Existing Pi/CodeBuddy summaries preserve refresh state; remote chat Detail still has no Hub contract. Old Hub compatibility remains, without Android collection, third-party login or Widget restoration. See [increment and NAS requirements](DESKTOP_071_DIFF.md) and [acceptance handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md). The matrix below is historical context.
+
+
 2026-10-14 **Android 0.2.63/72本地统一候选**：实际 Mac WidgetKit 扩展经 REA JS/Apple/native 定向分析，原生 RemoteViews 支持摘要/仪表盘/活动/工具/模型及额度、三周期与每实例配置，旧 provider 保留。关于四入口响应式同组排列；HTTP/HTTPS 同屏，成功请求端点与上次连接区分；设备名/OS/运行版本/在线/同步均复用已有字段，未知不编造。A=客户端实现；Mac per-cell Intent、动画及 WidgetKit 调度属于平台差异；实际 Launcher/覆盖升级/小米边界分别见[统一交接](HANDOFF_0.2.63.md)和[对照清单](MAC_ANDROID_WIDGET_COMPARISON_063.md)。没有服务端协议扩展或 NAS 部署。
 
 2026-10-14 **Android 0.2.62/71已正式发布**：固定桌面0.70 commit ac4eeb2；客户端roll/count、近期/标题投影/分组分页、外观高级选项、CatPaw/本币余额支持已通过Release验收（458单元、55Android、8组96窗口及签名升级）。Tag源码`aefe855c700cb7cac69ab43dac4df64e8e8ff677`。已支持的客户端字段不证明生产已升级，core78/runtime5无新providers观察与全部依赖/未验证范围保留。

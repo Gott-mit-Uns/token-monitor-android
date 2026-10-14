@@ -49,13 +49,14 @@ fun DeviceDetails(device: Device, alias: String?, onDismiss: () -> Unit, onRenam
                 Text(strings.getString(R.string.health_note), style = MaterialTheme.typography.bodySmall)
                 health.clients.forEach { client ->
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(client.client, style = MaterialTheme.typography.titleSmall)
+                        Text(toolLabel(client.client), style = MaterialTheme.typography.titleSmall)
                         Text(when (client.overall) { "healthy" -> strings.getString(R.string.health_healthy); "waiting" -> strings.getString(R.string.health_waiting); "attention" -> strings.getString(R.string.health_attention); "unavailable" -> strings.getString(R.string.health_unavailable); else -> strings.getString(R.string.health_unknown) },
                             color = if (client.overall == "attention") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
                         Text(strings.getString(R.string.data_source, when (client.source) { "detected" -> strings.getString(R.string.source_detected); "missing" -> strings.getString(R.string.source_missing); else -> strings.getString(R.string.unknown) }), style = MaterialTheme.typography.bodySmall)
                         Text(strings.getString(R.string.collection_state, when (client.collection) { "direct" -> strings.getString(R.string.collection_direct); "idle" -> strings.getString(R.string.collection_idle); "pending" -> strings.getString(R.string.collection_pending); "ok" -> strings.getString(R.string.collection_ok); "failed" -> strings.getString(R.string.collection_failed); else -> strings.getString(R.string.unknown) }), style = MaterialTheme.typography.bodySmall)
                         Text(strings.getString(R.string.scan_total, client.liveTokens?.let { numbers.format(it) } ?: strings.getString(R.string.not_provided)), style = MaterialTheme.typography.bodySmall)
                         client.lastActivityDay?.let { Text(strings.getString(R.string.recent_usage_date, it), style = MaterialTheme.typography.bodySmall) }
+                        client.sourceChecks.forEach {check -> Text("${check.id}: ${strings.getString(if(check.exists) R.string.source_detected else R.string.source_missing)}",style=MaterialTheme.typography.bodySmall) }
                         client.diagnostics.forEach { code -> Text(when (code) {
                             "sync-timeout" -> strings.getString(R.string.diagnostic_timeout); "sync-spawn-failed" -> strings.getString(R.string.diagnostic_spawn_failed); "sync-exit-error" -> strings.getString(R.string.diagnostic_exit_error); "sync-failed" -> strings.getString(R.string.collection_failed)
                             "source-missing" -> strings.getString(R.string.diagnostic_source_missing); "no-usage-observed" -> strings.getString(R.string.diagnostic_no_usage); "wsl-detected-no-data" -> strings.getString(R.string.diagnostic_wsl); else -> strings.getString(R.string.diagnostic_unknown)

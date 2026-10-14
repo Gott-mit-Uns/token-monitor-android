@@ -15,11 +15,20 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /** Android releases use vMAJOR.MINOR.PATCH, independently of desktop and Hub revisions. */
-internal data class AndroidReleaseVersion(val major: Long, val minor: Long, val patch: Long): Comparable<AndroidReleaseVersion> {
+internal data class AndroidReleaseVersion(val major: Long, val minor: Long, val patch: Long, val upstream:String?=null): Comparable<AndroidReleaseVersion> {
     override fun compareTo(other: AndroidReleaseVersion): Int = compareValuesBy(this, other, {it.major}, {it.minor}, {it.patch})
-    override fun toString() = "$major.$minor.$patch"
+    override fun toString() = upstream?.let {"$it-android.$major.$minor.$patch"} ?: "$major.$minor.$patch"
     companion object {
         fun parse(value: String): AndroidReleaseVersion? {
+            val normalized=value.removePrefix("v")
+            if("-android." in normalized) {
+                val parts=normalized.split("-android.")
+                if(parts.size!=2 || "-android." in parts[1]) return null
+                val upstream=parse(parts[0]) ?: return null
+                val android=parse(parts[1]) ?: return null
+                if(upstream.upstream!=null || android.upstream!=null) return null
+                return android.copy(upstream=upstream.toString())
+            }
             val match = Regex("^v?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$").matchEntire(value) ?: return null
             val parts = match.groupValues.drop(1).map {it.toLongOrNull() ?: return null}
             return AndroidReleaseVersion(parts[0], parts[1], parts[2])

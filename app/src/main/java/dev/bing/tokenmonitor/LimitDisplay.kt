@@ -54,6 +54,7 @@ internal object LimitDisplay {
         fun remainingMoney() = pair(remaining?.let { if (showUsed) (cap?.minus(it) ?: return@let null).coerceAtLeast(0.0) else it },true)
         if (isSpend(window)) return LimitWindowText(used?.let { if (cap != null) "${money(it,window.currency)} / ${money(cap,window.currency)}" else "${money(it,window.currency)} spent" })
         return when (window.provider.lowercase(Locale.ROOT)) {
+            "notion" -> LimitWindowText(detail=rawCount())
             "commandcode" -> if (billing) LimitWindowText(detail=remainingMoney(),percentLeads=window.presentation.showMeter) else LimitWindowText()
             "kiro" -> if (!billing) LimitWindowText() else if (!window.presentation.showMeter) LimitWindowText(listOfNotNull(used?.let { "${count(it)} credits" },remaining?.let { money(it,"USD") }).joinToString(" · ").ifEmpty { null }) else LimitWindowText(detail=rawCount())
             "qoder" -> if (billing) LimitWindowText(detail=rawCount()) else LimitWindowText()
@@ -134,6 +135,7 @@ internal object LimitDisplay {
                 else -> emailLabel(row,name).ifEmpty {name.ifEmpty { if(identity==LimitIdentity()) legacy else "" }}
             }
         }
+        if(window.provider=="notion") return "Account ${index+1}"
         val label = base(window).ifEmpty { return "Account ${index+1}" }
         val collisions = peers.filter {base(it).equals(label,true)}
         if(collisions.size<=1) return text(label,masked)

@@ -125,6 +125,10 @@
       "label": "StepFun"
     },
     {
+      "id": "notion",
+      "label": "Notion AI"
+    },
+    {
       "id": "thirdparty",
       "label": "Third-party APIs"
     }
@@ -161,6 +165,7 @@
         "trae",
         "alibaba",
         "stepfun",
+        "notion",
         "thirdparty"
       ]
     },

@@ -650,13 +650,23 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                                 },true,"limit-plan-group-$provider")
                                             }
                                         }
+                                        if(provider=="workbuddy") {
+                                            val totals=Provider071.workbuddyTotals(accounts.map(LimitProviderLayout::record))
+                                            if(totals!=null) item {
+                                                Column(Modifier.fillMaxWidth().testTag("workbuddy-display-total"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+                                                    Text(strings.getString(R.string.workbuddy_display_total),style=quotaTextStyle(11,bold=true))
+                                                    totals.forEach {w -> Text(LimitDisplay.money((w["remaining"] as? JsonPrimitive)?.contentOrNull,(w["currency"] as? JsonPrimitive)?.contentOrNull),style=quotaDataTextStyle(11)) }
+                                                    Text(strings.getString(R.string.workbuddy_independent_balances),style=quotaTextStyle(10))
+                                                }
+                                            }
+                                        }
                                         if(provider=="mimo" && grouped) {
                                             val representatives=mimo.map {group->group.firstOrNull {it.first().presentation.identity.email?.isNotBlank()==true}?.first() ?: group.first().first()}
                                             mimo.forEachIndexed {index,group->
                                                 if(mimo.size>1) item {Text(LimitDisplay.accountTitle(representatives[index].copy(provider=""),representatives.map {it.copy(provider="")},index,preferences.limits.maskEmails),style=quotaTextStyle(11),modifier=Modifier.testTag("mimo-account-$index"))}
                                                 items(group) {windows->val first=windows.first();DesktopAccount(windows,showAccount=false,peers=peers,accountIndex=peers.indexOf(first),showProvider=false,now=calendarNow,titleOverride=if(first.status!=null && first.status!="ok" && first.stale!=true) first.account.orEmpty() else "",quotaRows=quotaRows[QuotaMotionProjection.accountRowsKey(windows)],quotaMotion=quotaMotion)}
                                             }
-                                        } else items(accounts) { windows -> DesktopAccount(windows,showAccount=grouped,peers=peers,accountIndex=peers.indexOf(windows.first()),showProvider=!grouped,now=calendarNow,quotaRows=quotaRows[QuotaMotionProjection.accountRowsKey(windows)],quotaMotion=quotaMotion) }
+                                        } else items(accounts,key={windows->windows.first().let {"${it.provider}:${it.presentation.identity.key ?: it.presentation.recordIndex}"}}) { windows -> DesktopAccount(windows,showAccount=grouped,peers=peers,accountIndex=peers.indexOf(windows.first()),showProvider=!grouped,now=calendarNow,quotaRows=quotaRows[QuotaMotionProjection.accountRowsKey(windows)],quotaMotion=quotaMotion) }
                                     }
                                 }
                                 HubPage.TRENDS -> {

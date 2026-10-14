@@ -1,0 +1,5 @@
+<resources>
+    <string name="workbuddy_display_total">Combined display</string>
+    <string name="workbuddy_independent_balances">Independent account balances; cannot be shared</string>
+    <string name="goose_calls_unknown">Calls unknown</string>
+</resources>

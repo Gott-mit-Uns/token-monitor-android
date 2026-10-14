@@ -53,6 +53,7 @@ internal object SessionListDisplay {
         val a=row.session?.accounting ?: return null
         val read=a.cacheRead.coerceAtLeast(0.0);val write=a.cacheWrite.coerceAtLeast(0.0)
         if(read<=0 && write<=0) return null
+        if(row.tool?.trim()?.lowercase(Locale.ROOT)=="goose") return a.input.takeIf {it>0}?.let {(read/it*100).coerceIn(0.0,100.0)}
         return read/(a.input.coerceAtLeast(0.0)+read+write)*100
     }
     fun rate(row:UsageRow):Double {
@@ -69,7 +70,7 @@ internal object SessionListDisplay {
             val cache=cachePercent(row)?.let {if(it>0 && it<1) "<1%" else "${floor(it.coerceAtMost(100.0)+0.5).toInt()}%"}.orEmpty()
             val rate=floor(rate(row)+0.5).takeIf {it>0}?.let {"${integer(it)} tok/s"}.orEmpty()
             val activity=listOf(if(row.session?.archived==true) archivedLabel else "",time(at,now,zone),
-                if(accounting.calls>0) "${integer(accounting.calls)} ${if(accounting.calls==1.0) "call" else "calls"}" else "",cache,rate).filter(String::isNotEmpty).joinToString(" · ")
+                if(!accounting.callsKnown) "Calls unknown" else if(accounting.calls>0) "${integer(accounting.calls)} ${if(accounting.calls==1.0) "call" else "calls"}" else "",cache,rate).filter(String::isNotEmpty).joinToString(" · ")
             SessionListRow(row.id,row,title.ifEmpty {parts},if(title.isEmpty()) activity else parts,if(title.isEmpty()) "" else activity,
                 idLabel(row.session?.sessionId ?: row.id),BigInteger.valueOf(row.tokens!!),row.cost?.let {runCatching {BigDecimal(it)}.getOrNull()}?.toPlainString() ?: "0",row.unpriced,at)
         }.let(::sorted)

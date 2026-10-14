@@ -1,5 +1,10 @@
 # 本轮固定上游 v0.70.0
 
+## 2026-10-15: Fixed v0.71.0
+
+Target `a514e2063563e318ef73c2a17fad68057c4e300c`; compare only v0.70.0 to v0.71.0. Android candidate `0.71.0-android.0.2.65` /74; reference 0.71.0, fullyAligned=false. Provider/account presentation and the exact fixed Hub registry are updated. Electron/local parsers and later main commits are outside this round. See [increment](DESKTOP_071_DIFF.md) and [handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md).
+
+
 2026-10-14。固定compare起点`3f106ae3d4712b26cced8272f0d488eaab0de1e6`、终点`ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`，不使用main。完整分类、源码链接和验收在DESKTOP_070_DIFF.md，Hub真实新字段边界在HUB_070_DEPENDENCIES.md。以下是历史0.69审计，保留可追溯性。
 
 # 上游同步方法与本次差异证据

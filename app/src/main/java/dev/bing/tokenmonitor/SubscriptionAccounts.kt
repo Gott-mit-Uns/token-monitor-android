@@ -50,8 +50,8 @@ internal object SubscriptionAccounts {
     fun match(subscription:Subscription,records:List<JsonObject>):JsonObject? {
         val accounts=records.filter {id(it.s("provider"))==id(subscription.provider)};if(accounts.isEmpty()) return null
         val binding=subscription.binding ?: SubscriptionBinding(profileName=subscription.account.orEmpty())
-        binding.accountKey.trim().takeIf {it.isNotEmpty()}?.let {key->accounts.firstOrNull {key in family(it)}?.let {return it}}
-        id(binding.accountEmail).takeIf {it.isNotEmpty()}?.let {address->accounts.firstOrNull {id(it.s("accountEmail").ifEmpty {it.s("email")})==address}?.let {return it}}
+        binding.accountKey.trim().takeIf {it.isNotEmpty()}?.let {key->accounts.firstOrNull {key in family(it)}?.let {return it};if(subscription.provider=="workbuddy") return null}
+        id(binding.accountEmail).takeIf {it.isNotEmpty()}?.let {address->accounts.filter {id(it.s("accountEmail").ifEmpty {it.s("email")})==address}.let {if(subscription.provider=="workbuddy") it.singleOrNull() else it.firstOrNull()}?.let {return it}}
         binding.profileName.trim().takeIf {it.isNotEmpty()}?.let {name->accounts.filter {it.s("accountName")==name}.singleOrNull()?.let {return it}}
         return accounts.singleOrNull()
     }

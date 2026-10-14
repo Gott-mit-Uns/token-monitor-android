@@ -4,10 +4,10 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class HubBuildInfoTest {
-    private fun info(core:Long=78,runtime:Long=5)=HubBuildInfo("node-hub",1,core,HubBuildRegistry.entries.getValue("core")[core] ?: "sha256:"+"a".repeat(64),runtime,HubBuildRegistry.entries.getValue("node-hub")[runtime] ?: "sha256:"+"b".repeat(64))
+    private fun info(core:Long=83,runtime:Long=5)=HubBuildInfo("node-hub",1,core,HubBuildRegistry.entries.getValue("core")[core] ?: "sha256:"+"a".repeat(64),runtime,HubBuildRegistry.entries.getValue("node-hub")[runtime] ?: "sha256:"+"b".repeat(64))
     @Test fun currentBuildMatchesDesktopRegistry() {assertEquals("current",info().status)}
     @Test fun oldBuildIsReportedWithItsRealRevisions() {assertEquals("updateAvailable",info(74).status)}
-    @Test fun futureBuildIsNewer() {assertEquals("remoteNewer",info(79,6).status)}
+    @Test fun futureBuildIsNewer() {assertEquals("remoteNewer",info(84,6).status)}
     @Test fun mixedOlderAndNewerIsUnknown() {assertEquals("unknown",info(74,6).status)}
     @Test fun mismatchedKnownFingerprintIsUnknown() {assertEquals("unknown",info().copy(coreBuildId="sha256:"+"a".repeat(64)).status)}
     @Test fun legacyHealthNeverTreatsProtocolVersionAsSoftwareVersion() {val value=HubBuildInfo.parse("""{"version":1,"runtime":"node"}""")!!;assertNull(value.coreRevision);assertEquals("legacy",value.status)}

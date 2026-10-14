@@ -84,3 +84,13 @@ Android复用现有GET /api/health的验证响应，保留可选hubBuild.schemaV
 V5 Android 实际联调已完成：真实 LAN 数据经受控只读回环桥接、真实 Lucky 原域名/系统 TLS 经仅转发加密字节的本地 CONNECT 诊断路线。实际 snapshot/history/标题/timed 平均速率及受限 Codex 可选字段解析、加密缓存、Home/Launcher/SSE 与冷模型恢复通过。直接 Android LAN 和直接公网/蜂窝/IPv6 仍未验证，详见 `docs/HANDOFF_V5_NETWORK.md`，不将诊断路线等同于手机网络。
 
 真实 TLS 还暴露并修复 Android 连接池主线程清理异常：空闲 TLS Socket 关闭可发送 close_notify，原 ViewModel 清理/网络替换会触发 NetworkOnMainThreadException。现在捕获原池后在独立 IO 调度中关闭，不改变鉴权、证书/主机名、端点准入、取消/epoch、SSE 或有效缓存规则。相同真实 Conscrypt keep-alive/StrictMode 测试 APK 的修复前后失败→通过，以及最终真实联调均有指纹证据。
+
+## Fixed v0.71.0 optional display fields
+
+`clients.goose` and session totals stay collector/Hub authority: no cache/reasoning addition or cross-day redistribution. `clientHealth.clients.goose.source.checks[]` admits only public `id=goose-db` and boolean exists, never paths. Unknown enums degrade to unknown.
+
+`limits.providers[].provider=notion` is non-monetary allowance only: session/windowMinutes360 and monthly billing, numeric used/limit and optional resetsAt. No invented monthly duration. Identity is a collector-generated account hash; unknown schema/status is unavailable. Notion balance/usageSummary/raw workspace/user fields never enter its native model, Token totals, costs or credits.
+
+WorkBuddy accounts use exact keys/region/status/stale/actionRequired/full windows. A missing bound key never falls back to another same-name/email account. Display totals require distinct keys, all healthy/non-stale accounts, and identical non-measurement window fields. Independent balances are not shareable; the total never replaces cached accounts, subscription bindings or authoritative stats.
+
+Fields are optional. HTTP/SSE/freshness/cache envelope/network admission remain unchanged. Remote Pi/CodeBuddy chat Detail still has no endpoint; requirements are a proposal only. See [increment and NAS coordination](DESKTOP_071_DIFF.md).
