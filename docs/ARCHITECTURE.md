@@ -1,5 +1,7 @@
 # Android 架构与模块索引
 
+2026-10-14 / 0.2.64 当前增量：Android 桌面小组件整体删除，两个 provider、配置 Activity、专属权限/布局/资源/刷新 hooks/入口/路由不再保留。常规只保留语言与关于等原有功能；`HubSyncDevices` 的采集设备按等宽两列自然排布，手机查看端与 Hub 角色仍明确区分。加密缓存与前台 HTTP/SSE 的职责不变。下面 0.2.63/0.2.61 小组件条目仅为已取消功能的历史记录，不能作为重新引入依据。验收见 [HANDOFF_0.2.64.md](HANDOFF_0.2.64.md)。
+
 2026-10-14 / 0.2.63 候选增量：原 `.HubWidgetProvider` / `.HubQuotaWidgetProvider` 仍为 RemoteViews 缓存宿主。`WidgetConfigurationStore` 按 appWidgetId 保存独立模式、周期、分解及脱敏额度标识；配置 Activity 异步读取原加密 HubStore，取消不提交。`WidgetProjection` / `WidgetCharts` / `WidgetDashboard` 为纯缓存统计与布局，系统 updatePeriodMillis 改为 1800000（30 分钟）并保留保存、偏好、boot、package-replaced、restore 重绘；无 Widget 网络连接、轮询器或常驻服务。`MainActivity` 原入口追加实例/周期路由，隐藏页面仍可直接打开。`HubState.connectedEndpoint` / `lastSuccessfulEndpoint` 由接受的网络响应写入，停流/失败清当前，旧缓存无 receipt 保持未知；可选 receipt 仍在原加密 envelope，无 Hub wire 协议变化。`HubSyncDevices` 区分查看手机、Hub 和采集设备。详见[统一交接](HANDOFF_0.2.63.md)。下面 updatePeriodMillis=0 是 0.2.61 的历史记录。
 
 2026-10-13 / 0.2.61 增量：`SettingSwitchMotion*` 只管理设置开关视觉与前台生命周期；`AndroidUpdate*` 为独立匿名、手动、可取消的正式发行查询，不耦合Hub状态；`HubQuotaWidget` 只读既有HubStore和额度投影，updatePeriodMillis=0；`DailyChartInspection` 只消费现有日数据与图表坐标，长按前不消费滑动，不新增数据读取。Widget入口通过原Activity前台额度导航，既有缓存/SSE协议不改。两处设置追加复用菜单及字体偏好。验收/边界见[联合交接](HANDOFF_0.2.61.md)。下文是历史架构审计。
@@ -22,7 +24,6 @@ flowchart TD
   U --> D[纯展示投影与页面组件]
   V --> C[HubStore AES-GCM + gzip + AtomicFile]
   C --> V
-  C --> W[HubWidgetProvider 仅读缓存]
   V --> Q[DisplayPreferenceStore 本地显示偏好]
   H --> B[同一 Hub: LAN HTTP / Lucky HTTPS]
   S --> B
@@ -41,7 +42,6 @@ flowchart TD
 | 缓存 | `HubStore.kt`，387 行 | noBackup 原子记录，AndroidKeyStore AES-256-GCM；v1/v2 兼容，v2 gzip；密文10 MiB/展开32 MiB；跨实例锁；读取不迁移 |
 | 偏好 | `DisplayPreferences.kt`、`HubConnectionSettings.kt` | 本地 UI/语言/动效/额度设置；连接草稿不进入 saveable 状态；双入口保存为一个 SavedHub |
 | 历史和共享 | `HubHistory.kt`、`DeviceHistoryStream.kt`、`HistoryReadReceipt.kt`、`HubModelNames.kt`、`HubPricing.kt`、`HubSubscriptions.kt` | revision/连接修订驱动明细失效；旧请求不能回写；不用设备列表重算 Hub 总量 |
-| Widget | `HubWidgetProvider.kt` | 缓存展示和打开应用；没有后台采集或持续连接 |
 
 SSE 消费采用一个待处理帧槽、独立消费 Job 和 conflated 保存队列，避免无限协程积压。epoch 隔离旧流，requestToken 隔离旧 HTTP，bindingToken/cacheSequence 隔离旧缓存写入。普通 EOF 等待已收到帧消费后退避重连；新流基底从空开始，必须收到 full snapshot。认证失败关闭流和读取，自动生命周期变化不解封。
 

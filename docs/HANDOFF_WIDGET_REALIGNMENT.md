@@ -1,5 +1,7 @@
 # Native Android Widget realignment
 
+> Historical scope only: the user cancelled Android home-screen Widgets after trying 0.2.63. Version 0.2.64 removes the implementation and General settings. Do not continue these Widget acceptance tasks; see [the current handoff](HANDOFF_0.2.64.md).
+
 This document covers the Widget portion of the unified candidate. Final version, commit, APK fingerprint, executed test receipts and open acceptance items are recorded in [the unified 0.2.63 handoff](HANDOFF_0.2.63.md) and [the Mac/Android comparison](MAC_ANDROID_WIDGET_COMPARISON_063.md). Added tests and static conclusions below are not proof that any emulator or Xiaomi test has passed.
 
 The user explicitly selected the Mac system desktop Widget added through Edit Widgets. Edge Dock, mini windows and main-window cards are separate surfaces. The installed Mac Widget's matching revision is `ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`. The focused REA investigation, binary identity, accepted calls and live screenshot evidence live under `evidence/widget-settings-063/rea-native/` and `evidence/widget-settings-063/mac/`. Revision-matched Swift and JavaScript are supporting source evidence, not observations of live behavior.

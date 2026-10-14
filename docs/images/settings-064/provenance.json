@@ -1,0 +1,118 @@
+{
+  "images": {
+    "devices-two-columns-dark.png": {
+      "sha256": "a1406394c71735e3983906f802a63bf2a353234fd78155dcf7a44dc544fc86e3",
+      "sourceRun": "ui-dark-repair",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "71938d8f506d38a7157840085f35419099bdd312061db28325ce673bf94f722f"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing method; dark grid enclosing suite separately failed General selector, later fixed/retested"
+    },
+    "devices-two-columns-light.png": {
+      "sha256": "68809853e88273852846b6a136026cc6c0f92f11573e7376dff45351e78261fb",
+      "sourceRun": "ui-light-first",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "ad1e4d9a8a05eb4ac9244f4d58ab5f0fbd1bb0b7d31b9b0b736146cfd4276214"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing suite"
+    },
+    "devices-font2-long-light.png": {
+      "sha256": "e9b7eac6028f3d9df1fb9dbe10a4bf27463f2059262d6f11b4dbe77c2db6f179",
+      "sourceRun": "ui-light-first",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "ad1e4d9a8a05eb4ac9244f4d58ab5f0fbd1bb0b7d31b9b0b736146cfd4276214"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing suite"
+    },
+    "general-no-widgets-chinese-dark.png": {
+      "sha256": "b58fca390e9840e7210306f5526fdc4e126f53b65b4b75b2d6020b82cc0a1740",
+      "sourceRun": "removal-final",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "b1ecbe2a9a7d74f0c2d61960ea3b3a51bf92e2a5d794f785758806c5a5885fac"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing suite"
+    },
+    "general-no-widgets-english-dark.png": {
+      "sha256": "b3543b91082382ff85394146763f0fc7eca41fd17bccee620e3516cbea564125",
+      "sourceRun": "removal-final",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "b1ecbe2a9a7d74f0c2d61960ea3b3a51bf92e2a5d794f785758806c5a5885fac"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing suite"
+    },
+    "sync-live-light.png": {
+      "sha256": "a1f098a80d1fd059e765018079e4f9ef90413a903ca03df1203b7bbcdb28214e",
+      "sourceRun": "ui-light-first",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "ad1e4d9a8a05eb4ac9244f4d58ab5f0fbd1bb0b7d31b9b0b736146cfd4276214"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing suite"
+    },
+    "sync-offline-light.png": {
+      "sha256": "c7c2bc1a418a3d530a87a5be443632a3d392a1bac21dabd6c20fcc7854d68676",
+      "sourceRun": "ui-light-first",
+      "installed": [
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient",
+          "sha256": "df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56"
+        },
+        {
+          "package": "dev.bing.tokenmonitor.nativeclient.test",
+          "sha256": "ad1e4d9a8a05eb4ac9244f4d58ab5f0fbd1bb0b7d31b9b0b736146cfd4276214"
+        }
+      ],
+      "kind": "actual API36 emulator Compose screenshot using synthetic acceptance data",
+      "scope": "passing suite"
+    }
+  },
+  "pixelEdits": "none; byte-for-byte original files",
+  "physicalPhone": "not tested"
+}

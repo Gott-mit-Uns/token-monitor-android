@@ -1,3 +1,5 @@
+> 历史对照：用户已取消 Android 桌面小组件，0.2.64 删除此功能。本文保留 REA/源码/现场的历史证据，不是当前版本功能承诺；见 [当前交接](HANDOFF_0.2.64.md)。
+
 # Mac 系统 Widget 与 Android 0.2.63 对照
 
 参照为本机已安装 Token Monitor 0.70.0 arm64 的 WidgetKit 扩展，UI 47 / schema 10 / revision `ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`。用户明确选择“编辑小组件”添加的系统桌面 Widget。Edge Dock、悬浮窗、迷你窗口和主界面卡片不属于本次 Widget 参照。
