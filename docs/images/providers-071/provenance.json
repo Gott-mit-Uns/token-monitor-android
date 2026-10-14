@@ -1,0 +1,54 @@
+{
+  "images": [
+    {
+      "file": "provider071-light.png",
+      "sha256": "cefd459d43de28def03b050a4b0205e4a4988c132b90154ee4b926e315adb365",
+      "productApkSha256": "039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4",
+      "testApkSha256": "4003fa5fc7e1b656ce34c587e84db5286a5a51c724752948b261288e33d1511e",
+      "source": "task-owned API36 ARM64 emulator-5660, public synthesized fixture",
+      "scene": "native component harness (400dp scroll viewport); system bars are host window, not product-theme evidence"
+    },
+    {
+      "file": "provider071-workbuddy-total.png",
+      "sha256": "ec9e28c6f4033967a0c26e6219471c79dd7cbbccdac7207d069fdb36dbd84f96",
+      "productApkSha256": "039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4",
+      "testApkSha256": "4003fa5fc7e1b656ce34c587e84db5286a5a51c724752948b261288e33d1511e",
+      "source": "task-owned API36 ARM64 emulator-5660, public synthesized fixture",
+      "scene": "actual Limits HubScreen"
+    },
+    {
+      "file": "provider071-dark.png",
+      "sha256": "edc9a26ef78628d39f872f3148209d1894a6d9e067cc131b1272ce31f06aa9a2",
+      "productApkSha256": "039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4",
+      "testApkSha256": "4003fa5fc7e1b656ce34c587e84db5286a5a51c724752948b261288e33d1511e",
+      "source": "task-owned API36 ARM64 emulator-5660, public synthesized fixture",
+      "scene": "native component harness (400dp scroll viewport); system bars are host window, not product-theme evidence"
+    },
+    {
+      "file": "provider071-session-summary.png",
+      "sha256": "abb0456b14e7579b43e916969c860a3049bfdf08629f782f0dc389d5172d0ca0",
+      "productApkSha256": "039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4",
+      "testApkSha256": "4003fa5fc7e1b656ce34c587e84db5286a5a51c724752948b261288e33d1511e",
+      "source": "task-owned API36 ARM64 emulator-5660, public synthesized fixture",
+      "scene": "native session summary dialog; no chat transcript"
+    },
+    {
+      "file": "provider071-320-font2-dark.png",
+      "sha256": "6922e552355883a91813d78ff3923472ed5408517300742431a892c8315ce02d",
+      "productApkSha256": "039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4",
+      "testApkSha256": "4003fa5fc7e1b656ce34c587e84db5286a5a51c724752948b261288e33d1511e",
+      "source": "task-owned API36 ARM64 emulator-5660, public synthesized fixture",
+      "scene": "native component harness (400dp scroll viewport); system bars are host window, not product-theme evidence"
+    },
+    {
+      "file": "provider071-320-font2-light.png",
+      "sha256": "d0060807e156b43c352f2b661094ee10b1973714ab77c8c3f89663674637022c",
+      "productApkSha256": "039825b43a713a70d123abc4e27d7311ff4a01418bed35404c3d17b43186bfa4",
+      "testApkSha256": "4003fa5fc7e1b656ce34c587e84db5286a5a51c724752948b261288e33d1511e",
+      "source": "task-owned API36 ARM64 emulator-5660, public synthesized fixture",
+      "scene": "native component harness (400dp scroll viewport); system bars are host window, not product-theme evidence"
+    }
+  ],
+  "pixelEditing": false,
+  "publicFixture": "app/src/androidTest/assets/provider-071-public.json"
+}

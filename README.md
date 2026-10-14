@@ -1,5 +1,8 @@
 # Token Monitor Android
 
+Current source includes the fixed desktop v0.71.0 signed candidate `0.71.0-android.0.2.65` / code74; the latest formal Release remains 0.2.64. See [candidate handoff](docs/HANDOFF_0.71.0_ANDROID_0.2.65.md) for automation and remaining protocol/physical-device gaps. This round keeps Android Widgets removed, excludes R8/shrinking, and does not publish or install on a phone.
+
+
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。
 
 **Token Monitor Android** 是 [Token Monitor](https://github.com/Javis603/token-monitor) 的 Android Hub 查看客户端，使用 Kotlin 与 Jetpack Compose 实现。连接已有 Hub，即可集中查看桌面设备同步的统计数据。

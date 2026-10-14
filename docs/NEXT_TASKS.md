@@ -1,5 +1,8 @@
 2026-10-15 **0.2.64/73 已合入 GitHub main 并正式发布：删除 Android 桌面小组件 + 设备两列**。用户试用 0.2.63 后明确取消全部桌面小组件及常规相关设置；保留关于与双地址改进，采集设备改为等宽两列。用户另行明确授权合并、推送及正式 Release，独立 `release/0.2.64` 工作区正常快进推送，固定 Tag `v0.2.64` / `a7d509903a46223af5c0ecb6f82937aee16108b3`；四附件及无需认证的 APK／校验文件完整下载一致，详见 [发布回执](GITHUB_PUBLICATION.md)。产品字节、签名和 0.2.64 验收保持，原主目录未提交修改保留。手机由用户自行安装，NAS 不动；真机及实网未验证项不改写。对方小包调查及未来优化提示词已交付，但未实施新的 R8／资源／字体优化，不推进旧实验或其他待办。本轮完成后停止。
 
+2026-10-15: Fixed desktop v0.71.0 candidate development and automated acceptance are complete: `0.71.0-android.0.2.65` / code74. Goose identity/health, Notion allowance windows and WorkBuddy exact binding/display totals are implemented; Widget removal and 0.2.64 product decisions remain. See [candidate handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md) for 464 unit tests, scoped native regression, signed upgrade and remaining gaps. This round pushes/merges code only; no formal Tag/Release or phone installation. Remote Pi/CodeBuddy chat detail, live Notion eligibility, production NAS fields and physical-device networks remain unverified. Stop after this candidate; do not follow upstream main or restart historical tasks.
+
+
 2026-10-14 **历史统一任务：0.2.63/72 小组件重新对齐 + 设置页整理候选**。从实时核实的 main `5670227` / 正式 0.2.62/71 创建独立 `feat/widget-settings-063`，原主目录未提交工作保留。用户已确认 Mac 系统桌面 Widget，并授权独立 REA Ghidra/JDK 工具链及单份 Widget 快照读取；真实定向逆向和产品实现完成，最终验收/候选指纹见 [HANDOFF_0.2.63.md](HANDOFF_0.2.63.md)。合并主线、推送、Tag/正式 Release、手机安装及生产 NAS 修改等待用户明确确认；本轮不推进 R8/资源瘦身或历史待办。小米、厂商 Launcher/锁屏调度、真实 LAN/HTTPS/蜂窝恢复保持待验收，旧真机失败不被模拟器结果覆盖。
 
 2026-10-14 **0.2.62/71桌面0.70适配正式发布完成**，Tag/产品提交`aefe855c700cb7cac69ab43dac4df64e8e8ff677`，APK及四附件完整回读校验通过。458单元/55Android/8组96窗口及正式签名升级通过，当前门槛0失败。生产新provider和实体设备/实网仍未验证；不改NAS/Hub/Agent、不自动安装手机。详见HANDOFF_0.2.62与GITHUB_PUBLICATION。本轮停止，不推进历史待办。
