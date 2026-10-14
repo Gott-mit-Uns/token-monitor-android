@@ -77,9 +77,16 @@ class LauncherWidgetLifecycleTest {
             bitmap.recycle()
         }
     }
-    private fun home() {
+    private fun launcherIdle(deadline: Long) {
+        val remaining = TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime())
+        assertTrue("Real launcher navigation exceeded its 15-second bound", remaining > 350)
+        automation.waitForIdle(350, minOf(2000, remaining))
+        automation.rootInActiveWindow?.refresh()
+    }
+    private fun home(deadline: Long) {
         assertTrue("System HOME action unavailable", automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME))
         await("default HOME package $launcherPackage") { automation.rootInActiveWindow?.packageName?.toString() == launcherPackage }
+        launcherIdle(deadline)
     }
     private fun widgetNode(quota: Boolean): AccessibilityNodeInfo? {
         val entry = if (quota) "quota_widget_title" else "widget_title"
@@ -91,30 +98,39 @@ class LauncherWidgetLifecycleTest {
             ?.performAction(action) == true
     }
     private fun showWidget(quota: Boolean): AccessibilityNodeInfo {
-        home()
         val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(15)
+        home(deadline)
         fun settledWidget(): AccessibilityNodeInfo? {
             val pageDeadline = minOf(deadline, System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(600))
             while (System.nanoTime() < pageDeadline) {
-                widgetNode(quota)?.let { return it }
+                // Read title and Open from one fresh, settled current-page tree.
+                val page = nodes()
+                val titleId = if (quota) "quota_widget_title" else "widget_title"
+                val openId = if (quota) "quota_widget_open" else "widget_open"
+                val title = page.firstOrNull { it.viewIdResourceName == "${context.packageName}:id/$titleId" && it.isVisibleToUser }
+                if (title != null && page.any { it.viewIdResourceName == "${context.packageName}:id/$openId" && it.isVisibleToUser }) return title
                 Thread.sleep(25)
             }
-            return widgetNode(quota)
+            return null
         }
         // A captured first failure showed the actual widget after the immediate
         // AX scan had ended. Wait for its real view ID after HOME and page motion;
         // the route's ordinary 15-second behavioral bound remains unchanged.
         settledWidget()?.let { return it }
         // Navigate actual accessible workspace pages; never use a guessed swipe coordinate.
-        repeat(8) {
-            if (System.nanoTime() >= deadline) return@repeat
-            scrollWorkspace(false)
+        for (attempt in 0 until 8) {
+            if (System.nanoTime() >= deadline) break
+            val moved = scrollWorkspace(false)
+            launcherIdle(deadline)
             settledWidget()?.let { return it }
+            if (!moved) break
         }
-        repeat(12) {
-            if (System.nanoTime() >= deadline) return@repeat
-            scrollWorkspace(true)
+        for (attempt in 0 until 12) {
+            if (System.nanoTime() >= deadline) break
+            val moved = scrollWorkspace(true)
+            launcherIdle(deadline)
             settledWidget()?.let { return it }
+            if (!moved) break
         }
         saveScreen("launcher-widget-not-visible")
         throw AssertionError("Pinned widget is not exposed on real HOME pages; workspace scrolling or RemoteViews accessibility may be unsupported")
