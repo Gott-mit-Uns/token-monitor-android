@@ -1,0 +1,32 @@
+{
+  "androidProductSHA256": "f7907c8d7c7728f3ab893ba23c585d9a46996cbb811b0668224d950897ad8f63",
+  "androidTestSHA256": "2092943429c4a41b67558af756064809a4a2dbb73b880af338e6f4678eb1eb4c",
+  "macPreview": "source-derived ImageRenderer, exact ac4eeb2 SwiftUI components; not installed WidgetKit screenshot",
+  "macLive": "actual system Widget values differ from the authorized current snapshot; not same input; cause unconfirmed",
+  "images": {
+    "android-host-dashboard-total.png": "914348c8a343666e66f1c5876c7155b7fb0fbb484fd5ad4ea17026724a36dec6",
+    "mac-sync-live.png": "d14e93e7edbe30b5f9f1a349b6562b6d1381f8354f21b46fb32678b36dc250d0",
+    "android-host-summary-total.png": "ea1382cbcb9bde955968fb7b89d7a6837f162a27475b86da2e98ccafecf65af9",
+    "mac-source-derived-summary-month.png": "7a502b568d7dd03a9b89bbdd76aa832423ba323200e32d1a4c5e0f86293e046e",
+    "mac-source-derived-dashboard-day.png": "367c7fbf48bfc1a1ee52d72819b1ac683e0a28d10a2cc03f7fe2be036b8b6c7c",
+    "mac-source-derived-dashboard-total.png": "d579640efb246b50c4eae660776d29d26ee8a4178c23c0065dd31757d5702958",
+    "mac-about-live.png": "97e7453865287d22876c8c39b3231185f74f9e6859092ecdfadeb30bdfac5e00",
+    "mac-system-widget-live.png": "4bfbde96bfb1b924129978685fd8f81e8e11ac7f72022f4db643630f0bd0dccd",
+    "android-host-dashboard-month.png": "d388adc2b8e422a8686cf855be18d18d800d4149b45d8fb43fc20eb5f9343dd6",
+    "android-host-summary-month.png": "2a9cd37aaa39a65def7dc941c0ff041d7423c03c9334f6f2962c3ca319bb7f27",
+    "mac-source-derived-summary-total.png": "a3fc5c807374463ca6663ea41a2c036f6ff15543c76c891335b2922b3c159f39",
+    "mac-source-derived-summary-day.png": "ff5feb3e4563fc05dcbd8b557f0dee675b43d7888466ce87e6da56148fa1aeae",
+    "android-host-summary-day.png": "9459648105d490122613814d15148cf2f0f988469882e2597e30130f014c1f21",
+    "mac-source-derived-dashboard-month.png": "8dcf21312da49583a4e9d9ababae04a7a5af9e5eee10be7bbca27d42c2dd84e7",
+    "android-host-dashboard-day.png": "7f2fe44bb90f8cc45eb77496740311995564ca57a81cbbb77a6e952d12119277",
+    "android-about-regular-light.png": "4f8cad3e454c535a9a42b83c6985c87cac150884a2dac67dfa7d98f57f5fbc4a",
+    "android-about-large-light.png": "9dfdc79bd4ec5347bfa185e2f5be2696b2b6350dbd2ca042deead8f78e88b36f",
+    "android-sync-live-light.png": "e303f241955597a40ac6008fbcb75354206a4f4e00940fc7bbfaacf4bebd702a",
+    "android-sync-offline-light.png": "8fb9e150505164773e8f6789ea6cb3a38e963ef48a3d19ca2e1f410475f69557"
+  },
+  "androidSettings": {
+    "productSHA256": "fbffcec4960ef8736c1104e58351fe7036df57cd39575125069d93251d7c2280",
+    "testSHA256": "97a0ae90419b6d31cd1bf93987d8ee9f41eb4759c97bbeb3273b155f5eba51ac",
+    "scope": "actual component screenshots from same-round settings validation; final f790 settings sources unchanged; synthetic addresses/devices, not Mac production input"
+  }
+}

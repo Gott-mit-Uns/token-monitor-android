@@ -1,5 +1,7 @@
 # Android 架构与模块索引
 
+2026-10-14 / 0.2.63 候选增量：原 `.HubWidgetProvider` / `.HubQuotaWidgetProvider` 仍为 RemoteViews 缓存宿主。`WidgetConfigurationStore` 按 appWidgetId 保存独立模式、周期、分解及脱敏额度标识；配置 Activity 异步读取原加密 HubStore，取消不提交。`WidgetProjection` / `WidgetCharts` / `WidgetDashboard` 为纯缓存统计与布局，系统 updatePeriodMillis 改为 1800000（30 分钟）并保留保存、偏好、boot、package-replaced、restore 重绘；无 Widget 网络连接、轮询器或常驻服务。`MainActivity` 原入口追加实例/周期路由，隐藏页面仍可直接打开。`HubState.connectedEndpoint` / `lastSuccessfulEndpoint` 由接受的网络响应写入，停流/失败清当前，旧缓存无 receipt 保持未知；可选 receipt 仍在原加密 envelope，无 Hub wire 协议变化。`HubSyncDevices` 区分查看手机、Hub 和采集设备。详见[统一交接](HANDOFF_0.2.63.md)。下面 updatePeriodMillis=0 是 0.2.61 的历史记录。
+
 2026-10-13 / 0.2.61 增量：`SettingSwitchMotion*` 只管理设置开关视觉与前台生命周期；`AndroidUpdate*` 为独立匿名、手动、可取消的正式发行查询，不耦合Hub状态；`HubQuotaWidget` 只读既有HubStore和额度投影，updatePeriodMillis=0；`DailyChartInspection` 只消费现有日数据与图表坐标，长按前不消费滑动，不新增数据读取。Widget入口通过原Activity前台额度导航，既有缓存/SSE协议不改。两处设置追加复用菜单及字体偏好。验收/边界见[联合交接](HANDOFF_0.2.61.md)。下文是历史架构审计。
 
 状态：2026-10-12 定向源码审计；基线 0.2.51-dev/code60。源码包目录下述文件均位于 `app/src/main/java/dev/bing/tokenmonitor/`。构建、测试和风险结论见 [接管报告](TAKEOVER_AUDIT_0.2.51.md)。

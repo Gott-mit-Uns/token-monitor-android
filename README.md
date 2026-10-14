@@ -6,6 +6,8 @@
 
 [下载最新版 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [全部版本](https://github.com/Gott-mit-Uns/token-monitor-android/releases) · [来源与许可](THIRD_PARTY_NOTICES.md)
 
+0.2.63 / 72 是本地统一验收候选：按实际安装 Mac 系统桌面 Widget 的 REA 调查重排原生 RemoteViews 用量/额度组件，增加独立实例内容和周期配置，整理关于页四个原有入口，并同时展示真实配置的 HTTP/HTTPS 与网络成功端点、已有采集设备信息。候选包、测试和平台差异见[统一交接](docs/HANDOFF_0.2.63.md)及[Mac/Android 对照](docs/MAC_ANDROID_WIDGET_COMPARISON_063.md)。尚未合并、推送或正式发布；小米安装及生产环境操作等待用户另行确认。
+
 0.2.62 以固定桌面 v0.70.0 为参考，新增可选逐位滚动动画，优化大量会话的近期选择和标题展示，集中外观高级选项，并支持 Hub 已上传的 CatPaw 用量及 MiniMax 本币余额。采集、计费、模型修正和额度刷新依赖 Hub／Agent；真实新供应商数据与实体手机网络仍未验证，见[本轮交接](docs/HANDOFF_0.2.62.md)。
 
 0.2.61 增加关于页 Android 自身更新入口、只读缓存额度小组件，以及 Dashboard/记录日图的长按拖动逐日查看。设置开关支持短过渡，普通设置下拉更紧凑，字体菜单可直接选用已有的 Inter + Noto Sans SC 和 JetBrains Mono。小组件标注缓存时间与过期信息，点按后在 App 前台刷新；下载与安装交给浏览器和 Android 系统。具体范围与验收边界见[联合更新交接](docs/HANDOFF_0.2.61.md)。
@@ -68,7 +70,7 @@
 
 Android 客户端读取 Hub 数据，本机不扫描 AI 工具日志、不采集本机 Token，也不承担后台 Agent 的工作。连接信息及缓存通过现有加密存储保存；应用退到后台后关闭常规 HTTP/SSE 连接，小组件仅读取缓存。
 
-本项目以桌面端的显示语义为参考，针对手机触控和屏幕宽度适配。桌面参考版本与具体实现范围单独记录，不代表所有桌面能力均已移植。真实手机、蜂窝网络和生产端新增字段的验收范围见 [最新交接](docs/HANDOFF_0.2.58.md)。
+本项目以桌面端的显示语义为参考，针对手机触控和屏幕宽度适配。桌面参考版本与具体实现范围单独记录，不代表所有桌面能力均已移植。真实手机、蜂窝网络和生产端新增字段的验收范围见 [最新交接](docs/HANDOFF_0.2.63.md)。
 
 ## 开发
 

@@ -1,6 +1,6 @@
 # Native Android Widget realignment
 
-This document covers the Widget portion of the unified candidate. The release coordinator supplies the final version, commit, APK fingerprint and executed test receipts. Added tests and static conclusions below are not proof that any emulator or Xiaomi test has passed.
+This document covers the Widget portion of the unified candidate. Final version, commit, APK fingerprint, executed test receipts and open acceptance items are recorded in [the unified 0.2.63 handoff](HANDOFF_0.2.63.md) and [the Mac/Android comparison](MAC_ANDROID_WIDGET_COMPARISON_063.md). Added tests and static conclusions below are not proof that any emulator or Xiaomi test has passed.
 
 The user explicitly selected the Mac system desktop Widget added through Edit Widgets. Edge Dock, mini windows and main-window cards are separate surfaces. The installed Mac Widget's matching revision is `ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`. The focused REA investigation, binary identity, accepted calls and live screenshot evidence live under `evidence/widget-settings-063/rea-native/` and `evidence/widget-settings-063/mac/`. Revision-matched Swift and JavaScript are supporting source evidence, not observations of live behavior.
 
@@ -9,7 +9,7 @@ The user explicitly selected the Mac system desktop Widget added through Edit Wi
 | Item | Mac source / REA evidence | Android implementation | Limits / verification |
 |---|---|---|---|
 | Actual kinds | Dashboard large; Summary small; Activity, Breakdown, Quota medium | Existing HubWidgetProvider offers Summary, Dashboard, Activity, Tools and Models; existing HubQuotaWidgetProvider offers Quota | Two registered provider identities retained for placed-widget upgrade continuity |
-| Dashboard | Metric and trend across top, quota across middle, activity / breakdown in lower columns | Real RemoteViews compact dashboard uses same structure at width >= 280dp, height >= 320dp, font scale < 1.5 | Needs real launcher measurements; extreme fonts/narrow sizes retain core values and explicitly request more space |
+| Dashboard | Metric and trend across top, quota across middle, activity / breakdown in lower columns | Real RemoteViews compact dashboard uses same structure at width >= 280dp, height >= 320dp, font scale < 1.5 | Real launcher Add/Resize/Delete and host measurements are recorded separately. Normal-size font 2 retains core values; retained height <240dp with font scale >=1.5 hides count/cost and shows truthful state plus enlarge prompt |
 | Periods | day / month / total | today / natural month / allTime per instance | Never uses the App's last30 month preference as a Widget month |
 | Numbers | Compact western or localized units | K/M/B or Chinese 万/亿 according to existing App compact-units and language choices | Exact full integer is accessible; unknown is an em dash, explicit zero remains zero |
 | Usage cost | USD multiplied by configured rate, symbol + two decimal places | Same rate/currency projection; partial pricing is marked `+ ?` | Provider quota/balance preserves its own currency, independently of usage currency |
