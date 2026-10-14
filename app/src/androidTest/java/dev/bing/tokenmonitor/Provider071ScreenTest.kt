@@ -3,6 +3,8 @@ package dev.bing.tokenmonitor
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Modifier
@@ -40,9 +42,11 @@ class Provider071ScreenTest {
             TokenTheme(dark.value,LanguageChoice.ENGLISH) {
                 CompositionLocalProvider(LocalDesktopAnimationClock provides clock) {
                     scroll=rememberScrollState()
-                    Column(Modifier.fillMaxWidth().height(400.dp).verticalScroll(scroll).testTag("provider071-scroll")) {
-                        LimitDisplay.groups(limits.value).forEachIndexed {i,windows ->
-                            key(windows.first().presentation.identity.key) {DesktopAccount(windows,peers=LimitDisplay.groups(limits.value).map {it.first()},accountIndex=i,now=Instant.parse("2026-10-15T00:00:00Z"))}
+                    Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).safeDrawingPadding()) {
+                        Column(Modifier.fillMaxWidth().height(400.dp).verticalScroll(scroll).testTag("provider071-scroll")) {
+                            LimitDisplay.groups(limits.value).forEachIndexed {i,windows ->
+                                key(windows.first().presentation.identity.key) {DesktopAccount(windows,peers=LimitDisplay.groups(limits.value).map {it.first()},accountIndex=i,now=Instant.parse("2026-10-15T00:00:00Z"))}
+                            }
                         }
                     }
                 }
@@ -55,7 +59,7 @@ class Provider071ScreenTest {
         compose.onNodeWithTag("limit-expanded-account-0").assertExists()
         compose.onNodeWithTag("limit-account-1").performScrollTo()
         val before=compose.runOnIdle {scroll.value};assertTrue(before>0)
-        compose.runOnIdle {limits.value=HubParser.parse(body().replace("\"used\": 25","\"used\": 30").replace("\"usedPercent\": 50","\"usedPercent\": 60")).limits;dark.value=true}
+        compose.runOnIdle {limits.value=HubParser.parse(body().replace("\"used\": 25","\"used\": 30").replace("\"usedPercent\": 50","\"usedPercent\": 60").replace("\"remaining\": 25","\"remaining\": 20")).limits;dark.value=true}
         compose.onNodeWithTag("limit-expanded-account-0").assertExists()
         assertEquals(before,compose.runOnIdle {scroll.value})
         compose.onNodeWithTag("limit-account-0").performScrollTo()
