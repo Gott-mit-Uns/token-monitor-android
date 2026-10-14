@@ -7,7 +7,11 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Rect
 import android.os.Build
+import android.os.SystemClock
+import android.view.InputDevice
+import android.view.MotionEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.test.core.app.ActivityScenario
 import androidx.test.filters.SdkSuppress
@@ -144,6 +148,27 @@ class LauncherWidgetLifecycleTest {
         }
         return null
     }
+    private fun describeNodes(label: String) {
+        record("actual-ui $label")
+        nodes().filter { it.isVisibleToUser && (it.actionList.isNotEmpty() || it.text != null) }.forEach { node ->
+            val bounds = Rect().also(node::getBoundsInScreen)
+            record("node class=${node.className} id=${node.viewIdResourceName} text=${node.text} desc=${node.contentDescription} bounds=$bounds enabled=${node.isEnabled} clickable=${node.isClickable} actions=${node.actionList.joinToString { "${it.id}:${it.label}" }}")
+        }
+    }
+    private fun injectTouch(action: Int, x: Float, y: Float, down: Long): Boolean {
+        val event = MotionEvent.obtain(down, SystemClock.uptimeMillis(), action, x, y, 0)
+        event.source = InputDevice.SOURCE_TOUCHSCREEN
+        return try { automation.injectInputEvent(event, true) } finally { event.recycle() }
+    }
+    private fun launcherHost(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+        var item: AccessibilityNodeInfo? = node
+        repeat(12) {
+            val current = item ?: return null
+            if (current.packageName?.toString() == launcherPackage && current.className?.toString()?.endsWith("LauncherAppWidgetHostView") == true) return current
+            item = current.parent
+        }
+        return null
+    }
     private fun tryRealResize(id: Int) {
         val node = showWidget(false)
         val action = launcherAction(node, setOf("resize", "调整大小", "调整尺寸"))
@@ -153,6 +178,7 @@ class LauncherWidgetLifecycleTest {
         }
         val before = options(id)
         assertTrue("Launcher Resize action failed", action.first.performAction(action.second))
+        describeNodes("after-real-resize-request id=$id")
         val changes = setOf("increase width", "decrease width", "increase height", "decrease height", "增加宽度", "减少宽度", "增加高度", "减少高度")
         var resizeControl: AccessibilityNodeInfo? = null
         var resizeAction: Pair<AccessibilityNodeInfo,Int>? = null
@@ -171,8 +197,11 @@ class LauncherWidgetLifecycleTest {
             automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
             return
         }
-        val changed = resizeAction?.let {it.first.performAction(it.second)} ?: resizeControl?.let(::click) ?: false
-        assertTrue("Real resize control/action failed", changed)
+        // The observed Nexus popup exposes both text and custom actions. A custom
+        // action returned false on the first run, so use its actual visible control
+        // first and prove the outcome from the real host options rather than the API boolean.
+        val changed = resizeControl?.let(::click) ?: resizeAction?.let {it.first.performAction(it.second)} ?: false
+        record("actual-resize-control-return=$changed id=$id")
         await("real host changed its options") { options(id) != before }
         record("resize VERIFIED id=$id before=$before after=${options(id)}")
         showWidget(false)
@@ -192,15 +221,62 @@ class LauncherWidgetLifecycleTest {
     }
     private fun removeOwned(id: Int, quota: Boolean) {
         if (id !in owned || manager.getAppWidgetInfo(id) == null) return
+        automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK)
         val node = showWidget(quota)
         val action = launcherAction(node, setOf("remove", "remove widget", "移除", "移除小组件", "删除"))
-            ?: throw AssertionError("Real HOME has no accessible Remove action for the owned widget; refusing to clear an unrelated host or guess drag coordinates")
-        assertTrue("Launcher Remove action failed", action.first.performAction(action.second))
+        if (action != null) {
+            record("actual-remove-accessibility-return=${action.first.performAction(action.second)} id=$id")
+        } else {
+            describeNodes("before-owned-remove id=$id")
+            val host = requireNotNull(launcherHost(node)) { "Owned widget has no actual LauncherAppWidgetHostView ancestor" }
+            val source = Rect().also(host::getBoundsInScreen)
+            assertFalse("Actual widget host has empty screen bounds", source.isEmpty)
+            val down = SystemClock.uptimeMillis()
+            assertTrue("Actual host press failed", injectTouch(MotionEvent.ACTION_DOWN, source.exactCenterX(), source.exactCenterY(), down))
+            try {
+                val removeLabels = setOf("remove", "remove widget", "移除", "移除小组件", "删除")
+                await("actual Launcher Remove drop target after owned-widget long press", 4) {
+                    nodes().any { it.isVisibleToUser && exactText(it, removeLabels) }
+                }
+                describeNodes("actual-owned-remove-drop-target id=$id")
+                val target = nodes().first { it.isVisibleToUser && exactText(it, removeLabels) }
+                val destination = Rect().also(target::getBoundsInScreen)
+                assertFalse("Observed Remove target has empty bounds", destination.isEmpty)
+                // Both ends come from the current real UI tree. No launcher screen
+                // coordinates, grid positions or unrelated host IDs are assumed.
+                assertTrue("Drag to observed Remove target failed", injectTouch(MotionEvent.ACTION_MOVE, destination.exactCenterX(), destination.exactCenterY(), down))
+                Thread.sleep(150)
+                assertTrue("Observed Remove drop failed", injectTouch(MotionEvent.ACTION_UP, destination.exactCenterX(), destination.exactCenterY(), down))
+                record("actual-remove-drag id=$id source=$source target=$destination")
+            } finally {
+                injectTouch(MotionEvent.ACTION_CANCEL, source.exactCenterX(), source.exactCenterY(), down)
+            }
+        }
         await("Launcher removed only requested provider id") { manager.getAppWidgetInfo(id) == null }
         val metadata = context.getSharedPreferences("widget-instance-v1", Context.MODE_PRIVATE)
         await("provider onDeleted removed only this instance metadata") { metadata.all.keys.none { it.startsWith("$id.") } }
         record("actual-launcher-remove id=$id metadata-cleared=true")
         owned.remove(id)
+    }
+    @Test fun cleanupPreviouslyRecordedOwnedInstanceOnly() {
+        val argument = InstrumentationRegistry.getArguments().getString("launcherCleanupOwnedId")
+        org.junit.Assume.assumeTrue("Administrative cleanup requires the explicit recorded owned-id argument", argument != null)
+        val requested = requireNotNull(argument)
+        record("administrative-cleanup-only requested-owned-id=$requested")
+        assertEquals("This helper only accepts the first-failure receipt's owned id", "8", requested)
+        assertTrue("Cleanup is restricted to the task emulator", Build.HARDWARE in setOf("ranchu", "goldfish") || Build.MODEL.startsWith("sdk_"))
+        assertTrue(automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_HOME))
+        await("actual HOME before explicit owned-id cleanup") { automation.rootInActiveWindow?.packageName?.toString()?.let { it != context.packageName && it != "com.android.systemui" && it != "android" } == true }
+        launcherPackage = requireNotNull(automation.rootInActiveWindow?.packageName?.toString())
+        val id = requested.toInt()
+        assertEquals("Recorded id must still be our usage provider", usageProvider, manager.getAppWidgetInfo(id)?.provider)
+        owned[id] = false
+        val previousFlags = automation.serviceInfo.flags
+        automation.serviceInfo = automation.serviceInfo.apply { flags = flags or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS }
+        try { removeOwned(id, false) } finally {
+            automation.serviceInfo = automation.serviceInfo.apply { flags = previousFlags }
+            writeReceipt()
+        }
     }
     private fun writeReceipt() {
         fun hash(path: String) = File(path).inputStream().use { stream ->
