@@ -156,3 +156,7 @@ README重写并入库四张实际模拟器演示截图；通过GitHub内容API�
 46单元及38Android/Compose定向通过；Lint0错误/97警告/1提示，新增0。身份保证限制、旧APK降级缓存限制、手机/蜂窝/Lucky未验证边界，均在预发布说明和[网络专项交接](HANDOFF_HUB_CONNECTION_FAILOVER.md)中明确保留。
 
 远程提交、标签及下载校验回执保存在本地evidence/github-publication/，发布完毕停止，不继续开发或修改生产服务。
+
+## 2026-10-15：0.71.0-01 正式发布
+
+固定桌面 v0.71.0，Android 编号参照 NAS 的上游基础＋两位修订号，code74。正式 Release 为 [v0.71.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-01)，旧更新解析兼容 latest 为 [v0.2.65](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.65)，均指向 `ac37728cd79d8bdb9b4e6104fb25586a3b6f7d11`，同字节签名 APK。SHA-256 `2e62a0239f6f6917d321d30152ccb6986e77a95e36fa693accb26d5594c3ccbb`。双草稿/正式8附件、双匿名APK与实际旧/新版公开更新元数据回归均已验证；完整回执、测试范围及未验证手机边界见 [补充交接](HANDOFF_0.71.0-01.md)。原0.2.64发布回执保留为历史。
