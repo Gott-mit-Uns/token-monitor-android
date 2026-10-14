@@ -6,7 +6,7 @@ internal enum class SyncEndpointStatus { CONFIGURED, CURRENT, PREVIOUS }
 
 internal object SyncSettingsPresentation {
     // Mac syncDevicePanel.syncedAt uses Hub receipt time for remote collection devices.
-    fun syncedAt(device:Device):String? = device.received?.takeIf(String::isNotBlank) ?: device.updated
+    fun syncedAt(device:Device):String? = listOfNotNull(device.received,device.updated).firstOrNull {SessionDisplay.timestamp(it)!=null}
     fun devices(devices:List<Device>):List<Device> = devices.sortedWith(
         compareBy<Device> {when(it.stale) {false->0;null->1;true->2}}
             .thenByDescending {SessionDisplay.timestamp(syncedAt(it)) ?: 0L}.thenBy {it.id})

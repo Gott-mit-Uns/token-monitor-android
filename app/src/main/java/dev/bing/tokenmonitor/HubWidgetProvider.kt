@@ -30,8 +30,9 @@ fun widgetUsage(snapshot: Snapshot, savedAt: Long, period: String = "today"): Wi
     val cost = value?.cost?.takeIf { it.length <= 128 }?.let { text -> runCatching {
         BigDecimal(text).takeIf { it.signum() >= 0 && it.precision() <= 100 && it.scale() in -100..100 }?.toPlainString()
     }.getOrNull() }
+    fun sourceTime(value: String?): Instant? = value?.takeIf { it.length <= 80 }?.let { runCatching { Instant.parse(it) }.getOrNull() }
     val newestDevice = snapshot.devices.mapNotNull { device ->
-        (device.received ?: device.updated)?.takeIf { it.length <= 80 }?.let { runCatching { Instant.parse(it) }.getOrNull() }
+        sourceTime(device.received) ?: sourceTime(device.updated)
     }.maxOrNull()?.toString()
     return WidgetUsage(value?.tokens, cost, (value?.unpriced ?: 0) > 0, newestDevice ?: snapshot.updated, savedAt,
         snapshot.devices.isNotEmpty() && snapshot.devices.all { it.stale == true })

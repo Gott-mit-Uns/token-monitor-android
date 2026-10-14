@@ -120,4 +120,16 @@ class WidgetAlignmentTest {
         val rows = widgetQuotaGroups(data, WidgetConfiguration(), now)
         assertEquals("first@example.invalid", rows.first().first().presentation.identity.email)
     }
+    @Test fun invalidReceiptTimeFallsBackToValidDeviceUpdateInsteadOfFreshHubTime() {
+        listOf("invalid", "", "x".repeat(81)).forEach { receipt ->
+            val source = HubParser.parse("""{"updatedAt":"2026-10-14T11:59:00Z","periods":{"today":{"totalTokens":10}},"devices":[{"deviceId":"fixture-collector","receivedAt":"$receipt","updatedAt":"2026-10-14T10:00:00Z","stale":false}]}""")
+            val usage = widgetUsage(source, now.toEpochMilli())
+            assertEquals("2026-10-14T10:00:00Z", usage.updated)
+            assertTrue(widgetStale(usage, now))
+        }
+        val future = HubParser.parse("""{"updatedAt":"2026-10-14T11:59:00Z","periods":{"today":{"totalTokens":10}},"devices":[{"deviceId":"fixture-collector","receivedAt":"2026-10-14T12:01:00Z","updatedAt":"2026-10-14T11:59:00Z","stale":false}]}""")
+        val usage = widgetUsage(future, now.toEpochMilli())
+        assertEquals("2026-10-14T12:01:00Z", usage.updated)
+        assertTrue(widgetStale(usage, now))
+    }
 }
