@@ -10,7 +10,7 @@
         "goose:public": {
           "client": "goose",
           "sessionId": "public",
-          "startedAt": "2026-10-14T01:00:00Z",
+          "startedAt": "2026-10-15T01:00:00Z",
           "lastUsedAt": "2026-10-15T01:00:00Z",
           "totalTokens": 1500,
           "inputTokens": 1000,

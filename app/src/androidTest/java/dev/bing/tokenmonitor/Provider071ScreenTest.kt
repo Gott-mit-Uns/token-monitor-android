@@ -16,11 +16,20 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
 import java.util.UUID
+import java.io.File
+import android.graphics.Bitmap
+import java.math.BigInteger
 
 class Provider071ScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val context get()=InstrumentationRegistry.getInstrumentation().targetContext
     private fun body()=InstrumentationRegistry.getInstrumentation().context.assets.open("provider-071-public.json").bufferedReader().use {it.readText()}
+    private fun capture(name:String) {
+        compose.waitForIdle()
+        val bitmap=InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
+        File(context.getExternalFilesDir(null),"provider071-$name.png").outputStream().use {bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}
+        bitmap.recycle()
+    }
     @Test fun newAllowanceWindowsAndRefreshKeepAccountExpansionAndScrollInBothThemes() {
         val limits=mutableStateOf(HubParser.parse(body()).limits)
         val dark=mutableStateOf(false)
@@ -40,6 +49,7 @@ class Provider071ScreenTest {
         }}
         compose.onAllNodesWithText("Rolling 6 hours").assertCountEquals(2)
         compose.onAllNodesWithText("Reset time unknown").assertCountEquals(4)
+        capture("light")
         compose.onNodeWithTag("limit-account-0").performClick()
         compose.onNodeWithTag("limit-expanded-account-0").assertExists()
         compose.onNodeWithTag("limit-account-1").performScrollTo()
@@ -49,6 +59,72 @@ class Provider071ScreenTest {
         assertEquals(before,compose.runOnIdle {scroll.value})
         compose.onNodeWithTag("limit-account-0").performScrollTo()
         assertTrue(compose.onAllNodesWithText("Account 1",useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty())
+        capture("dark")
+    }
+    @Test fun piAndCodebuddySummaryRefreshKeepsOpenDialogAndScrollWithoutChatContent() {
+        val snapshot=HubParser.parse(body())
+        val source=snapshot.periods.getValue("today").sessions.single()
+        val tokens=mutableStateOf(1500L)
+        lateinit var scroll:androidx.compose.foundation.ScrollState
+        val clock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
+        compose.activity.runOnUiThread {compose.activity.setContent {
+            TokenTheme(false,LanguageChoice.ENGLISH) {
+                CompositionLocalProvider(LocalDesktopAnimationClock provides clock) {
+                    scroll=rememberScrollState()
+                    Column(Modifier.fillMaxSize().verticalScroll(scroll)) {
+                        repeat(18) {index ->
+                            val client=if(index%2==0) "pi" else "codebuddy"
+                            val row=source.copy(id="public-$index",tool=client,tokens=tokens.value)
+                            val display=SessionListDisplay.raw(listOf(row),Instant.parse("2026-10-15T03:00:00Z").toEpochMilli()).single()
+                            key(display.id) {DesktopSessionRow(display,BigInteger.valueOf(3000),Instant.parse("2026-10-15T03:00:00Z").toEpochMilli(),openReview={})}
+                        }
+                    }
+                }
+            }
+        }}
+        compose.onNodeWithTag("session-row-public-15").performScrollTo().performClick()
+        compose.onNodeWithTag("session-summary-details").assertExists()
+        val before=compose.runOnIdle {scroll.value};assertTrue(before>0)
+        compose.runOnIdle {tokens.value=2000}
+        compose.onNodeWithTag("session-summary-details").assertExists()
+        assertTrue(compose.onAllNodesWithText("2,000 Token",substring=true).fetchSemanticsNodes().isNotEmpty())
+        assertEquals(before,compose.runOnIdle {scroll.value})
+        capture("session-summary")
+    }
+    @Test fun fullLimitsPageShowsOnlyCompatibleWorkbuddyDisplayTotalAndRemovesItOnAccountFailure() {
+        val state=mutableStateOf(HubState(snapshot=HubParser.parse(body()),history=HubHistory(emptyList(),emptyList())))
+        val actions=object:HubUiActions {
+            override fun connect(address:String,credential:String,alternate:String) {}
+            override fun refreshSaved() {}
+            override fun switchEndpoint() {}
+            override fun hasAlternate()=false
+            override fun endpointType()="https"
+            override fun loadHistory() {}
+            override fun loadModelNames() {}
+            override fun loadSubscriptions() {}
+            override fun forget() {}
+            override fun renameDevice(id:String,input:String) {}
+        }
+        val prefs=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(reduceMotion="on"))
+        val clock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(false,prefs.language,prefs.appearance) {
+            CompositionLocalProvider(LocalDesktopAnimationClock provides clock) {HubScreen(state.value,actions,preferences=prefs)}
+        }}}
+        compose.onNodeWithTag("hub-view-selector").performClick()
+        compose.onNodeWithTag("view-limits").performScrollTo().performClick()
+        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("workbuddy-display-total"))
+        compose.onNodeWithTag("workbuddy-display-total").assertExists()
+        compose.onNodeWithText("Independent account balances; cannot be shared").assertExists()
+        compose.onNodeWithText("160.00").assertExists()
+        capture("workbuddy-total")
+        val root=Json.parseToJsonElement(body()).jsonObject
+        val limits=root["limits"]!!.jsonObject
+        val providers=limits["providers"]!!.jsonArray.mapIndexed {i,p ->if(i==3) JsonObject(p.jsonObject.toMutableMap().apply {put("status",JsonPrimitive("unauthorized"))}) else p}
+        val changed=JsonObject(root.toMutableMap().apply {put("limits",JsonObject(limits.toMutableMap().apply {put("providers",JsonArray(providers))}))})
+        compose.runOnIdle {state.value=state.value.copy(snapshot=HubParser.parse(changed.toString()))}
+        compose.onNodeWithTag("workbuddy-display-total").assertDoesNotExist()
+        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("limit-account-3"))
+        compose.onNodeWithText("Sign in again").assertExists()
     }
     @Test fun encryptedSnapshotColdRestoreAndFreshnessRetainNewFieldsAndOldHub() {
         val name="provider071-${UUID.randomUUID()}.bin";val store=HubStore(context,name)

@@ -8,12 +8,11 @@ class LimitPreferencesTest {
     private val data by lazy {javaClass.classLoader!!.getResourceAsStream("limit-preferences-parity.json")!!.bufferedReader().use {Json.parseToJsonElement(it.readText()).jsonObject}}
     private fun JsonElement.strings()=jsonArray.map {it.jsonPrimitive.content}
     private fun JsonElement.hidden()=jsonObject.mapValues {it.value.strings()}
-    private fun withNotion(order:List<String>)=order.toMutableList().apply {add(indexOf("thirdparty"),"notion")}
     @Test fun originalDesktopOrderingUsageIdsFallbacksAndBoundsArePreserved() {
         data.getValue("orders").jsonArray.forEach {raw->
             val case=raw.jsonObject;val input=case.getValue("input").strings()
-            assertEquals(case.getValue("selection").strings(),LimitPreferences.selection(input));assertEquals(withNotion(case.getValue("order").strings()),LimitPreferences.order(input))
-            case.getValue("moves").jsonArray.forEach {move->val m=move.jsonObject;assertEquals(withNotion(m.getValue("value").strings()),LimitPreferences.move(input,m.getValue("id").jsonPrimitive.content,m.getValue("direction").jsonPrimitive.int))}
+            assertEquals(case.getValue("selection").strings(),LimitPreferences.selection(input));assertEquals(case.getValue("order").strings(),LimitPreferences.order(input))
+            case.getValue("moves").jsonArray.forEach {move->val m=move.jsonObject;assertEquals(m.getValue("value").strings(),LimitPreferences.move(input,m.getValue("id").jsonPrimitive.content,m.getValue("direction").jsonPrimitive.int))}
         }
         data.getValue("items").jsonArray.forEach {raw->
             val case=raw.jsonObject;val input=case.getValue("input").jsonPrimitive.content;val normalized=case.getValue("normalized").jsonPrimitive.contentOrNull
