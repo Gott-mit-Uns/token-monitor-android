@@ -228,13 +228,30 @@ class LauncherWidgetLifecycleTest {
             record("actual-remove-accessibility-return=${action.first.performAction(action.second)} id=$id")
         } else {
             describeNodes("before-owned-remove id=$id")
+            val removeLabels = setOf("remove", "remove widget", "移除", "移除小组件", "删除")
+            val move = launcherAction(node, setOf("move item", "移动项目", "移动"))
+            if (move != null) {
+                // The actual host always exposed Move item in the failure receipts.
+                // It starts the launcher's native accessible drag, whose Remove
+                // control belongs to this selected widget, without pointer guessing.
+                record("actual-native-move-return=${move.first.performAction(move.second)} id=$id action=${move.second}")
+                await("actual Remove target after native owned-widget Move item", 4) {
+                    nodes().any { it.isVisibleToUser && exactText(it, removeLabels) }
+                }
+                describeNodes("native-owned-move-remove-target id=$id")
+                val nativeRemove = widgetNode(quota)?.let { launcherAction(it, removeLabels) }
+                if (nativeRemove != null) record("actual-remove-after-native-move-return=${nativeRemove.first.performAction(nativeRemove.second)} id=$id action=${nativeRemove.second}")
+                else {
+                    val target = nodes().first { it.isVisibleToUser && exactText(it, removeLabels) }
+                    record("actual-remove-accessible-drag-target-return=${click(target)} id=$id")
+                }
+            } else {
             val host = requireNotNull(launcherHost(node)) { "Owned widget has no actual LauncherAppWidgetHostView ancestor" }
             val source = Rect().also(host::getBoundsInScreen)
             assertFalse("Actual widget host has empty screen bounds", source.isEmpty)
             val down = SystemClock.uptimeMillis()
             assertTrue("Actual host press failed", injectTouch(MotionEvent.ACTION_DOWN, source.exactCenterX(), source.exactCenterY(), down))
             try {
-                val removeLabels = setOf("remove", "remove widget", "移除", "移除小组件", "删除")
                 await("actual Launcher Remove drop target after owned-widget long press", 4) {
                     nodes().any { it.isVisibleToUser && exactText(it, removeLabels) }
                 }
@@ -263,6 +280,7 @@ class LauncherWidgetLifecycleTest {
                 }
             } finally {
                 injectTouch(MotionEvent.ACTION_CANCEL, source.exactCenterX(), source.exactCenterY(), down)
+            }
             }
         }
         await("Launcher removed only requested provider id") { manager.getAppWidgetInfo(id) == null }
