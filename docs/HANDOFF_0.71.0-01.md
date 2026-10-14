@@ -20,3 +20,9 @@
 Pi / CodeBuddy 的远端会话摘要已支持，聊天明细尚无 Hub 接口；本次无伪造内容或 Android 本地采集。Notion fixture 验证不代表所有真实账号登录/资格已验证。生产 NAS 的新供应商字段与真实手机网络需要独立证据，本次不操作 NAS；手机由用户自行安装。
 
 两条固定 Release 共用相同源提交和 APK，仅文件名按旧解析器需要不同。后续须保持兼容入口的标题、版本映射与正式入口一致，不重写固定 Tag。
+
+## 最终包验收
+
+最终源码 `453ec2a31cb1feb766c33be1abebe29cccc00300`，APK 15,239,578 bytes，SHA-256 `2e62a0239f6f6917d321d30152ccb6986e77a95e36fa693accb26d5594c3ccbb`。包名 `dev.bing.tokenmonitor.nativeclient`；原证书 SHA-256 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202` 不变。
+
+全部 466 项单元测试通过；lint 0 Error/Fatal，101 Warning、1 Hint。API36 ARM64 emulator-5660：真实旧包更新界面 fixture 1/1，旧包数据准备 1/1，最终包升级保留数据＋更新 UI＋0.71 展示 8/8，冷启动成功。两份不同文件名的 APK 完全相同。证据 `evidence/publication-065/` 在独立工作树保留；公开可审阅摘要随 Release 的 VALIDATION.md / release-manifest.json 交付。此前候选全回归和真实手机验收边界维持上述区分。
