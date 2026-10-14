@@ -92,10 +92,30 @@ class LauncherWidgetLifecycleTest {
     }
     private fun showWidget(quota: Boolean): AccessibilityNodeInfo {
         home()
-        widgetNode(quota)?.let { return it }
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(15)
+        fun settledWidget(): AccessibilityNodeInfo? {
+            val pageDeadline = minOf(deadline, System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(600))
+            while (System.nanoTime() < pageDeadline) {
+                widgetNode(quota)?.let { return it }
+                Thread.sleep(25)
+            }
+            return widgetNode(quota)
+        }
+        // A captured first failure showed the actual widget after the immediate
+        // AX scan had ended. Wait for its real view ID after HOME and page motion;
+        // the route's ordinary 15-second behavioral bound remains unchanged.
+        settledWidget()?.let { return it }
         // Navigate actual accessible workspace pages; never use a guessed swipe coordinate.
-        repeat(8) { if (!scrollWorkspace(false)) return@repeat; Thread.sleep(200); widgetNode(quota)?.let { return it } }
-        repeat(12) { if (!scrollWorkspace(true)) return@repeat; Thread.sleep(200); widgetNode(quota)?.let { return it } }
+        repeat(8) {
+            if (System.nanoTime() >= deadline) return@repeat
+            scrollWorkspace(false)
+            settledWidget()?.let { return it }
+        }
+        repeat(12) {
+            if (System.nanoTime() >= deadline) return@repeat
+            scrollWorkspace(true)
+            settledWidget()?.let { return it }
+        }
         saveScreen("launcher-widget-not-visible")
         throw AssertionError("Pinned widget is not exposed on real HOME pages; workspace scrolling or RemoteViews accessibility may be unsupported")
     }
