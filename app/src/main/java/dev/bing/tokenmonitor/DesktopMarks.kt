@@ -20,6 +20,7 @@ internal val desktopToolLabels = mapOf(
     "copilot" to "GitHub Copilot",
     "pi" to "Pi",
     "omp" to "Oh My Pi",
+    "goose" to "Goose",
     "zed" to "Zed",
     "kilo" to "Kilo",
     "commandcode" to "Command Code",
@@ -60,6 +61,7 @@ internal val desktopManagedToolIds = listOf(
     "copilot",
     "pi",
     "omp",
+    "goose",
     "zed",
     "kilo",
     "commandcode",
@@ -111,6 +113,7 @@ internal val desktopProviderLabels = mapOf(
     "trae" to "Trae CN",
     "alibaba" to "Alibaba Cloud",
     "stepfun" to "StepFun",
+    "notion" to "Notion AI",
     "thirdparty" to "Third-party APIs",
 )
 

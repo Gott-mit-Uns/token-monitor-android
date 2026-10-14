@@ -11,7 +11,7 @@ import kotlin.math.floor
 data class SessionLiveActivity(val state:String,val observedAt:Long)
 data class SessionPromptCache(val observedAt:String,val ttlSeconds:Int)
 data class SessionAccounting(val calls:Double=0.0,val input:Double=0.0,val cacheRead:Double=0.0,val cacheWrite:Double=0.0,
-    val output:Double=0.0,val timedOutput:Double=0.0,val timedDurationMs:Double=0.0)
+    val output:Double=0.0,val timedOutput:Double=0.0,val timedDurationMs:Double=0.0,val callsKnown:Boolean=true)
 /** Only aggregate display metadata provided by the Hub; no transcript or message fields. */
 data class SessionMetadata(val title:String?=null,val projectLabel:String?=null,val sessionId:String?=null,
     val startedAt:String?=null,val kind:String?=null,val archived:Boolean=false,val models:Map<String,Long> = emptyMap(),
@@ -44,8 +44,8 @@ internal object SessionMetadataParser {
         return SessionMetadata(title,text("projectLabel"),text("sessionId"),text("startedAt"),text("sessionKind"),
             listOf("archived","deleted","sourceDeleted").any {(row[it] as? JsonPrimitive)?.booleanOrNull==true},models,
             positive("contextTokens"),positive("contextWindow"),cache,
-            SessionAccounting(counter("messageCount"),counter("inputTokens"),counter("cacheReadTokens"),counter("cacheWriteTokens"),
-                counter("outputTokens"),counter("timedOutputTokens"),counter("timedDurationMs")),
+            SessionAccounting(if(client=="goose") 0.0 else counter("messageCount"),counter("inputTokens"),counter("cacheReadTokens"),counter("cacheWriteTokens"),
+                counter("outputTokens"),counter("timedOutputTokens"),counter("timedDurationMs"),callsKnown=client!="goose"),
             ((row["sessionId"] as? JsonPrimitive)?.contentOrNull?.takeIf {it.isNotEmpty()} ?: (row["session_id"] as? JsonPrimitive)?.contentOrNull).orEmpty().trim().lowercase(java.util.Locale.ROOT).let {it.startsWith("reasonix:") || it.startsWith("reasonix-stats:")},
             (row["waitingForInput"] as? JsonPrimitive)?.takeIf {client=="codex" && !it.isString}?.booleanOrNull,live,native,
             text("parentSessionId") ?: text("parent_session_id"),text("parentClient")?.takeIf {Regex("[a-z0-9_-]{1,64}",RegexOption.IGNORE_CASE).matches(it)}?.lowercase(java.util.Locale.ROOT),thread)

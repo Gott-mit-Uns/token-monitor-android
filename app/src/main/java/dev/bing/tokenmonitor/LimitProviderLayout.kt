@@ -21,7 +21,7 @@ internal object LimitProviderLayout {
         fun fields(value:JsonObject,allowed:Set<String>,scalarOnly:Set<String> = emptySet())=JsonObject(value.filter { (key,item) ->
             key in allowed && (key !in scalarOnly || (item is JsonPrimitive && item !== JsonNull))
         })
-        val header=setOf("provider","status","stale","updatedAt","checkedAt","accountLabel","accountName","accountEmail","email","planLabel","accountKey","workspaceLabel","workspaceKind","source","sourceDetail","sourceDeviceId","adapterId","balanceUsd","actionRequired","profileId")
+        val header=setOf("provider","status","stale","updatedAt","checkedAt","accountLabel","accountName","accountEmail","email","planLabel","accountKey","workspaceLabel","workspaceKind","source","sourceDetail","sourceDeviceId","adapterId","balanceUsd","actionRequired","profileId","region")
         val window=setOf("kind","label","metric","remaining","used","limit","currency","remainingPercent","usedPercent","resetsAt","resetDescription","boundaryKind","detail","showMeter","additional","limitId","limitName","windowMinutes","id","quotaId","model","group")
         val funds=setOf("amount","currency","todaySpend","weekSpend","monthSpend","allTimeSpend","requestCount","quotaGroup","expiresAt","giftBalance","cashBalance","planUsed","planLimit","planPercent","planStatus")
         val usage=setOf("period","todayTokens","weekTokens","totalTokens","inputTokens","outputTokens","requests","cacheReadTokens","cacheCreationTokens","averageDurationMs","standardCost")
@@ -143,7 +143,7 @@ internal object LimitProviderLayout {
         return LimitDisplay.windowText(limit,used)
     }
     fun project(provider:JsonObject,used:Boolean=false,locale:Locale=Locale.US,now:Instant=Instant.now(),zone:ZoneId=ZoneId.systemDefault()):List<ProviderQuotaRow> {
-        val id=provider.s("provider").orEmpty();val windows=provider.rows("windows");val balance=provider.obj("balance")
+        val id=provider.s("provider").orEmpty();val windows=if(id=="notion") Provider071.notionWindows(provider) else provider.rows("windows");val balance=provider.obj("balance")
         val result=mutableListOf<ProviderQuotaRow>()
         fun first(kind:String)=windows.firstOrNull {it.s("kind")==kind}
         fun all(kind:String)=windows.filter {it.s("kind")==kind}
@@ -216,6 +216,10 @@ internal object LimitProviderLayout {
             result+=ProviderQuotaRow("","${count(count)} reset${if(count==1.0) "" else "s"}",wide=true,item="resets",details=details,resetSummary=summary.joinToString("·"))
         }
         when(id) {
+            "notion" -> windows.forEach {w ->
+                row(w,if(w.s("kind")=="session") {if(locale.language=="zh") "滚动 6 小时" else "Rolling 6 hours"} else {if(locale.language=="zh") "月度" else "Monthly"},wide=true,detail=text(provider,w,used).detail)
+                if(w.s("resetsAt").isNullOrBlank()) result[result.lastIndex]=result.last().copy(boundary=if(locale.language=="zh") "重置时间未知" else "Reset time unknown")
+            }
             "codex" -> {
                 val primary=windows.filter {it.flag("additional")!=true}
                 listOf("session","weekly","billing").forEach {kind->row(primary.firstOrNull {it.s("kind")==kind},tone=if(kind=="session") 0.95 else 0.68,wide=kind=="billing" || (kind=="session" && primary.none {it.s("kind") in setOf("weekly","billing")}) || (kind=="weekly" && primary.none {it.s("kind") in setOf("session","billing")}))}

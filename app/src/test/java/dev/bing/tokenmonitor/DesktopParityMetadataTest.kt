@@ -5,7 +5,7 @@ import org.junit.Test
 
 class DesktopParityMetadataTest {
     @Test fun referenceDoesNotClaimFullParityOrInferHubAppVersionFromProtocol() {
-        assertEquals("0.70.0",DesktopParityMetadata.reference)
+        assertEquals("0.71.0",DesktopParityMetadata.reference)
         assertFalse(DesktopParityMetadata.fullyAligned)
         assertNull(HubBuildInfo.parse("""{"version":1}""")!!.coreRevision)
     }

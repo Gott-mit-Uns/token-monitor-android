@@ -1,0 +1,124 @@
+{
+  "periods": {
+    "today": {
+      "totalTokens": 1500,
+      "costUsd": "0.125",
+      "clients": {
+        "goose": 1500
+      },
+      "sessions": {
+        "goose:public": {
+          "client": "goose",
+          "sessionId": "public",
+          "startedAt": "2026-10-14T01:00:00Z",
+          "lastUsedAt": "2026-10-15T01:00:00Z",
+          "totalTokens": 1500,
+          "inputTokens": 1000,
+          "cacheReadTokens": 400,
+          "outputTokens": 500,
+          "messageCount": 1,
+          "models": {
+            "public-alpha": 1000,
+            "public-beta": 500
+          }
+        }
+      }
+    }
+  },
+  "limits": {
+    "providers": [
+      {
+        "provider": "notion",
+        "status": "ok",
+        "accountKey": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "planLabel": "Business",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Rolling",
+            "windowMinutes": 360,
+            "used": 25,
+            "limit": 50,
+            "usedPercent": 50,
+            "remaining": 25
+          },
+          {
+            "kind": "billing",
+            "label": "Monthly",
+            "used": 100,
+            "limit": 400,
+            "usedPercent": 25,
+            "remaining": 300,
+            "resetDescription": "Monthly"
+          }
+        ]
+      },
+      {
+        "provider": "notion",
+        "status": "ok",
+        "accountKey": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "planLabel": "Business",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Rolling",
+            "windowMinutes": 360,
+            "used": 25,
+            "limit": 50,
+            "usedPercent": 50,
+            "remaining": 25
+          },
+          {
+            "kind": "billing",
+            "label": "Monthly",
+            "used": 100,
+            "limit": 400,
+            "usedPercent": 25,
+            "remaining": 300,
+            "resetDescription": "Monthly"
+          }
+        ]
+      },
+      {
+        "provider": "workbuddy",
+        "status": "ok",
+        "region": "cn",
+        "accountKey": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "accountName": "Public account c",
+        "windows": [
+          {
+            "kind": "billing",
+            "metric": "credits",
+            "currency": "CREDITS",
+            "used": 20,
+            "limit": 100,
+            "remaining": 80,
+            "usedPercent": 20,
+            "remainingPercent": 80,
+            "resetsAt": "2026-11-01T00:00:00Z"
+          }
+        ]
+      },
+      {
+        "provider": "workbuddy",
+        "status": "ok",
+        "region": "cn",
+        "accountKey": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "accountName": "Public account d",
+        "windows": [
+          {
+            "kind": "billing",
+            "metric": "credits",
+            "currency": "CREDITS",
+            "used": 20,
+            "limit": 100,
+            "remaining": 80,
+            "usedPercent": 20,
+            "remainingPercent": 80,
+            "resetsAt": "2026-11-01T00:00:00Z"
+          }
+        ]
+      }
+    ]
+  }
+}

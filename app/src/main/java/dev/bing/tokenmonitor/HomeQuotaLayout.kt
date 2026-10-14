@@ -28,7 +28,8 @@ internal object HomeQuotaLayout {
             val groups=grouped[provider].orEmpty();val peers=groups.map {it.first()}
             val count=if(provider=="mimo") LimitPreferences.mimoGroups(groups).size else groups.size
             groups.forEachIndexed {accountIndex,original ->
-                val first=original.first();val record=LimitProviderLayout.record(original);val raw=(record["windows"] as? JsonArray).orEmpty();val hidden=prefs.hiddenItems[provider].orEmpty()
+                val first=original.first();if(provider in setOf("notion","workbuddy") && (first.status!="ok" || first.stale==true)) return@forEachIndexed
+                val record=LimitProviderLayout.record(original);val raw=(record["windows"] as? JsonArray).orEmpty();val hidden=prefs.hiddenItems[provider].orEmpty()
                 fun windowObject(w:Limit):JsonObject {
                     val index=original.indexOf(w).takeIf {it>=0} ?: original.indexOfFirst {it.presentation.limitId==w.presentation.limitId && it.copy(presentation=w.presentation)==w}
                     return raw.getOrNull(index) as? JsonObject ?: buildJsonObject {w.kind?.let {put("kind",it)};w.label?.let {put("label",it)};w.metric?.let {put("metric",it)};put("additional",w.presentation.additional)}
@@ -71,9 +72,9 @@ internal object HomeQuotaLayout {
                     val percent=remaining?.let {if(used) 100-it else it}
                     val value=fixed ?: if(w.detail.equals("unlimited",true)) "Unlimited" else if(credits) LimitDisplay.creditsMoney(w) else percent?.let {"${Math.round(it)}% ${if(used) "used" else "left"}"} ?: "—"
                     // homeOverview supplies the raw kind as the label of an unnamed billing window.
-                    val caption=when {singleGroup->"${group(w)} ${if(w.kind=="session") "5-hour" else "Weekly"}";named && labels.distinct().size==labels.size->group(w)!!;provider=="zai" && w.kind=="daily" && !w.label.isNullOrBlank()->w.label;w.kind=="billing"->w.label?.takeIf {it.isNotBlank()} ?: "billing";else->when(w.kind) {"session"->"Session";"daily"->"Daily";"weekly"->"Weekly";"monthly"->"Monthly";else->w.label.orEmpty()}}
+                    val caption=when {provider=="notion"->if(w.kind=="session") {if(locale.language=="zh") "滚动 6 小时" else "Rolling 6 hours"} else {if(locale.language=="zh") "月度" else "Monthly"};singleGroup->"${group(w)} ${if(w.kind=="session") "5-hour" else "Weekly"}";named && labels.distinct().size==labels.size->group(w)!!;provider=="zai" && w.kind=="daily" && !w.label.isNullOrBlank()->w.label;w.kind=="billing"->w.label?.takeIf {it.isNotBlank()} ?: "billing";else->when(w.kind) {"session"->"Session";"daily"->"Daily";"weekly"->"Weekly";"monthly"->"Monthly";else->w.label.orEmpty()}}
                     val objectValue=windowObject(w)
-                    val boundary=if(!w.resets.isNullOrEmpty()) LimitProviderLayout.boundary(objectValue,now) else w.presentation.resetDescription?.takeIf {it.isNotEmpty()}?.let {"${if(locale.language=="zh") "重置" else "Reset"} $it"}.orEmpty()
+                    val boundary=if(provider=="notion" && w.resets.isNullOrEmpty()) {if(locale.language=="zh") "重置时间未知" else "Reset time unknown"} else if(!w.resets.isNullOrEmpty()) LimitProviderLayout.boundary(objectValue,now) else w.presentation.resetDescription?.takeIf {it.isNotEmpty()}?.let {"${if(locale.language=="zh") "重置" else "Reset"} $it"}.orEmpty()
                     HomeQuotaWindow(w,objectValue,remaining,caption,value,if(named && !singleGroup && boundary.isNotEmpty()) "${if(w.kind=="session") "5-hour" else "Weekly"} · $boundary" else boundary,percent)
                 }
                 val showProvider=prefs.showHomeProviderNames || !icons

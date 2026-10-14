@@ -1,0 +1,5 @@
+<resources>
+    <string name="workbuddy_display_total">展示合计</string>
+    <string name="workbuddy_independent_balances">各账户余额独立，不可共享</string>
+    <string name="goose_calls_unknown">调用次数未知</string>
+</resources>

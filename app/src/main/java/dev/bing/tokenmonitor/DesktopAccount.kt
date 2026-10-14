@@ -49,7 +49,7 @@ internal fun DesktopAccount(windows:List<Limit>,compact:Boolean=false,showAccoun
     val projected=remember(selected,display.showUsed,locale,now,hidden,quotaRows) {quotaRows ?: LimitPreferences.filter(LimitProviderLayout.project(selected,display.showUsed,locale,now),hidden)}
     val mark=LimitProviderLayout.adapterMark(first)
     val color=when(mark) {"newapi"->Color(0xFFC738FB);"sub2api"->Color(0xFF39D9E7);"thirdparty"->Color(0xFF8A96A8);else->providerColor(first.provider,LocalDesktopVendorPalette.current)}
-    var expanded by rememberSaveable(first.provider,first.presentation.recordIndex,accountIndex) {mutableStateOf(false)}
+    var expanded by rememberSaveable(first.provider,first.presentation.identity.key ?: first.presentation.recordIndex.toString()) {mutableStateOf(false)}
     Column(Modifier.fillMaxWidth().padding(vertical=6.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
         Row(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable {expanded=!expanded}.testTag("limit-account-${first.presentation.recordIndex ?: accountIndex}"),
             verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(8.dp)) {

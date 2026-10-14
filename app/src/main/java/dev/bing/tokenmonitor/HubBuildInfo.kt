@@ -48,7 +48,7 @@ data class HubBuildInfo(val runtime:String, val schemaVersion:Long?=null,
     }
 }
 
-/** Exact build registry from desktop v0.69.0 (3f106ae3), under its MIT license. */
+/** Exact build registry from desktop v0.71.0 (a514e206), under its MIT license. */
 internal object HubBuildRegistry {
     val entries=mapOf(
         "core" to mapOf(
@@ -130,13 +130,18 @@ internal object HubBuildRegistry {
             76L to "sha256:c5bb4e95d7f1c593113b32f21d4c158ccfd3a7992727194990a72ec31b9f2523",
             77L to "sha256:87359e4f614349c0e166e145b49c165f233cfb285148205a61cb6bdd23b93780",
             78L to "sha256:4e3d46d08d77cf74e417e0440a58c221caaf201f638f9ea0415cbac868bbfd4c",
+            79L to "sha256:bfcc10d125a8eff0f642c4daaea6bd5192920ce74d427025cdf534f8deb5e36d",
+            80L to "sha256:04f734afadd03540a3db992734808c07803460c4bf4296d912dbf2816102a32a",
+            81L to "sha256:1bdf526dd665a840e2ed280103aa16511ed7b6fec06655a25026af8c88fcf9ba",
+            82L to "sha256:139183e108139b528f8ed24ce079a74fa317a4b156dd6debf9a1968b1fc37d82",
+            83L to "sha256:597ec1ee025bdf3bca0ca1509d60a6b3317c138f0573c06e2a6eecbb86206c9b"
         ),
         "node-hub" to mapOf(
             1L to "sha256:dbdaa0b2aa2e8d627b939d6ab76a9029aa2807839fdbe4e7918edcab592fe749",
             2L to "sha256:8c938cc1f7f0717964c84e85f2620b88620115d8e539b362dddf20097b66fe45",
             3L to "sha256:3bbeb3606151b55254ccfe4d847b050b328c587fa94e165f4258a1a7f14fdc79",
             4L to "sha256:f1db81c0d1ede372aaf74c39514e00d19bee54f064dec77e5554c6434eb6ceb0",
-            5L to "sha256:d825a515df8f90735f15682eaae40d039b266b21a0e282667d6f6472987977e8",
+            5L to "sha256:d825a515df8f90735f15682eaae40d039b266b21a0e282667d6f6472987977e8"
         ),
         "cloudflare-worker" to mapOf(
             1L to "sha256:a02f96b20ea72eb22ce4ee81f738023661742830f705c1f89fb71259ec41fd72",
@@ -144,7 +149,7 @@ internal object HubBuildRegistry {
             3L to "sha256:7b98c4a6209c258ceac7ecc781cf6b9c0f9e803b0b5716a533fa1dafec954ad9",
             4L to "sha256:9e3977bad4a1399e8d0d959db5f88180d8d106f717f68e527cc7dd843272fb46",
             5L to "sha256:63d5baedb008de3d80f4da376c8579fb7e7d906fda51e7f5264430adf0597df5",
-            6L to "sha256:55a2b202dd01754eb1e8f59fecdfab3bc5fd14e1bbd71ea63f00e36dfb127c81",
-        ),
+            6L to "sha256:55a2b202dd01754eb1e8f59fecdfab3bc5fd14e1bbd71ea63f00e36dfb127c81"
+        )
     )
 }

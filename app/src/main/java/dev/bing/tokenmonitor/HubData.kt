@@ -15,7 +15,8 @@ data class Period(val tokens: Long?, val cost: String?, val tools: Map<String, L
     val toolDetails: Map<String, UsageBreakdown> = emptyMap(), val modelDetails: Map<String, UsageBreakdown> = emptyMap(), val exact: Boolean = false, val unknownModelSource: String? = null,
     internal val throughput:Throughput?=null, val sessionsOmitted:Long=0, val projectsProvided:Boolean=false, val projectsIncomplete:Boolean=false,internal val averageRate:PeriodAverageRate?=null)
 data class DeviceUsage(val tokens: Long?, val cost: String?, val tools: Map<String, Long>, val window: String?, val ends: String?, val zone: String?, val unpriced: Long? = null, val clientModels:Map<String,Map<String,Long>> = emptyMap())
-data class ClientHealth(val client: String, val overall: String, val source: String, val collection: String, val liveTokens: Long?, val lastActivityDay: String?, val diagnostics: List<String>)
+data class ClientSourceCheck(val id:String,val exists:Boolean)
+data class ClientHealth(val client: String, val overall: String, val source: String, val collection: String, val liveTokens: Long?, val lastActivityDay: String?, val diagnostics: List<String>,val sourceChecks:List<ClientSourceCheck> = emptyList())
 data class DeviceHealth(val observed: String?, val clients: List<ClientHealth>)
 data class Device(val id: String, val name: String, val stale: Boolean?, val updated: String?, val platform: String?, val received: String?,
     val periods: Map<String, DeviceUsage> = emptyMap(), val health: DeviceHealth? = null, val agentVersion: String? = null, val agentRuntime: String? = null, val periodDetails: Map<String, Period> = emptyMap(),val osName:String?=null,val osVersion:String?=null,val hubDisplayName:String?=null,val rawPlatform:String?=null)
@@ -153,7 +154,12 @@ object HubParser {
                         }.take(16)
                         ClientHealth(id, state(row.text("overall"), setOf("healthy", "waiting", "attention", "unavailable")),
                             state(source?.text("state"), setOf("detected", "missing")), state(collection?.text("state"), setOf("direct", "idle", "pending", "ok", "failed")),
-                            data?.number("liveTokens")?.takeIf { it >= 0 }, data?.text("lastActivityDay"), diagnostics)
+                            data?.number("liveTokens")?.takeIf { it >= 0 }, data?.text("lastActivityDay"), diagnostics,
+                            (source?.get("checks") as? JsonArray).orEmpty().take(16).mapNotNull {check->
+                                val item=check as? JsonObject ?: return@mapNotNull null
+                                if(id!="goose" || item.text("id")!="goose-db") return@mapNotNull null
+                                (item["exists"] as? JsonPrimitive)?.booleanOrNull?.let {ClientSourceCheck("goose-db",it)}
+                            })
                     })
                 }
                 Device(d.text("deviceId").orEmpty(), d.text("hostname") ?: "__unnamed_device__", (d["stale"] as? JsonPrimitive)?.booleanOrNull, d.text("updatedAt"),
@@ -164,7 +170,8 @@ object HubParser {
                     }.orEmpty(),d.text("osName"),d.text("osVersion"),d.text("displayName"),d.text("platform").orEmpty())
             }
             val limits = ((root["limits"] as? JsonObject)?.get("providers") as? JsonArray).orEmpty().flatMapIndexed { recordIndex, element ->
-                val p = element.jsonObject
+                val rawProvider = element.jsonObject
+                val p = if(rawProvider.text("provider")=="notion") Provider071.notionRecord(rawProvider) else rawProvider
                 val balance=p["balance"] as? JsonObject
                 val presentationRecord=LimitProviderLayout.displayRecord(p)
                 fun clean(key:String)=p.text(key)?.trim()?.takeIf {it.isNotEmpty() && it.length<=4096}
