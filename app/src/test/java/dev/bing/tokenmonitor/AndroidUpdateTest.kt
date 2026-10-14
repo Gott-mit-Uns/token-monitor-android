@@ -35,6 +35,34 @@ class AndroidUpdateTest {
         val asset = """{"name":"token-monitor-android-0.2.61.apk","state":"uploaded","size":12345,"browser_download_url":"${AndroidReleases.repository}/releases/download/v0.2.61/token-monitor-android-0.2.61.apk"}"""
         rejected(release().replace("\"assets\":[", "\"assets\":[$asset,"))
     }
+    @Test fun canonicalAndroidTagSupportsDualInstalledVersionAndFutureUpdates() {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            val installed = "0.71.0-android.0.2.65"
+            assertEquals("${AndroidReleases.repository}/releases/tag/v0.2.65", AndroidReleases.currentNotes(installed))
+            val current = AndroidUpdateController(installed, AndroidReleaseSource {AndroidReleases.parse(release("0.2.65"))}, scope)
+            current.setForeground(true); current.check(); assertEquals(AndroidUpdateState.Current,current.state.value)
+            val future = AndroidUpdateController(installed, AndroidReleaseSource {AndroidReleases.parse(release("0.2.66"))}, scope)
+            future.setForeground(true); future.check(); assertTrue(future.state.value is AndroidUpdateState.Available)
+            val old = AndroidUpdateController("0.2.64", AndroidReleaseSource {AndroidReleases.parse(release("0.2.65"))}, scope)
+            old.setForeground(true); old.check(); assertTrue(old.state.value is AndroidUpdateState.Available)
+            assertEquals("${AndroidReleases.repository}/releases/download/v0.2.65/token-monitor-android-0.2.65.apk", (old.state.value as AndroidUpdateState.Available).release.apkUrl)
+        } finally {scope.cancel()}
+    }
+    @Test fun upstreamRevisionAndLegacyBridgeCompareCurrentAndFuture() {
+        val installed=AndroidReleaseVersion.parse("0.71.0-01")!!
+        assertTrue(installed>AndroidReleaseVersion.parse("0.2.64")!!)
+        assertTrue(AndroidReleaseVersion.parse("0.71.0-02")!!>installed)
+        assertTrue(AndroidReleaseVersion.parse("0.72.0-01")!!>installed)
+        assertNull(AndroidReleaseVersion.parse("0.71.0-00"))
+        assertNull(AndroidReleaseVersion.parse("0.71.0-1"))
+        assertEquals("${AndroidReleases.repository}/releases/tag/v0.71.0-01",AndroidReleases.currentNotes(installed.toString()))
+        val bridge=AndroidReleases.parse(release("0.2.65",extra=",\"name\":\"Token Monitor Android v0.71.0-01\""))
+        assertEquals(installed,bridge.version)
+        assertEquals(AndroidReleases.currentNotes(installed.toString()),bridge.notesUrl)
+        assertTrue(AndroidReleases.parse(release("0.2.66",extra=",\"name\":\"Token Monitor Android v0.71.0-02\"" )).version>installed)
+        assertEquals(installed,AndroidReleases.parse(release("0.71.0-01")).version)
+    }
     @Test fun noAutomaticChecksAndFailuresRecoverWithoutHub() = runBlocking {
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
         try {

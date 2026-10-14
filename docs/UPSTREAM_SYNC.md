@@ -1,5 +1,7 @@
 # 本轮固定上游 v0.70.0
 
+2026-10-15 后续授权：正式 GitHub 发布，编号改用 NAS 风格 `0.71.0-01` / code74；旧更新检查兼容入口另保留 v0.2.65。以下候选描述为此前阶段记录，正式交付以 [补充交接](HANDOFF_0.71.0-01.md) 为准。手机用户自装，NAS 未修改。
+
 ## 2026-10-15: Fixed v0.71.0
 
 Target `a514e2063563e318ef73c2a17fad68057c4e300c`; compare only v0.70.0 to v0.71.0. Android candidate `0.71.0-android.0.2.65` /74; reference 0.71.0, fullyAligned=false. Provider/account presentation and the exact fixed Hub registry are updated. Electron/local parsers and later main commits are outside this round. See [increment](DESKTOP_071_DIFF.md) and [handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md).

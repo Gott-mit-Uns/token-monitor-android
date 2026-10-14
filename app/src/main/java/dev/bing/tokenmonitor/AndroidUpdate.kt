@@ -14,19 +14,25 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-/** Android releases use vMAJOR.MINOR.PATCH, independently of desktop and Hub revisions. */
-internal data class AndroidReleaseVersion(val major: Long, val minor: Long, val patch: Long, val upstream:String?=null): Comparable<AndroidReleaseVersion> {
-    override fun compareTo(other: AndroidReleaseVersion): Int = compareValuesBy(this, other, {it.major}, {it.minor}, {it.patch})
-    override fun toString() = upstream?.let {"$it-android.$major.$minor.$patch"} ?: "$major.$minor.$patch"
+/** Fixed upstream base plus two-digit Android revision; legacy delivery tags remain readable. */
+internal data class AndroidReleaseVersion(val major: Long, val minor: Long, val patch: Long, val upstream:String?=null, val revision:Long?=null): Comparable<AndroidReleaseVersion> {
+    override fun compareTo(other: AndroidReleaseVersion): Int = compareValuesBy(this, other, {it.major}, {it.minor}, {it.patch}, {it.revision ?: 0L})
+    override fun toString() = revision?.let {"$major.$minor.$patch-${it.toString().padStart(2,'0')}"} ?: upstream?.let {"$it-android.$major.$minor.$patch"} ?: "$major.$minor.$patch"
     companion object {
         fun parse(value: String): AndroidReleaseVersion? {
             val normalized=value.removePrefix("v")
+            val revised=Regex("^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)-([0-9]{2})$").matchEntire(normalized)
+            if(revised!=null) {
+                val parts=revised.groupValues.drop(1).map {it.toLongOrNull() ?: return null}
+                if(parts[3]==0L) return null
+                return AndroidReleaseVersion(parts[0],parts[1],parts[2],revision=parts[3])
+            }
             if("-android." in normalized) {
                 val parts=normalized.split("-android.")
                 if(parts.size!=2 || "-android." in parts[1]) return null
                 val upstream=parse(parts[0]) ?: return null
                 val android=parse(parts[1]) ?: return null
-                if(upstream.upstream!=null || android.upstream!=null) return null
+                if(upstream.upstream!=null || android.upstream!=null || upstream.revision!=null || android.revision!=null) return null
                 return android.copy(upstream=upstream.toString())
             }
             val match = Regex("^v?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$").matchEntire(value) ?: return null
@@ -51,7 +57,7 @@ internal object AndroidReleases {
     const val repository = "https://github.com/Gott-mit-Uns/token-monitor-android"
     const val releasesUrl = "$repository/releases"
     const val apiUrl = "https://api.github.com/repos/Gott-mit-Uns/token-monitor-android/releases/latest"
-    fun currentNotes(version: String): String = AndroidReleaseVersion.parse(version)?.let {"$repository/releases/tag/v$it"} ?: releasesUrl
+    fun currentNotes(version: String): String = AndroidReleaseVersion.parse(version)?.let {"$repository/releases/tag/v${if(it.upstream!=null) "${it.major}.${it.minor}.${it.patch}" else it.toString()}"} ?: releasesUrl
 
     /** Fail closed: draft, preview, wrong repository, unrelated/debug APKs and ambiguous assets are rejected. */
     fun parse(body: String): AndroidRelease {
@@ -69,7 +75,13 @@ internal object AndroidReleases {
             val asset = matches.singleOrNull() ?: throw AndroidUpdateException(AndroidUpdateFailure.INVALID_RELEASE)
             val apk = "$repository/releases/download/$tag/$expectedName"
             if (text(asset, "browser_download_url") != apk || text(asset, "state") != "uploaded" || (asset["size"] as? JsonPrimitive)?.longOrNull?.let {it > 0} != true) throw AndroidUpdateException(AndroidUpdateFailure.INVALID_RELEASE)
-            return AndroidRelease(version, notes, apk)
+            // The latest legacy bridge has the old asset/tag shape and a strictly validated new title.
+            // Old binaries ignore the title; new binaries compare the upstream/revision identity.
+            val namedVersion=text(root,"name")?.removePrefix("Token Monitor Android v")
+                ?.takeIf {text(root,"name")=="Token Monitor Android v$it"}
+                ?.let {AndroidReleaseVersion.parse(it)}?.takeIf {it.revision!=null}
+            val effective=if(version.revision==null && version.upstream==null && version.major==0L && version.minor==2L) namedVersion ?: version else version
+            return AndroidRelease(effective, if(effective!=version) "$repository/releases/tag/v$effective" else notes, apk)
         } catch (failure: AndroidUpdateException) { throw failure }
         catch (_: Exception) { throw AndroidUpdateException(AndroidUpdateFailure.INVALID_RELEASE) }
     }

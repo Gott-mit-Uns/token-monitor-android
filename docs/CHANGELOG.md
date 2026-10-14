@@ -1,3 +1,7 @@
+# 0.71.0-01 / code 74
+
+固定桌面 v0.71.0 的 Goose、Notion AI、WorkBuddy 展示适配及回归已在此前候选完成。此次采用 NAS 风格版本编号，加入旧三段数字更新入口与新修订号的兼容映射，保留原签名及数据。正式发布回执和验证范围见 HANDOFF_0.71.0-01.md。
+
 # Android change log
 
 ## 0.71.0-android.0.2.65 / code74 candidate (2026-10-15)

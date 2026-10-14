@@ -1,5 +1,7 @@
 2026-10-15 **0.2.64/73 已合入 GitHub main 并正式发布：删除 Android 桌面小组件 + 设备两列**。用户试用 0.2.63 后明确取消全部桌面小组件及常规相关设置；保留关于与双地址改进，采集设备改为等宽两列。用户另行明确授权合并、推送及正式 Release，独立 `release/0.2.64` 工作区正常快进推送，固定 Tag `v0.2.64` / `a7d509903a46223af5c0ecb6f82937aee16108b3`；四附件及无需认证的 APK／校验文件完整下载一致，详见 [发布回执](GITHUB_PUBLICATION.md)。产品字节、签名和 0.2.64 验收保持，原主目录未提交修改保留。手机由用户自行安装，NAS 不动；真机及实网未验证项不改写。对方小包调查及未来优化提示词已交付，但未实施新的 R8／资源／字体优化，不推进旧实验或其他待办。本轮完成后停止。
 
+2026-10-15 后续授权：正式 GitHub 发布，编号改用 NAS 风格 `0.71.0-01` / code74；旧更新检查兼容入口另保留 v0.2.65。以下候选描述为此前阶段记录，正式交付以 [补充交接](HANDOFF_0.71.0-01.md) 为准。手机用户自装，NAS 未修改。
+
 2026-10-15: Fixed desktop v0.71.0 candidate development and automated acceptance are complete: `0.71.0-android.0.2.65` / code74. Goose identity/health, Notion allowance windows and WorkBuddy exact binding/display totals are implemented; Widget removal and 0.2.64 product decisions remain. See [candidate handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md) for 464 unit tests, scoped native regression, signed upgrade and remaining gaps. This round pushes/merges code only; no formal Tag/Release or phone installation. Remote Pi/CodeBuddy chat detail, live Notion eligibility, production NAS fields and physical-device networks remain unverified. Stop after this candidate; do not follow upstream main or restart historical tasks.
 
 
