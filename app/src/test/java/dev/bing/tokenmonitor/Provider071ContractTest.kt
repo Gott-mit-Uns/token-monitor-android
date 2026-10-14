@@ -89,6 +89,6 @@ class Provider071ContractTest {
         assertEquals("0.71.0-android.0.2.65",candidate.toString());assertTrue(candidate>AndroidReleaseVersion.parse("0.2.64")!!)
         assertTrue(AndroidReleaseVersion.parse("0.71.0-android.0.2.66")!!>candidate)
         assertEquals(null,AndroidReleaseVersion.parse("0.71.0-android.future"))
-        assertEquals("${AndroidReleases.repository}/releases/tag/v$candidate",AndroidReleases.currentNotes(candidate.toString()))
+        assertEquals("${AndroidReleases.repository}/releases/tag/v0.2.65",AndroidReleases.currentNotes(candidate.toString()))
     }
 }

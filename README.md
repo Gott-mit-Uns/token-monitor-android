@@ -1,6 +1,6 @@
 # Token Monitor Android
 
-Current source includes the fixed desktop v0.71.0 signed candidate `0.71.0-android.0.2.65` / code74; the latest formal Release remains 0.2.64. See [candidate handoff](docs/HANDOFF_0.71.0_ANDROID_0.2.65.md) for automation and remaining protocol/physical-device gaps. This round keeps Android Widgets removed, excludes R8/shrinking, and does not publish or install on a phone.
+本次正式交付编号为 `0.71.0-01` / code74，参照 NAS 的固定上游版本＋两位项目修订规则。桌面目标固定 v0.71.0；正式说明与旧版更新兼容入口的关系见 [版本规则](VERSIONING.md) 和 [交接补充](docs/HANDOFF_0.71.0-01.md)。原候选验收保留，Android Widget 仍移除，未启用 R8／资源压缩，手机由用户自行安装。
 
 
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。
