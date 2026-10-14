@@ -117,6 +117,11 @@ class WidgetAlignmentHostTest {
                             val infoText = "language=$language host=$width x $actualHeight min=$minimum font=$scale id=${child.resources.getResourceEntryName(child.id)} size=${child.width}x${child.height} natural=${child.layout?.height} text=${child.text}"
                             assertTrue("Old instance text fits: $infoText", child.layout?.height?.let { it <= child.height-child.totalPaddingTop-child.totalPaddingBottom } != false)
                             assertTrue("Old instance stays inside parent: $infoText", child.bottom <= (child.parent as View).height)
+                            if(child.id == R.id.widget_tokens) {
+                                assertEquals("Old instance value stays one line: $infoText", 1, child.layout.lineCount)
+                                assertTrue("Old instance value fits actual width: $infoText", child.layout.getLineWidth(0) <= child.width-child.totalPaddingLeft-child.totalPaddingRight)
+                                assertEquals("Old instance value must not be ellipsized: $infoText", 0, child.layout.getEllipsisCount(0))
+                            }
                         }
                         if(child is ViewGroup) for(index in 0 until child.childCount) check(child.getChildAt(index))
                     }

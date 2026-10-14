@@ -80,6 +80,12 @@ class HubWidgetTest {
                 val diagnostic = "id=${child.resources.getResourceEntryName(child.id)} text=${child.text} size=${child.width}x${child.height} natural=${child.layout?.height} padding=${child.totalPaddingTop}+${child.totalPaddingBottom} font=${context.resources.configuration.fontScale}"
                 assertTrue("Widget text was clipped vertically: $diagnostic", child.layout?.height?.let { it <= child.height - child.totalPaddingTop - child.totalPaddingBottom } != false)
                 assertTrue("Widget content extends beyond host height: $diagnostic", child.bottom <= view.height)
+                if (child.id == R.id.widget_tokens) {
+                    assertEquals("Compact token value must remain on one line: $diagnostic", 1, child.layout.lineCount)
+                    val available = child.width-child.totalPaddingLeft-child.totalPaddingRight
+                    assertTrue("Compact token value fits actual TextView width: $diagnostic available=$available line=${child.layout.getLineWidth(0)}", child.layout.getLineWidth(0) <= available)
+                    assertFalse("Compact token value must not be ellipsized: $diagnostic", child.layout.getEllipsisCount(0) > 0)
+                }
             }
             if (child is ViewGroup) for (index in 0 until child.childCount) checkVisible(child.getChildAt(index))
         }

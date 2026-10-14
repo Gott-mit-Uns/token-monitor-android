@@ -3,6 +3,7 @@ package dev.bing.tokenmonitor
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.appwidget.AppWidgetHostView
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import java.text.NumberFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 /** Only business projection fields enter RemoteViews. Connection addresses and credentials never do. */
 data class WidgetUsage(val tokens: Long?, val cost: String?, val unpriced: Boolean, val updated: String?, val savedAt: Long, val sourceStale: Boolean = false)
@@ -146,8 +148,9 @@ object HubWidget {
             views.setContentDescription(R.id.widget_root, "${context.getString(modeTitle(config.mode))}. ${context.getString(R.string.widget_open)}")
         }
         val metricSize = if (width < 220 || scale >= 1.5f || (compactHeight && height < 180)) 26f else if (compactHeight) 30f else 37f
+        val contentInsetDp = if (compactHeight) 6 else 12
         if (compactHeight) {
-            val inset = (8 * context.resources.displayMetrics.density).toInt()
+            val inset = (contentInsetDp * context.resources.displayMetrics.density).roundToInt()
             views.setViewPadding(R.id.widget_root, inset, inset, inset, inset)
         }
         views.setTextViewTextSize(R.id.widget_tokens, TypedValue.COMPLEX_UNIT_SP, metricSize)
@@ -186,9 +189,12 @@ object HubWidget {
             views.setTextViewText(R.id.widget_tokens, compactTokens)
             val nominal = metricSize
             val px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, nominal, context.resources.displayMetrics)
-            val paint = android.graphics.Paint().apply { textSize = px; typeface = android.graphics.Typeface.DEFAULT_BOLD }
+            val paint = android.graphics.Paint().apply { textSize = px; typeface = android.graphics.Typeface.create("sans-serif", android.graphics.Typeface.BOLD) }
             val measured = paint.measureText(compactTokens).coerceAtLeast(1f)
-            val available = (width - 24).coerceAtLeast(100) * context.resources.displayMetrics.density
+            val density = context.resources.displayMetrics.density
+            val hostPadding = AppWidgetHostView.getDefaultPaddingForWidget(context, ComponentName(context, HubWidgetProvider::class.java), null)
+            val insetPx = (contentInsetDp * density).roundToInt()
+            val available = ((width * density).toInt() - hostPadding.left - hostPadding.right - insetPx * 2 - 2 * density).coerceAtLeast(1f)
             views.setTextViewTextSize(R.id.widget_tokens, TypedValue.COMPLEX_UNIT_PX, px * (available / measured).coerceAtMost(1f))
             views.setContentDescription(R.id.widget_tokens, context.getString(R.string.widget_tokens_accessible, exact))
             views.setTextViewText(R.id.widget_cost, widgetCost(usage, preferences))
