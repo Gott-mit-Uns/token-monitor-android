@@ -15,8 +15,10 @@ internal fun openSettingsSection(compose:AndroidComposeTestRule<ActivityScenario
 
 /** Shared read-only data belongs to settings, outside the main-view menu. */
 internal fun openSharedSettings(compose:AndroidComposeTestRule<ActivityScenarioRule<MainActivity>,MainActivity>,page:String) {
-    compose.onNodeWithTag("hub-settings-toggle").performClick()
+    if(compose.onAllNodesWithTag("hub-settings-panel-motion").fetchSemanticsNodes().isEmpty()) compose.onNodeWithTag("hub-settings-toggle").performClick()
     openSettingsSection(compose,if(page=="pricing") "tools" else "subscriptions")
-    compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("settings-open-$page"))
-    compose.onNodeWithTag("settings-open-$page").performClick()
+    if(page=="pricing" && compose.onAllNodesWithTag("settings-open-pricing-details").fetchSemanticsNodes().isEmpty()) {
+        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("settings-open-pricing"))
+        compose.onNodeWithTag("settings-open-pricing").performClick()
+    }
 }

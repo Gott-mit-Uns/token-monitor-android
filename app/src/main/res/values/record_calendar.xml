@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="record_month_scope">Monthly totals come directly from Hub month records; the daily range does not trim full months.</string>
+    <string name="record_previous_year">Previous year</string>
+    <string name="record_next_year">Next year</string>
+    <string name="record_previous_month">Previous month</string>
+    <string name="record_next_month">Next month</string>
+    <string name="record_calendar_legend">0: recorded zero · ·: no record · —: unavailable or outside range · …: loading. Select a cell for the full value.</string>
+    <string name="record_loading">Loading history…</string>
+    <string name="record_read_failed">History could not be loaded. Existing records are retained; refresh to retry.</string>
+    <string name="record_select">Select a date or month to view its details.</string>
+    <string name="record_analysis_hide">Hide charts and activity</string>
+    <string name="record_analysis_show">Charts and activity</string>
+    <string name="record_cell_description">%1$s, %2$s</string>
+    <string name="record_today">Today</string>
+    <string name="record_no_record">No record supplied by Hub; this is not zero usage.</string>
+    <string name="record_outside_range">Outside the selected daily range.</string>
+    <string name="record_future">Future date</string>
+    <string name="record_not_loaded">History has not been loaded.</string>
+    <string name="record_source_unavailable">Hub has not provided history for this dimension.</string>
+</resources>

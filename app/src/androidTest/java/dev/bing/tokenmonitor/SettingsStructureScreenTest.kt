@@ -39,7 +39,7 @@ class SettingsStructureScreenTest {
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("devices")))
         val state=HubState(snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1100,"costUsd":2.1,"models":{"public-many":1000,"public-expensive":100},"modelCosts":{"public-many":0.1,"public-expensive":2}}}}"""),subscriptions=subscriptions(),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"))
         val actions=Actions()
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick()
         listOf("general","main","appearance","tools","limits","subscriptions","sync").forEach {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("settings-section-$it"));compose.onNodeWithTag("settings-details-$it").assertDoesNotExist()}
         compose.onNodeWithTag("hub-content").performScrollToIndex(0)
@@ -84,7 +84,7 @@ class SettingsStructureScreenTest {
         val name="motion-v13-${UUID.randomUUID()}.bin";val store=DisplayPreferenceStore(compose.activity,name)
         fun source(tokens:Int)=HubParser.parse("""{"periods":{"today":{"totalTokens":$tokens}}}""")
         val state=mutableStateOf(HubState(snapshot=source(1000),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off")))
-        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("devices"),appearance=AppearancePreferences(reduceMotion="off")))
+        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("devices"),appearance=AppearancePreferences(reduceMotion="off",tokenNumberAnimation="count")))
         val actions=Actions()
         try {
             store.save(prefs.value)

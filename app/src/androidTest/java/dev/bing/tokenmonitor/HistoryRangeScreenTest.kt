@@ -24,7 +24,7 @@ class HistoryRangeScreenTest {
         val dark = InstrumentationRegistry.getArguments().getString("visualDark") == "true"
         val history = HistoryParser.parse("""{"daily":[{"date":"2026-10-09","tokens":100,"cost":"1.25","unpricedTokens":10},{"date":"2026-10-08","tokens":0,"cost":"0"},{"date":"2026-09-30","tokens":200,"cost":"2.50"}],"monthly":[{"month":"2026-10","tokens":100,"cost":"1.25"}]}""")
         compose.activity.runOnUiThread { compose.activity.setContent {
-            TokenTheme(dark = dark) { Surface { Column(Modifier.fillMaxSize().safeDrawingPadding().testTag("history-range-scroll").verticalScroll(rememberScrollState()).padding(24.dp)) { HistoryTrend(history) } } }
+            TokenTheme(dark = dark) { Surface { Column(Modifier.fillMaxSize().safeDrawingPadding().testTag("history-range-scroll").verticalScroll(rememberScrollState()).padding(24.dp)) { HistoryTrend(history, today = java.time.LocalDate.parse("2026-10-16")) } } }
         } }
         compose.onNodeWithText("7天").performClick()
         compose.onNodeWithText("2026-10-03 至 2026-10-09").assertIsDisplayed()
@@ -35,20 +35,11 @@ class HistoryRangeScreenTest {
         compose.onNodeWithText("全部记录").performClick()
         compose.onNodeWithText("已知用量 300 Token").assertIsDisplayed()
         compose.onNodeWithText("已记录 3 / 10 天；Token 可用 3 天").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("逐日选择").performScrollTo().performClick()
-        val zeroDay = compose.onNodeWithContentDescription("2026-10-08，0 Token")
-        zeroDay.performScrollTo()
-        repeat(20) {
-            if (!zeroDay.isDisplayed()) compose.onNodeWithTag("history-range-scroll").performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, 200f) }
-        }
-        compose.onNodeWithTag("history-range-scroll").performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, 144f) }
-        zeroDay.assertIsDisplayed().performClick()
-        saveVisualEvidence(compose.activity, compose.onNode(isDialog()), "visual-calendar-detail.png")
-        compose.onNodeWithText("Token 0").assertIsDisplayed()
-        compose.onNodeWithText("关闭").performClick()
-        compose.onNodeWithContentDescription("2026-10-07，用量未提供").performScrollTo().performClick()
-        compose.onNodeWithText("Token 未提供").assertIsDisplayed()
-        compose.onNodeWithText("关闭").performClick()
+        compose.onNodeWithTag("history-record-2026-10-08").performScrollTo().performClick()
+        compose.onNodeWithText("Token 0").performScrollTo().assertIsDisplayed()
+        saveVisualEvidence(compose.activity, compose.onRoot(), "visual-calendar-detail.png")
+        compose.onNodeWithTag("history-record-2026-10-07").performScrollTo().performClick()
+        compose.onNodeWithText("Hub 未提供记录，不代表零用量。").performScrollTo().assertIsDisplayed()
         saveVisualEvidence(compose.activity, compose.onRoot(), if (dark) "visual-history-activity-dark.png" else "visual-history-activity.png")
     }
 }

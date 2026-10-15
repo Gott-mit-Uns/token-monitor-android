@@ -26,18 +26,19 @@ class HistoryUiTest {
         compose.activity.runOnUiThread {
             compose.activity.setContent {
                 TokenTheme(dark = dark) {
-                    Surface { Box(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp)) { HistoryTrend(history) } }
+                    Surface { Box(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp)) { HistoryTrend(history, today = java.time.LocalDate.parse("2026-10-16")) } }
                 }
             }
         }
-        compose.onNodeWithText("最高 123 Token").assertIsDisplayed()
-        compose.onNodeWithText("日期间缺口表示没有记录，不代表零用量。").assertExists()
         val output = File(compose.activity.getExternalFilesDir(null), if (dark) "visual-history-dark.png" else "visual-history.png")
         output.outputStream().use { compose.onRoot().captureToImage().asAndroidBitmap().compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
-        compose.onNode(hasText("2026-10-09") and hasClickAction()).performScrollTo().performClick()
-        compose.onNodeWithText("已知估算费用：$0.2500").assertIsDisplayed()
-        compose.onNodeWithText("关闭").performClick()
+        compose.onNodeWithTag("history-record-2026-10-09").performScrollTo().performClick()
+        compose.onNodeWithText("已知估算费用：$0.2500").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("每月").performScrollTo().performClick()
-        compose.onNodeWithText("135 Token").assertIsDisplayed()
+        compose.onNodeWithTag("history-record-2026-10").performScrollTo().performClick()
+        compose.onNodeWithText("Token 135").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("records-analysis-toggle").performScrollTo().performClick()
+        compose.onNodeWithText("最高 123 Token").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("日期间缺口表示没有记录，不代表零用量。").assertExists()
     }
 }

@@ -68,7 +68,7 @@ class ButtonColorScreenTest {
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"subscriptions")
         show("settings-subscriptions-load")
         compose.onNodeWithTag("settings-subscriptions-load").assertIsEnabled()
-        assertEquals(text,buttonTextColor("settings-open-subscriptions"))
+        compose.onNodeWithTag("settings-open-subscriptions").assertDoesNotExist()
         assertEquals(text,buttonTextColor("settings-subscriptions-load"))
         save("settings")
 

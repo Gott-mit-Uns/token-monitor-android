@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Build
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -19,6 +20,7 @@ import org.junit.Test
 
 class EditControlsScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private class Actions:HubUiActions {
         var reads=0
@@ -44,7 +46,7 @@ class EditControlsScreenTest {
         var before:ClipData?=null
         instrumentation.runOnMainSync {before=manager.primaryClip}
         try {
-            compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(prefs.value.theme!=ThemeChoice.LIGHT,prefs.value.language,prefs.value.appearance) {HubScreen(HubState(snapshot=snapshot),actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+            compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(prefs.value.theme!=ThemeChoice.LIGHT,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(HubState(snapshot=snapshot),actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
             compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"appearance")
             click("appearance-code-copy")
             val canonical=DesktopAppearance.encode(DesktopAppearance.palette(initial.appearance.colors,dark))
@@ -85,7 +87,7 @@ class EditControlsScreenTest {
     @Test fun colorDialogCancelRgbAndManualRateFallbackOperateActualControlsWithoutReads() {
         val prefs=mutableStateOf(DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT,language=LanguageChoice.ENGLISH))
         val actions=Actions();val state=HubState(snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1000,"costUsd":1}}}"""))
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(prefs.value.theme!=ThemeChoice.LIGHT,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(prefs.value.theme!=ThemeChoice.LIGHT,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"appearance");click("appearance-colors-toggle");click("appearance-color-chart-open")
         compose.onNodeWithTag("appearance-color-chart").performTextReplacement("invalid")
         compose.onNodeWithTag("appearance-color-chart-apply").assertIsNotEnabled()

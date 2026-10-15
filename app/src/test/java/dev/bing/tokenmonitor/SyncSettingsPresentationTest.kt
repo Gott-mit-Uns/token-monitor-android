@@ -4,6 +4,21 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SyncSettingsPresentationTest {
+    @Test fun exactPhoneModelMappingDoesNotRenameOtherDevices() {
+        assertEquals("Xiaomi 13 Ultra",SyncSettingsPresentation.phoneModel("2304FPN60C"))
+        assertEquals("2304FPN60G",SyncSettingsPresentation.phoneModel("2304FPN60G"))
+        assertEquals("Pixel 10",SyncSettingsPresentation.phoneModel("Pixel 10"))
+    }
+    @Test fun actualHubEndpointChangesNameWithoutGuessingHostFromCollectors() {
+        val state=HubState(lastSuccessfulEndpoint="https://previous.example.invalid",connectedEndpoint="https://current.example.invalid")
+        assertEquals("current.example.invalid",SyncSettingsPresentation.hubHostName(state))
+        assertEquals("previous.example.invalid",SyncSettingsPresentation.hubHostName(state.copy(connectedEndpoint=null)))
+        assertEquals("new.example.invalid",SyncSettingsPresentation.hubHostName(state.copy(connectedEndpoint="https://new.example.invalid")))
+        assertNull(SyncSettingsPresentation.hubHostName(HubState()))
+        assertNull(SyncSettingsPresentation.hubHostName(HubState(connectedEndpoint="http://192.168.31.12:17321")))
+        assertNull(SyncSettingsPresentation.hubHostName(HubState(connectedEndpoint="http://[2001:db8::1]:17321")))
+        assertNull(SyncSettingsPresentation.hubHostName(HubState(connectedEndpoint="invalid",lastSuccessfulEndpoint="https://previous.example.invalid")))
+    }
     private val secure="https://public.example.invalid"
     private val local="http://192.168.1.1:17321"
     @Test fun actualReceiptWinsOverConfiguredOrderAndOfflineRetainsOnlyPrevious() {

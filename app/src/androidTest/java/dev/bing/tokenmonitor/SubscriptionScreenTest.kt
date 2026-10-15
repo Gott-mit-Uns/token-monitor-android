@@ -16,6 +16,7 @@ class SubscriptionScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val data by lazy {InstrumentationRegistry.getInstrumentation().context.assets.open("subscription-layout-parity.json").bufferedReader().use {Json.parseToJsonElement(it.readText()).jsonObject}}
     private val fixtureClock get()=java.time.Clock.fixed(java.time.LocalDate.parse(data.getValue("today").jsonPrimitive.content).atTime(12,0).atZone(java.time.ZoneId.systemDefault()).toInstant(),java.time.ZoneId.systemDefault())
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private class Actions:HubUiActions {
         var reads=0
@@ -53,7 +54,7 @@ class SubscriptionScreenTest {
         val providers=c.getValue("providers").jsonArray
         val initial=HubState(snapshot=snapshot(providers),subscriptions=subscriptions(c))
         val state=mutableStateOf(initial);val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH));val actions=Actions()
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalHubCalendarClock provides fixtureClock) {HubScreen(state.value,actions,preferences=prefs.value)}}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalHubCalendarClock provides fixtureClock,LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs.value)}}}}
         openSharedSettings(compose,"subscriptions")
         c.getValue("dom").jsonArray.forEach {raw->val row=raw.jsonObject;val id=row.getValue("id").jsonPrimitive.content;show("shared-subscription-$id")
             compose.onNodeWithTag("shared-subscription-$id-title",useUnmergedTree=true).assertTextEquals(row.getValue("title").jsonPrimitive.content)
@@ -78,7 +79,7 @@ class SubscriptionScreenTest {
         val group=cards.first {c->c.getValue("provider").jsonObject["accountGroup"]?.jsonPrimitive?.booleanOrNull==true && c.getValue("input").jsonArray.size==2 && c.getValue("provider").jsonObject["groupAccounts"]?.jsonArray?.size==2}
         val state=mutableStateOf(HubState(snapshot=snapshot(group.getValue("accounts").jsonArray,group.getValue("costs").jsonObject),subscriptions=subscriptions(group)))
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH));val actions=Actions()
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalHubCalendarClock provides fixtureClock) {HubScreen(state.value,actions,preferences=prefs.value)}}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalHubCalendarClock provides fixtureClock,LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs.value)}}}}
         select("limits");click("limit-plan-group-codex");verifySourceRows(group);save("group",true)
         compose.onNodeWithText("Close").performClick()
         val account=cards.first {it.getValue("input")==group.getValue("input") && it.getValue("accounts")==group.getValue("accounts") && it.getValue("provider").jsonObject["accountGroup"]==null && !it.getValue("includeRollup").jsonPrimitive.boolean}

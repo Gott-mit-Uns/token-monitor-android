@@ -84,15 +84,24 @@ class AppearanceScreenTest {
         val state=HubState(snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":123456789,"costUsd":12.5}}}"""))
         val actions=Actions();var labelSize=0f
         compose.activity.runOnUiThread { compose.activity.setContent { TokenTheme(dark,prefs.value.language,prefs.value.appearance) { val size=MaterialTheme.typography.bodyMedium.fontSize.value;SideEffect {labelSize=size};HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)}) } } }
-        val total=layout("hub-total-tokens").layoutInput.style.fontSize
+        val initialTotal=layout("hub-total-tokens")
+        val total=initialTotal.layoutInput.style.fontSize
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"appearance");click("appearance-colors-toggle");click("appearance-size-select");compose.onNodeWithTag("appearance-size-largest").performClick()
+        // Isolate App text size from typeface changes: a new display face may need a different fitted size on a narrow screen.
+        compose.onNodeWithTag("hub-settings-toggle").performClick()
+        assertEquals(total,layout("hub-total-tokens").layoutInput.style.fontSize)
+        compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"appearance")
         click("appearance-interface-select");compose.onNodeWithTag("appearance-interface-system").performClick();click("appearance-display-select");compose.onNodeWithTag("appearance-display-mono").performClick()
         compose.runOnIdle { assertEquals(16.8f,labelSize,0.001f) }
         val familyList="\"TokenMonitorMissingPublicFont, monospace\", serif"
         click("appearance-interface-select");compose.onNodeWithTag("appearance-interface-custom").performClick();show("appearance-interface-custom-field");compose.onNodeWithTag("appearance-interface-custom-field").performTextReplacement(familyList);click("appearance-interface-apply")
         saveVisualEvidence(compose.activity,compose.onRoot(),"appearance-fonts-${if(dark) "dark" else "light"}.png")
         compose.onNodeWithTag("hub-settings-toggle").performClick()
-        assertEquals(total,layout("hub-total-tokens").layoutInput.style.fontSize);assertEquals(FontFamily.Monospace,layout("hub-total-tokens").layoutInput.style.fontFamily)
+        val fittedTotal=layout("hub-total-tokens")
+        assertEquals(initialTotal.layoutInput.text,fittedTotal.layoutInput.text)
+        assertFalse("Selected display face must fit the full total",fittedTotal.hasVisualOverflow)
+        repeat(fittedTotal.lineCount) {assertFalse(fittedTotal.isLineEllipsized(it))}
+        assertEquals(FontFamily.Monospace,fittedTotal.layoutInput.style.fontFamily)
         assertEquals(FontFamily.Serif,layout("hub-total-cost").layoutInput.style.fontFamily)
         compose.runOnIdle { assertEquals(familyList,prefs.value.appearance.interfaceFont);assertEquals(0,actions.reads) }
         // Return to production Activity composition and verify disk/state recreation, no synthetic connection.
@@ -104,9 +113,17 @@ class AppearanceScreenTest {
             // Production restoration may legitimately land on Home when a cached Hub exists.
             // Establish Settings explicitly before checking the unchanged preference controls.
             compose.waitUntil(5000) { compose.onAllNodesWithTag("hub-startup").fetchSemanticsNodes().isEmpty() }
-            if (compose.onAllNodesWithTag("settings-general-toggle").fetchSemanticsNodes().isEmpty())
-                compose.onNodeWithTag("hub-settings-toggle").performClick()
-            compose.onNodeWithTag("settings-general-toggle").assertIsDisplayed()
+            val settingsInitiallyOpen=compose.onAllNodesWithTag("hub-settings-panel-motion").fetchSemanticsNodes().isNotEmpty()
+            if (!settingsInitiallyOpen) compose.onNodeWithTag("hub-settings-toggle").performClick()
+            val restoredGeneral=compose.onNodeWithTag("settings-general-toggle")
+            val generalInitiallyComposed=compose.onAllNodesWithTag("settings-general-toggle").fetchSemanticsNodes().isNotEmpty()
+            val restoredBounds=if(generalInitiallyComposed) restoredGeneral.getUnclippedBoundsInRoot() else null
+            val restoredViewport=compose.onNodeWithTag("hub-content").getUnclippedBoundsInRoot()
+            java.io.File(compose.activity.getExternalFilesDir(null),"appearance-restored-general-${if(dark) "dark" else "light"}.txt").writeText("settingsInitiallyOpen=$settingsInitiallyOpen generalInitiallyComposed=$generalInitiallyComposed general=$restoredBounds viewport=$restoredViewport systemFontScale=${compose.activity.resources.configuration.fontScale}\n")
+            saveVisualEvidence(compose.activity,compose.onRoot(),"appearance-restored-before-general-scroll-${if(dark) "dark" else "light"}.png")
+            // Recreation preserves the actual list position; bring the intended control into view before asserting it.
+            compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("settings-general-toggle"))
+            restoredGeneral.assertIsDisplayed()
             openSettingsSection(compose,"appearance");click("appearance-colors-toggle");click("appearance-size-select");compose.onNodeWithTag("appearance-size-largest").assertIsSelected();compose.onNodeWithTag("appearance-size-largest").performClick()
             show("appearance-interface-custom-field");compose.onNodeWithTag("appearance-interface-custom-field").assertTextContains(familyList)
             click("appearance-display-select");compose.onNodeWithTag("appearance-display-mono").assertIsSelected();compose.onNodeWithTag("appearance-display-mono").performClick()

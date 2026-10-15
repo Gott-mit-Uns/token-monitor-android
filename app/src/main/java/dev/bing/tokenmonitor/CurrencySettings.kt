@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
     val strings=LocalResources.current
     val focus=LocalFocusManager.current;val keyboard=LocalSoftwareKeyboardController.current
     val labels=mapOf("USD" to R.string.usage_currency_usd,"TWD" to R.string.usage_currency_twd,"HKD" to R.string.usage_currency_hkd,"CNY" to R.string.usage_currency_cny)
+    DesktopSettingNoteGroup(strings.getString(R.string.usage_currency_note),"usage-currency") {
     DesktopSettingSelect(strings.getString(R.string.usage_currency),UsageCurrency.codes.map {it to strings.getString(labels.getValue(it))},preferences.currency,"usage-currency") {focus.clearFocus();keyboard?.hide();change(DisplayChange.Currency(it))}
     if(preferences.currency!="USD") {
         val code=preferences.currency;val saved=preferences.currencyRates[code]
@@ -41,5 +42,5 @@ import androidx.compose.ui.unit.dp
             }
         } else Text(strings.getString(R.string.usage_builtin_rate),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
-    Text(strings.getString(R.string.usage_currency_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }

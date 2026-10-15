@@ -53,6 +53,26 @@ class SyncDeviceGridScreenTest {
         screenshot("empty-320-font1")
     }
 
+    @Test fun hubLabelUsesCurrentHostAndOfflineStatusDoesNotClaimConnection() {
+        val value=mutableStateOf(HubState(connectedEndpoint="https://first.example.invalid",lastSuccessfulEndpoint="https://first.example.invalid"))
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
+            Column(Modifier.width(320.dp).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
+        }}}
+        complete("sync-hub-destination","Hub: first.example.invalid")
+        complete("sync-hub-status","已连接")
+        compose.runOnIdle {value.value=value.value.copy(connectedEndpoint="https://second.example.invalid",lastSuccessfulEndpoint="https://second.example.invalid")}
+        complete("sync-hub-destination","Hub: second.example.invalid")
+        compose.runOnIdle {value.value=value.value.copy(connectedEndpoint=null,error=R.string.error_no_network)}
+        complete("sync-hub-destination","Hub: second.example.invalid")
+        complete("sync-hub-status","离线 · 上次连接的 Hub")
+        compose.runOnIdle {value.value=HubState(connectedEndpoint="http://192.168.31.12:17321")}
+        complete("sync-hub-destination","Hub: 名称未知")
+        complete("sync-hub-address","http://192.168.31.12:17321")
+        compose.runOnIdle {value.value=HubState()}
+        complete("sync-hub-status","尚未连接")
+        screenshot("hub-dynamic-offline")
+    }
+
     private fun mount(width:Int,font:MutableState<Float>,state:HubState) {
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
             val density=LocalDensity.current
@@ -110,6 +130,9 @@ class SyncDeviceGridScreenTest {
         val enlargedName=complete("sync-device-name-long",name,wrap=true)
         assertEquals("Names retain their original sp size",baselineName.layoutInput.style.fontSize,enlargedName.layoutInput.style.fontSize)
         assertEquals(2f,enlargedName.layoutInput.density.fontScale,0f)
+        complete("sync-viewer-role","本机 · 只读查看手机",wrap=true)
+        complete("sync-viewer-note","查看 Hub 数据；此手机不是采集设备。",wrap=true)
+        complete("sync-hub-destination","Hub: sync-fixture.example.invalid",wrap=true)
         screenshot("grid-$width-font2-long-name")
         complete("sync-device-platform-long","$platform 27.0.1 fixture edition",wrap=true)
         complete("sync-device-version-long","Agent v$version",wrap=true)
@@ -145,8 +168,11 @@ class SyncDeviceGridScreenTest {
         assertTrue("Odd last collector never stretches across both columns",cards.last().right<grid.right)
         val viewer=compose.onNodeWithTag("sync-viewer-information").getUnclippedBoundsInRoot()
         val hub=compose.onNodeWithTag("sync-hub-information").getUnclippedBoundsInRoot()
-        assertEquals(grid.width.value,viewer.width.value,.5f)
-        assertEquals(grid.width.value,hub.width.value,.5f)
+        assertEquals(cards.first().width.value,viewer.width.value,.5f)
+        assertEquals(viewer.width.value,hub.width.value,.5f)
+        assertEquals("Phone and Hub share one row",viewer.top.value,hub.top.value,.5f)
+        assertEquals("Natural peer height matches collector policy",viewer.height.value,hub.height.value,.5f)
+        assertEquals(CompactUiTokens.SectionSpacing.value,hub.left.value-viewer.right.value,.5f)
         assertTrue("Phone stays outside the collector grid",viewer.bottom<=grid.top)
         assertTrue("Hub stays outside the collector grid",hub.bottom<=grid.top)
     }
@@ -157,7 +183,19 @@ class SyncDeviceGridScreenTest {
         node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(layouts)}
         val layout=layouts.single()
         assertEquals(expected,layout.layoutInput.text.text)
-        assertFalse("$tag preserves complete text without clipping or ellipsis",layout.hasVisualOverflow)
+        val measured="tag=$tag text=$expected constraints=${layout.layoutInput.constraints} size=${layout.size} " +
+            "paragraphWidth=${layout.multiParagraph.width} paragraphHeight=${layout.multiParagraph.height} " +
+            "overflowWidth=${layout.didOverflowWidth} overflowHeight=${layout.didOverflowHeight} lines=${layout.lineCount} " +
+            "fontScale=${layout.layoutInput.density.fontScale} fontSize=${layout.layoutInput.style.fontSize} " +
+            "bounds=${node.getUnclippedBoundsInRoot()} " +
+            (0 until layout.lineCount).joinToString {line->"line$line(bottom=${layout.getLineBottom(line)},right=${layout.getLineRight(line)},ellipsis=${layout.isLineEllipsized(line)})"}
+        if(layout.hasVisualOverflow) {
+            val filename="sync-overflow-$tag-${if(dark) "dark" else "light"}"
+            java.io.File(compose.activity.getExternalFilesDir(null),"$filename.txt").writeText(measured)
+            saveVisualEvidence(compose.activity,compose.onRoot(),"$filename.png")
+            println("PUBLIC_SYNC_TEXT_LAYOUT $measured")
+        }
+        assertFalse("$tag preserves complete text without clipping or ellipsis: $measured",layout.hasVisualOverflow)
         if(wrap) assertTrue("$tag wraps naturally",layout.lineCount>1)
         return layout
     }

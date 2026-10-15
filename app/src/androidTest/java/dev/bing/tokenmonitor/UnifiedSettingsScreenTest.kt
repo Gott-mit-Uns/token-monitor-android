@@ -24,7 +24,7 @@ import org.junit.Test
 class UnifiedSettingsScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-    private val tags=listOf("android-update-check","android-update-current-notes","android-update-releases","about-open-licenses")
+    private val tags=listOf("android-update-check","about-desktop-latest","android-update-current-notes","about-open-licenses")
     @Test fun fourOriginalAboutActionsShareOneRowAndKeepEveryDestination() = aboutActions(353,1f,false)
     @Test fun narrowLargeTextUsesTwoColumnsWithoutShrinkingOrClipping() = aboutActions(240,2f,true)
     @Test fun narrowLargeTextKeepsLongAddressAndDeviceNameCompleteAndMissingFieldsUnknown() {
@@ -71,7 +71,7 @@ class UnifiedSettingsScreenTest {
             val density=LocalDensity.current
             CompositionLocalProvider(LocalDensity provides Density(density.density,font)) {
                 Column(Modifier.width(width.dp).background(MaterialTheme.colorScheme.background).verticalScroll(rememberScrollState())) {
-                    AndroidUpdateContent("0.2.62",AndroidUpdateState.Idle,{checks++},opened::add,{licenses++})
+                    AndroidUpdateContent("0.2.62",AndroidUpdateState.Idle,{checks++},opened::add,{licenses++},DesktopReleaseState.Ready(DesktopRelease("0.72.0","${DesktopReleases.repository}/releases/tag/v0.72.0")))
                 }
             }
         }}}
@@ -89,7 +89,7 @@ class UnifiedSettingsScreenTest {
         saveVisualEvidence(compose.activity,compose.onRoot(),"settings064-about-${if(twoColumns) "large" else "regular"}-${if(dark) "dark" else "light"}.png")
         tags.forEach {tag->compose.onNodeWithTag(tag).performScrollTo().performClick()}
         assertEquals(1,checks);assertEquals(1,licenses)
-        assertEquals(listOf(AndroidReleases.currentNotes("0.2.62"),AndroidReleases.releasesUrl),opened)
+        assertEquals(listOf("${DesktopReleases.repository}/releases/tag/v0.72.0",AndroidReleases.currentNotes("0.2.62")),opened)
     }
     @Test fun actualAboutOpensCompleteSelectableLicenses() {
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {

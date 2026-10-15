@@ -665,7 +665,7 @@
     <string name="session_group_main">主对话 / 续接</string>
     <string name="session_group_subagent">子代理</string>
     <string name="desktop_reference_version">桌面参考版本：v%1$s</string>
-    <string name="desktop_parity_partial">桌面 0.70：已适配数字动画、近期会话展示及可选供应商字段。采集、计费修复和额度刷新仍依赖 Hub／Agent。</string>
+    <string name="desktop_parity_partial">已适配数字动画、近期会话展示及可选供应商字段。采集、计费修复和额度刷新仍依赖 Hub／Agent。</string>
     <string name="hub_version_unknown">Hub 构建：服务端未报告</string>
     <plurals name="session_subagent_count"><item quantity="other">%1$d 个子代理</item></plurals>
     <string name="hub_version_pending">Hub 构建：等待连接验证</string>

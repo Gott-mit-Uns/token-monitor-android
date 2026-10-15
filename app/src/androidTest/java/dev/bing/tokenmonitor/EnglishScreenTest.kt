@@ -53,11 +53,12 @@ class EnglishScreenTest {
             compose.onRoot().captureToImage().asAndroidBitmap().compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
         }
         compose.runOnIdle { preferences.value = preferences.value.copy(language = LanguageChoice.CHINESE) }
-        compose.onNode(hasText("主页") and isSelected()).assertIsDisplayed()
+        compose.onNodeWithTag("hub-settings-panel-motion").assertExists()
         
         compose.onNodeWithText("输入(未命中缓存)：0（明确免费）").performScrollTo().assertIsDisplayed()
         compose.runOnIdle { preferences.value = preferences.value.copy(language = LanguageChoice.ENGLISH) }
-        compose.onNodeWithText("Close").performClick()
+        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("settings-open-pricing"));compose.onNodeWithTag("settings-open-pricing").performClick()
+        compose.onNodeWithTag("hub-settings-toggle").performClick()
         compose.onNodeWithTag("hub-view-selector").performClick()
         compose.onNodeWithTag("view-trends").performScrollTo().performClick()
         compose.onNodeWithTag("trends-main-open-history").performClick()

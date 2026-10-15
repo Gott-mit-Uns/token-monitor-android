@@ -1,6 +1,10 @@
 package dev.bing.tokenmonitor
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,8 +29,7 @@ internal val LocalLimitDisplay = staticCompositionLocalOf { LimitDisplayPreferen
     if(expanded || embedded) Column(Modifier.fillMaxWidth().testTag("limit-settings-controls"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         QuotaProviderSettings(preferences,update,limits)
         DesktopSettingSwitch(strings.getString(R.string.limit_show_source),preferences.limits.showSource,"limit-show-source") {update(DisplayChange.LimitSource(it))}
-        DesktopSettingSwitch(strings.getString(R.string.limit_mask_emails),preferences.limits.maskEmails,"limit-mask-emails") {update(DisplayChange.MaskLimitEmails(it))}
-        Text(strings.getString(R.string.limit_mask_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+        DesktopSettingSwitch(strings.getString(R.string.limit_mask_emails),preferences.limits.maskEmails,"limit-mask-emails",description=strings.getString(R.string.limit_mask_note)) {update(DisplayChange.MaskLimitEmails(it))}
         DesktopSettingInlineChoices(strings.getString(R.string.limit_bars_show),listOf("remaining" to strings.getString(R.string.limit_mode_remaining),"used" to strings.getString(R.string.limit_mode_used)),if(preferences.limits.showUsed) "used" else "remaining","limit-mode") {update(DisplayChange.LimitUsed(it=="used"))}
     }
 }
@@ -34,8 +37,17 @@ internal val LocalLimitDisplay = staticCompositionLocalOf { LimitDisplayPreferen
 /** Original usage-item checkbox at the left; entire row remains one touch target. */
 @Composable internal fun LimitDisplayToggle(label:String,tag:String,value:Boolean,enabled:Boolean=true,change:(Boolean)->Unit) {
     val colors=MaterialTheme.colorScheme
-    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).testTag(tag).toggleable(value,enabled=enabled,role=Role.Checkbox,onValueChange=change),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-        Checkbox(value,null,enabled=enabled,modifier=Modifier.size(20.dp))
+    Row(Modifier.fillMaxWidth().heightIn(min=48.dp).testTag(tag).toggleable(value,enabled=enabled,role=Role.Checkbox,onValueChange=change),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        val ink=if(value) colors.primary else colors.onSurfaceVariant.copy(alpha=.75f)
+        Canvas(Modifier.size(14.dp).testTag("$tag-visual")) {
+            val tint=ink.copy(alpha=if(enabled) ink.alpha else .38f)
+            if(value) drawRoundRect(tint,cornerRadius=CornerRadius(2.dp.toPx()))
+            else drawRoundRect(tint,cornerRadius=CornerRadius(2.dp.toPx()),style=Stroke(1.dp.toPx()))
+            if(value) {
+                val path=Path();path.moveTo(size.width*.23f,size.height*.51f);path.lineTo(size.width*.43f,size.height*.71f);path.lineTo(size.width*.79f,size.height*.30f)
+                drawPath(path,colors.onPrimary,style=Stroke(1.5.dp.toPx(),cap=androidx.compose.ui.graphics.StrokeCap.Round,join=androidx.compose.ui.graphics.StrokeJoin.Round))
+            }
+        }
         Text(label,Modifier.weight(1f),style=quotaTextStyle(11),color=colors.onSurface.copy(alpha=if(enabled) 1f else .58f))
     }
 }
@@ -98,8 +110,7 @@ private data class LimitSettingItem(val key:String,val label:String,val availabl
     DesktopSettingSelect(strings.getString(R.string.limit_home_display_mode),listOf("text" to strings.getString(R.string.limit_home_text),"bars" to strings.getString(R.string.limit_home_bars)),if(prefs.homeBars) "bars" else "text","home-quota-mode") {update(DisplayChange.HomeLimitBars(it=="bars"))}
     DesktopSettingSwitch(strings.getString(R.string.limit_home_highlight),prefs.highlightLowHomeLimits,"home-quota-highlight") {update(DisplayChange.HighlightLowHomeLimits(it))}
     val namesRequired=!preferences.appearance.showToolIcons
-    DesktopSettingSwitch(strings.getString(R.string.limit_home_names),namesRequired || prefs.showHomeProviderNames,"home-quota-names",enabled=!namesRequired) {update(DisplayChange.HomeLimitNames(it))}
-    if(namesRequired) Text(strings.getString(R.string.limit_home_names_required),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+    DesktopSettingSwitch(strings.getString(R.string.limit_home_names),namesRequired || prefs.showHomeProviderNames,"home-quota-names",enabled=!namesRequired,description=if(namesRequired) strings.getString(R.string.limit_home_names_required) else null) {update(DisplayChange.HomeLimitNames(it))}
     var count by remember(prefs.homeAccountCount) {mutableStateOf(prefs.homeAccountCount.toString())}
     fun commitCount() {
         val value=count.toIntOrNull()?.takeIf {it in 1..12}

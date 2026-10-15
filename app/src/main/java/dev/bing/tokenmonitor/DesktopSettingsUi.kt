@@ -29,6 +29,7 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
@@ -92,7 +93,7 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
     }
 }
 
-@Composable internal fun DesktopSettingSelect(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,stacked:Boolean=false,change:(String)->Unit) {
+@Composable internal fun DesktopSettingSelect(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,stacked:Boolean=false,controlWidth:Dp?=null,titleColumnWidth:Dp?=null,trailing:(@Composable ()->Unit)?=null,description:String?=null,change:(String)->Unit) {
     var menu by remember {mutableStateOf(false)}
     var menuWidth by remember {mutableStateOf(200.dp)}
     val density=LocalDensity.current;val strings=LocalResources.current
@@ -101,7 +102,7 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
     val selectedLabel=choices.firstOrNull {it.first==selected}?.second ?: selected
     val labelWidths=rememberDesktopLabelWidths(choices.map {it.second}+selectedLabel,style)
     val titleWidth=rememberDesktopLabelWidths(listOf(title),style).single()
-    val naturalControlWidth=with(density) {
+    val naturalControlWidth=controlWidth ?: with(density) {
         maxOf(48.dp.roundToPx(),(labelWidths.maxOrNull() ?: 0)+2*8.dp.roundToPx()+8.dp.roundToPx()+10.dp.roundToPx()).toDp()
     } // Round each actual padding edge, gap and disclosure before adding them.
     val control:@Composable (Modifier)->Unit={modifier->
@@ -115,31 +116,53 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
             DesktopOptionMenu(menu,choices.map {(id,label)->DesktopMenuOption(id,label,"$tag-$id")},selected, "$tag-menu",width=menuWidth,compactSettings=true,dismiss={menu=false}) {id->change(id);menu=false}
         }
     }
-    BoxWithConstraints(Modifier.fillMaxWidth().testTag("$tag-row")) {
+    BoxWithConstraints(Modifier.fillMaxWidth().padding(bottom=if(description!=null) 8.dp else 0.dp).testTag("$tag-row")) {
         val availableWidth=maxWidth
-        val canStayInline=!stacked && with(density) {titleWidth+8.dp.roundToPx()+naturalControlWidth.roundToPx()<=availableWidth.roundToPx()}
+        val canStayInline=!stacked && with(density) {(titleColumnWidth?.roundToPx() ?: titleWidth)+8.dp.roundToPx()+naturalControlWidth.roundToPx()+(if(trailing!=null) 56.dp.roundToPx() else 0)<=availableWidth.roundToPx()}
         if(canStayInline) Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            if(title.isNotEmpty()) Text(title,Modifier.weight(1f).testTag("$tag-title"),style=style)
+            if(title.isNotEmpty()) Column(if(titleColumnWidth!=null) Modifier.width(titleColumnWidth) else Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(2.dp)) {
+                Text(title,Modifier.fillMaxWidth().testTag("$tag-title"),style=style)
+                if(description!=null) Text(description,Modifier.fillMaxWidth().testTag("$tag-description"),style=quotaTextStyle(9),color=colors.onSurfaceVariant)
+            }
             control(Modifier.width(naturalControlWidth.coerceAtMost(availableWidth)))
+            trailing?.invoke()
         } else Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
-            if(title.isNotEmpty()) Text(title,Modifier.fillMaxWidth().testTag("$tag-title"),style=style,color=colors.onSurfaceVariant)
-            control(Modifier.fillMaxWidth())
+            if(title.isNotEmpty()) Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(2.dp)) {
+                Text(title,Modifier.fillMaxWidth().testTag("$tag-title"),style=style,color=colors.onSurfaceVariant)
+                if(description!=null) Text(description,Modifier.fillMaxWidth().testTag("$tag-description"),style=quotaTextStyle(9),color=colors.onSurfaceVariant)
+            }
+            Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                val reserved=if(trailing!=null) 56.dp else 0.dp
+                control(if(controlWidth==null) Modifier.weight(1f) else Modifier.width(naturalControlWidth.coerceAtMost((availableWidth-reserved).coerceAtLeast(48.dp))))
+                trailing?.invoke()
+            }
         }
     }
 }
 
-@Composable internal fun DesktopSettingSwitch(label:String,checked:Boolean,tag:String,enabled:Boolean=true,change:(Boolean)->Unit) {
+@Composable internal fun DesktopSettingSwitch(label:String,checked:Boolean,tag:String,enabled:Boolean=true,description:String?=null,change:(Boolean)->Unit) {
     val colors=MaterialTheme.colorScheme
     val sunken=LocalDesktopSunkenColor.current.copy(alpha=.55f)
     val pose=rememberSettingSwitchMotion(checked,enabled,colors.primary.copy(alpha=.88f),sunken,colors.primary.copy(alpha=.5f),colors.onSurface.copy(alpha=.16f),colors.surfaceContainer,colors.onSurfaceVariant)
-    Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current).toggleable(checked,enabled=enabled,role=Role.Checkbox,onValueChange=change).testTag(tag).semantics {this[SettingSwitchPosition]=pose.position;this[SettingSwitchPlaying]=pose.running},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-        Text(label,Modifier.weight(1f),style=quotaTextStyle(11))
+    Row(Modifier.fillMaxWidth().padding(bottom=if(description!=null) 8.dp else 0.dp).heightIn(min=LocalDesktopSettingsRowHeight.current).toggleable(checked,enabled=enabled,role=Role.Checkbox,onValueChange=change).testTag(tag).semantics {this[SettingSwitchPosition]=pose.position;this[SettingSwitchPlaying]=pose.running},verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.weight(1f),verticalArrangement=Arrangement.spacedBy(2.dp)) {
+            Text(label,Modifier.fillMaxWidth(),style=quotaTextStyle(11))
+            if(description!=null) Text(description,Modifier.fillMaxWidth().testTag("$tag-description"),style=quotaTextStyle(9),color=colors.onSurfaceVariant)
+        }
         Canvas(Modifier.size(34.dp,20.dp).alpha(if(enabled) 1f else .38f)) {
             val shape=androidx.compose.ui.geometry.CornerRadius(10.dp.toPx())
             drawRoundRect(pose.background,cornerRadius=shape)
             drawRoundRect(pose.border,cornerRadius=shape,style=Stroke(1.dp.toPx()))
             drawCircle(pose.thumb,radius=7.dp.toPx(),center=Offset((10f+14f*pose.position).dp.toPx(),10.dp.toPx()))
         }
+    }
+}
+
+/** Keep explanatory copy attached to the controls it qualifies, then separate the next item. */
+@Composable internal fun DesktopSettingNoteGroup(note:String,tag:String,content:@Composable ColumnScope.()->Unit) {
+    Column(Modifier.fillMaxWidth().padding(bottom=8.dp).testTag("$tag-group"),verticalArrangement=Arrangement.spacedBy(2.dp)) {
+        content()
+        Text(note,Modifier.fillMaxWidth().testTag("$tag-description"),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 

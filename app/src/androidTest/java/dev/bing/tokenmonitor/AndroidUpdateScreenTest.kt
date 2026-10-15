@@ -25,13 +25,13 @@ class AndroidUpdateScreenTest {
         val urls = mutableListOf<String>()
         var checks = 0
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark, LanguageChoice.ENGLISH) {
-            Column(Modifier.verticalScroll(rememberScrollState())) {AndroidUpdateContent("0.2.60", state.value, {checks++}, urls::add)}
+            Column(Modifier.verticalScroll(rememberScrollState())) {AndroidUpdateContent("0.2.60", state.value, {checks++}, urls::add, desktopState=DesktopReleaseState.Ready(DesktopRelease("0.72.0","${DesktopReleases.repository}/releases/tag/v0.72.0")))}
         }}}
         assertEquals(0, checks)
         compose.onNodeWithTag("android-update-check").performClick(); assertEquals(1, checks)
         compose.onNodeWithTag("android-update-current-notes").performClick()
-        compose.onNodeWithTag("android-update-releases").performClick()
-        assertEquals(listOf(AndroidReleases.currentNotes("0.2.60"), AndroidReleases.releasesUrl), urls)
+        compose.onNodeWithTag("about-desktop-latest").performClick()
+        assertEquals(listOf(AndroidReleases.currentNotes("0.2.60"), "${DesktopReleases.repository}/releases/tag/v0.72.0"), urls)
         compose.runOnIdle {state.value = AndroidUpdateState.Checking}
         compose.onNodeWithTag("android-update-check").assertIsNotEnabled()
         compose.onNodeWithTag("android-update-status").assertTextEquals("Checking Android releases…")
@@ -39,7 +39,7 @@ class AndroidUpdateScreenTest {
         compose.onNodeWithTag("android-update-status").assertTextEquals("The Android client is up to date.")
         compose.runOnIdle {state.value = AndroidUpdateState.Failed(AndroidUpdateFailure.ACCESS)}
         compose.onNodeWithTag("android-update-status").assertTextContains("Cannot access the Android release API", substring = true)
-        compose.onNodeWithTag("android-update-releases").assertIsEnabled()
+        compose.onNodeWithTag("about-desktop-latest").assertIsEnabled()
         saveVisualEvidence(compose.activity, compose.onRoot(), "android-update-inaccessible-${if(dark) "dark" else "light"}.png")
         val release = AndroidRelease(AndroidReleaseVersion(0, 2, 61), "${AndroidReleases.repository}/releases/tag/v0.2.61", "${AndroidReleases.repository}/releases/download/v0.2.61/token-monitor-android-0.2.61.apk")
         compose.runOnIdle {state.value = AndroidUpdateState.Available(release)}
@@ -49,6 +49,32 @@ class AndroidUpdateScreenTest {
         assertEquals(listOf(release.notesUrl, release.apkUrl), urls.takeLast(2))
         saveVisualEvidence(compose.activity, compose.onRoot(), "android-update-available-${if(dark) "dark" else "light"}.png")
     }
+    @Test fun desktopQueryStatesDoNotClaimAndroidCurrentOrChangeInstalledNotes() {
+        val desktop=mutableStateOf<DesktopReleaseState>(DesktopReleaseState.Idle)
+        var androidChecks=0;var desktopChecks=0;val urls=mutableListOf<String>()
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                AndroidUpdateContent("0.71.0-01",AndroidUpdateState.Idle,{androidChecks++},urls::add,
+                    desktopState=desktop.value,checkDesktop={desktopChecks++})
+            }
+        }}}
+        compose.onNodeWithTag("about-desktop-latest").performClick();assertEquals(1,desktopChecks);assertEquals(0,androidChecks)
+        compose.runOnIdle {desktop.value=DesktopReleaseState.Checking}
+        compose.onNodeWithTag("about-desktop-latest").assertIsNotEnabled()
+        compose.onNodeWithTag("desktop-release-status").assertTextEquals("Checking the upstream desktop release…")
+        compose.onNodeWithTag("android-update-status").assertDoesNotExist()
+        for(reason in listOf(AndroidUpdateFailure.NETWORK,AndroidUpdateFailure.RATE_LIMIT,AndroidUpdateFailure.ACCESS,AndroidUpdateFailure.INVALID_RELEASE)) {
+            compose.runOnIdle {desktop.value=DesktopReleaseState.Failed(reason)}
+            compose.onNodeWithTag("about-desktop-latest").assertIsEnabled().performClick()
+            compose.onNodeWithTag("android-update-status").assertDoesNotExist()
+        }
+        compose.runOnIdle {desktop.value=DesktopReleaseState.Ready(DesktopRelease("0.72.0","${DesktopReleases.repository}/releases/tag/v0.72.0"))}
+        compose.onNodeWithTag("about-desktop-latest").performClick()
+        compose.onNodeWithTag("android-update-current-notes").performClick()
+        assertEquals(listOf("${DesktopReleases.repository}/releases/tag/v0.72.0",AndroidReleases.currentNotes("0.71.0-01")),urls)
+        compose.onNodeWithTag("android-update-check").performClick();assertEquals(1,androidChecks)
+        saveVisualEvidence(compose.activity,compose.onRoot(),"compact-about-${if(dark) "dark" else "light"}.png")
+    }
     @Test fun realLifecycleCancelsInFlightCheckAndResumeStaysManual() {
         val calls = AtomicInteger(0)
         val cancelled = AtomicBoolean(false)
@@ -56,7 +82,7 @@ class AndroidUpdateScreenTest {
             calls.incrementAndGet()
             try {awaitCancellation()} finally {cancelled.set(true)}
         }
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark, LanguageChoice.ENGLISH) {AndroidUpdateSettings("0.2.60", source)}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark, LanguageChoice.ENGLISH) {AndroidUpdateSettings("0.2.60", source, desktopSource=DesktopReleaseSource {DesktopRelease("0.72.0","${DesktopReleases.repository}/releases/tag/v0.72.0")})}}}
         compose.onNodeWithTag("android-update-check").performClick()
         compose.waitUntil {calls.get() == 1}
         compose.onNodeWithTag("android-update-status").assertTextEquals("Checking Android releases…")
