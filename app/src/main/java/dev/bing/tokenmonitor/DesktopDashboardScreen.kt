@@ -34,12 +34,14 @@ import kotlinx.coroutines.ensureActive
     trend:DashboardTrendModel?,today:LocalDate,preferences:DisplayPreferences,
     updateDisplay:((DisplayChange)->Unit)?,onBack:()->Unit,onRefresh:()->Unit,onSettings:()->Unit,
     chartMotion:State<DashboardChartFrame>?=null,overviewMotion:DashboardOverviewMotionState?=null,chartEventKey:Any?=history,
-    recordsHistory:HubHistory?=history
+    recordsHistory:HubHistory?=history,historyRead:HistoryReadPresentation=HistoryReadPresentation()
 ) {
     val strings=LocalResources.current
     val text=MaterialTheme.colorScheme.onSurface
     val overlay=LocalDesktopOverlayColor.current
     val density=LocalDensity.current
+    val visibleLoading=if(ui.tab==DashboardTab.RECORDS) historyRead.loading else loading
+    val visibleError=if(ui.tab==DashboardTab.RECORDS) historyRead.error else error
     var selectedRow by remember(history) {mutableStateOf<HistoryRow?>(null)}
     var selectedBar by remember(history,ui.range,ui.byModel,ui.mode) {mutableStateOf<DashboardTrendBar?>(null)}
     var selectedCandle by remember(history,ui.range,ui.mode) {mutableStateOf<DashboardTrendCandle?>(null)}
@@ -70,16 +72,16 @@ import kotlinx.coroutines.ensureActive
                 }
             }
             HorizontalDivider(color=overlay.copy(alpha=.08f))
-            if(loading) LinearProgressIndicator(Modifier.fillMaxWidth().height(2.dp))
-            error?.let {Text(strings.getString(it),Modifier.fillMaxWidth().padding(horizontal=14.dp,vertical=6.dp)
-                .semantics {liveRegion=LiveRegionMode.Polite},style=quotaTextStyle(11),color=MaterialTheme.colorScheme.error)}
+            if(visibleLoading) LinearProgressIndicator(Modifier.fillMaxWidth().height(2.dp).testTag("dashboard-history-loading"))
+            visibleError?.let {Text(strings.getString(it),Modifier.fillMaxWidth().padding(horizontal=14.dp,vertical=6.dp)
+                .testTag("dashboard-history-error").semantics {liveRegion=LiveRegionMode.Polite},style=quotaTextStyle(11),color=MaterialTheme.colorScheme.error)}
         }}) {padding->
         Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding),contentAlignment=Alignment.TopCenter) {
             Column(Modifier.widthIn(max=1200.dp).fillMaxWidth().verticalScroll(rememberScrollState()).testTag("dashboard-scroll")
                 .padding(14.dp).onSizeChanged {ui.resizeOverview(with(density) {it.width.toDp().value.toDouble()})},verticalArrangement=Arrangement.spacedBy(12.dp)) {
                 if(ui.tab==DashboardTab.RECORDS) {
                     DesktopTextButton(onClick=ui::closeRecords,modifier=Modifier.testTag("dashboard-records-back")) {Text(strings.getString(R.string.dashboard_back_overview),style=quotaTextStyle(11))}
-                    Box(Modifier.testTag("dashboard-records")) {HistoryTrend(recordsHistory,loading,error,today)}
+                    Box(Modifier.testTag("dashboard-records")) {HistoryTrend(recordsHistory,historyRead.loading,historyRead.error,today)}
                 } else if(history==null) {
                     DesktopActionButton(onRefresh,enabled=!loading,modifier=Modifier.testTag("history-load")) {Text(strings.getString(R.string.desktop_load_charts))}
                 } else if(history.daily.isEmpty() && history.monthly.isEmpty()) {

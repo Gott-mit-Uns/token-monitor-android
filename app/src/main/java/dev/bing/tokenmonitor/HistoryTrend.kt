@@ -120,8 +120,8 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
         }
         Text(strings.getString(R.string.record_calendar_legend), style = quotaTextStyle(10), color = text.copy(alpha = .6f))
         if (loading) Text(strings.getString(R.string.record_loading), Modifier.testTag("records-loading"), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
-        error?.let { Text(strings.getString(R.string.record_read_failed), Modifier.testTag("records-error"), style = quotaTextStyle(11), color = MaterialTheme.colorScheme.error) }
-        selected?.let { RecordInlineDetail(it, numbers) }
+        error?.let { Text(strings.getString(it), Modifier.testTag("records-error"), style = quotaTextStyle(11), color = MaterialTheme.colorScheme.error) }
+        selected?.let { RecordInlineDetail(it, numbers, error) }
             ?: Text(strings.getString(R.string.record_select), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
         if (!monthly) summary?.let { range ->
             Text(strings.getString(R.string.history_date_note), style = quotaTextStyle(10), color = text.copy(alpha = .6f))
@@ -199,7 +199,7 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
     })
 }
 
-@Composable private fun RecordInlineDetail(cell: RecordCalendarCell, numbers: NumberFormat) {
+@Composable private fun RecordInlineDetail(cell: RecordCalendarCell, numbers: NumberFormat, error: Int? = null) {
     val strings = LocalResources.current
     val text = MaterialTheme.colorScheme.onSurface
     Column(Modifier.fillMaxWidth().testTag("records-selected-detail").background(
@@ -207,7 +207,7 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
         verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(cell.key, Modifier.testTag("records-selected-date"), style = quotaTextStyle(12, true))
         if (cell.state !in setOf(RecordCellState.RECORDED, RecordCellState.UNKNOWN)) {
-            Text(recordStateLabel(cell.state), style = quotaTextStyle(12), color = text.copy(alpha = .65f))
+            Text(if (cell.state == RecordCellState.FAILED && error != null) strings.getString(error) else recordStateLabel(cell.state), style = quotaTextStyle(12), color = text.copy(alpha = .65f))
         } else cell.row?.let { row ->
             Text("Token ${row.tokens?.let(numbers::format) ?: strings.getString(R.string.not_provided)}", Modifier.testTag("records-selected-tokens"), style = quotaDataTextStyle(14))
             Text(strings.getString(R.string.known_cost_formatted, usageCostText(row.cost, row.unpricedTokens)), style = quotaTextStyle(11))

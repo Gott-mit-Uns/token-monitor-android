@@ -399,7 +399,8 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
             CompositionLocalProvider(LocalDesktopDisplayFont provides nativeFont(preferences.appearance.displayFont,dashboardFont)) {
             DesktopDashboardScreen(dashboardHistory,state.loading,state.error,dashboardUi,dashboardTrend,homeDay,preferences,updateDisplay,
                 {trendsHistoryOpen=false},{model.loadHistory(true)},{directPage=null;page=HubPage.SETTINGS},dashboardChartMotion,dashboardOverviewMotion,dashboardEventKey,
-                recordsHistory=dashboardRawHistory)
+                recordsHistory=dashboardRawHistory,
+                historyRead=HistoryReadPresentation.project(HistoryReadKey(state.connectionRevision,historySignature),state.historyReadReceipt))
             }
             }
         }
