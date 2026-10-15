@@ -60,9 +60,9 @@ HubLayout 夹具也需统一动画时钟。Appearance 大字体恢复夹具原�
 
 最终版本构建成功，484 单元测试、0 失败／错误／跳过；完整 Lint 0 错误、102 警告、1 提示。完整界面矩阵的先前候选、修复与新版本执行分开留存；版本提升前最终状态边界定向 32/32 通过，包括日历7项在普通／实际320dp系统字体2.0的两主题28次、Appearance两主题真实字号与实际Activity重建4次。最终版本只追加版本字段和去除About过时0.70前缀，计算与布局源码不变；最终包定向页面截图、链接和发布读回另记。
 
-实际旧正式 0.71.0-01/code74 APK → 最终02/code75 APK 签名覆盖升级通过，旧／新／冷启动后的实际 base.apk 均回读对上输入SHA。UID10213不变；旧 Hub 历史与四份 primary/system/mono/custom 偏好可解密、内容及密文指纹保留。只使用任务自有 API36 ARM64 模拟器，未卸载、清数据或回装降级。公开测试数据准备、升级检查、受保护冷启动准备、实际MainActivity缓存主页、冷启动后继承检查共5/5；独立force-stop后启动 Status:ok、LaunchState:COLD。公开无认证fixture仅显示缓存与连接提示，不代表真实Hub账户联网。
+实际旧正式 0.71.0-01/code74 APK → 最终02/code75 APK 签名覆盖升级通过，旧／新／冷启动后的实际 base.apk 均回读对上输入SHA。UID10213不变；旧加密Hub历史可解密，四份primary/system/mono/custom偏好可读取；内容及文件指纹保留。只使用任务自有 API36 ARM64 模拟器，未卸载、清数据或回装降级。公开测试数据准备、升级检查、受保护冷启动准备、实际MainActivity缓存主页、冷启动后继承检查共5/5；独立force-stop后启动 Status:ok、LaunchState:COLD。公开无认证fixture仅显示缓存与连接提示，不代表真实Hub账户联网。
 
-升级run1在产品断言通过后因输出输送检查停下：PUBLIC_UPGRADE由System.out Logcat输出，而非instrumentation标准输出。仅过滤提取前后进程各六条公开标记，核对UID及密文完全相同；run2从剩余冷启动步骤继续，未重新生成旧数据。首次失败、原脚本、诊断和原APK均保留于evidence/compact-ui/upgrade。
+升级run1在产品断言通过后因输出输送检查停下：PUBLIC_UPGRADE由System.out Logcat输出，而非instrumentation标准输出。仅过滤提取前后进程各六条公开标记，核对UID及文件指纹完全相同；run2从剩余冷启动步骤继续，未重新生成旧数据。首次失败、原脚本、诊断和原APK均保留于evidence/compact-ui/upgrade。
 
 最终正式APK的50个指定深／浅色页面验收场景全部取得通过：原测试包7bd的48项，加仅修复EditControls宿主时钟后的4c3d测试包2项。原两次时钟夹具失败保留，没有将全部场景冒称为新测试包重跑。首项About因两个instrumentation执行重叠中断，按0有效项保留，设备独占后单独复验1/1通过。统一页面截图36张原图与SHA清单见[改前／改后对照](UI_COMPACT_COMPARISON_0.71.0-02.md)，不裁切或重绘，也不把模拟器型号改成真机型号。
 
@@ -71,7 +71,7 @@ HubLayout 夹具也需统一动画时钟。Appearance 大字体恢复夹具原�
 正式发布前继续按既有PR审查、固定Tag和双入口分发流程执行；旧版真实0.2.64公开metadata、新版实际latest查询、附件完整下载及GitHub状态必须在发布后分别读回，结果另附，不以草稿或拟发布fixture冒充公开发布成功。
 
 
-## 审查修复后的最终候选
+## 审查修复后的候选（合入重建后退役）
 
 PR#5自动审查指出：记录宿主把全局loading/error传入日历，别名、单价、订阅或设备读取可能让已接受的历史误报读取中／失败。已改为仅使用与当前连接revision及historySignature匹配的HistoryReadReceipt投影；记录页头和日历一致，旧回执不覆盖新状态，刷新仍服从原串行门禁。既有请求接纳、缓存和统计不变。原审查及所有旧候选保留，c994从未发布。
 
@@ -85,3 +85,23 @@ PR#5自动审查指出：记录宿主把全局loading/error传入日历，别名
 新6768候选签名数据续验3/3通过：不重装旧74、不重新seed、不清数据，直接核对最初74的UID10213及Hub/历史/四偏好共六条公开指纹；新包首次继承、读取既有公开fixture的实际冷主页、冷启动后继承均一致。独立launcher为Status:ok/LaunchState:COLD，实际base.apk15,305,502bytes/SHA6768与封存相同。首次脚本在instrumentation已成功结束后误假设进程仍存活而停下，保留断点；按精确TestRunner PID关联该次公开截图后只续行剩余步骤，未重新生成数据。
 
 新APK上的实际匿名桌面客户端与安装版精确说明／无循环检查2/2通过，耗时5.136s，真正上游v0.72.0；对应封存904b测试包。证据位于final-075-review-fixed/current-and-upstream.txt。此时尚未发布，Android latest公开实际元数据仍需发布后再验证，当前无循环检查使用拟发布同结构fixture。
+
+
+## 正式发布及最终分发文件
+
+2026-10-16 06:56:51/52（Asia/Shanghai），正式v0.71.0-02与旧版latest兼容v0.2.66依次公开，非草稿、非预发行，标题均为Token Monitor Android v0.71.0-02。PR#5产品合入提交5994b51b1a528ebe7de60ba3bd3163521bcb597d是两个固定annotated标签的来源；自动复审针对a29dfd0完成，无发现和未解决项，app树与合入提交一致。
+
+最终APK来自合入提交完整重建，15,305,502bytes，0.71.0-02/code75，SHA-256 d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3。原包名、正式证书和非Debug属性已核对；测试APK为904b42d19ca94326f2c512da6beb638eca353be62bb86b23b5dc27681df57937。此前6768及c994候选没有发布，不冒充最终分发文件实测。
+
+完整重建的真实字节差异已先拦下：54,066个有代码方法中四处可选图表测试观察回调增加Result装箱，生产默认observer为null并跳过；baseline.prof仅DEX CRC绑定4bytes变化。未声称字节码、分配或性能完全相同，工具链差异根因未证明。随后对最终合入源APK重新安装并完成：487单元零失败/错误/跳过；完整Lint0错误、102警告、1提示；32/32日历和历史状态UI（normal/真实320dp系统font2、明暗）；图表viewport/绘制/缓存/减少动态/导航5/5；原74数据保留及冷启动续验3/3；真实桌面上游查询与安装版说明2/2。未影响设置36项和字体恢复4项仍按前文原候选继承；最终日/月截图为D66直接原图。
+
+草稿8个附件完整下载校验后才公开；公开后8个附件再次匿名完整下载，大小、SHA及GitHub digest逐项一致，SHA256SUMS每行重算通过。两个APK字节完全相同，对匿名下载文件分别重验包名、75/02和原签名；两个标签远端peel均为产品提交。发布后实际Android更新HTTP源及实际公开metadata无循环2/2通过，真正安装官方0.2.64/code73旧解析器/UI识别公开v0.2.66元数据1/1通过；此旧版项使用实际公开JSON输入，不冒称旧客户端自行发起HTTP。
+
+另在原官方0.2.64上唯一一次生成隔离公开数据，直接install-r匿名下载的最终D66 APK，4/4通过（旧版seed、新版继承、只读未配置冷启动、冷后继承）。UID及Hub/历史/四偏好六指纹相同；未清数据、降级或预置默认Hub，实际base.apk回读D66，独立启动Status:ok/LaunchState:COLD。此为任务API36模拟器，不是真机。
+
+证据在evidence/compact-ui/publication-066、final-075-merged、ui-calendar-merged-final、upgrade/merged-final和upgrade/direct064-final。首次草稿tag查询404改为真实ID回读；旧版验收TCP console及外部文件EACCES失败保留，改同设备getprop和可读公开临时JSON；合并命令EOF后直接读回MERGED及产品提交，没有重复合并。没有替换产品或降低断言。
+
+GitHub Actions工作流和运行均为0，不宣称远程CI通过。实体手机未连接：Xiaomi触摸/键盘、真机升级、真实认证Hub LAN/HTTPS/蜂窝及OEM后台仍需确认。真实桌面renderer已核对，REA部分覆盖、后续深层像素受锁屏限制。原源码工作区三项未提交内容保留；不恢复Widget、不推进R8、不改生产服务。固定Release/Tag/APK及附件不再覆盖，后续只补文档回执。
+
+
+术语勘误：发布附件VALIDATION.md将四份偏好文件也称为ciphertexts，该表述不准确。Hub/历史缓存使用既有加密存储；DisplayPreferenceStore保存的是二进制配置，四份偏好验证的是文件SHA和读取内容保持，并非加密偏好。实际产品、签名和保留结果不变。按固定发布不可覆盖规则，不改已公开附件，在本交接与发布回执中明确校正。
