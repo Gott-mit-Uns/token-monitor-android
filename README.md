@@ -1,6 +1,6 @@
 # Token Monitor Android
 
-本轮版本为 `0.71.0-02` / code75：统一紧凑设置、页内只读配置、设备与 Hub 卡片及日／月记录日历。固定功能基线保持桌面 v0.71.0，指定界面样式对照实际桌面 v0.72.0。正式入口与同字节旧版更新兼容入口 v0.2.66 见 [版本规则](VERSIONING.md)，实施及验收边界见 [联合交接](docs/HANDOFF_COMPACT_UI.md)。原工作区未提交修改保留，Widget 仍移除，未启用 R8／资源瘦身。[本轮改前／改后原图](docs/UI_COMPACT_COMPARISON_0.71.0-02.md)。
+当前正式版本为 [`0.71.0-02` / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)：统一紧凑设置、页内只读配置、设备与 Hub 卡片及日／月记录日历。固定功能基线保持桌面 v0.71.0，指定界面样式对照实际桌面 v0.72.0。正式入口与同字节旧版更新兼容入口 v0.2.66 见 [版本规则](VERSIONING.md)，实施及验收边界见 [联合交接](docs/HANDOFF_COMPACT_UI.md)。原工作区未提交修改保留，Widget 仍移除，未启用 R8／资源瘦身。[本轮改前／改后原图](docs/UI_COMPACT_COMPARISON_0.71.0-02.md)。
 
 
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。
@@ -9,7 +9,7 @@
 
 [下载最新版 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [全部版本](https://github.com/Gott-mit-Uns/token-monitor-android/releases) · [来源与许可](THIRD_PARTY_NOTICES.md)
 
-0.2.64 / 73 已合入主线并[正式发布](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.64)：按用户实际试用反馈彻底移除 Android 桌面小组件及常规相关设置，多设备同步的采集设备改为等宽两列。关于应用四入口、双协议地址与真实连接端点、设备信息和已有主页／趋势／额度／缓存功能保留。APK 为 15,238,142 bytes / 14.53 MiB，沿用原包名和正式签名；四个附件及公开 APK／校验文件均完整下载核对。验收边界见[当前交接](docs/HANDOFF_0.2.64.md)，发布指纹见[发布回执](docs/GITHUB_PUBLICATION.md)。手机由用户自行安装，NAS 未修改；本次没有合入 R8／资源瘦身实验。[包体积对比](docs/APK_SIZE_COMPARISON_064.md)和[后续优化提示词](docs/APK_SIZE_OPTIMIZATION_PROMPT.md)已另存。
+历史0.2.64 / 73 已合入主线并[正式发布](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.64)：按用户实际试用反馈彻底移除 Android 桌面小组件及常规相关设置，多设备同步的采集设备改为等宽两列。关于应用四入口、双协议地址与真实连接端点、设备信息和已有主页／趋势／额度／缓存功能保留。APK 为 15,238,142 bytes / 14.53 MiB，沿用原包名和正式签名；四个附件及公开 APK／校验文件均完整下载核对。验收边界见[当时交接](docs/HANDOFF_0.2.64.md)，发布指纹见[发布回执](docs/GITHUB_PUBLICATION.md)。手机由用户自行安装，NAS 未修改；本次没有合入 R8／资源瘦身实验。[包体积对比](docs/APK_SIZE_COMPARISON_064.md)和[后续优化提示词](docs/APK_SIZE_OPTIMIZATION_PROMPT.md)已另存。
 
 0.2.63 / 72 为历史候选，小组件重新对齐在用户试用后取消，其桌面小组件功能已于 0.2.64 删除；本轮保留关于应用和多设备同步改进。历史调查及测试见[0.2.63 交接](docs/HANDOFF_0.2.63.md)及[Mac/Android 对照](docs/MAC_ANDROID_WIDGET_COMPARISON_063.md)。
 

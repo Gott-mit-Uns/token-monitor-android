@@ -1,3 +1,21 @@
+# 0.71.0-02 / code75 正式发布完成回执
+
+2026-10-16（Asia/Shanghai），[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)与[latest兼容Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.66)依次公开。两个固定annotated标签均指向PR#5合入提交5994b51b1a528ebe7de60ba3bd3163521bcb597d，标题同为Token Monitor Android v0.71.0-02，分发同一正式签名APK，不是两个产品版本。
+
+[正式APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.71.0-02/token-monitor-android-0.71.0-02.apk)为15,305,502bytes / 14.60MiB，SHA-256 d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3。原包名dev.bing.tokenmonitor.nativeclient和证书保持，非Debug、Android8.0+。这是合入源完整构建后重新实际验收的文件；未发布此前6768或c994候选。
+
+487单元全过，完整Lint0错误/102警告/1提示。最终包32日历/状态、5图表回归、3原74数据保留续验、真实桌面查询/说明2项通过；未影响设置36项和字体恢复4项按原候选继承。复审针对a29dfd0完成，无发现/未解决项，app树与发布提交相同。重建字节差异定位为四处可选测试观察装箱及DEX校验绑定；未宣称编译结果完全相同，精确最终文件另行完成全部上述门槛。
+
+每个Release均上传APK、SHA256SUMS.txt、release-manifest.json和VALIDATION.md。8附件草稿及公开后完整读回，逐文件SHA/大小/GitHub digest相符；匿名下载的两APK字节相同，包名/版本/签名复验通过。SHA文件每行重算，标签远端peel与产品提交一致。
+
+发布后新版真实匿名HTTP更新源及公开元数据无循环2/2通过。真正安装官方0.2.64/code73旧解析器/UI接受实际公开066元数据1/1通过；该旧版JSON输入项不冒称旧客户端自行HTTP请求。随后直接覆盖安装匿名下载最终APK，4/4通过，UID、加密历史和四偏好保留、只读未配置冷启动及实际base.apk一致；不清数据、不降级、不预置默认Hub。旧客户端提示066、安装实际02，新版按正式修订比较并打开正式说明。
+
+GitHub Actions工作流/运行均为0，不宣称远程CI通过。没有实体手机或实际认证Hub网络验收；模拟器不是Xiaomi真机。真实桌面renderer与有限像素已查，REA部分覆盖、后续深层像素受锁屏限制。原工作区三项修改保留，未恢复Widget、推进R8或改生产服务。
+
+详细指纹、首失败、继承证据和边界见[联合交接](HANDOFF_COMPACT_UI.md)及[36张改前改后原图](UI_COMPACT_COMPARISON_0.71.0-02.md)。本回执只补文档，不修改固定标签、APK或已公开附件。
+
+术语校正：附件VALIDATION.md中的four preference ciphertexts应为four binary preference files；只有Hub/历史缓存为既有加密存储。数据保留的SHA及读取验证结论不变，不覆盖固定发布附件。
+
 # 0.2.64 / 73 发布完成回执
 
 2026-10-15 04:35:56（Asia/Shanghai），[正式 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.64)已发布，非草稿、非预发行，已标最新。用户明确授权合并、推送及正式发布；手机用户自行安装，NAS 不动。通过独立 `release/0.2.64` 工作区正常快进推送至 GitHub main 和同名分支，唯一 annotated Tag `v0.2.64` 固定发布提交 `a7d509903a46223af5c0ecb6f82937aee16108b3`。原主目录的 NEXT_TASKS 修改、AGENTS-original.md 和历史 REA 审计未提交状态保持，未 reset、stash、强推或覆盖历史 Tag／Release。

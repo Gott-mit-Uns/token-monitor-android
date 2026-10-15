@@ -128,7 +128,7 @@
 - `versionCode` 必须严格递增，确保 Android 支持覆盖安装所需的版本顺序；覆盖安装还需满足包名和签名兼容。
 - Android 编号参照 NAS：versionName / 正式 Tag 为 `<固定桌面版本>-<两位 Android 修订号>` / `v<同版本>`，新上游从 01 开始，同基础修订递增；versionCode 严格递增。历史组合版本仍可解析。
 - 桌面端对齐版本应在 Android 设置页及项目文档中单独记录。
-- 为旧版更新检查维护三段数字兼容 Release（本次 v0.2.65）并设为 latest，标题严格为 `Token Monitor Android v<正式版本>`，旧格式 APK 附件与正式 Release APK 字节相同。新版以标题的正式版本比较更新、打开正式说明；兼容编号及正式修订同时递增，不覆盖固定 Tag。
+- 为旧版更新检查维护三段数字兼容 Release并设为 latest，标题严格为 `Token Monitor Android v<正式版本>`，旧格式 APK 附件与正式 Release APK 字节相同。新版以标题的正式版本比较更新、打开正式说明；兼容编号及正式修订同时递增，不覆盖固定 Tag。
 - 不得使用已经发布过的版本号或 versionCode；同一交付候选的临时验证或重建不重复递增，避免把每次调试构建当作新版本。
 - 纯文档修改、审计和方案分析不触发 APK 版本递增。
 

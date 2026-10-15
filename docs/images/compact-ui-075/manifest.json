@@ -20,7 +20,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "about-before-dark.png",
@@ -43,7 +43,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "fonts-before-light.png",
@@ -66,7 +66,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "fonts-before-dark.png",
@@ -89,7 +89,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "pricing-before-light.png",
@@ -112,7 +112,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "pricing-before-dark.png",
@@ -135,7 +135,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "subscriptions-before-light.png",
@@ -158,7 +158,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "subscriptions-before-dark.png",
@@ -181,7 +181,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "quota-before-light.png",
@@ -204,7 +204,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "quota-before-dark.png",
@@ -227,7 +227,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "privacy-before-light.png",
@@ -250,7 +250,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "privacy-before-dark.png",
@@ -273,7 +273,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "devices-before-light.png",
@@ -296,7 +296,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "devices-before-dark.png",
@@ -319,7 +319,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "calendar-before-light.png",
@@ -334,14 +334,14 @@
   },
   {
     "file": "calendar-after-light.png",
-    "source": "evidence/compact-ui/ui-calendar-review-fixed/normal/light/compact-records-daily.png",
-    "sha256": "480bbf10bfd88a0413cab049ecd1cf78d83c996b9f566de7c1bc4782001ac0b8",
-    "bytes": 182341,
-    "appSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4",
+    "source": "evidence/compact-ui/ui-calendar-merged-final/normal/light/compact-records-daily.png",
+    "sha256": "ba23c94dba82af24858c9e9a47614958fc1af233d667ed82ac0b25a90120417c",
+    "bytes": 170860,
+    "appSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3",
     "testApkSha256": "904b42d19ca94326f2c512da6beb638eca353be62bb86b23b5dc27681df57937",
     "versionName": "0.71.0-02",
     "versionCode": 75,
-    "evidenceStatus": "direct-review-corrected-final-app",
+    "evidenceStatus": "direct-merged-final-app",
     "acceptance": "RecordCalendarScreenTest:7 tests per theme; focused batch32/32 including actual system font2 and history-read scope"
   },
   {
@@ -357,38 +357,38 @@
   },
   {
     "file": "calendar-after-dark.png",
-    "source": "evidence/compact-ui/ui-calendar-review-fixed/normal/dark/compact-records-daily.png",
-    "sha256": "4500db6ca5ed6bc793bd4d145e31736a9b74216efad07cadd9a49273faeaf9bc",
-    "bytes": 177515,
-    "appSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4",
+    "source": "evidence/compact-ui/ui-calendar-merged-final/normal/dark/compact-records-daily.png",
+    "sha256": "f392d5eb7f13c17eb76f8f4064fa96ec1599ac5cee6bc0d978e1f49926570d9c",
+    "bytes": 173512,
+    "appSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3",
     "testApkSha256": "904b42d19ca94326f2c512da6beb638eca353be62bb86b23b5dc27681df57937",
     "versionName": "0.71.0-02",
     "versionCode": 75,
-    "evidenceStatus": "direct-review-corrected-final-app",
+    "evidenceStatus": "direct-merged-final-app",
     "acceptance": "RecordCalendarScreenTest:7 tests per theme; focused batch32/32 including actual system font2 and history-read scope"
   },
   {
     "file": "monthly-after-light.png",
-    "source": "evidence/compact-ui/ui-calendar-review-fixed/normal/light/compact-records-monthly.png",
-    "sha256": "bdac202d113dcc41bca1cfff8af68c837b1882e3ba0eaa014d5edee9f7a15b94",
-    "bytes": 109181,
-    "appSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4",
+    "source": "evidence/compact-ui/ui-calendar-merged-final/normal/light/compact-records-monthly.png",
+    "sha256": "b3dc89fe802cf3ca8337a27a8deaf8c9096c44dd2283240512adaed3fd01e565",
+    "bytes": 100826,
+    "appSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3",
     "testApkSha256": "904b42d19ca94326f2c512da6beb638eca353be62bb86b23b5dc27681df57937",
     "versionName": "0.71.0-02",
     "versionCode": 75,
-    "evidenceStatus": "direct-review-corrected-final-app",
+    "evidenceStatus": "direct-merged-final-app",
     "acceptance": "RecordCalendarScreenTest:7 tests per theme; focused batch32/32 including actual system font2 and history-read scope"
   },
   {
     "file": "monthly-after-dark.png",
-    "source": "evidence/compact-ui/ui-calendar-review-fixed/normal/dark/compact-records-monthly.png",
-    "sha256": "725f973bd75a56359abb1256d9ca98390ffa4bd794aa60cef3a40cda88f799b3",
-    "bytes": 109231,
-    "appSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4",
+    "source": "evidence/compact-ui/ui-calendar-merged-final/normal/dark/compact-records-monthly.png",
+    "sha256": "7c2b55f334d4c8350b121872adfbad84e657a8c51484ba7dbcbc64aab42fe073",
+    "bytes": 108080,
+    "appSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3",
     "testApkSha256": "904b42d19ca94326f2c512da6beb638eca353be62bb86b23b5dc27681df57937",
     "versionName": "0.71.0-02",
     "versionCode": 75,
-    "evidenceStatus": "direct-review-corrected-final-app",
+    "evidenceStatus": "direct-merged-final-app",
     "acceptance": "RecordCalendarScreenTest:7 tests per theme; focused batch32/32 including actual system font2 and history-read scope"
   },
   {
@@ -401,7 +401,7 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   },
   {
     "file": "privacy-component-after-dark.png",
@@ -413,6 +413,6 @@
     "versionName": "0.71.0-02",
     "versionCode": 75,
     "evidenceStatus": "inherited-unaffected-page-from-prior-candidate",
-    "notReexecutedOnAppSha256": "6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4"
+    "notReexecutedOnAppSha256": "d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3"
   }
 ]
