@@ -77,7 +77,10 @@ import kotlinx.coroutines.ensureActive
         Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding),contentAlignment=Alignment.TopCenter) {
             Column(Modifier.widthIn(max=1200.dp).fillMaxWidth().verticalScroll(rememberScrollState()).testTag("dashboard-scroll")
                 .padding(14.dp).onSizeChanged {ui.resizeOverview(with(density) {it.width.toDp().value.toDouble()})},verticalArrangement=Arrangement.spacedBy(12.dp)) {
-                if(history==null) {
+                if(ui.tab==DashboardTab.RECORDS) {
+                    DesktopTextButton(onClick=ui::closeRecords,modifier=Modifier.testTag("dashboard-records-back")) {Text(strings.getString(R.string.dashboard_back_overview),style=quotaTextStyle(11))}
+                    Box(Modifier.testTag("dashboard-records")) {HistoryTrend(recordsHistory,loading,error,today)}
+                } else if(history==null) {
                     DesktopActionButton(onRefresh,enabled=!loading,modifier=Modifier.testTag("history-load")) {Text(strings.getString(R.string.desktop_load_charts))}
                 } else if(history.daily.isEmpty() && history.monthly.isEmpty()) {
                     Text(strings.getString(R.string.dashboard_empty),Modifier.testTag("dashboard-empty"),style=quotaTextStyle(12),color=text.copy(alpha=.5f))
@@ -87,10 +90,7 @@ import kotlinx.coroutines.ensureActive
                     DashboardTab.TRENDS->trend?.let {model->
                         DashboardTrendsBody(history,model,ui,{bar,row->selectedBar=bar;selectedRow=row},{selectedCandle=it},chartMotion,chartEventKey)
                     }
-                    DashboardTab.RECORDS->{
-                        DesktopTextButton(onClick=ui::closeRecords,modifier=Modifier.testTag("dashboard-records-back")) {Text(strings.getString(R.string.dashboard_back_overview))}
-                        Box(Modifier.testTag("dashboard-records")) {HistoryTrend(recordsHistory ?: history)}
-                    }
+                    DashboardTab.RECORDS->Unit
                 }
                 if(history!=null && ui.tab!=DashboardTab.RECORDS) DesktopTextButton(onClick={ui.selectTab(DashboardTab.RECORDS)},
                     modifier=Modifier.testTag("dashboard-open-records")) {Text(strings.getString(R.string.dashboard_records),style=quotaTextStyle(11))}

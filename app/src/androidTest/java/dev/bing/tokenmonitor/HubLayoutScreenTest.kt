@@ -1,6 +1,7 @@
 package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
@@ -11,6 +12,7 @@ import java.io.File
 
 class HubLayoutScreenTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     @Test fun responsiveNavigationAndReadOnlyPricingRemainUsable() {
         val args = InstrumentationRegistry.getArguments()
         val wide = args.getString("expectWide") == "true"
@@ -33,7 +35,7 @@ class HubLayoutScreenTest {
             TokenComponents(1000, 100, 10, 20, 4999998993))
         val state = HubState(snapshot = Snapshot("2026-10-09T00:00:00Z", mapOf("today" to period), emptyList(), emptyList(), false),
             pricing = PricingParser.parse("""{"ok":true,"version":1,"revision":1,"value":[{"modelId":"demo-model","inputPerM":0,"outputPerM":1.25,"cacheWrite1hPerM":2.5}]}"""))
-        compose.activity.runOnUiThread { compose.activity.setContent { TokenTheme(dark) { HubScreen(state, actions) } } }
+        compose.activity.runOnUiThread { compose.activity.setContent { TokenTheme(dark) { CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state, actions)} } } }
         compose.onNodeWithTag("hub-view-selector").assertIsDisplayed()
         compose.onNodeWithTag("hub-settings-toggle").assertIsDisplayed()
         compose.onNodeWithTag("hub-total-tokens").assertIsDisplayed()

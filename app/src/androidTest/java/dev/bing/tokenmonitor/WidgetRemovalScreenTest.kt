@@ -86,10 +86,11 @@ class WidgetRemovalScreenTest {
                 compose.onAllNodes(hasText(text, substring = true, ignoreCase = true), useUnmergedTree = true)
                     .assertCountEquals(0)
             }
-            listOf("android-update-check", "android-update-current-notes", "android-update-releases", "about-open-licenses")
+            listOf("android-update-check", "about-desktop-latest", "android-update-current-notes", "about-open-licenses")
                 .forEach { tag ->
                     compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(tag))
-                    compose.onNodeWithTag(tag).assertIsDisplayed().assertIsEnabled()
+                    compose.onNodeWithTag(tag).assertIsDisplayed()
+                    if(tag!="about-desktop-latest") compose.onNodeWithTag(tag).assertIsEnabled()
                 }
             compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("about-android-version"))
             compose.onNodeWithTag("about-android-version").assertIsDisplayed()

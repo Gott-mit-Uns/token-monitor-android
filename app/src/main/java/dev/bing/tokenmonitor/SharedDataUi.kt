@@ -36,15 +36,17 @@ import java.time.format.FormatStyle
 }
 
 @Composable internal fun PriceDetails(price:ModelPrice,onClose:()->Unit) {
+    CompactUsageDialog(price.model,"shared-price-details",onClose) {PriceDetailsContent(price)}
+}
+
+@Composable internal fun PriceDetailsContent(price:ModelPrice) {
     val strings=LocalResources.current
     val labels=linkedMapOf("inputPerM" to R.string.shared_price_miss,"outputPerM" to R.string.token_output,"cacheReadPerM" to R.string.shared_price_hit,"cacheWritePerM" to R.string.token_cache_write,"cacheWrite1hPerM" to R.string.shared_price_hour)
-    CompactUsageDialog(price.model,"shared-price-details",onClose) {
-        Text(strings.getString(R.string.shared_rate_units),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
-        labels.forEach { (key,label) ->
-            val rate=price.rates[key]
-            val value=when {rate==null -> strings.getString(R.string.price_unset);rate.toDouble()==0.0 -> strings.getString(R.string.price_zero);else -> sharedRateText(rate)}
-            Text(strings.getString(R.string.price_rate,strings.getString(label),value),style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("shared-price-$key"))
-        }
+    Text(strings.getString(R.string.shared_rate_units),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+    labels.forEach { (key,label) ->
+        val rate=price.rates[key]
+        val value=when {rate==null -> strings.getString(R.string.price_unset);rate.toDouble()==0.0 -> strings.getString(R.string.price_zero);else -> sharedRateText(rate)}
+        Text(strings.getString(R.string.price_rate,strings.getString(label),value),style=quotaTextStyle(11),modifier=Modifier.testTag("shared-price-$key"))
     }
 }
 
@@ -81,32 +83,33 @@ import java.time.format.FormatStyle
     var expanded by rememberSaveable {mutableStateOf(false)}
     var query by rememberSaveable {mutableStateOf("")}
     var page by rememberSaveable {mutableIntStateOf(0)}
-    LaunchedEffect(query) {page=0}
+    LaunchedEffect(names) {if(names==null || !names.initialized) {expanded=false;query=""}}
     if(names==null) {
-        DesktopActionButton(onClick=load,enabled=!loading,modifier=Modifier.heightIn(min=48.dp).testTag("shared-model-rules-load"),visualTag="shared-model-rules-load-visual") {Text(strings.getString(R.string.load_model_names))}
-        Text(strings.getString(R.string.original_model_names),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        DesktopActionButton(onClick=load,enabled=!loading,modifier=Modifier.heightIn(min=48.dp).testTag("shared-model-rules-load"),visualTag="shared-model-rules-load-visual") {Text(strings.getString(R.string.load_model_names),style=quotaTextStyle(11))}
+        Text(strings.getString(R.string.original_model_names),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
     } else {
         val status=if(!names.initialized) strings.getString(R.string.shared_model_rules_uninitialized) else if(names.aliases.isEmpty()) strings.getString(when(names.grouping) {"prefix"->R.string.shared_group_prefix;"duplicates"->R.string.shared_group_duplicates;else->R.string.shared_group_off}) else strings.getString(R.string.settings_model_aliases_count,names.aliases.size)
-        DesktopSharedSettingHeader(strings.getString(R.string.settings_model_aliases_title),status,"shared-model-rules-open",expanded,enabled=names.initialized) {expanded=true}
-    }
-    LaunchedEffect(names) {if(names==null || !names.initialized) {expanded=false;query=""}}
-    if(expanded && names?.initialized==true) CompactUsageDialog(strings.getString(R.string.settings_model_aliases_title),"shared-model-rules",{expanded=false}) {
+        InlineSettingsDisclosure(strings.getString(R.string.settings_model_aliases_title),status,"shared-model-rules-open",expanded,enabled=names.initialized,toggle={expanded=!expanded}) {
+            Column(Modifier.fillMaxWidth().testTag("shared-model-rules"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+        Text(strings.getString(R.string.settings_model_aliases_title),Modifier.testTag("shared-model-rules-title"),style=quotaTextStyle(11))
         Text(strings.getString(R.string.shared_model_names),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(strings.getString(R.string.shared_rule_grouping,strings.getString(when(names.grouping) {"prefix" -> R.string.shared_group_prefix;"duplicates" -> R.string.shared_group_duplicates;else -> R.string.shared_group_off})),style=MaterialTheme.typography.bodySmall)
+        Text(strings.getString(R.string.shared_rule_grouping,strings.getString(when(names.grouping) {"prefix" -> R.string.shared_group_prefix;"duplicates" -> R.string.shared_group_duplicates;else -> R.string.shared_group_off})),style=quotaTextStyle(11))
         DesktopActionButton(onClick=load,enabled=!loading,modifier=Modifier.heightIn(min=48.dp).testTag("shared-rules-refresh"),visualTag="shared-rules-refresh-visual") {Text(strings.getString(R.string.refresh))}
-        OutlinedTextField(query,{query=it},singleLine=true,label={Text(strings.getString(R.string.shared_rule_search))},modifier=Modifier.fillMaxWidth().testTag("shared-rule-search"))
+        DesktopListSearch(query,{query=it;page=0},strings.getString(R.string.shared_rule_search),"shared-rule-search")
         val rows=names.aliases.entries.filter {query.isEmpty() || it.key.contains(query,true) || it.value.contains(query,true)}.sortedBy {it.key}
-        if(rows.isEmpty()) Text(strings.getString(if(names.aliases.isEmpty()) R.string.shared_rules_empty else R.string.pricing_no_match),style=MaterialTheme.typography.bodySmall)
+        if(rows.isEmpty()) Text(strings.getString(if(names.aliases.isEmpty()) R.string.shared_rules_empty else R.string.pricing_no_match),style=quotaTextStyle(11))
         val pages=((rows.size+99)/100).coerceAtLeast(1);val current=page.coerceAtMost(pages-1)
         if(pages>1) Row(horizontalArrangement=Arrangement.spacedBy(8.dp),verticalAlignment=Alignment.CenterVertically) {
             DesktopTextButton(onClick={page=current-1},enabled=current>0,modifier=Modifier.heightIn(min=48.dp).testTag("shared-rules-prev")) {Text(strings.getString(R.string.shared_previous))}
-            Text("${current+1}/$pages",style=MaterialTheme.typography.bodySmall,modifier=Modifier.testTag("shared-rules-page"))
+            Text("${current+1}/$pages",style=quotaTextStyle(11),modifier=Modifier.testTag("shared-rules-page"))
             DesktopTextButton(onClick={page=current+1},enabled=current<pages-1,modifier=Modifier.heightIn(min=48.dp).testTag("shared-rules-next")) {Text(strings.getString(R.string.shared_next))}
         }
         rows.drop(current*100).take(100).forEach {row ->
-            Text(row.key,style=MaterialTheme.typography.bodySmall)
-            Text("→ "+row.value,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(row.key,style=quotaTextStyle(11))
+            Text("→ "+row.value,style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Text(strings.getString(R.string.shared_readonly_note),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(strings.getString(R.string.shared_readonly_note),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     }
 }

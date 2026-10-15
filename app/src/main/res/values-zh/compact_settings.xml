@@ -1,0 +1,5 @@
+<resources>
+    <string name="compact_reset_interface_font">重置界面字体</string>
+    <string name="compact_reset_display_font">重置总量数字字体</string>
+    <string name="compact_refresh_subscriptions">刷新订阅</string>
+</resources>

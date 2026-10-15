@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
@@ -25,18 +26,38 @@ import androidx.compose.ui.unit.dp
     Column(Modifier.fillMaxWidth().testTag("sync-device-information"),verticalArrangement=Arrangement.spacedBy(8.dp)) {
         HorizontalDivider(color=colors.outlineVariant)
         Text(strings.getString(R.string.sync_devices_heading),style=quotaTextStyle(11,true))
-        Column(Modifier.fillMaxWidth().testTag("sync-viewer-information"),verticalArrangement=Arrangement.spacedBy(3.dp)) {
-            Text(strings.getString(R.string.sync_viewer_role),style=quotaTextStyle(11,true))
-            Text("${android.os.Build.MODEL} · Android ${android.os.Build.VERSION.RELEASE}",style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-            Text(strings.getString(R.string.sync_viewer_note),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-        }
-        Column(Modifier.fillMaxWidth().testTag("sync-hub-information"),verticalArrangement=Arrangement.spacedBy(3.dp)) {
-            val build=state.hubBuild
-            val runtime=when(build?.runtime) {"node-hub"->"Node Hub";"cloudflare-worker"->"Cloudflare Worker";else->"Hub"}
-            Text(runtime,style=quotaTextStyle(11,true))
-            val revisions=if(build?.coreRevision!=null && build.runtimeRevision!=null) strings.getString(R.string.hub_build_version,runtime,build.coreRevision,build.runtimeRevision) else strings.getString(R.string.hub_version_unknown)
-            Text(revisions,style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-            Text(strings.getString(if(connected) R.string.sync_hub_connected else R.string.sync_hub_cached),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+        // Share the collectors' card geometry; natural row height keeps enlarged text complete.
+        Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).testTag("sync-infrastructure-grid").semantics {
+            collectionInfo=CollectionInfo(1,2)
+        },horizontalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
+            SyncDeviceCard(Modifier.weight(1f).fillMaxHeight().testTag("sync-viewer-information").semantics {
+                collectionItemInfo=CollectionItemInfo(0,1,0,1)
+            }) {
+                SyncCardTitle(strings.getString(R.string.sync_viewer_role),painterResource(R.drawable.desktop_view_device),Modifier.testTag("sync-viewer-role"))
+                Text("${SyncSettingsPresentation.phoneModel(android.os.Build.MODEL)} · Android ${android.os.Build.VERSION.RELEASE}",Modifier.fillMaxWidth().testTag("sync-viewer-model"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                Text(strings.getString(R.string.sync_viewer_note),Modifier.fillMaxWidth().testTag("sync-viewer-note"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+            }
+            SyncDeviceCard(Modifier.weight(1f).fillMaxHeight().testTag("sync-hub-information").semantics {
+                collectionItemInfo=CollectionItemInfo(0,1,1,1)
+            }) {
+                val build=state.hubBuild
+                val runtime=when(build?.runtime) {"node-hub"->"Node Hub";"cloudflare-worker"->"Cloudflare Worker";else->"Hub"}
+                SyncCardTitle(runtime,painterResource(R.drawable.desktop_view_device))
+                val host=SyncSettingsPresentation.hubHostName(state) ?: strings.getString(R.string.sync_hub_name_unknown)
+                Text(strings.getString(R.string.sync_hub_destination,host),Modifier.fillMaxWidth().testTag("sync-hub-destination"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                val revisions=if(build?.coreRevision!=null && build.runtimeRevision!=null) strings.getString(R.string.hub_build_version,runtime,build.coreRevision,build.runtimeRevision) else strings.getString(R.string.hub_version_unknown)
+                Text(revisions,Modifier.fillMaxWidth(),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                ConnectionDisplay.address(state.connectedEndpoint ?: state.lastSuccessfulEndpoint)?.let {
+                    Text(it,Modifier.fillMaxWidth().testTag("sync-hub-address"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                }
+                val status=when {
+                    connected->R.string.sync_hub_connected
+                    state.lastSuccessfulEndpoint!=null && (state.error!=null || state.connectionFailure!=null)->R.string.sync_hub_offline
+                    state.lastSuccessfulEndpoint!=null->R.string.sync_hub_cached
+                    else->R.string.sync_hub_unconnected
+                }
+                Text(strings.getString(status),Modifier.fillMaxWidth().testTag("sync-hub-status"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+            }
         }
         Text(strings.getString(R.string.sync_collectors_heading),style=quotaTextStyle(11,true))
         val devices=SyncSettingsPresentation.devices(state.snapshot?.devices.orEmpty())
@@ -49,17 +70,13 @@ import androidx.compose.ui.unit.dp
                 horizontalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
             pair.forEachIndexed {columnIndex,device->
                 val key=device.id.ifEmpty {(rowIndex*2+columnIndex).toString()}
-                val shape=RoundedCornerShape(8.dp)
-                Column(Modifier.weight(1f).fillMaxHeight().testTag("sync-device-$key").semantics {
+                SyncDeviceCard(Modifier.weight(1f).fillMaxHeight().testTag("sync-device-$key").semantics {
                     collectionItemInfo=CollectionItemInfo(rowIndex,1,columnIndex,1)
-                }.border(1.dp,colors.outlineVariant,shape)
-                    .background(LocalDesktopOverlayColor.current.copy(alpha=.025f),shape)
-                    .padding(CompactUiTokens.CardContentPadding),verticalArrangement=Arrangement.spacedBy(3.dp)) {
-                Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
-                    val icon=DeviceDisplay.icon(device.rawPlatform ?: device.platform.orEmpty())
-                    Icon(painterResource(when(icon) {"apple"->R.drawable.brand_os_apple;"windows"->R.drawable.brand_os_windows;"linux"->R.drawable.brand_os_linux;else->R.drawable.desktop_view_device}),null,Modifier.padding(top=1.dp).size(14.dp))
-                    Text(DeviceDisplay.name(device,state.deviceAliases[device.id],strings.getString(R.string.unnamed_device)),Modifier.weight(1f).testTag("sync-device-name-$key"),style=quotaTextStyle(11,true))
-                }
+                }) {
+                val icon=DeviceDisplay.icon(device.rawPlatform ?: device.platform.orEmpty())
+                SyncCardTitle(DeviceDisplay.name(device,state.deviceAliases[device.id],strings.getString(R.string.unnamed_device)),
+                    painterResource(when(icon) {"apple"->R.drawable.brand_os_apple;"windows"->R.drawable.brand_os_windows;"linux"->R.drawable.brand_os_linux;else->R.drawable.desktop_view_device}),
+                    Modifier.testTag("sync-device-name-$key"))
                 Text(SyncSettingsPresentation.platform(device) ?: strings.getString(R.string.not_provided),Modifier.fillMaxWidth().testTag("sync-device-platform-$key"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                 Text(SyncSettingsPresentation.version(device) ?: listOfNotNull(SyncSettingsPresentation.runtime(device),strings.getString(R.string.sync_version_missing)).joinToString(" · "),Modifier.fillMaxWidth().testTag("sync-device-version-$key"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                 val status=strings.getString(when(device.stale) {
@@ -77,5 +94,20 @@ import androidx.compose.ui.unit.dp
             }
         }
         }
+    }
+}
+
+/** Same padding, natural height, title hierarchy and border for every device role. */
+@Composable private fun SyncDeviceCard(modifier:Modifier=Modifier,content:@Composable ColumnScope.()->Unit) {
+    val shape=RoundedCornerShape(8.dp)
+    Column(modifier.border(1.dp,MaterialTheme.colorScheme.outlineVariant,shape)
+        .background(LocalDesktopOverlayColor.current.copy(alpha=.025f),shape)
+        .padding(CompactUiTokens.CardContentPadding),verticalArrangement=Arrangement.spacedBy(3.dp),content=content)
+}
+
+@Composable private fun SyncCardTitle(title:String,icon:Painter,modifier:Modifier=Modifier) {
+    Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
+        Icon(icon,null,Modifier.padding(top=1.dp).size(14.dp))
+        Text(title,modifier.weight(1f),style=quotaTextStyle(11,true))
     }
 }

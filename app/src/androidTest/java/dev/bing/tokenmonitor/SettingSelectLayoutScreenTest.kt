@@ -35,7 +35,7 @@ class SettingSelectLayoutScreenTest {
     private fun assertComplete(tag:String,expected:String) {
         node(tag).assertTextEquals(expected).assertIsDisplayed()
         val text=layout(tag)
-        assertFalse("$tag must not hide text outside the measured box: size=${text.size}, constraints=${text.layoutInput.constraints}, lines=${text.lineCount}, widthOverflow=${text.didOverflowWidth}, heightOverflow=${text.didOverflowHeight}, style=${text.layoutInput.style}",text.hasVisualOverflow)
+        assertFalse("$tag must not hide text outside the measured box: size=${text.size}, constraints=${text.layoutInput.constraints}, lines=${text.lineCount}, widthOverflow=${text.didOverflowWidth}, heightOverflow=${text.didOverflowHeight}, paragraphWidth=${text.multiParagraph.width}, paragraphHeight=${text.multiParagraph.height}, lineBounds=${(0 until text.lineCount).joinToString {line->"${text.getLineLeft(line)}..${text.getLineRight(line)}"}}, style=${text.layoutInput.style}",text.hasVisualOverflow)
         for(line in 0 until text.lineCount) assertFalse("$tag line $line must be complete",text.isLineEllipsized(line))
         assertEquals(expected,text.layoutInput.text.text)
     }
@@ -58,7 +58,8 @@ class SettingSelectLayoutScreenTest {
             assertComplete("layout-language-$id-label",label)
             assertInside("layout-language-$id","layout-language-menu")
             assertInside("layout-language-$id-label","layout-language-$id")
-            assertTrue("Each option keeps its touch target",node("layout-language-$id").getUnclippedBoundsInRoot().height>=47.5.dp)
+            // DesktopSettingSelect uses compactSettings=true: the approved menu minimum is 36dp.
+            assertTrue("Each compact settings option keeps its approved 36dp target",node("layout-language-$id").getUnclippedBoundsInRoot().height>=35.5.dp)
         }
         ids.zipWithNext().forEach {(first,next)->
             assertTrue("Adjacent language touch targets must not overlap",node("layout-language-$first").getUnclippedBoundsInRoot().bottom<=node("layout-language-$next").getUnclippedBoundsInRoot().top)
@@ -113,6 +114,7 @@ class SettingSelectLayoutScreenTest {
                 }
             }
         }}
+        saveVisualEvidence(compose.activity,compose.onRoot(),"select-narrow-before-text-check.png")
         assertComplete("layout-language-title","Language")
         assertComplete("layout-language-value","System default")
         assertInside("layout-language-title","layout-language-row")

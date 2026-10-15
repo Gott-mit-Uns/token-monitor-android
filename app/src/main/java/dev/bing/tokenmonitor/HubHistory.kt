@@ -18,7 +18,7 @@ data class HistorySummary(val totalTokens: Long?, val totalCost: String?, val ac
     val longestStreak: Long?, val activeTimeMs: Long?, val peakDayTokens: Long?, val favoriteModel: String?, val messages: Long?,
     val unpricedTokens: Long? = null)
 data class HubHistory(val daily: List<HistoryRow>, val monthly: List<HistoryRow>, val summary: HistorySummary? = null,
-    val observedModelIds: List<String> = emptyList())
+    val observedModelIds: List<String> = emptyList(), val dailyProvided: Boolean = true, val monthlyProvided: Boolean = true)
 object HistoryParser {
     fun parse(body: String): HubHistory {
         val root = Json.parseToJsonElement(body).jsonObject
@@ -65,7 +65,8 @@ object HistoryParser {
         val summaryObject = root["summary"] as? JsonObject
         addModel((summaryObject?.get("favoriteModel") as? JsonPrimitive)?.contentOrNull)
         clientModels(summaryObject?.get("clientModelCosts"))
-        return HubHistory(rows("daily", "date"), rows("monthly", "month"), summary, observed.toList())
+        return HubHistory(rows("daily", "date"), rows("monthly", "month"), summary, observed.toList(),
+            dailyProvided = root["daily"] is JsonArray, monthlyProvided = root["monthly"] is JsonArray)
     }
 }
 

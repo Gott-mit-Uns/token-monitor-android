@@ -1,6 +1,6 @@
 <resources>
     <string name="android_update_heading">Android client updates</string>
-    <string name="android_update_manual_note">Checks GitHub only when tapped. Downloads and installation use your browser and Android.</string>
+    <string name="android_update_manual_note">Android updates are checked when tapped; the latest desktop release is checked when About opens. Downloads and installation use your browser and Android.</string>
     <string name="android_update_check">Check for updates</string>
     <string name="android_update_current_notes">Current version notes</string>
     <string name="android_update_releases">Android releases</string>

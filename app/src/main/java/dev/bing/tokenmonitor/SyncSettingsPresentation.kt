@@ -5,6 +5,17 @@ internal data class SyncEndpointRow(val protocol:String,val address:String?,val 
 internal enum class SyncEndpointStatus { CONFIGURED, CURRENT, PREVIOUS }
 
 internal object SyncSettingsPresentation {
+    /** Display-only mapping; the phone never becomes a collector or changes its sync identity. */
+    fun phoneModel(model:String):String = when(model.trim()) {
+        "2304FPN60C"->"Xiaomi 13 Ultra"
+        else->model.trim()
+    }
+    /** The Hub contract has no host display name. A DNS hostname is usable as-is, an IP is not a device name. */
+    fun hubHostName(state:HubState):String? = runCatching {
+        val endpoint=state.connectedEndpoint ?: state.lastSuccessfulEndpoint ?: return null
+        val host=java.net.URI(ConnectionDisplay.address(endpoint) ?: return null).host ?: return null
+        host.takeUnless {it.contains(':') || it.removeSurrounding("[","]").all {c->c.isDigit() || c=='.'}}
+    }.getOrNull()
     // Mac syncDevicePanel.syncedAt uses Hub receipt time for remote collection devices.
     fun syncedAt(device:Device):String? = listOfNotNull(device.received,device.updated).firstOrNull {SessionDisplay.timestamp(it)!=null}
     fun devices(devices:List<Device>):List<Device> = devices.sortedWith(

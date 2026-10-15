@@ -5,7 +5,7 @@
     <string name="sync_devices_heading">Devices and Hub</string>
     <string name="sync_viewer_role">This phone · read-only viewer</string>
     <string name="sync_viewer_note">Views Hub data; this phone is not a collection device.</string>
-    <string name="sync_hub_connected">This phone is connected to the Hub.</string>
+    <string name="sync_hub_connected">Connected</string>
     <string name="sync_hub_cached">Hub connection is unconfirmed; showing the saved snapshot.</string>
     <string name="sync_collectors_heading">Collection devices</string>
     <string name="sync_devices_empty">No collection devices reported.</string>
@@ -16,4 +16,8 @@
     <string name="sync_device_online_cached">Online at last report</string>
     <string name="sync_device_offline_cached">Offline at last report</string>
     <string name="sync_device_unknown">Online status unknown</string>
+    <string name="sync_hub_offline">Offline · last connected Hub</string>
+    <string name="sync_hub_unconnected">Not connected</string>
+    <string name="sync_hub_name_unknown">Name unavailable</string>
+    <string name="sync_hub_destination">Hub: %1$s</string>
 </resources>

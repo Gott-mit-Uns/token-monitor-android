@@ -33,8 +33,7 @@ internal val LocalMainDisplay=staticCompositionLocalOf {MainDisplayPreferences()
     Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         if(!viewsOnly) {
         MainDisplayOption(strings.getString(R.string.main_compact_total),main.compactTotal,"main-compact-total") {change(DisplayChange.CompactTotal(it))}
-        MainDisplayOption(strings.getString(R.string.main_live_rate),main.showLiveRate,"main-live-rate") {change(DisplayChange.ShowLiveRate(it))}
-        if(main.showLiveRate) Text(strings.getString(R.string.main_live_rate_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+        MainDisplayOption(strings.getString(R.string.main_live_rate),main.showLiveRate,"main-live-rate",description=if(main.showLiveRate) strings.getString(R.string.main_live_rate_note) else null) {change(DisplayChange.ShowLiveRate(it))}
         if(main.compactTotal || main.showLiveRate) {
             DesktopSettingInlineChoices(strings.getString(R.string.main_compact_units),listOf("western" to strings.getString(R.string.main_units_western),"localized" to strings.getString(R.string.main_units_localized)),main.compactUnits,"main-units") {change(DisplayChange.CompactUnits(it))}
         }
@@ -79,8 +78,7 @@ internal val LocalMainDisplay=staticCompositionLocalOf {MainDisplayPreferences()
                 val nestedLine=LocalDesktopLineColor.current.copy(alpha=.14f)
                 if(id=="sessions") DesktopAccordion(sessionExpanded,"main-sessions-details-motion",kind=DesktopDisclosureKind.MAIN_SESSIONS) {
                 Column(Modifier.fillMaxWidth().padding(start=12.dp).drawBehind {drawLine(nestedLine,Offset.Zero,Offset(0f,size.height),1.dp.toPx())}.padding(start=8.dp).testTag("main-view-sessions-details"),verticalArrangement=Arrangement.spacedBy(4.dp)) {
-                    DesktopSettingSwitch(strings.getString(R.string.settings_session_titles),preferences.sessionTitlesEnabled,"session-titles") {change(DisplayChange.SessionTitles(it))}
-                    Text(strings.getString(if(preferences.hideTitles) R.string.settings_session_privacy_note else R.string.settings_session_titles_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    DesktopSettingSwitch(strings.getString(R.string.settings_session_titles),preferences.sessionTitlesEnabled,"session-titles",description=strings.getString(if(preferences.hideTitles) R.string.settings_session_privacy_note else R.string.settings_session_titles_note)) {change(DisplayChange.SessionTitles(it))}
                     DesktopSettingInlineChoices(strings.getString(R.string.session_context_metric),listOf("used" to strings.getString(R.string.session_context_used),"remaining" to strings.getString(R.string.session_context_remaining)),main.sessionContextMetric,"session-context") {change(DisplayChange.SessionContextMetric(it))}
                 }
                 }
@@ -91,6 +89,6 @@ internal val LocalMainDisplay=staticCompositionLocalOf {MainDisplayPreferences()
     }
 }
 
-@Composable private fun MainDisplayOption(label:String,checked:Boolean,tag:String,onChange:(Boolean)->Unit) {
-    DesktopSettingSwitch(label,checked,tag,change=onChange)
+@Composable private fun MainDisplayOption(label:String,checked:Boolean,tag:String,description:String?=null,onChange:(Boolean)->Unit) {
+    DesktopSettingSwitch(label,checked,tag,description=description,change=onChange)
 }

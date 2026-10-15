@@ -51,30 +51,37 @@ import kotlinx.coroutines.launch
             DesktopSettingSwitch(strings.getString(R.string.main_title_icon),preferences.main.titleIconOnly,"main-title-icon") {commit(DisplayChange.TitleIconOnly(it))}
             DesktopAppearance.colorKeys.forEach {key->ColorControl(key,palette.getValue(key),preferences.appearance.colors.containsKey(key),::commit)}
             HorizontalDivider(color=desktopEditLine(),thickness=1.dp)
-            DesktopSettingSelect(strings.getString(R.string.appearance_text_size),listOf("standard" to strings.getString(R.string.appearance_size_standard),"larger" to strings.getString(R.string.appearance_size_larger),"largest" to strings.getString(R.string.appearance_size_largest)),preferences.appearance.textSize,"appearance-size") {commit(DisplayChange.TextSize(it))}
-            Text(strings.getString(R.string.appearance_size_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
-            FontControl(preferences.appearance.interfaceFont,false,::commit)
-            FontControl(preferences.appearance.displayFont,true,::commit)
-            Text(strings.getString(R.string.appearance_font_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+            DesktopSettingSelect(strings.getString(R.string.appearance_text_size),listOf("standard" to strings.getString(R.string.appearance_size_standard),"larger" to strings.getString(R.string.appearance_size_larger),"largest" to strings.getString(R.string.appearance_size_largest)),preferences.appearance.textSize,"appearance-size",description=strings.getString(R.string.appearance_size_note)) {commit(DisplayChange.TextSize(it))}
+            DesktopSettingNoteGroup(strings.getString(R.string.appearance_font_note),"appearance-fonts") {FontSettingsControls(preferences,::commit)}
         }
         VendorColorSettings(preferences,::commit)
     }
 }
 
-@Composable private fun FontControl(value:String,display:Boolean,change:(DisplayChange)->Unit) {
+/** Both rows measure from the same labels and values, so neither control drifts horizontally. */
+@Composable internal fun FontSettingsControls(preferences:DisplayPreferences,change:(DisplayChange)->Unit) {
+    val strings=LocalResources.current;val density=LocalDensity.current;val style=quotaTextStyle(11)
+    val titles=listOf(R.string.appearance_interface_font,R.string.appearance_display_font).map(strings::getString)
+    val labels=fontChoices(true).map {strings.getString(it.second)}
+    val titleWidth=with(density) {rememberDesktopLabelWidths(titles,style).max().toDp()}
+    val controlWidth=with(density) {(rememberDesktopLabelWidths(labels,style).max()+2*8.dp.roundToPx()+8.dp.roundToPx()+10.dp.roundToPx()).toDp()}.coerceAtLeast(48.dp)
+    Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
+        FontControl(preferences.appearance.interfaceFont,false,titleWidth,controlWidth,change)
+        FontControl(preferences.appearance.displayFont,true,titleWidth,controlWidth,change)
+    }
+}
+
+private fun fontChoices(display:Boolean)=buildList {if(display) add("follow" to R.string.appearance_font_follow);add("app" to R.string.appearance_font_app);add("bundled-ui" to R.string.appearance_font_bundled_ui);add("bundled-data" to R.string.appearance_font_bundled_data);add("system" to R.string.appearance_font_system);add("mono" to R.string.appearance_font_mono);add("custom" to R.string.appearance_custom)}
+
+@Composable private fun FontControl(value:String,display:Boolean,titleWidth:androidx.compose.ui.unit.Dp,controlWidth:androidx.compose.ui.unit.Dp,change:(DisplayChange)->Unit) {
     val strings=LocalResources.current;val role=if(display) "display" else "interface"
     val current=DesktopAppearance.fontPreset(value,display)
     var custom by rememberSaveable(current) {mutableStateOf(current=="custom")}
     var draft by rememberSaveable(value) {mutableStateOf(if(current=="custom") value else "")}
-    val choices=buildList {if(display) add("follow" to R.string.appearance_font_follow);add("app" to R.string.appearance_font_app);add("bundled-ui" to R.string.appearance_font_bundled_ui);add("bundled-data" to R.string.appearance_font_bundled_data);add("system" to R.string.appearance_font_system);add("mono" to R.string.appearance_font_mono);add("custom" to R.string.appearance_custom)}
-    Text(strings.getString(if(display) R.string.appearance_display_font else R.string.appearance_interface_font),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
-    Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-        Column(Modifier.weight(1f)) {
-            DesktopSettingSelect("",choices.map {(id,label)->id to strings.getString(label)},if(custom) "custom" else current,"appearance-$role",stacked=true) {id->
-                custom=id=="custom";if(!custom) change(DisplayChange.Font(display,DesktopAppearance.fontFor(id,display=display)))
-            }
-        }
-        DesktopEditAction("↺",strings.getString(R.string.appearance_reset),"appearance-$role-reset",visualSize=18,glyphSize=10) {custom=false;change(DisplayChange.Font(display,if(display) DesktopAppearance.defaultDisplayFont else ""))}
+    DesktopSettingSelect(strings.getString(if(display) R.string.appearance_display_font else R.string.appearance_interface_font),fontChoices(display).map {(id,label)->id to strings.getString(label)},if(custom) "custom" else current,"appearance-$role",controlWidth=controlWidth,titleColumnWidth=titleWidth,trailing={
+        DesktopEditAction("↺",strings.getString(if(display) R.string.compact_reset_display_font else R.string.compact_reset_interface_font),"appearance-$role-reset",visualSize=18,glyphSize=10) {custom=false;draft="";change(DisplayChange.Font(display,if(display) DesktopAppearance.defaultDisplayFont else ""))}
+    }) {id->
+        custom=id=="custom";if(!custom) change(DisplayChange.Font(display,DesktopAppearance.fontFor(id,display=display)))
     }
     if(custom) {
         val normalized=DesktopAppearance.font(draft)
@@ -134,6 +141,7 @@ import kotlinx.coroutines.launch
         change(DisplayChange.ThemeCode(text));feedback(R.string.appearance_code_applied,true)
     }
     LaunchedEffect(code,focused) {if(!focused && draft!=code) {draft=code;generation++;status=0}}
+    DesktopSettingNoteGroup(strings.getString(R.string.appearance_code_note),"appearance-theme-code") {
     Text(strings.getString(R.string.appearance_theme_code),style=quotaTextStyle(11))
     Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
         DesktopEditField(draft,{draft=it.uppercase(java.util.Locale.ROOT).take(64);generation++;status=0},strings.getString(R.string.appearance_theme_code),"appearance-theme-code-field",Modifier.weight(1f),textStyle=quotaTextStyle(10).copy(fontFamily=FontFamily.Monospace,letterSpacing=.1.sp),onFocus={focused=it},done={generation++;applyEntered(draft)})
@@ -154,5 +162,5 @@ import kotlinx.coroutines.launch
         }
     }
     if(status!=0) Text(strings.getString(status),Modifier.testTag("appearance-code-status"),style=quotaTextStyle(10),color=if(success) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error)
-    Text(strings.getString(R.string.appearance_code_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }

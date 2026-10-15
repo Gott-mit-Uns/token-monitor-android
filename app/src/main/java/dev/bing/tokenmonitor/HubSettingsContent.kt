@@ -49,11 +49,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
                     MainDisplaySettings(preferences,state.snapshot?.devices.orEmpty(),updateDisplay,embedded=true,viewsOnly=true,homeContent={HomeDisplaySettings(preferences,updateDisplay,state.snapshot?.limits.orEmpty())})
                     CurrencySettings(preferences,updateDisplay)
                     DesktopSettingInlineChoices(strings.getString(R.string.settings_model_ranking),listOf("tokens" to "Token","cost" to strings.getString(R.string.activity_cost)),preferences.modelRanking,"settings-ranking") {updateDisplay(DisplayChange.ModelRanking(it))}
-                    Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
-                        Text(strings.getString(R.string.hide_titles),Modifier.weight(1f),style=quotaTextStyle(11))
-                        Switch(preferences.hideTitles,{updateDisplay(DisplayChange.HideTitles(it))},Modifier.semantics {contentDescription=strings.getString(R.string.hide_titles)})
-                    }
-                    Text(strings.getString(R.string.hide_titles_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    DesktopSettingSwitch(strings.getString(R.string.hide_titles),preferences.hideTitles,"settings-hide-titles",description=strings.getString(R.string.hide_titles_note)) {updateDisplay(DisplayChange.HideTitles(it))}
                 }
             }
             item(key="settings-appearance") {
@@ -64,8 +60,9 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
                     DesktopSettingInlineChoices(strings.getString(R.string.settings_theme_mode),listOf(ThemeChoice.SYSTEM.name to strings.getString(R.string.follow_system),ThemeChoice.LIGHT.name to strings.getString(R.string.theme_light),ThemeChoice.DARK.name to strings.getString(R.string.theme_dark)),preferences.theme.name,"settings-theme") {updateDisplay(DisplayChange.Theme(ThemeChoice.valueOf(it)))}
                     MainDisplaySettings(preferences,state.snapshot?.devices.orEmpty(),updateDisplay,embedded=true,appearanceOnly=true)
                     BackgroundImageControl()
+                    DesktopSettingNoteGroup(strings.getString(R.string.settings_motion_note),"settings-motion") {
                     DesktopSettingInlineChoices(strings.getString(R.string.settings_reduce_motion),listOf("system" to strings.getString(R.string.follow_system),"on" to strings.getString(R.string.settings_motion_on),"off" to strings.getString(R.string.settings_motion_off)),preferences.appearance.reduceMotion,"settings-motion") {updateDisplay(DisplayChange.ReduceMotion(it))}
-                    Text(strings.getString(R.string.settings_motion_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                     DesktopSettingSelect(strings.getString(R.string.token_number_animation),listOf("roll" to strings.getString(R.string.token_animation_roll),"count" to strings.getString(R.string.token_animation_count)),preferences.appearance.tokenNumberAnimation,"token-number-animation") {updateDisplay(DisplayChange.TokenNumberAnimation(it))}
                     AppearanceSettings(preferences,updateDisplay,embedded=true)
                 }
@@ -76,9 +73,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
                 Text(strings.getString(R.string.tool_settings_mobile_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
                 if(updateDisplay!=null) ToolDisplaySettings(preferences,updateDisplay,toolQuery,{toolQuery=it})
                 ModelRuleControl(state.modelNames,state.loading,model::loadModelNames)
-                val prices=state.pricing
-                val priceStatus=if(prices?.initialized!=true) "—" else if(prices.models.isEmpty()) strings.getString(R.string.settings_custom_pricing_none) else strings.getString(R.string.settings_custom_pricing_count,prices.models.size)
-                DesktopSharedSettingHeader(strings.getString(R.string.settings_custom_pricing_title),priceStatus,"settings-open-pricing") {openShared(HubPage.PRICING)}
+                InlinePricingSettings(state.pricing,state.loading,model::loadPricing)
             }
         }
         if(updateDisplay!=null) {
@@ -94,11 +89,12 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
             val total=rows?.let {SubscriptionDisplay.monthlyUsd(it,today,LocalUsageCurrency.current)}?.let {LocalUsageCurrency.current.format(it)} ?: "—"
             val summary=if(rows==null) "—" else if(rows.isEmpty()) strings.getString(R.string.settings_none_yet) else strings.getString(R.string.settings_subscription_summary,active,total)
             DesktopSettingSection("subscriptions",strings.getString(R.string.desktop_subscriptions),R.drawable.desktop_settings_subscriptions,summary,section=="subscriptions","settings-subscriptions-toggle",toggle={selectSection("subscriptions")}) {
-                DesktopActionButton(onClick={openShared(HubPage.SUBSCRIPTIONS)},modifier=Modifier.testTag("settings-open-subscriptions"),visualTag="settings-open-subscriptions-visual") {Text(strings.getString(R.string.desktop_subscriptions),style=quotaTextStyle(11))}
+                Text(strings.getString(R.string.subscriptions_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                if(rows!=null) DesktopActionButton(onClick=model::loadSubscriptions,enabled=!state.loading,modifier=Modifier.testTag("settings-subscriptions-refresh")) {Text(strings.getString(R.string.compact_refresh_subscriptions),style=quotaTextStyle(11))}
                 if(rows==null) {
                     DesktopActionButton(onClick=model::loadSubscriptions,enabled=!state.loading,modifier=Modifier.testTag("settings-subscriptions-load"),visualTag="settings-subscriptions-load-visual") {Text(strings.getString(R.string.load_subscriptions),style=quotaTextStyle(11))}
-                    Text(strings.getString(R.string.subscriptions_note),style=quotaTextStyle(9))
                 } else {
+                    Text(strings.getQuantityString(R.plurals.settings_subscription_count,rows.size,rows.size),Modifier.testTag("shared-subscriptions-summary"),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
                     if(rows.isEmpty()) Text(strings.getString(R.string.subscriptions_empty),style=quotaTextStyle(11))
                     val accounts=SubscriptionAccounts.records(state.snapshot?.limits.orEmpty())
                     SubscriptionDisplay.keyed(rows).forEach {(identity,record)->SubscriptionRow(record,today,identity,accounts) {onSubscription(identity)}}

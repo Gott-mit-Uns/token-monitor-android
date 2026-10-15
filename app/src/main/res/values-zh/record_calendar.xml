@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="record_month_scope">月总量直接使用 Hub 月记录；每日日期范围不裁切整月统计。</string>
+    <string name="record_previous_year">上一年</string>
+    <string name="record_next_year">下一年</string>
+    <string name="record_previous_month">上个月</string>
+    <string name="record_next_month">下个月</string>
+    <string name="record_calendar_legend">0：已记录零用量 · ·：无记录 · —：未知或范围外 · …：读取中。选中后可查看完整数值。</string>
+    <string name="record_loading">正在读取历史…</string>
+    <string name="record_read_failed">历史读取失败，已有记录仍保留；可刷新重试。</string>
+    <string name="record_select">选择日期或月份查看明细。</string>
+    <string name="record_analysis_hide">收起图表与活动</string>
+    <string name="record_analysis_show">图表与活动</string>
+    <string name="record_cell_description">%1$s，%2$s</string>
+    <string name="record_today">今天</string>
+    <string name="record_no_record">Hub 未提供记录，不代表零用量。</string>
+    <string name="record_outside_range">不在当前每日日期范围内。</string>
+    <string name="record_future">未来日期</string>
+    <string name="record_not_loaded">尚未读取历史。</string>
+    <string name="record_source_unavailable">Hub 未提供此维度的历史，无法判断是否有记录。</string>
+</resources>

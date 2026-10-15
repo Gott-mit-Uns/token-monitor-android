@@ -1,6 +1,7 @@
 package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.*
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -15,6 +16,7 @@ import org.junit.Test
 
 class LimitSettingsScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private val dark get()=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
     private class Actions:HubUiActions {
         var reads=0
@@ -40,7 +42,7 @@ class LimitSettingsScreenTest {
           {"provider":"codex","status":"ok","source":"rpc","sourceDetail":"app","sourceDeviceId":"Public workstation","accountEmail":"second@example.com","accountKey":"public-second","planLabel":"Pro","windows":[{"kind":"session","remainingPercent":72}]}
         ]}}""")
         val state=HubState(snapshot=snapshot,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"))
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"limits")
         show("limit-provider-row-claude")
         child("limit-provider-status-claude").assertTextEquals("Stale");child("limit-provider-source-claude").assertTextEquals("Web")
