@@ -1,6 +1,6 @@
 # Android 0.72.0-01 联合交接
 
-**当前状态：最终候选db90已完成514单元、受影响9＋2项实际验收与Lint0错误；17b7的78项视觉证据按源文件未变限定继承。等待最终源码自动审查、正式公开发布及附件／更新器读回，尚未宣称正式交付；最新证据见文末。**
+**当前状态：Android0.72.0-01/code76正式Release与latest兼容0.2.67已于2026-10-16公开，两Tag同源3c4d2d6，最终db90字节保持。两Release共8附件已匿名完整复核、两APK同字节db90；实际公开新旧更新器与官方64→75→公开76升级／冷保留已通过。历史候选／失败／视觉继承边界保留，完整最新回执见文末。**
 
 本轮目标固定桌面 v0.72.0 `126e9a43dcc51d3d7b2609231eac9974ba73bed7`，Android `0.72.0-01` / code76，latest兼容计划为 `v0.2.67`。包名、正式证书、历史版本及未提交原工作区保持；Widget不恢复，R8不实施。完整提交/排除/数据依赖清单见 [逐项对齐](DESKTOP_072_ALIGNMENT.md)。
 
@@ -114,3 +114,21 @@ NAS PR #11当前头为 `1a0e570`，仍open，未merge／部署。此状态不因
 最终Tag与生产源码绑定改用 `release76/production-source-trees.json` 六条输入（main树 `e269bdee3683af6f72ddba43bd57c703079e886d`，其余Gradle输入按该文件），逐项对比buildCommit5b1fb38；测试／文档提交可改变整个app树。SOURCE.json须携带新六输入及buildCommit、最终Tag commit、APK／测试APK指纹。APK不声称内嵌commit，AGP的NO_VALID_GIT_FOUND边界保持。
 
 最终源码自动审查尚待实际回执，本节不沿用53d25bf的旧审查结论作为通过。正式Release、同字节兼容v0.2.67、公开附件下载与旧／新更新器读取实际latest仍待发布后验证；当前仍是本地验收完成的候选。现网NAS没有因此改变，PR #11仍未合并部署，真机／真实Cursor／生产Android实网未验证范围保持。
+
+
+## 正式公开发布回执（2026-10-16）
+
+[Android v0.72.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.72.0-01)于 `2026-10-16T14:05:41Z`（北京时间22:05:41）公开；[latest兼容v0.2.67](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.67)于14:05:44Z（22:05:44）公开。两固定Tag均指向PR #7合入源码 `3c4d2d673605ba9359d66a577dce4488c4bfc083`，buildCommit `5b1fb385b731bd7081fcf54e108510df4f6943c7`。正式与兼容标题均为Token Monitor Android v0.72.0-01，latest保持三段Tag供旧更新器识别，并非另一个产品版本。
+
+[正式APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/token-monitor-android-0.72.0-01.apk)为15,305,354 bytes，SHA-256 **`db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977`**，沿用原包名和正式证书。每条Release各有APK、SHA256SUMS.txt、SOURCE.json、VALIDATION.md四附件；**两Release共8附件均已完成匿名下载，文件大小／GitHub digest／SHA256SUMS／SOURCE sourceCommit全部核验通过，两APK byte-identical并匹配db90**。[SHA校验文件](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/SHA256SUMS.txt)、[SOURCE.json](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/SOURCE.json)记录APK、build/final源码和六条生产输入绑定；不声称APK内嵌commit。最终源码审查针对 `847b6d35ab64698fb398923b67158b9318f0ea73` completed、无发现／未解决项；security_review空状态不称安全审查通过。GitHub Actions0工作流，未宣称远程CI通过。
+
+公开后执行 `public-updaters/official64-public-updater.txt` **1项通过**：实际安装官方0.2.64，其原解析器／UI接受匿名下载的实际v0.2.67 latest JSON；这是实际公开metadata输入，不是声称旧app自行发HTTP。`public-updaters/final76-public-updater.txt` **3项通过**：真实匿名Android自身HTTP更新源、真实桌面HTTP查询、当前说明与版本比较不循环。此前拟发布fixture与当前公开回执明确分开。
+
+另重新执行真实公开升级链：**官方0.2.64/code73 → 官方0.71.0-02/code75 → 匿名公开下载的最终db90/code76**。仅在64生成一次隔离公开合成加密缓存／历史和四份偏好，UID、缓存／历史及偏好在75、76与独立冷启动后分别保留；未卸载／清数据。该公开链不是把早先4534／f7／17b7同code候选链重命名，证据 `public-upgrade/receipt.json` 及对应安装、保留、cold记录，最终已安装SHA为db90。
+
+最终产品514单元、Lint0／104／1、db90受影响9＋2实际通过与17b7视觉78限定继承维持原范围；上述公开测试独立记账，不扩大为db90重跑全部视觉矩阵。真实手机、真实Cursor额度／余额、生产OpenCode采集及Android生产LAN／公网HTTPS／蜂窝／OEM后台未验证状态保持。
+
+NAS后续 [PR #11](https://github.com/Gott-mit-Uns/token-monitor-nas/pull/11)已合并，可选鉴权Hub名称合同随 [NAS v0.72.0-02](https://github.com/Gott-mit-Uns/token-monitor-nas/releases/tag/v0.72.0-02)于2026-10-16T13:35:40Z发布，source `0f748427b7c75171d1c2fcaf40c0ef552bfb2f2d`。历史OpenCode／协议审计基于NAS0.72.0-01运行源码，新增名称合同与之分别记录；**实际NAS部署未验收，不宣称已部署或生产配置已生效**。旧Hub仍保留DNS／名称未知降级。
+
+
+公开附件最终复核收尾：`public-readback/verified-assets.json` 与 `latest.json` 确认全部8附件匿名下载、大小／GitHub digest／SHA256SUMS／SOURCE sourceCommit通过，正式／兼容APK字节相同且为db90；公开APK签名／包名／版本由apksigner及aapt复核通过。兼容VALIDATION.md首次下载RemoteDisconnected原日志保留，retry1仅补缺失文件后全过，不重写第一次结果。正式Release与兼容latest及公开升级／更新器验证现均已完成；文档回执PR不重建、不重新发布或覆盖产品字节。

@@ -58,5 +58,19 @@
     "source": "evidence/desktop-072/ui-joint-final-remaining/system320-font2/false/sessions072-dark-missing.png",
     "sha256": "4318ea0908d998780535efd74f7ec0c63d90cf729ae61d1538ab898ee3eb272b",
     "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "db90-cold-home-dark.png",
+    "source": "evidence/desktop-072/release76/cold/screenshots/cold-process-actual-home-dark-chinese-public.png",
+    "sha256": "38c11ee28139ac3639aca5f1816b6726d46866b1b101c798cd414fa5cfbe06ae",
+    "productionApkSha256": "db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977",
+    "capture": "Actual MainActivity, API36 emulator, public synthetic fixture; no test setContent"
+  },
+  {
+    "image": "db90-settings-background-return-dark.png",
+    "source": "evidence/desktop-072/release76/cold/screenshots/cold-process-actual-settings-after-background-return-dark-chinese-public.png",
+    "sha256": "b75086a46089b26401870542c6e9f224554a5dfb37dcbed5496e7755e9b0b7e5",
+    "productionApkSha256": "db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977",
+    "capture": "Actual MainActivity, API36 emulator, public synthetic fixture; no test setContent"
   }
 ]

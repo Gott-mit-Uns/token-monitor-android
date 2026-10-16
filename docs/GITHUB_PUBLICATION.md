@@ -1,3 +1,17 @@
+# 0.72.0-01 / code76 正式公开发布回执
+
+2026-10-16（Asia/Shanghai），[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.72.0-01)于14:05:41Z／北京时间22:05:41公开，[latest兼容v0.2.67](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.67)于14:05:44Z／22:05:44公开。两固定Tag均指向PR #7合入提交 [3c4d2d673605ba9359d66a577dce4488c4bfc083](https://github.com/Gott-mit-Uns/token-monitor-android/commit/3c4d2d673605ba9359d66a577dce4488c4bfc083)，build为5b1fb385b731bd7081fcf54e108510df4f6943c7；兼容标题严格Token Monitor Android v0.72.0-01，不是独立产品版本。
+
+[正式签名APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/token-monitor-android-0.72.0-01.apk)为15,305,354 bytes，SHA-256 **db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977**，包名dev.bing.tokenmonitor.nativeclient及原正式证书连续。[SHA256SUMS.txt](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/SHA256SUMS.txt)、[SOURCE.json](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/SOURCE.json)和[VALIDATION.md](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/VALIDATION.md)随包发布；SOURCE绑定最终／build提交、APK／测试APK和六生产输入，未假称APK内嵌commit。两Release各四附件；**两Release共八附件全部匿名下载并核验：size、GitHub digest、SHA256SUMS和SOURCE源码提交均一致，两APK字节相同并匹配db90；公开APK的apksigner／aapt检查也通过**。实际公开readback证据在evidence/desktop-072/public-readback/。 verified-assets.json与latest.json保存最终清单；兼容VALIDATION.md首次下载RemoteDisconnected已保留，retry1仅补缺失文件后全部通过，未覆盖首次日志。[兼容APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.2.67/token-monitor-android-0.2.67.apk)与正式APK同字节，安装后均为0.72.0-01/code76。
+
+最终514单元、Lint0错误／104警告／1提示、db90受影响9＋2实际通过；17b7候选78项视觉专项和10图仅按UI源未变限定继承，不称db90全78实跑。P2配置重建重复请求已修复并纳入三项生命周期测试。最终源码自动审查针对847b6d35ab64698fb398923b67158b9318f0ea73完成、无发现／未解决项；security_review为空，不称安全审查通过。GitHub Actions工作流／运行0，不称远程CI通过。
+
+公开后原官方64解析器／UI接受实际匿名public latest JSON **1项通过**；旧app并未被声称自行发HTTP。最终CurrentReleaseAcceptance公开套件 **3项通过**，含真实匿名Android更新HTTP、桌面HTTP及当前说明／版本无循环。证据public-updaters/；这些与发布前拟metadata fixture分开。
+
+重新执行官方64/code73→官方75/code75→匿名公开下载db90/code76实际覆盖链，64仅一次种入隔离公开合成缓存／历史与四偏好；相同UID、缓存／历史／偏好在75、76及独立冷启动后保留，无卸载／清数据。public-upgrade/receipt.json及各安装／保留记录确认此链，不是沿用退役同code候选链。最终安装SHA匹配db90。
+
+完整功能／桌面排除／Hub依赖见[逐项对齐](DESKTOP_072_ALIGNMENT.md)，首次失败、历史候选和继承边界见[联合交接](HANDOFF_0.72.0-01.md)。真机、真实Cursor套餐／余额、生产OpenCode与Android生产LAN／公网HTTPS／蜂窝／OEM后台未验收。NAS PR #11已merge并随[NAS v0.72.0-02](https://github.com/Gott-mit-Uns/token-monitor-nas/releases/tag/v0.72.0-02)发布，source0f748427b7c75171d1c2fcaf40c0ef552bfb2f2d；实际NAS部署未验收，发布不代表生产已升级。没有重新构建、替换或覆盖已发布APK／标签。以下历史正式版本回执保留。
+
 # 0.71.0-02 / code75 正式发布完成回执
 
 2026-10-16（Asia/Shanghai），[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)与[latest兼容Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.66)依次公开。两个固定annotated标签均指向PR#5合入提交5994b51b1a528ebe7de60ba3bd3163521bcb597d，标题同为Token Monitor Android v0.71.0-02，分发同一正式签名APK，不是两个产品版本。
