@@ -97,7 +97,7 @@ import java.util.Locale
                     display.groupRole?.let {role->Text(strings.getString(if(role=="main") R.string.session_group_main else R.string.session_group_subagent),Modifier.testTag("session-role-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)}
                     if(activityState=="waiting" && !reviewRun) Text(strings.getString(if(row?.let {SessionDisplay.waitingForReply(it,now)}==true) R.string.session_waiting_reply else R.string.session_waiting),Modifier.testTag("session-waiting-${display.id}"),style=quotaTextStyle(10),color=colors.primary)
                     if(shownSubtitle.isNotEmpty()) Box(titleModifier(shownSubtitle)) {Text(shownSubtitle,Modifier.testTag("session-subtitle-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)}
-                    if(shownActivity.isNotEmpty()) Text(shownActivity,Modifier.testTag("session-activity-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                    if(shownActivity.isNotEmpty()) Text(shownActivity,Modifier.fillMaxWidth().testTag("session-activity-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                     // Hub metadata has no local transcript detail. Keep its identifier available in the read-only summary.
                     if(shownActivity.isEmpty() && shownDetail.isNotEmpty()) Text(shownDetail,Modifier.testTag("session-id-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant.copy(alpha=.84f),maxLines=1,overflow=TextOverflow.Ellipsis)
                 }

@@ -56,7 +56,7 @@ class SyncDeviceGridScreenTest {
     @Test fun hubLabelUsesCurrentHostAndOfflineStatusDoesNotClaimConnection() {
         val value=mutableStateOf(HubState(connectedEndpoint="https://first.example.invalid",lastSuccessfulEndpoint="https://first.example.invalid"))
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
-            Column(Modifier.width(320.dp).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
+            Column(Modifier.width(320.dp).background(MaterialTheme.colorScheme.background).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
         }}}
         complete("sync-hub-destination","Hub: first.example.invalid")
         complete("sync-hub-status","已连接")
@@ -78,7 +78,7 @@ class SyncDeviceGridScreenTest {
         val endpoint="http://192.168.31.12:17321"
         val value=mutableStateOf(HubState(snapshot=snapshot,connectedEndpoint=endpoint,lastSuccessfulEndpoint=endpoint))
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
-            Column(Modifier.width(320.dp).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
+            Column(Modifier.width(320.dp).background(MaterialTheme.colorScheme.background).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
         }}}
         complete("sync-hub-destination","Hub: DXP4800")
         complete("sync-hub-address",endpoint)
