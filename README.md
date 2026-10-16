@@ -1,6 +1,6 @@
 # Token Monitor Android
 
-当前 `0.72.0-01` / code76 已完成最终包本地验收，处于**候选等待正式公开发布与读回**状态。固定对齐桌面 [v0.72.0](https://github.com/Javis603/token-monitor/releases/tag/v0.72.0)，最终签名APK `17b7470e…1991` 已通过511项单元、78次API36模拟器专项、真实匿名Android桌面Release查询、原64合成缓存／偏好保留与明确opt-in的独立冷启动主页、设置重建／后台恢复检查；Lint为0错误、104警告、1提示。公开Release／下载／Android新旧更新器读回尚未完成，不能提前称已发布。正式版本仍为 [0.71.0-02 / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)。计划正式入口 `v0.72.0-01` 与同字节latest兼容 `v0.2.67`。范围见[逐项对齐](docs/DESKTOP_072_ALIGNMENT.md)，78次的18＋54＋6批次、历史候选、升级与剩余门槛见[联合交接](docs/HANDOFF_0.72.0-01.md)，[10张最终包截图](docs/UI_072_VALIDATION.md)均为模拟器合成fixture。紧凑设置与日／月日历保留，Widget不恢复、R8不启用。可选Hub名称的 NAS PR #11仍open未部署；旧Hub保持诚实降级。
+当前 `0.72.0-01` / code76 为**最终候选db90已完成本地验收，等待最终审查与正式公开发布／读回**。固定对齐桌面 [v0.72.0](https://github.com/Javis603/token-monitor/releases/tag/v0.72.0)。配置重建重复更新请求的P2已修复；最终签名APK `db90f7e9…b977` 完成514项单元、Lint0错误／104警告／1提示，以及受影响Android更新浅深色、当前版本fixture、真实匿名桌面查询和原64保留共9项，加明确opt-in冷主页／设置重建恢复2项。前候选17b7上实跑78次视觉专项及[10张原图](docs/UI_072_VALIDATION.md)按未变UI源限定继承，不能称db90全78重跑。正式版本仍为 [0.71.0-02 / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)，计划正式 `v0.72.0-01` 与同字节latest兼容 `v0.2.67`。功能、Hub依赖与实际边界见[逐项对齐](docs/DESKTOP_072_ALIGNMENT.md)、[联合交接](docs/HANDOFF_0.72.0-01.md)。紧凑设置与日／月日历保留，Widget不恢复、R8不启用。NAS PR #11仍open未部署；真机／真实Cursor账号与生产手机网络未验证。
 
 
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。

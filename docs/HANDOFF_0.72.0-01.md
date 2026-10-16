@@ -1,6 +1,6 @@
 # Android 0.72.0-01 联合交接
 
-**当前状态：最终17b7封包完成511单元、78专项及明确opt-in冷启动／升级等本地验收；候选等待正式公开发布与读回。历史事件保留，最新结果见文末。**
+**当前状态：最终候选db90已完成514单元、受影响9＋2项实际验收与Lint0错误；17b7的78项视觉证据按源文件未变限定继承。等待最终源码自动审查、正式公开发布及附件／更新器读回，尚未宣称正式交付；最新证据见文末。**
 
 本轮目标固定桌面 v0.72.0 `126e9a43dcc51d3d7b2609231eac9974ba73bed7`，Android `0.72.0-01` / code76，latest兼容计划为 `v0.2.67`。包名、正式证书、历史版本及未提交原工作区保持；Widget不恢复，R8不实施。完整提交/排除/数据依赖清单见 [逐项对齐](DESKTOP_072_ALIGNMENT.md)。
 
@@ -76,7 +76,7 @@
 NAS PR #11当前头为 `1a0e570`，仍open，未merge／部署。此状态不因Android重新封包而改变。
 
 
-## 最终17b7封包：本地验收完成，候选等待公开发布／读回
+## 历史17b7候选：511／78和冷启动通过，后续P2触发重新封包
 
 本节取代前述阶段性的“重新封包待收尾”状态；原始失败及历史候选记录保留。最终生产APK位于 `evidence/desktop-072/joint-final76/app-release.apk`，**SHA-256 `17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991`**，15,305,354 bytes，Android0.72.0-01/code76。buildCommit为 `16f92a759c62522da94070f8acd5dd04e5ab5b45`，构建时整个app树 `17ca03a297a669515f58796af4fef03c43e9d8ad`（含androidTest，仅作构建记录）；包括会话完整行宽与Hub测试主题背景修复。包名和正式签名连续性保持。
 
@@ -90,4 +90,27 @@ NAS PR #11当前头为 `1a0e570`，仍open，未merge／部署。此状态不因
 正式v0.72.0-01／latest兼容v0.2.67尚未在本记录宣称发布。最终Tag提交若随后增加纯测试／文档，须对比 `app/src/main` 与全部Gradle生产构建输入的对象ID和buildCommit16f92a7一致，不能要求含测试的整个app树不变；上传同字节17b7正式／兼容APK后执行公开元数据、附件下载校验与新旧更新器读回。公开回执追加后才能更新“正式发布完成”。NAS PR #11仍open未合并部署，真机／真实Cursor账号与生产Android网络边界保持。
 
 
-最终源码绑定以 `joint-final76/production-source-trees.json` 的六条输入为准：`app/src/main`、`app/build.gradle.kts`、`build.gradle.kts`、`settings.gradle.kts`、`gradle.properties`、`gradle/wrapper/gradle-wrapper.properties`。最终Tag与16f92a7逐项比较这些对象ID，发布 `SOURCE.json` 载入同一记录。SharedData测试变更会改变整个app树，故17ca仅为build时历史树记录，不作最终Tag必须相等的门槛。APK未声称嵌入源码commit：AGP报告 `NO_VALID_GIT_FOUND`，绑定依据是封包SHA、构建记录及上述生产输入比对。
+17b7历史阶段的源码绑定以 `joint-final76/production-source-trees.json` 的六条输入为准：`app/src/main`、`app/build.gradle.kts`、`build.gradle.kts`、`settings.gradle.kts`、`gradle.properties`、`gradle/wrapper/gradle-wrapper.properties`。当时计划Tag与16f92a7比较；后续5b生产修复改变了输入，必须重新记录新封包六路径对象ID并由最终Tag逐项比对，发布SOURCE.json以新记录为准。SharedData测试变更会改变整个app树，故17ca仅为build时历史树记录，不作最终Tag必须相等的门槛。APK未声称嵌入源码commit：AGP报告 `NO_VALID_GIT_FOUND`，绑定依据是封包SHA、构建记录及上述生产输入比对。
+
+
+## 历史阶段：自动审查P2配置重建修复并启动新包验证
+
+最终自动审查在 `53d25bf` 确认P2：MainActivity.onStop无差别取消retained AndroidUpdateModel的在途请求，旋转／语言／主题配置重建后新Activity立即重请求；慢网络反复recreate可产生无界请求，违背节流目标。该问题不是用假失败时间戳掩盖，而是由 `5b1fb38` 最小修复：Activity传入isChangingConfigurations，Model仅对配置变化保留同一viewModelScope在途；真正后台仍取消，最终Owner.clear也由scope取消，没有后台唤醒或新认证流程。公开Application单参数构造兼容默认factory，internal测试source注入不改变默认请求。
+
+新增 `AndroidUpdateLifecycleTest` 三项：同ViewModelStore连续8次配置stop/start只一慢请求，完成后正常成功节流且无伪时间戳；配置后真正后台立即取消、后台不请求、前台只一重试；最后stop为配置变化时清除Owner仍取消请求。**此处只是测试范围，完整单元／assemble／测试assemble／Lint正在统一执行，不预称新增3项或514已过。** 新包Android更新UI／安装版本fixture、冷主页／保留及真实桌面查询按受影响范围复验，最终新SHA及生产输入对象记录待追加。
+
+本次生产修改只在MainActivity与AndroidUpdateModel生命周期，不改变视觉UI源；17b7上实跑78（18＋54＋6）和对应10张原图继续作为明确版本的UI参考，未受影响场景可限定继承。它们不证明新生命周期修复已通过，也不能改写为新APK全78已实际执行。17b7、f7及退役候选的原始指纹／失败／通过记录均保留，gallery图片原样不重绘。公开Release与新旧更新器真实读回仍待最终验收后执行。
+
+
+## 最终候选db90：514单元与受影响9＋2通过，等待最终审查和公开读回
+
+生产APK `evidence/desktop-072/release76/app-release.apk`，**SHA-256 `db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977`**，15,305,354 bytes，Android0.72.0-01/code76；buildCommit `5b1fb385b731bd7081fcf54e108510df4f6943c7`。测试APK SHA `6439190bbc9a405a48b8bfca870ac2f77100acc9a29a419f5baec195f2354502`。原包名和正式证书保持；已安装APK回读SHA与db90一致。
+
+- **完整514单元通过，0失败／错误／跳过**，包括新增3项Robolectric更新生命周期测试；完整Lint **0错误、104警告、1提示**，完整应用／测试APK构建成功。证据 `release76/unit-summary.json`、`lint-summary.json`。配置重建保持单一在途、真后台取消、最终Owner清除均有本轮逻辑证据，不再只是实现声明。
+- **db90实际受影响验收9项通过**：AndroidUpdateScreenTest浅色3＋深色3，当前安装版本／拟发布兼容metadata不重复更新fixture1，真实匿名Android桌面Release查询1，原64合成缓存／历史与四偏好保留1。证据 `release76/affected-ui/summary.json`。这是本轮db90实际执行，不从17b7继承。
+- **db90实际opt-in冷启动检查2项通过**：`release76/cold/home.txt` 默认Store主页1、`settings-recreation.txt` 设置重建／后台恢复1，均明确ownedEmulator true并实际执行；launcher记录COLD，`installed-sha.txt` 匹配db90。早期未opt-in的OK3仍属于assumption跳过，不计入。
+- **78次视觉专项只作为17b7历史候选的限定继承**，不称db90重跑全78。`ui-inheritance-proof.json` 证明17b7→db90的生产main源码仅MainActivity及AndroidUpdateModel两文件生命周期变化，视觉UI源无变化；未受影响的分组／Cursor／设置／日月日历／卡片与合成主题大字场景沿用明确17b7版本及截图。更新／生命周期等受影响部分以上述db90新执行补足。gallery10张原图继续明确其17b7身份，不重绘／改标新包。
+
+最终Tag与生产源码绑定改用 `release76/production-source-trees.json` 六条输入（main树 `e269bdee3683af6f72ddba43bd57c703079e886d`，其余Gradle输入按该文件），逐项对比buildCommit5b1fb38；测试／文档提交可改变整个app树。SOURCE.json须携带新六输入及buildCommit、最终Tag commit、APK／测试APK指纹。APK不声称内嵌commit，AGP的NO_VALID_GIT_FOUND边界保持。
+
+最终源码自动审查尚待实际回执，本节不沿用53d25bf的旧审查结论作为通过。正式Release、同字节兼容v0.2.67、公开附件下载与旧／新更新器读取实际latest仍待发布后验证；当前仍是本地验收完成的候选。现网NAS没有因此改变，PR #11仍未合并部署，真机／真实Cursor／生产Android实网未验证范围保持。
