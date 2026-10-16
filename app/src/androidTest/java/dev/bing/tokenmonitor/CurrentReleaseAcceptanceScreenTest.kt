@@ -16,17 +16,16 @@ import org.junit.Rule
 import org.junit.Test
 import java.io.File
 
-/** Final APK and the real public compatibility metadata must agree on the installed identity. */
+/** Final APK and the real public canonical metadata must agree on the installed identity. */
 class CurrentReleaseAcceptanceScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
-    /** Run only after both official distribution entries have been published. */
+    /** Run after the canonical formal Release has been published as latest. */
     @Test fun publishedAndroidReleaseIsFetchedByTheRealAnonymousAndroidClient() {
         val expected=InstrumentationRegistry.getArguments().getString("expectedVersion") ?: "0.72.0-01"
         val release=kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {GitHubAndroidReleaseSource().latest()}
         assertEquals(AndroidReleaseVersion.parse(expected),release.version)
         assertEquals("${AndroidReleases.repository}/releases/tag/v$expected",release.notesUrl)
-        val compatibility=InstrumentationRegistry.getArguments().getString("expectedCompatibilityVersion") ?: "0.2.67"
-        assertEquals("${AndroidReleases.repository}/releases/download/v$compatibility/token-monitor-android-$compatibility.apk",release.apkUrl)
+        assertEquals("${AndroidReleases.repository}/releases/download/v$expected/token-monitor-android-$expected.apk",release.apkUrl)
     }
     @Test fun upstreamDesktopReleaseIsFetchedByTheRealAnonymousAndroidClient() {
         val expected=InstrumentationRegistry.getArguments().getString("expectedDesktopVersion") ?: "0.72.0"
@@ -59,7 +58,7 @@ class CurrentReleaseAcceptanceScreenTest {
         val installedCode=if(android.os.Build.VERSION.SDK_INT>=28) installed.longVersionCode else installed.versionCode.toLong()
         assertEquals((args.getString("expectedVersionCode") ?: "76").toLong(),installedCode)
         val path=args.getString("releaseMetadataPath")
-        val metadata=if(path!=null) File(path).readText() else """{"name":"Token Monitor Android v$expected","draft":false,"prerelease":false,"tag_name":"v0.2.67","html_url":"${AndroidReleases.repository}/releases/tag/v0.2.67","assets":[{"name":"token-monitor-android-0.2.67.apk","state":"uploaded","size":12345,"browser_download_url":"${AndroidReleases.repository}/releases/download/v0.2.67/token-monitor-android-0.2.67.apk"}]}"""
+        val metadata=if(path!=null) File(path).readText() else """{"name":"Token Monitor Android v$expected","draft":false,"prerelease":false,"tag_name":"v$expected","html_url":"${AndroidReleases.repository}/releases/tag/v$expected","assets":[{"name":"token-monitor-android-$expected.apk","state":"uploaded","size":12345,"browser_download_url":"${AndroidReleases.repository}/releases/download/v$expected/token-monitor-android-$expected.apk"}]}"""
         val parsed=AndroidReleases.parse(metadata)
         assertEquals(AndroidReleaseVersion.parse(expected),parsed.version)
         assertEquals("${AndroidReleases.repository}/releases/tag/v$expected",parsed.notesUrl)

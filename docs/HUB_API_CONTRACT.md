@@ -1,3 +1,5 @@
+2026-10-16 命名规则更新：正式v0.72.0-01直接作为latest，当前APK统一使用正式编号，停止旧编号兼容发行；下文此前桥接策略与对应测试仅保留历史证据。现行规则见[VERSIONING](../VERSIONING.md)。
+
 2026-10-16 **Android0.72.0-01/code76已正式公开**：正式v0.72.0-01与latest兼容v0.2.67两Tag同PR #7源码3c4d2d6，最终APK db90保持；514单元、Lint0错误及受影响9＋2通过，17b7视觉78限定继承。公开Android查询／旧原解析器与真实官方64→75→匿名公开76升级／冷保留已验；两Release共8附件已匿名完整下载并核验，两APK字节相同，size／GitHub digest／SHA256SUMS／SOURCE全部匹配。完整回执见[GITHUB_PUBLICATION.md](GITHUB_PUBLICATION.md)及[联合交接最新节](HANDOFF_0.72.0-01.md)。NAS PR #11已合并并随NAS0.72.0-02发布，实际部署未验收；真机／真实Cursor／生产手机网络边界保持。以下为历史阶段记录。
 
 2026-10-16 本轮固定桌面v0.72.0，Android0.72.0-01/code76联合候选：逐项实现、Hub依赖和桌面排除见[对齐清单](DESKTOP_072_ALIGNMENT.md)，实际验证/发布状态见[本轮交接](HANDOFF_0.72.0-01.md)。此前0.71设置与日历优化已包含，配套NAS0.72发行纳入协议核对；不代表生产部署或全平台完整对齐。
