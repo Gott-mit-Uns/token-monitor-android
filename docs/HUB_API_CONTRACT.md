@@ -1,8 +1,16 @@
+2026-10-16 本轮固定桌面v0.72.0，Android0.72.0-01/code76联合候选：逐项实现、Hub依赖和桌面排除见[对齐清单](DESKTOP_072_ALIGNMENT.md)，实际验证/发布状态见[本轮交接](HANDOFF_0.72.0-01.md)。此前0.71设置与日历优化已包含，配套NAS0.72发行纳入协议核对；不代表生产部署或全平台完整对齐。
+
 # v0.70 可选供应商字段增量
 
 2026-10-14。CatPaw沿用`clients.catpaw`、clientModels及session client，不新增必需字段；MiniMax按量余额是billing/credits窗口的`remaining`金额及`currency`（CNY/USD），不是Token限额或百分比。不跨币种加总、不转换余额、缺失不作零；旧Hub无字段保留原展示。全量/HTTP/SSE/freshness/旧缓存兼容和生产无provider观察见HUB_070_DEPENDENCIES.md。以下原合同保留。
 
 # Android Hub API 合同与 v0.69 增量
+
+## 待联合验收：Hub 显示名称
+
+NAS 名称修复 PR #11 提供可选的鉴权 stats 顶层 `hub.displayName`，普通/Windows SSE 完整快照相同；公开 health 无名称。Android 仅从成功接受的权威快照读取，HTTP/SSE projection 保留该字段，限制为非空字符串、最多 80 个 Unicode 码点、无控制/格式/孤立代理码点。显示元数据不是稳定实例 ID，不参与端点关联或鉴权。
+
+名称随原始快照进入既有加密缓存，无新存储信封、请求或轮询；离线读取旧快照，freshness 不修改名称，新的 full snapshot 缺字段则回到旧 Hub 的 DNS/名称未知行为。不根据采集设备 ID、IP 或产品型号猜 Hub 名称。只更新 Android 不足以使未提供字段的旧 Hub 显示 DXP4800。联合交接见 `HANDOFF_HUB_DISPLAY_NAME.md`。
 
 2026-10-12。此文件是当前入口/新字段的增量合同；既有完整规则继续引用 [PROTOCOL.md](PROTOCOL.md)，不替代旧验证。上游依据 [固定v0.69 API](https://github.com/Javis603/token-monitor/blob/3f106ae3d4712b26cced8272f0d488eaab0de1e6/docs/API.md)、`src/hub/server.js`、`src/shared/usage.js`、`worker/src/shared/usage.js`。Android依据HubHttp、HubStream、HubParser、HubViewModel。
 

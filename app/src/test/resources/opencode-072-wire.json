@@ -1,0 +1,762 @@
+{
+  "legacy": {
+    "updatedAt": "2026-10-16T01:01:00.000Z",
+    "periods": {
+      "today": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0.03,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {
+          "opencode": 150
+        },
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {
+          "opencode": 150
+        },
+        "models": {
+          "opencode-model": 150
+        },
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {
+          "opencode-model": 150
+        },
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {
+          "opencode:session-one": {
+            "client": "opencode",
+            "sessionId": "session-one",
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "messageCount": 1,
+            "inputTokens": 100,
+            "outputTokens": 30,
+            "cacheReadTokens": 20,
+            "cacheWriteTokens": 0,
+            "reasoningTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "startedAt": "2026-10-16T01:00:00.000Z",
+            "lastUsedAt": "2026-10-16T01:01:00.000Z",
+            "contextTokens": 0,
+            "contextWindow": 0,
+            "projectId": "",
+            "projectLabel": "",
+            "title": "OpenCode compatibility",
+            "sessionKind": "",
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "providers": {},
+            "turnEnded": true
+          }
+        }
+      },
+      "month": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0.03,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {
+          "opencode": 150
+        },
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {
+          "opencode": 150
+        },
+        "models": {
+          "opencode-model": 150
+        },
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {
+          "opencode-model": 150
+        },
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {
+          "opencode:session-one": {
+            "client": "opencode",
+            "sessionId": "session-one",
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "messageCount": 1,
+            "inputTokens": 100,
+            "outputTokens": 30,
+            "cacheReadTokens": 20,
+            "cacheWriteTokens": 0,
+            "reasoningTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "startedAt": "2026-10-16T01:00:00.000Z",
+            "lastUsedAt": "2026-10-16T01:01:00.000Z",
+            "contextTokens": 0,
+            "contextWindow": 0,
+            "projectId": "",
+            "projectLabel": "",
+            "title": "OpenCode compatibility",
+            "sessionKind": "",
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "providers": {},
+            "turnEnded": true
+          }
+        }
+      },
+      "allTime": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0.03,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {
+          "opencode": 150
+        },
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {
+          "opencode": 150
+        },
+        "models": {
+          "opencode-model": 150
+        },
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {
+          "opencode-model": 150
+        },
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {}
+      }
+    },
+    "devices": [
+      {
+        "deviceId": "synthetic-device",
+        "hostname": "",
+        "platform": "linux",
+        "agentVersion": "",
+        "agentRuntime": "",
+        "updatedAt": "2026-10-16T01:01:00.000Z",
+        "receivedAt": "2026-10-16T01:01:00.000Z",
+        "ageMs": 0,
+        "stale": false,
+        "periods": {
+          "today": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {
+              "opencode": 150
+            },
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {
+              "opencode": 150
+            },
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {
+              "opencode-model": 150
+            },
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {
+              "opencode:session-one": {
+                "client": "opencode",
+                "sessionId": "session-one",
+                "totalTokens": 150,
+                "costUsd": 0.03,
+                "messageCount": 1,
+                "inputTokens": 100,
+                "outputTokens": 30,
+                "cacheReadTokens": 20,
+                "cacheWriteTokens": 0,
+                "reasoningTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "startedAt": "2026-10-16T01:00:00.000Z",
+                "lastUsedAt": "2026-10-16T01:01:00.000Z",
+                "contextTokens": 0,
+                "contextWindow": 0,
+                "projectId": "",
+                "projectLabel": "",
+                "title": "OpenCode compatibility",
+                "sessionKind": "",
+                "models": {
+                  "opencode-model": 150
+                },
+                "modelCosts": {},
+                "providers": {},
+                "turnEnded": true
+              }
+            }
+          },
+          "month": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {
+              "opencode": 150
+            },
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {
+              "opencode": 150
+            },
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {
+              "opencode-model": 150
+            },
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {
+              "opencode:session-one": {
+                "client": "opencode",
+                "sessionId": "session-one",
+                "totalTokens": 150,
+                "costUsd": 0.03,
+                "messageCount": 1,
+                "inputTokens": 100,
+                "outputTokens": 30,
+                "cacheReadTokens": 20,
+                "cacheWriteTokens": 0,
+                "reasoningTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "startedAt": "2026-10-16T01:00:00.000Z",
+                "lastUsedAt": "2026-10-16T01:01:00.000Z",
+                "contextTokens": 0,
+                "contextWindow": 0,
+                "projectId": "",
+                "projectLabel": "",
+                "title": "OpenCode compatibility",
+                "sessionKind": "",
+                "models": {
+                  "opencode-model": 150
+                },
+                "modelCosts": {},
+                "providers": {},
+                "turnEnded": true
+              }
+            }
+          },
+          "allTime": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {
+              "opencode": 150
+            },
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {
+              "opencode": 150
+            },
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {
+              "opencode-model": 150
+            },
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {}
+          }
+        },
+        "limits": {
+          "updatedAt": null,
+          "refreshMs": 300000,
+          "providers": []
+        }
+      }
+    ],
+    "projectsIncomplete": false,
+    "limits": {
+      "updatedAt": "2026-10-16T01:01:00.000Z",
+      "providers": []
+    }
+  },
+  "current": {
+    "updatedAt": "2026-10-16T01:01:00.000Z",
+    "periods": {
+      "today": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0.03,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {
+          "opencode": 150
+        },
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {
+          "opencode": 150
+        },
+        "models": {
+          "opencode-model": 150
+        },
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {
+          "opencode-model": 150
+        },
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {
+          "opencode:session-one": {
+            "client": "opencode",
+            "sessionId": "session-one",
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "messageCount": 1,
+            "inputTokens": 100,
+            "outputTokens": 30,
+            "cacheReadTokens": 20,
+            "cacheWriteTokens": 0,
+            "reasoningTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "startedAt": "2026-10-16T01:00:00.000Z",
+            "lastUsedAt": "2026-10-16T01:01:00.000Z",
+            "contextTokens": 0,
+            "contextWindow": 0,
+            "projectId": "",
+            "projectLabel": "",
+            "title": "OpenCode compatibility",
+            "sessionKind": "",
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "providers": {},
+            "turnEnded": true
+          }
+        }
+      },
+      "month": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0.03,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {
+          "opencode": 150
+        },
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {
+          "opencode": 150
+        },
+        "models": {
+          "opencode-model": 150
+        },
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {
+          "opencode-model": 150
+        },
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {
+          "opencode:session-one": {
+            "client": "opencode",
+            "sessionId": "session-one",
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "messageCount": 1,
+            "inputTokens": 100,
+            "outputTokens": 30,
+            "cacheReadTokens": 20,
+            "cacheWriteTokens": 0,
+            "reasoningTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "startedAt": "2026-10-16T01:00:00.000Z",
+            "lastUsedAt": "2026-10-16T01:01:00.000Z",
+            "contextTokens": 0,
+            "contextWindow": 0,
+            "projectId": "",
+            "projectLabel": "",
+            "title": "OpenCode compatibility",
+            "sessionKind": "",
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "providers": {},
+            "turnEnded": true
+          }
+        }
+      },
+      "allTime": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0.03,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {
+          "opencode": 150
+        },
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {
+          "opencode": 150
+        },
+        "models": {
+          "opencode-model": 150
+        },
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {
+          "opencode-model": 150
+        },
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {}
+      }
+    },
+    "devices": [
+      {
+        "deviceId": "synthetic-device",
+        "hostname": "",
+        "platform": "linux",
+        "agentVersion": "",
+        "agentRuntime": "",
+        "updatedAt": "2026-10-16T01:01:00.000Z",
+        "receivedAt": "2026-10-16T01:01:00.000Z",
+        "ageMs": 0,
+        "stale": false,
+        "periods": {
+          "today": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {
+              "opencode": 150
+            },
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {
+              "opencode": 150
+            },
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {
+              "opencode-model": 150
+            },
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {
+              "opencode:session-one": {
+                "client": "opencode",
+                "sessionId": "session-one",
+                "totalTokens": 150,
+                "costUsd": 0.03,
+                "messageCount": 1,
+                "inputTokens": 100,
+                "outputTokens": 30,
+                "cacheReadTokens": 20,
+                "cacheWriteTokens": 0,
+                "reasoningTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "startedAt": "2026-10-16T01:00:00.000Z",
+                "lastUsedAt": "2026-10-16T01:01:00.000Z",
+                "contextTokens": 0,
+                "contextWindow": 0,
+                "projectId": "",
+                "projectLabel": "",
+                "title": "OpenCode compatibility",
+                "sessionKind": "",
+                "models": {
+                  "opencode-model": 150
+                },
+                "modelCosts": {},
+                "providers": {},
+                "turnEnded": true
+              }
+            }
+          },
+          "month": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {
+              "opencode": 150
+            },
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {
+              "opencode": 150
+            },
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {
+              "opencode-model": 150
+            },
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {
+              "opencode:session-one": {
+                "client": "opencode",
+                "sessionId": "session-one",
+                "totalTokens": 150,
+                "costUsd": 0.03,
+                "messageCount": 1,
+                "inputTokens": 100,
+                "outputTokens": 30,
+                "cacheReadTokens": 20,
+                "cacheWriteTokens": 0,
+                "reasoningTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "startedAt": "2026-10-16T01:00:00.000Z",
+                "lastUsedAt": "2026-10-16T01:01:00.000Z",
+                "contextTokens": 0,
+                "contextWindow": 0,
+                "projectId": "",
+                "projectLabel": "",
+                "title": "OpenCode compatibility",
+                "sessionKind": "",
+                "models": {
+                  "opencode-model": 150
+                },
+                "modelCosts": {},
+                "providers": {},
+                "turnEnded": true
+              }
+            }
+          },
+          "allTime": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0.03,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {
+              "opencode": 150
+            },
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {
+              "opencode": 150
+            },
+            "models": {
+              "opencode-model": 150
+            },
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {
+              "opencode-model": 150
+            },
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {}
+          }
+        },
+        "limits": {
+          "updatedAt": null,
+          "refreshMs": 300000,
+          "providers": []
+        }
+      }
+    ],
+    "projectsIncomplete": false,
+    "limits": {
+      "updatedAt": "2026-10-16T01:01:00.000Z",
+      "providers": []
+    }
+  }
+}

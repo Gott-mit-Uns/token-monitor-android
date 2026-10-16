@@ -59,14 +59,21 @@ import java.util.Locale
         val next=sum.toMutableMap();member.source?.let {SessionDisplay.displayModels(it,names,observed)}.orEmpty().forEach {(name,value)->next[name]=(next[name] ?: BigInteger.ZERO)+value};next
     } else row?.let {SessionDisplay.displayModels(it,names,observed)}.orEmpty()
     val modelLabel=when(models.size) {0->"";1->models.keys.single();else->"${models.size} models"}
-    val context=row?.takeUnless {reviewRun}?.let {SessionDisplay.context(it,now)};val cache=row?.takeUnless {reviewRun}?.let {SessionDisplay.cache(it,now)}
+    val contextSource=row ?: display.reviews.firstOrNull {it.groupRole=="main"}?.source
+    val context=contextSource?.takeUnless {reviewRun}?.let {SessionDisplay.context(it,now)};val cache=contextSource?.takeUnless {reviewRun}?.let {SessionDisplay.cache(it,now)}
     val palette=LocalDesktopVendorPalette.current
     val client=display.groupClient ?: row?.tool.orEmpty()
     val fallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFFD97BC4L,0xFFF0D66AL,0xFFF06A7BL)
     val color=if(reviewRun) Color(0xFF6AB4F0) else palette[client]?.let {Color(it)} ?: if(modelLabel.isNotEmpty()) modelColor(modelLabel,palette) else Color(fallbackColors[(kotlin.math.abs(display.id.hashCode().toLong())%fallbackColors.size).toInt()])
     val shownName=if(reviewRun) listOf(modelLabel,SessionListDisplay.time(display.sortTime,now)).filter(String::isNotEmpty).joinToString(" · ").ifEmpty {strings.getString(R.string.session_review_group)} else display.name
     val shownSubtitle=if(reviewRun) display.detail else if(display.review && display.groupKind!="review") modelLabel else display.subtitle.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))
-    val shownActivity=if(reviewRun) "" else display.activity.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))
+    val shownActivity=(if(reviewRun) SessionFamilyMetrics.from(listOf(display)).label() else (display.groupMetrics?.let {metrics->
+        listOf(strings.getString(R.string.session_archived).takeIf {display.reviews.isNotEmpty() && display.reviews.all {it.source?.session?.archived==true}}.orEmpty(),SessionListDisplay.time(display.sortTime,now),metrics.label()).filter(String::isNotEmpty).joinToString(" · ")
+    } ?: listOf(display.activity, row?.session?.accounting?.let {accounting->
+        listOf("Calls unknown".takeUnless {accounting.callsKnown || display.activity.contains("Calls unknown") || display.subtitle.contains("Calls unknown")},
+            "—%".takeIf {SessionListDisplay.cachePercent(row)==null},
+            "— tok/s".takeIf {SessionListDisplay.rate(row)<=0}).filterNotNull().joinToString(" · ")
+    }.orEmpty()).filter(String::isNotEmpty).joinToString(" · "))).replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))
     val shownDetail=if(reviewRun) "" else display.detail
     val sunkenContext=LocalDesktopSunkenColor.current.copy(alpha=.46f)
     val lineColor=LocalDesktopLineColor.current
@@ -90,7 +97,7 @@ import java.util.Locale
                     display.groupRole?.let {role->Text(strings.getString(if(role=="main") R.string.session_group_main else R.string.session_group_subagent),Modifier.testTag("session-role-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)}
                     if(activityState=="waiting" && !reviewRun) Text(strings.getString(if(row?.let {SessionDisplay.waitingForReply(it,now)}==true) R.string.session_waiting_reply else R.string.session_waiting),Modifier.testTag("session-waiting-${display.id}"),style=quotaTextStyle(10),color=colors.primary)
                     if(shownSubtitle.isNotEmpty()) Box(titleModifier(shownSubtitle)) {Text(shownSubtitle,Modifier.testTag("session-subtitle-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)}
-                    if(shownActivity.isNotEmpty()) Text(shownActivity,Modifier.testTag("session-activity-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)
+                    if(shownActivity.isNotEmpty()) Text(shownActivity,Modifier.fillMaxWidth().testTag("session-activity-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                     // Hub metadata has no local transcript detail. Keep its identifier available in the read-only summary.
                     if(shownActivity.isEmpty() && shownDetail.isNotEmpty()) Text(shownDetail,Modifier.testTag("session-id-${display.id}"),style=quotaTextStyle(10),color=colors.onSurfaceVariant.copy(alpha=.84f),maxLines=1,overflow=TextOverflow.Ellipsis)
                 }
@@ -130,15 +137,15 @@ import java.util.Locale
             Text(numbers.format(tokens),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
         }}
     }
-    if(contextOpen && row!=null && (context!=null || cache!=null)) CompactUsageDialog(strings.getString(R.string.session_context_details),"session-context-details",{contextOpen=false},desktopTooltip=true) {
-        val tokens=row.session?.contextTokens;val window=row.session?.contextWindow
-        if(row.session?.archived!=true && tokens!=null && window!=null) Text("${DesktopCompactTokens.format(tokens,"western","en",false)} / ${DesktopCompactTokens.format(window,"western","en",false)}",style=quotaTextStyle(10))
+    if(contextOpen && contextSource!=null && (context!=null || cache!=null)) CompactUsageDialog(strings.getString(R.string.session_context_details),"session-context-details",{contextOpen=false},desktopTooltip=true) {
+        val tokens=contextSource.session?.contextTokens;val window=contextSource.session?.contextWindow
+        if(contextSource.session?.archived!=true && tokens!=null && window!=null) Text("${DesktopCompactTokens.format(tokens,"western","en",false)} / ${DesktopCompactTokens.format(window,"western","en",false)}",style=quotaTextStyle(10))
         cache?.let {Text(strings.getString(R.string.session_cache_details,it.minutes),style=quotaTextStyle(10))}
     }
     if(summaryOpen && row!=null) CompactUsageDialog(display.name,"session-summary-details",{summaryOpen=false},desktopTooltip=true) {
         Text(strings.getString(R.string.session_hub_summary),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
         Text("${numbers.format(display.tokens)} Token · ${usageCostText(display.cost,display.unpricedTotal)}",style=quotaTextStyle(11))
         Text(display.detail,style=quotaTextStyle(10))
-        Text(listOf(display.subtitle,display.activity).map {it.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))}.filter(String::isNotEmpty).joinToString("\n"),style=quotaTextStyle(10))
+        Text(listOf(shownSubtitle,shownActivity).distinct().map {it.replace("Calls unknown",strings.getString(R.string.goose_calls_unknown))}.filter(String::isNotEmpty).joinToString("\n"),style=quotaTextStyle(10))
     }
 }

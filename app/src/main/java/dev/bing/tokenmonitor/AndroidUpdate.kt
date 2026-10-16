@@ -89,7 +89,7 @@ internal object AndroidReleases {
 
 internal fun interface AndroidReleaseSource { suspend fun latest(): AndroidRelease }
 
-/** One anonymous, user initiated request. No shared Hub client, credentials, cache or scheduler. */
+/** Anonymous foreground request. No shared Hub client, credentials or background scheduler. */
 internal class GitHubAndroidReleaseSource: AndroidReleaseSource {
     private val client = OkHttpClient.Builder().followRedirects(false).followSslRedirects(false)
         .connectTimeout(10, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS).callTimeout(20, TimeUnit.SECONDS).build()
@@ -123,7 +123,15 @@ internal class GitHubAndroidReleaseSource: AndroidReleaseSource {
 }
 
 /** Explicit foreground ownership also guards stale responses after cancellation/re-entry. */
-internal class AndroidUpdateController(private val current: String, private val source: AndroidReleaseSource, private val scope: CoroutineScope) {
+internal class AndroidUpdateController(private val current: String, private val source: AndroidReleaseSource, private val scope: CoroutineScope,
+    private val now: () -> Long = System::currentTimeMillis,
+    private val loadLastAutomaticCheck: () -> Long = { 0L },
+    private val saveLastAutomaticCheck: (Long) -> Unit = {},
+    private val loadLastAutomaticFailure: () -> Long? = { null },
+    private val saveLastAutomaticFailure: (Long?) -> Unit = {}
+) {
+    private var lastAutomaticCheck = loadLastAutomaticCheck()
+    private var lastAutomaticFailure: Long? = loadLastAutomaticFailure()
     private val mutableState = MutableStateFlow<AndroidUpdateState>(AndroidUpdateState.Idle)
     val state = mutableState.asStateFlow()
     private var foreground = false
@@ -137,7 +145,16 @@ internal class AndroidUpdateController(private val current: String, private val 
             if (mutableState.value == AndroidUpdateState.Checking) mutableState.value = AndroidUpdateState.Idle
         }
     }
-    fun check() {
+    /** Called only by the application foreground owner. Failures and cancellation remain retryable. */
+    fun checkOnForeground() {
+        val time = now()
+        val elapsed = time - lastAutomaticCheck
+        if (lastAutomaticFailure?.let { time - it in 0 until AUTOMATIC_FAILURE_INTERVAL_MS } == true) return
+        if (lastAutomaticCheck > 0L && elapsed in 0 until AUTOMATIC_CHECK_INTERVAL_MS) return
+        check(automatic = true)
+    }
+    fun check() = check(automatic = false)
+    private fun check(automatic: Boolean) {
         if (!foreground || mutableState.value == AndroidUpdateState.Checking) return
         val id = ++generation
         mutableState.value = AndroidUpdateState.Checking
@@ -148,7 +165,25 @@ internal class AndroidUpdateController(private val current: String, private val 
                 if (latest.version > installed) AndroidUpdateState.Available(latest) else AndroidUpdateState.Current
             } catch (cancelled: CancellationException) {throw cancelled}
             catch (failure: Exception) {AndroidUpdateState.Failed((failure as? AndroidUpdateException)?.reason ?: AndroidUpdateFailure.NETWORK)}
-            if (foreground && generation == id) mutableState.value = result
+            if (foreground && generation == id) {
+                mutableState.value = result
+                if (automatic && result is AndroidUpdateState.Failed) {
+                    lastAutomaticFailure = now()
+                    saveLastAutomaticFailure(lastAutomaticFailure)
+                }
+                if (result !is AndroidUpdateState.Failed) {
+                    lastAutomaticFailure = null
+                    saveLastAutomaticFailure(null)
+                }
+                if (result !is AndroidUpdateState.Failed) {
+                    lastAutomaticCheck = now()
+                    saveLastAutomaticCheck(lastAutomaticCheck)
+                }
+            }
         }
+    }
+    companion object {
+        const val AUTOMATIC_CHECK_INTERVAL_MS = 24L * 60L * 60L * 1000L
+        const val AUTOMATIC_FAILURE_INTERVAL_MS = 60L * 60L * 1000L
     }
 }

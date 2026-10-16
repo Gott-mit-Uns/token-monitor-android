@@ -5,7 +5,10 @@ import org.junit.Test
 
 class SyncSettingsPresentationTest {
     @Test fun exactPhoneModelMappingDoesNotRenameOtherDevices() {
+        assertEquals("Xiaomi 13 Ultra",SyncSettingsPresentation.phoneModel("2304FPN6DC"))
+        assertEquals("Xiaomi 13 Ultra",SyncSettingsPresentation.phoneModel(" 2304fpn6dc "))
         assertEquals("Xiaomi 13 Ultra",SyncSettingsPresentation.phoneModel("2304FPN60C"))
+        assertEquals("Xiaomi 13 Ultra",SyncSettingsPresentation.phoneModel("2304FPN6DC"))
         assertEquals("2304FPN60G",SyncSettingsPresentation.phoneModel("2304FPN60G"))
         assertEquals("Pixel 10",SyncSettingsPresentation.phoneModel("Pixel 10"))
     }

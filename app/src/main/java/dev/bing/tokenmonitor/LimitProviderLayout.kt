@@ -226,7 +226,19 @@ internal object LimitProviderLayout {
                 windows.filter {it.flag("additional")==true}.forEach {w->row(w,tone=0.78,wide=true)}
                 resets()
             }
-            "cursor" -> windows.forEach {w->val line=text(provider,w,used);row(w,w.s("label") ?: "Quota",wide=true,value=line.value,detail=line.detail)}
+            "cursor" -> {
+                if(windows.isEmpty()) result+=ProviderQuotaRow(if(locale.language=="zh") "额度" else "Quota",
+                    if(locale.language=="zh") "额度数据未提供" else "Allowance unavailable",wide=true,noReset=true)
+                windows.forEach {w->
+                val line=text(provider,w,used)
+                val credit=w.s("metric")=="credits"
+                // Prepaid funds stay separate from usage and have no meter/reset.
+                row(w,w.s("label") ?: "Quota",wide=true,value=line.value,detail=line.detail,noReset=credit)
+                if(credit) result[result.lastIndex]=result.last().copy(percent=null,motion=null)
+                if(w.s("label")=="Included usage" && boundary(w,now).isEmpty())
+                    result[result.lastIndex]=result.last().copy(boundary=if(locale.language=="zh") "重置时间未知" else "Reset time unknown")
+                }
+            }
             "antigravity" -> {
                 val rateWindows=windows.filter {it.s("kind") in setOf("session","weekly")}
                 fun group(w:JsonObject):String? {val suffix=if(w.s("kind")=="session") "\\s+5-hour$" else "\\s+weekly$";val name=w.s("label")?.trim() ?: return null;val pattern=Regex(suffix,RegexOption.IGNORE_CASE);return if(pattern.containsMatchIn(name)) name.replace(pattern,"").trim().takeIf {it.isNotEmpty()} else null}

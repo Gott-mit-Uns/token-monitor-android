@@ -1,6 +1,6 @@
 # Token Monitor Android
 
-当前正式版本为 [`0.71.0-02` / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)：统一紧凑设置、页内只读配置、设备与 Hub 卡片及日／月记录日历。固定功能基线保持桌面 v0.71.0，指定界面样式对照实际桌面 v0.72.0。正式入口与同字节旧版更新兼容入口 v0.2.66 见 [版本规则](VERSIONING.md)，实施及验收边界见 [联合交接](docs/HANDOFF_COMPACT_UI.md)。原工作区未提交修改保留，Widget 仍移除，未启用 R8／资源瘦身。[本轮改前／改后原图](docs/UI_COMPACT_COMPARISON_0.71.0-02.md)。
+当前 `0.72.0-01` / code76 为**最终候选db90已完成本地验收，等待最终审查与正式公开发布／读回**。固定对齐桌面 [v0.72.0](https://github.com/Javis603/token-monitor/releases/tag/v0.72.0)。配置重建重复更新请求的P2已修复；最终签名APK `db90f7e9…b977` 完成514项单元、Lint0错误／104警告／1提示，以及受影响Android更新浅深色、当前版本fixture、真实匿名桌面查询和原64保留共9项，加明确opt-in冷主页／设置重建恢复2项。前候选17b7上实跑78次视觉专项及[10张原图](docs/UI_072_VALIDATION.md)按未变UI源限定继承，不能称db90全78重跑。正式版本仍为 [0.71.0-02 / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)，计划正式 `v0.72.0-01` 与同字节latest兼容 `v0.2.67`。功能、Hub依赖与实际边界见[逐项对齐](docs/DESKTOP_072_ALIGNMENT.md)、[联合交接](docs/HANDOFF_0.72.0-01.md)。紧凑设置与日／月日历保留，Widget不恢复、R8不启用。NAS PR #11仍open未部署；真机／真实Cursor账号与生产手机网络未验证。
 
 
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。

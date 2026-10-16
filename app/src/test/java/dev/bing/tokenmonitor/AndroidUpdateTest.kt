@@ -112,4 +112,145 @@ class AndroidUpdateTest {
             assertTrue(controller.state.value is AndroidUpdateState.Available)
         } finally {scope.cancel()}
     }
+    @Test fun foregroundAutoChecksArePersistedThrottledAndManualCheckRemainsAvailable() {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            var now = 1_000_000_000L
+            var persisted = 0L
+            var calls = 0
+            val source = AndroidReleaseSource { calls++; AndroidReleases.parse(release("0.72.0-01")) }
+            fun controller() = AndroidUpdateController("0.71.0-02", source, scope, { now }, { persisted }, { persisted = it })
+            val first = controller()
+            first.checkOnForeground(); assertEquals(0, calls)
+            first.setForeground(true); first.checkOnForeground()
+            assertEquals(1, calls); assertEquals(now, persisted)
+            repeat(5) { first.setForeground(false); first.setForeground(true); first.checkOnForeground() }
+            assertEquals(1, calls)
+            val recreated = controller()
+            recreated.setForeground(true); recreated.checkOnForeground(); assertEquals(1, calls)
+            now += AndroidUpdateController.AUTOMATIC_CHECK_INTERVAL_MS - 1
+            recreated.checkOnForeground(); assertEquals(1, calls)
+            now++
+            recreated.checkOnForeground(); assertEquals(2, calls)
+            recreated.check(); assertEquals(3, calls)
+            // A clock correction must not disable checks indefinitely.
+            now -= 2 * AndroidUpdateController.AUTOMATIC_CHECK_INTERVAL_MS
+            recreated.checkOnForeground(); assertEquals(4, calls)
+        } finally { scope.cancel() }
+    }
+    @Test fun failedAndCancelledAutomaticChecksRemainRetryableWithoutBackgroundWork() = runBlocking {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            var now = 1_000_000_000L
+            var calls = 0
+            var fail = true
+            var persisted = 0L
+            val controller = AndroidUpdateController("0.71.0-02", AndroidReleaseSource {
+                calls++
+                if (fail) throw AndroidUpdateException(AndroidUpdateFailure.NETWORK)
+                AndroidReleases.parse(release("0.72.0-01"))
+            }, scope, { now }, { persisted }, { persisted = it })
+            controller.setForeground(true); controller.checkOnForeground()
+            assertEquals(1, calls); assertEquals(0L, persisted)
+            controller.setForeground(false); controller.setForeground(true); controller.checkOnForeground()
+            assertEquals(1, calls)
+            now += AndroidUpdateController.AUTOMATIC_FAILURE_INTERVAL_MS
+            fail = false; controller.checkOnForeground(); assertEquals(2, calls)
+            assertTrue(controller.state.value is AndroidUpdateState.Available)
+            val pending = CompletableDeferred<AndroidRelease>()
+            val cancelled = AndroidUpdateController("0.71.0-02", AndroidReleaseSource { calls++; pending.await() }, scope,
+                { now }, { 0L }, { persisted = it })
+            cancelled.setForeground(true); cancelled.checkOnForeground()
+            assertEquals(3, calls)
+            cancelled.setForeground(false); assertEquals(AndroidUpdateState.Idle, cancelled.state.value)
+            pending.complete(AndroidReleases.parse(release("0.72.0-01")))
+            cancelled.checkOnForeground(); assertEquals(3, calls)
+            cancelled.setForeground(true); cancelled.checkOnForeground()
+            assertEquals(4, calls); assertTrue(cancelled.state.value is AndroidUpdateState.Available)
+        } finally { scope.cancel() }
+    }
+    @Test fun nextCompatibilityBridgeWorksForLegacyAndCurrentReleaseFamiliesWithoutDowngrade() {
+        val bridge = AndroidReleases.parse(release("0.2.67", extra=",\"name\":\"Token Monitor Android v0.72.0-01\""))
+        assertEquals("0.72.0-01", bridge.version.toString())
+        assertEquals("${AndroidReleases.repository}/releases/tag/v0.72.0-01", bridge.notesUrl)
+        assertTrue(bridge.apkUrl.endsWith("/v0.2.67/token-monitor-android-0.2.67.apk"))
+        listOf("0.2.64", "0.2.66", "0.71.0-android.0.2.65", "0.71.0-02").forEach {
+            assertTrue(it, bridge.version > AndroidReleaseVersion.parse(it)!!)
+        }
+        assertEquals(0, bridge.version.compareTo(AndroidReleaseVersion.parse("0.72.0-01")!!))
+        assertTrue(bridge.version < AndroidReleaseVersion.parse("0.72.0-02")!!)
+    }
+
+    @Test fun automaticFailureBackoffSurvivesControllerRecreationAndManualSuccessClearsIt() {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            var now = 1_000_000_000L
+            var failureAt: Long? = null
+            var successAt = 0L
+            var calls = 0
+            var failing = true
+            val source = AndroidReleaseSource {
+                calls++
+                if (failing) throw AndroidUpdateException(AndroidUpdateFailure.NETWORK)
+                AndroidReleases.parse(release("0.72.0-01"))
+            }
+            fun controller() = AndroidUpdateController("0.71.0-02", source, scope, { now },
+                { successAt }, { successAt = it }, { failureAt }, { failureAt = it })
+            val first = controller()
+            first.setForeground(true); first.checkOnForeground()
+            assertEquals(1, calls); assertEquals(now, failureAt); assertEquals(0L, successAt)
+            first.setForeground(false)
+            val recreated = controller()
+            recreated.setForeground(true); recreated.checkOnForeground()
+            assertEquals(1, calls)
+            now += AndroidUpdateController.AUTOMATIC_FAILURE_INTERVAL_MS - 1
+            recreated.checkOnForeground(); assertEquals(1, calls)
+            now++
+            recreated.checkOnForeground(); assertEquals(2, calls); assertEquals(now, failureAt)
+            // Explicit manual retry bypasses the persisted interval. A failure
+            // does not move the automatic timestamp or misreport success.
+            val savedFailure = failureAt
+            recreated.check(); assertEquals(3, calls); assertEquals(savedFailure, failureAt)
+            failing = false
+            recreated.check(); assertEquals(4, calls)
+            assertNull(failureAt); assertEquals(now, successAt)
+            recreated.setForeground(false)
+            val afterSuccess = controller()
+            afterSuccess.setForeground(true); afterSuccess.checkOnForeground()
+            assertEquals(4, calls)
+        } finally { scope.cancel() }
+    }
+    @Test fun cancelledAutomaticAttemptDoesNotPersistFailureAndClockRollbackCanRecoverPersistedBackoff() = runBlocking {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
+        try {
+            var now = 1_000_000_000L
+            var failureAt: Long? = null
+            var writes = 0
+            var calls = 0
+            val pending = CompletableDeferred<AndroidRelease>()
+            val cancelled = AndroidUpdateController("0.71.0-02", AndroidReleaseSource { calls++; pending.await() }, scope,
+                { now }, { 0L }, {}, { failureAt }, { failureAt = it; writes++ })
+            cancelled.setForeground(true); cancelled.checkOnForeground()
+            assertEquals(1, calls)
+            cancelled.setForeground(false)
+            pending.complete(AndroidReleases.parse(release("0.72.0-01")))
+            assertNull(failureAt); assertEquals(0, writes)
+            val recreated = AndroidUpdateController("0.71.0-02", AndroidReleaseSource {
+                calls++; throw AndroidUpdateException(AndroidUpdateFailure.NETWORK)
+            }, scope, { now }, { 0L }, {}, { failureAt }, { failureAt = it; writes++ })
+            recreated.setForeground(true); recreated.checkOnForeground()
+            assertEquals(2, calls); assertEquals(now, failureAt); assertEquals(1, writes)
+            recreated.setForeground(false)
+            // A persisted future failure timestamp must not suppress checks
+            // forever after the user corrects the device clock backwards.
+            now -= 10_000L
+            val rolledBack = AndroidUpdateController("0.71.0-02", AndroidReleaseSource {
+                calls++; AndroidReleases.parse(release("0.72.0-01"))
+            }, scope, { now }, { 0L }, {}, { failureAt }, { failureAt = it; writes++ })
+            rolledBack.setForeground(true); rolledBack.checkOnForeground()
+            assertEquals(3, calls); assertNull(failureAt)
+            assertTrue(rolledBack.state.value is AndroidUpdateState.Available)
+        } finally { scope.cancel() }
+    }
+
 }

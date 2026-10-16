@@ -25,7 +25,7 @@ data class Limit(val provider: String, val status: String?, val remaining: Doubl
     val usedAmount: String? = null, val limitAmount: String? = null, val boundaryKind: String? = null, val detail: String? = null, val componentSource: String? = null, val presentation: LimitPresentation = LimitPresentation())
 data class Snapshot(val updated: String?, val periods: Map<String, Period>, val devices: List<Device>, val limits: List<Limit>, val detailIncomplete: Boolean,
     val historyRevision: String? = null, val subscriptionsRevision: String? = null, val modelNamesRevision: String? = null, val pricingRevision: String? = null, val deviceHistoryRevision: String? = null,
-    val historyPreview: HubHistory? = null,val observedModelIds:List<String> = emptyList())
+    val historyPreview: HubHistory? = null,val observedModelIds:List<String> = emptyList(),val hubDisplayName:String?=null)
 
 object HubParser {
     private val json = Json { ignoreUnknownKeys = true }
@@ -199,7 +199,8 @@ object HubParser {
             Snapshot(root.text("updatedAt"), periods, devices, limits,
                 listOf("projectsIncomplete", "sessionDetailsOmitted", "periodProjectsOmitted").any { hasOmissions(root[it]) },
                 root.text("historyRevision"), root.text("subscriptionsUpdatedAt"), (root["syncSettingsRevisions"] as? JsonObject)?.text("modelAliases"), (root["syncSettingsRevisions"] as? JsonObject)?.text("customPricing"), root.text("deviceHistoryRevision"),
-                (root["historyPreview"] as? JsonObject)?.let { runCatching { HistoryParser.parse(it.toString()) }.getOrNull() },trustedObservedModelIds ?: ObservedModelIds.collect(root, modelIndex))
+                (root["historyPreview"] as? JsonObject)?.let { runCatching { HistoryParser.parse(it.toString()) }.getOrNull() },trustedObservedModelIds ?: ObservedModelIds.collect(root, modelIndex),
+                HubDisplayName.normalize(((root["hub"] as? JsonObject)?.get("displayName") as? JsonPrimitive)?.takeIf {it.isString}?.content))
         }
 }
 

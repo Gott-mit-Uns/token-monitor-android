@@ -2,6 +2,7 @@ package dev.bing.tokenmonitor
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
@@ -14,6 +15,10 @@ import java.time.LocalDate
 /** Public fixture interaction; no Hub credentials or real screenshots. */
 class SharedDataScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
+    // Retargeting and frame sampling must share Compose's virtual clock. The production
+    // System.nanoTime clock can be ahead of virtual frames and leave disclosure progress at zero.
+    // Keep animations enabled and preserve all interaction assertions below.
+    private val animationClock=DesktopAnimationClock {compose.mainClock.currentTime*1_000_000L}
     private class Actions:HubUiActions {
         var stats=0;var prices=0;var subscriptions=0;var rules=0;var history=0
         override fun connect(address:String,credential:String,alternate:String) {}
@@ -39,7 +44,7 @@ class SharedDataScreenTest {
         val top=SubscriptionParser.parse("""{"subscriptions":[{"id":"public-topup","provider":"openrouter","planName":"Public credits","kind":"topup","currency":"USD","topUps":[{"date":"$today","amountMinor":1000}]}]}""").single()
         val state=mutableStateOf(HubState(snapshot=original,pricing=pricing,subscriptions=listOf(plan)))
         val prefs=mutableStateOf(DisplayPreferences());val actions=Actions();val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state.value,actions,preferences=prefs.value)}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions,preferences=prefs.value)}}}}
         openSharedSettings(compose,"pricing");compose.onNodeWithTag("hub-period-today").assertDoesNotExist();compose.onNodeWithTag("shared-pricing-load").assertDoesNotExist();show("shared-price-public-model")
         compose.onNodeWithTag("shared-pricing-summary").assertTextEquals("1 个模型 · USD / 百万 Token")
         save("pricing",dark);show("shared-pricing-refresh");compose.onNodeWithTag("shared-pricing-refresh").performClick();assertEquals(1,actions.prices);assertEquals(0,actions.stats)
@@ -56,7 +61,9 @@ class SharedDataScreenTest {
         compose.onNodeWithTag("shared-subscriptions-summary").assertTextEquals("1 笔订阅")
         show("shared-subscription-public-plan");compose.onNodeWithTag("shared-subscription-public-plan-title",useUnmergedTree=true).assertTextContains("Public account",substring=true)
         compose.onNodeWithTag("shared-subscription-public-plan-meta",useUnmergedTree=true).assertTextContains("Public Plus · $20.00 / 月",substring=true)
-        save("subscriptions",dark);show("settings-subscriptions-refresh");compose.onNodeWithTag("settings-subscriptions-refresh").performClick();assertEquals(1,actions.subscriptions)
+        compose.onNodeWithTag("settings-subscriptions-refresh").assertDoesNotExist()
+        assertEquals(0,actions.subscriptions)
+        save("subscriptions",dark)
         compose.onNodeWithTag("shared-subscription-public-plan").performClick()
         compose.onNodeWithTag("shared-subscription-paid").assertTextContains("累计 $60.00",substring=true)
         compose.runOnIdle {state.value=state.value.copy(subscriptions=listOf(plan.copy(autoRenew=false)))}
@@ -76,7 +83,7 @@ class SharedDataScreenTest {
         val rules=ModelNames((0..204).associate {"raw-${it.toString().padStart(3,'0')}" to "display-${it.toString().padStart(3,'0')}"},"duplicates")
         val state=mutableStateOf(HubState(snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1000,"models":{"raw-000":1000}}}}"""),modelNames=rules))
         val actions=Actions();val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark) {HubScreen(state.value,actions)}}}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(state.value,actions)}}}}
         compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"tools");compose.onNodeWithTag("shared-model-rules-load").assertDoesNotExist();show("shared-model-rules-open");compose.onNodeWithTag("shared-model-rules-open").performClick()
         compose.onNodeWithTag("shared-model-rules-title").assertTextEquals("模型别名")
         compose.onNodeWithTag("shared-rules-page").assertTextEquals("1/3")

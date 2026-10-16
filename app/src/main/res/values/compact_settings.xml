@@ -1,5 +1,4 @@
 <resources>
     <string name="compact_reset_interface_font">Reset interface font</string>
     <string name="compact_reset_display_font">Reset token total font</string>
-    <string name="compact_refresh_subscriptions">Refresh subscriptions</string>
 </resources>

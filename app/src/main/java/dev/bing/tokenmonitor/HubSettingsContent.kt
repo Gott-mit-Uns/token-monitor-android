@@ -90,7 +90,6 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
             val summary=if(rows==null) "—" else if(rows.isEmpty()) strings.getString(R.string.settings_none_yet) else strings.getString(R.string.settings_subscription_summary,active,total)
             DesktopSettingSection("subscriptions",strings.getString(R.string.desktop_subscriptions),R.drawable.desktop_settings_subscriptions,summary,section=="subscriptions","settings-subscriptions-toggle",toggle={selectSection("subscriptions")}) {
                 Text(strings.getString(R.string.subscriptions_note),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
-                if(rows!=null) DesktopActionButton(onClick=model::loadSubscriptions,enabled=!state.loading,modifier=Modifier.testTag("settings-subscriptions-refresh")) {Text(strings.getString(R.string.compact_refresh_subscriptions),style=quotaTextStyle(11))}
                 if(rows==null) {
                     DesktopActionButton(onClick=model::loadSubscriptions,enabled=!state.loading,modifier=Modifier.testTag("settings-subscriptions-load"),visualTag="settings-subscriptions-load-visual") {Text(strings.getString(R.string.load_subscriptions),style=quotaTextStyle(11))}
                 } else {

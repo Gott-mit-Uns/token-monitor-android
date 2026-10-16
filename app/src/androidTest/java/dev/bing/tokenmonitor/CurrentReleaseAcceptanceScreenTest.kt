@@ -21,11 +21,12 @@ class CurrentReleaseAcceptanceScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     /** Run only after both official distribution entries have been published. */
     @Test fun publishedAndroidReleaseIsFetchedByTheRealAnonymousAndroidClient() {
-        val expected=InstrumentationRegistry.getArguments().getString("expectedVersion") ?: "0.71.0-02"
+        val expected=InstrumentationRegistry.getArguments().getString("expectedVersion") ?: "0.72.0-01"
         val release=kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {GitHubAndroidReleaseSource().latest()}
         assertEquals(AndroidReleaseVersion.parse(expected),release.version)
         assertEquals("${AndroidReleases.repository}/releases/tag/v$expected",release.notesUrl)
-        assertEquals("${AndroidReleases.repository}/releases/download/v0.2.66/token-monitor-android-0.2.66.apk",release.apkUrl)
+        val compatibility=InstrumentationRegistry.getArguments().getString("expectedCompatibilityVersion") ?: "0.2.67"
+        assertEquals("${AndroidReleases.repository}/releases/download/v$compatibility/token-monitor-android-$compatibility.apk",release.apkUrl)
     }
     @Test fun upstreamDesktopReleaseIsFetchedByTheRealAnonymousAndroidClient() {
         val expected=InstrumentationRegistry.getArguments().getString("expectedDesktopVersion") ?: "0.72.0"
@@ -52,13 +53,13 @@ class CurrentReleaseAcceptanceScreenTest {
         val args=InstrumentationRegistry.getArguments()
         val context=InstrumentationRegistry.getInstrumentation().targetContext
         val installed=context.packageManager.getPackageInfo(context.packageName,0)
-        val expected=args.getString("expectedVersion") ?: "0.71.0-02"
+        val expected=args.getString("expectedVersion") ?: "0.72.0-01"
         assertEquals(expected,installed.versionName)
         @Suppress("DEPRECATION")
         val installedCode=if(android.os.Build.VERSION.SDK_INT>=28) installed.longVersionCode else installed.versionCode.toLong()
-        assertEquals(75L,installedCode)
+        assertEquals((args.getString("expectedVersionCode") ?: "76").toLong(),installedCode)
         val path=args.getString("releaseMetadataPath")
-        val metadata=if(path!=null) File(path).readText() else """{"name":"Token Monitor Android v$expected","draft":false,"prerelease":false,"tag_name":"v0.2.66","html_url":"${AndroidReleases.repository}/releases/tag/v0.2.66","assets":[{"name":"token-monitor-android-0.2.66.apk","state":"uploaded","size":12345,"browser_download_url":"${AndroidReleases.repository}/releases/download/v0.2.66/token-monitor-android-0.2.66.apk"}]}"""
+        val metadata=if(path!=null) File(path).readText() else """{"name":"Token Monitor Android v$expected","draft":false,"prerelease":false,"tag_name":"v0.2.67","html_url":"${AndroidReleases.repository}/releases/tag/v0.2.67","assets":[{"name":"token-monitor-android-0.2.67.apk","state":"uploaded","size":12345,"browser_download_url":"${AndroidReleases.repository}/releases/download/v0.2.67/token-monitor-android-0.2.67.apk"}]}"""
         val parsed=AndroidReleases.parse(metadata)
         assertEquals(AndroidReleaseVersion.parse(expected),parsed.version)
         assertEquals("${AndroidReleases.repository}/releases/tag/v$expected",parsed.notesUrl)

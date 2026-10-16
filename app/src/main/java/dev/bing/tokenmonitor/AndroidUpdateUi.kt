@@ -38,10 +38,12 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 @Composable internal fun AndroidUpdateSettings(currentVersion: String, source: AndroidReleaseSource? = null,onLicenses:(()->Unit)?=null, desktopSource:DesktopReleaseSource?=null) {
     val scope = rememberCoroutineScope()
     val releaseSource = remember(source) {source ?: GitHubAndroidReleaseSource()}
-    val controller = remember(currentVersion, releaseSource, scope) {AndroidUpdateController(currentVersion, releaseSource, scope)}
+    val sharedController = LocalAndroidUpdateController.current.takeIf { source == null }
+    val controller = sharedController ?: remember(currentVersion, releaseSource, scope) {AndroidUpdateController(currentVersion, releaseSource, scope)}
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val state by controller.state.collectAsState()
-    DisposableEffect(controller, lifecycle) {
+    DisposableEffect(controller, lifecycle, sharedController) {
+        if (sharedController != null) return@DisposableEffect onDispose {}
         controller.setForeground(lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
         val observer = LifecycleEventObserver {_, _ -> controller.setForeground(lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))}
         lifecycle.addObserver(observer)
