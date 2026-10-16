@@ -40,14 +40,33 @@ class SessionMetrics072ScreenTest {
         val layouts=mutableListOf<TextLayoutResult>()
         node.performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(layouts)}
         val layout=layouts.single()
-        val detail="$tag text=${layout.layoutInput.text}, size=${layout.size}, lines=${layout.lineCount}"
-        assertFalse("Activity metrics must wrap without overflow: $detail",layout.hasVisualOverflow)
+        val visible=node.fetchSemanticsNode().boundsInRoot
+        val lineMeasurements=(0 until layout.lineCount).joinToString {line->
+            "line$line(left=${layout.getLineLeft(line)},right=${layout.getLineRight(line)},top=${layout.getLineTop(line)},bottom=${layout.getLineBottom(line)},baseline=${layout.getLineBaseline(line)},start=${layout.getLineStart(line)},end=${layout.getLineEnd(line)},visibleEnd=${layout.getLineEnd(line,visibleEnd=true)},ellipsis=${layout.isLineEllipsized(line)})"
+        }
+        val detail="$tag text=${layout.layoutInput.text}, size=${layout.size}, lines=${layout.lineCount}, "+
+            "rawHasVisualOverflow=${layout.hasVisualOverflow}, overflowWidth=${layout.didOverflowWidth}, overflowHeight=${layout.didOverflowHeight}, "+
+            "paragraphWidth=${layout.multiParagraph.width}, paragraphHeight=${layout.multiParagraph.height}, "+
+            "didExceedMaxLines=${layout.multiParagraph.didExceedMaxLines}, constraints=${layout.layoutInput.constraints}, "+
+            "density=${layout.layoutInput.density}, maxLines=${layout.layoutInput.maxLines}, softWrap=${layout.layoutInput.softWrap}, "+
+            "overflow=${layout.layoutInput.overflow}, style=${layout.layoutInput.style}, visibleBounds=$visible, $lineMeasurements"
+        val diagnosticId=id.replace(Regex("[^A-Za-z0-9_-]"),"_")
+        File(compose.activity.getExternalFilesDir(null),"sessions072-layout-$diagnosticId.txt").writeText(detail)
+        // Capture the actual Compose scene before a failing assertion tears down the Activity.
+        screenshot("diagnostic-$diagnosticId")
+        // Observed on the unchanged f7 product: the pre-layout paragraph retains the parent's
+        // 765px max width while Text shrink-wraps to 275px. The line right/visible bounds are
+        // both 275px and all 25 characters are visible, so the raw width flag is not clipping.
+        // Verify painted line bounds and ancestor bounds below instead of that container flag.
+        assertFalse("Activity metrics must fit vertically: $detail",layout.didOverflowHeight)
+        assertFalse("Activity metrics must not exceed the line budget: $detail",layout.multiParagraph.didExceedMaxLines)
+        assertEquals("Every activity character must remain visible: $detail",expected.length,
+            layout.getLineEnd(layout.lineCount-1,visibleEnd=true))
         repeat(layout.lineCount) {line->
             assertFalse("Activity metrics must not ellipsize: $detail",layout.isLineEllipsized(line))
             assertTrue("Activity line must fit horizontally: $detail",layout.getLineLeft(line)>=-.5f && layout.getLineRight(line)<=layout.size.width+.5f)
             assertTrue("Activity line must fit vertically: $detail",layout.getLineBottom(line)<=layout.size.height+.5f)
         }
-        val visible=node.fetchSemanticsNode().boundsInRoot
         assertTrue("Activity node must not be clipped by its ancestors: $detail; visible=$visible",
             visible.width>=layout.size.width-1f && visible.height>=layout.size.height-1f)
     }
