@@ -1,3 +1,20 @@
+# 当前发行文件名已统一正式编号
+
+2026-10-16，按用户后续明确要求，停止旧编号兼容发行，正式 [v0.72.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.72.0-01) 直接作为GitHub latest。默认下载及本次两个发行入口中的APK均统一为 `token-monitor-android-0.72.0-01.apk`；旧兼容入口标记为已停用，不再承担更新发现。历史Tag保留追溯，未改写提交，更早已发布版本仍属于历史档案。
+
+- [统一的latest下载链接](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest/download/token-monitor-android-0.72.0-01.apk)；[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.72.0-01)。
+- APK仍为15,305,354 bytes，SHA-256 `db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977`，versionName0.72.0-01/code76，沿用正式签名。仅更正发行名称、latest选择和校验清单；没有重建产品APK或增加一套应用版本。
+- 原兼容附件通过GitHub资产改名保留同一asset ID及digest；对应SHA256SUMS已同步新文件名，SOURCE与VALIDATION历史快照保持追溯。两条当前入口的APK名称及校验清单均经公开读回核对；实际匿名latest下载返回正确Content-Disposition文件名，APK完整下载SHA与原包一致。
+- 当前更新相关12项JVM测试通过；最终已发布APK上2项模拟器检查通过：真实匿名Android客户端读取新的正式latest及精确正式APK链接，当前版本说明与检查无重复更新循环。真实HTTP结果与输入官方实时元数据的UI检查分开记录。首次宿主匿名API403限流保留，随后公开下载/API及模拟器实际匿名查询完成通过，没有用鉴权替代模拟器匿名结果。
+- 证据目录 `evidence/desktop-072/canonical-naming/`，含改名前后元数据、资产改名、公开下载与校验、测试包指纹及模拟器结果。更新入口验收默认使用正式Tag/文件名；历史桥接解析测试保留用于已有版本比较。
+
+仅支持三段数字旧编号的旧客户端无法解析新的正式latest，需要手动下载上述APK覆盖安装一次。包名和正式签名兼容，不需要卸载或清数据。该影响是用户明确停止旧编号策略后的边界，不能继续声称旧更新器当前仍能自动发现。未来发布遵循 [VERSIONING.md](../VERSIONING.md) 与AGENTS正式编号规则，不再生成旧编号兼容发行。
+
+
+本次名称更正由用户明确要求“发布的 APK 文件名还是有老的版本号，彻底摒弃以前版本号，用新的版本号命名”直接授权，取代原双编号及默认发行不可变命名策略；APK资产ID和内容保持，Git Tag未改写。原 `/releases/download/v0.2.67/token-monitor-android-0.2.67.apk` URL已停止使用，不保留旧名别名，当前下载转向正式入口。原SHA256SUMS逐字归档于 [改名前校验清单](release-records/0.72.0-01/SHA256SUMS.before-canonical-naming.txt)，便于核对此前已下载的旧文件名及同一APK字节；归档不是当前下载清单。
+
+以下原双编号发行、旧更新器通过结果和附件命名均是此次改名前的历史验收快照。
+
 # 0.72.0-01 / code76 正式公开发布回执
 
 2026-10-16（Asia/Shanghai），[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.72.0-01)于14:05:41Z／北京时间22:05:41公开，[latest兼容v0.2.67](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.67)于14:05:44Z／22:05:44公开。两固定Tag均指向PR #7合入提交 [3c4d2d673605ba9359d66a577dce4488c4bfc083](https://github.com/Gott-mit-Uns/token-monitor-android/commit/3c4d2d673605ba9359d66a577dce4488c4bfc083)，build为5b1fb385b731bd7081fcf54e108510df4f6943c7；兼容标题严格Token Monitor Android v0.72.0-01，不是独立产品版本。

@@ -1,3 +1,5 @@
+2026-10-16 命名规则更新：正式v0.72.0-01直接作为latest，当前APK统一使用正式编号，停止旧编号兼容发行；下文此前桥接策略与对应测试仅保留历史证据。现行规则见[VERSIONING](../VERSIONING.md)。
+
 # Desktop 0.72: Android update and OpenCode contract
 
 Locked desktop tag `v0.72.0`, commit `126e9a43dcc51d3d7b2609231eac9974ba73bed7`. This document covers #1060 and #1065 only, not the complete alignment claim. No NAS device, installation, source or deployment is modified by this task.
