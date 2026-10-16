@@ -8,10 +8,16 @@ import androidx.lifecycle.viewModelScope
 internal val LocalAndroidUpdateController = staticCompositionLocalOf<AndroidUpdateController?> { null }
 
 /** Activity recreation retains the request and throttle; no worker, alarm or background wakeup. */
-class AndroidUpdateModel(application: Application) : AndroidViewModel(application) {
+class AndroidUpdateModel internal constructor(
+    application: Application,
+    source: AndroidReleaseSource,
+    installedVersion: String
+) : AndroidViewModel(application) {
+    constructor(application: Application) : this(application, GitHubAndroidReleaseSource(),
+        application.packageManager.getPackageInfo(application.packageName, 0).versionName.orEmpty())
     private val preferences = application.getSharedPreferences("android-release-check", 0)
     internal val controller = AndroidUpdateController(
-        application.packageManager.getPackageInfo(application.packageName, 0).versionName.orEmpty(), GitHubAndroidReleaseSource(), viewModelScope,
+        installedVersion, source, viewModelScope,
         loadLastAutomaticCheck = { preferences.getLong("last-success-ms", 0L) },
         saveLastAutomaticCheck = { preferences.edit().putLong("last-success-ms", it).apply() },
         loadLastAutomaticFailure = { preferences.getLong("last-failure-ms", 0L).takeIf { it > 0L } },
@@ -21,6 +27,10 @@ class AndroidUpdateModel(application: Application) : AndroidViewModel(applicatio
             }.apply()
         }
     )
+    /** Configuration recreation keeps this retained model and its single in-flight request. */
+    fun onActivityStopped(changingConfigurations: Boolean) {
+        if (!changingConfigurations) setForeground(false)
+    }
     fun setForeground(active: Boolean) {
         controller.setForeground(active)
         if (active) controller.checkOnForeground()

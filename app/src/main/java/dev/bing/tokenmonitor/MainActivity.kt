@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
     private val localPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { localAllowed.value = HubLocalPermission.granted(this) }
     private val networks by lazy { HubNetworkObserver(this, model::updateNetworkScope) }
     override fun onStart() { super.onStart(); localAllowed.value = HubLocalPermission.granted(this); networks.start(); model.setForeground(true); androidUpdates.setForeground(true) }
-    override fun onStop() { networks.stop(); model.setForeground(false); androidUpdates.setForeground(false); super.onStop() }
+    override fun onStop() { networks.stop(); model.setForeground(false); androidUpdates.onActivityStopped(isChangingConfigurations); super.onStop() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
