@@ -73,6 +73,23 @@ class SyncDeviceGridScreenTest {
         screenshot("hub-dynamic-offline")
     }
 
+    @Test fun explicitHubNameDisplaysOverIpAndSurvivesOfflineThenClearsWithLegacySnapshot() {
+        val snapshot=HubParser.parse("""{"hub":{"displayName":"DXP4800"},"periods":{"today":{}},"devices":[]}""")
+        val endpoint="http://192.168.31.12:17321"
+        val value=mutableStateOf(HubState(snapshot=snapshot,connectedEndpoint=endpoint,lastSuccessfulEndpoint=endpoint))
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
+            Column(Modifier.width(320.dp).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
+        }}}
+        complete("sync-hub-destination","Hub: DXP4800")
+        complete("sync-hub-address",endpoint)
+        compose.runOnIdle {value.value=value.value.copy(connectedEndpoint=null,error=R.string.error_no_network)}
+        complete("sync-hub-destination","Hub: DXP4800")
+        complete("sync-hub-status","离线 · 上次连接的 Hub")
+        screenshot("hub-explicit-name-offline")
+        compose.runOnIdle {value.value=value.value.copy(snapshot=HubParser.parse("""{"periods":{"today":{}},"devices":[]}"""))}
+        complete("sync-hub-destination","Hub: 名称未知")
+    }
+
     private fun mount(width:Int,font:MutableState<Float>,state:HubState) {
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
             val density=LocalDensity.current

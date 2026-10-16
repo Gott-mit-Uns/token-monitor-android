@@ -6,12 +6,12 @@ internal enum class SyncEndpointStatus { CONFIGURED, CURRENT, PREVIOUS }
 
 internal object SyncSettingsPresentation {
     /** Display-only mapping; the phone never becomes a collector or changes its sync identity. */
-    fun phoneModel(model:String):String = when(model.trim()) {
-        "2304FPN60C"->"Xiaomi 13 Ultra"
+    fun phoneModel(model:String):String = when(model.trim().uppercase(java.util.Locale.ROOT)) {
+        "2304FPN60C", "2304FPN6DC"->"Xiaomi 13 Ultra"
         else->model.trim()
     }
-    /** The Hub contract has no host display name. A DNS hostname is usable as-is, an IP is not a device name. */
-    fun hubHostName(state:HubState):String? = runCatching {
+    /** Prefer the accepted snapshot's name. Legacy Hubs fall back to a DNS host, never a collector/IP guess. */
+    fun hubHostName(state:HubState):String? = HubDisplayName.normalize(state.snapshot?.hubDisplayName) ?: runCatching {
         val endpoint=state.connectedEndpoint ?: state.lastSuccessfulEndpoint ?: return null
         val host=java.net.URI(ConnectionDisplay.address(endpoint) ?: return null).host ?: return null
         host.takeUnless {it.contains(':') || it.removeSurrounding("[","]").all {c->c.isDigit() || c=='.'}}

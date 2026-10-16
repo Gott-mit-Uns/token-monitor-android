@@ -13,7 +13,7 @@ class HubStoreTest {
         val store = HubStore(context, name)
         val file = File(context.noBackupFilesDir, name)
         val generated = UUID.randomUUID().toString()
-        val record = SavedHub("https://example.invalid", generated, """{"periods":{"today":{"totalTokens":5000000123}}}""", 1234, "http://192.168.31.12:17321",
+        val record = SavedHub("https://example.invalid", generated, """{"hub":{"displayName":"DXP4800"},"periods":{"today":{"totalTokens":5000000123}}}""", 1234, "http://192.168.31.12:17321",
             """{"daily":[{"date":"2026-10-09","tokens":123}],"monthly":[]}""", """{"subscriptions":[]}""", mapOf("fixture-desktop" to "示例电脑"),
             """{"ok":true,"value":{"modelAliases":{"vendor/model":"model"},"modelAliasGrouping":"off"}}""", """{"ok":true,"version":1,"revision":1,"value":[{"modelId":"fixture-model","inputPerM":0}]}""")
         record.hubBuild=HubBuildInfo("node-hub",1,78,HubBuildRegistry.entries.getValue("core").getValue(78L),5,HubBuildRegistry.entries.getValue("node-hub").getValue(5L))
@@ -27,10 +27,14 @@ class HubStoreTest {
             val bytes = file.readBytes()
             assertEquals(2, bytes[0].toInt())
             assertFalse(bytes.toString(Charsets.ISO_8859_1).contains(generated))
+            assertFalse(bytes.toString(Charsets.ISO_8859_1).contains("DXP4800"))
             val loaded = HubStore(context, name).load()!!
             // Assert boolean equality so a failure never prints credential content.
             assertTrue(loaded.credential == generated)
             assertEquals(5000000123L, HubParser.parse(loaded.snapshot).periods.getValue("today").tokens)
+            val restored=HubParser.parse(loaded.snapshot)
+            assertEquals("DXP4800",restored.hubDisplayName)
+            assertEquals("DXP4800",SyncSettingsPresentation.hubHostName(HubState(snapshot=restored,lastSuccessfulEndpoint=record.address)))
             assertEquals(1234L, loaded.savedAt)
             assertTrue(loaded.lanEnabled)
             assertFalse(loaded.endpointsAssociated)
