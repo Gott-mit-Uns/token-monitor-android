@@ -1,3 +1,5 @@
+2026-10-16 **Android0.72.0-01/code76已正式公开**：正式v0.72.0-01与latest兼容v0.2.67两Tag同PR #7源码3c4d2d6，最终APK db90保持；514单元、Lint0错误及受影响9＋2通过，17b7视觉78限定继承。公开Android查询／旧原解析器与真实官方64→75→匿名公开76升级／冷保留已验；两Release共8附件已匿名完整下载并核验，两APK字节相同，size／GitHub digest／SHA256SUMS／SOURCE全部匹配。完整回执见[GITHUB_PUBLICATION.md](GITHUB_PUBLICATION.md)及[联合交接最新节](HANDOFF_0.72.0-01.md)。NAS PR #11已合并并随NAS0.72.0-02发布，实际部署未验收；真机／真实Cursor／生产手机网络边界保持。以下为历史阶段记录。
+
 2026-10-16 本轮固定桌面v0.72.0，Android0.72.0-01/code76联合候选：逐项实现、Hub依赖和桌面排除见[对齐清单](DESKTOP_072_ALIGNMENT.md)，实际验证/发布状态见[本轮交接](HANDOFF_0.72.0-01.md)。此前0.71设置与日历优化已包含，配套NAS0.72发行纳入协议核对；不代表生产部署或全平台完整对齐。
 
 # v0.70 可选供应商字段增量
@@ -6,9 +8,9 @@
 
 # Android Hub API 合同与 v0.69 增量
 
-## 待联合验收：Hub 显示名称
+## 已发布Android兼容：可选Hub显示名称合同
 
-NAS 名称修复 PR #11 提供可选的鉴权 stats 顶层 `hub.displayName`，普通/Windows SSE 完整快照相同；公开 health 无名称。Android 仅从成功接受的权威快照读取，HTTP/SSE projection 保留该字段，限制为非空字符串、最多 80 个 Unicode 码点、无控制/格式/孤立代理码点。显示元数据不是稳定实例 ID，不参与端点关联或鉴权。
+NAS名称修复PR #11已合并，合同随NAS v0.72.0-02/source0f748427发布；实际部署未验收。该合同提供可选的鉴权 stats 顶层 `hub.displayName`，普通/Windows SSE 完整快照相同；公开 health 无名称。Android 仅从成功接受的权威快照读取，HTTP/SSE projection 保留该字段，限制为非空字符串、最多 80 个 Unicode 码点、无控制/格式/孤立代理码点。显示元数据不是稳定实例 ID，不参与端点关联或鉴权。
 
 名称随原始快照进入既有加密缓存，无新存储信封、请求或轮询；离线读取旧快照，freshness 不修改名称，新的 full snapshot 缺字段则回到旧 Hub 的 DNS/名称未知行为。不根据采集设备 ID、IP 或产品型号猜 Hub 名称。只更新 Android 不足以使未提供字段的旧 Hub 显示 DXP4800。联合交接见 `HANDOFF_HUB_DISPLAY_NAME.md`。
 
