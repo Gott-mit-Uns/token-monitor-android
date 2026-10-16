@@ -1,0 +1,62 @@
+[
+  {
+    "image": "about-light.png",
+    "source": "evidence/desktop-072/ui-joint-final/normal/false/compact-about-light.png",
+    "sha256": "7f0a88d535d6ccada26ebf4d4f5e55f99fb58b9aeaba333b85810195c922e7b5",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "fonts-dark-320-font2.png",
+    "source": "evidence/desktop-072/ui-joint-final/normal/false/compact-fonts-dark-320-2.0.png",
+    "sha256": "8b5c78342cae9d880d7ab5782f205054ef9ac930236e588e8e04920b4636e2ca",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "records-daily.png",
+    "source": "evidence/desktop-072/ui-joint-final/normal/false/compact-records-daily.png",
+    "sha256": "eb8d9f7c9c0aeb7b79159140e1234d439bb361beb43d0c0f9a8bf96713936f8e",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "records-monthly.png",
+    "source": "evidence/desktop-072/ui-joint-final/normal/false/compact-records-monthly.png",
+    "sha256": "d1d02c1335587f3a0f0c6bdc7fffbad03f4733a72f60ddf43f01e16761d02ffc",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "subscriptions-light.png",
+    "source": "evidence/desktop-072/ui-joint-final-shared/normal/false/shared-subscriptions-light.png",
+    "sha256": "409e265625d5a3f437968673d65ddd3c78e7d5485a849f227c2eeecd2dea71a6",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "hub-name-offline.png",
+    "source": "evidence/desktop-072/ui-joint-final-remaining/normal/true/settings064-sync-hub-explicit-name-offline-dark.png",
+    "sha256": "cf5476a45174394f85001ce290d958fe1ac6a1388aa661604065da881693b15c",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "cursor-limits-light.png",
+    "source": "evidence/desktop-072/ui-joint-final-remaining/normal/false/cursor-072-limits-light-1.0.png",
+    "sha256": "9e0507eb540cf0ad9d878b52d8d32a0668b13dad1d325e86e86606e63c6c3f46",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "cursor-home-dark-font2.png",
+    "source": "evidence/desktop-072/ui-joint-final-remaining/normal/false/cursor-072-home-dark-2.0.png",
+    "sha256": "a25ba917532831f39df916334380dfa5517eb5083b122ebe98b9166c1931aae9",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "sessions-light-320-font2.png",
+    "source": "evidence/desktop-072/ui-joint-final-remaining/system320-font2/false/sessions072-light-group.png",
+    "sha256": "41ed929c06d7c3e174d96afc91d1b69a4eebac635435f9ab20641c6ad9be561e",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  },
+  {
+    "image": "sessions-dark-missing-320-font2.png",
+    "source": "evidence/desktop-072/ui-joint-final-remaining/system320-font2/false/sessions072-dark-missing.png",
+    "sha256": "4318ea0908d998780535efd74f7ec0c63d90cf729ae61d1538ab898ee3eb272b",
+    "productionApkSha256": "17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991"
+  }
+]

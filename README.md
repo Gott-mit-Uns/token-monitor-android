@@ -1,6 +1,6 @@
 # Token Monitor Android
 
-当前正式版本为 [`0.71.0-02` / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)：统一紧凑设置、页内只读配置、设备与 Hub 卡片及日／月记录日历。固定功能基线保持桌面 v0.71.0，指定界面样式对照实际桌面 v0.72.0。正式入口与同字节旧版更新兼容入口 v0.2.66 见 [版本规则](VERSIONING.md)，实施及验收边界见 [联合交接](docs/HANDOFF_COMPACT_UI.md)。原工作区未提交修改保留，Widget 仍移除，未启用 R8／资源瘦身。[本轮改前／改后原图](docs/UI_COMPACT_COMPARISON_0.71.0-02.md)。
+当前 `0.72.0-01` / code76 已完成最终包本地验收，处于**候选等待正式公开发布与读回**状态。固定对齐桌面 [v0.72.0](https://github.com/Javis603/token-monitor/releases/tag/v0.72.0)，最终签名APK `17b7470e…1991` 已通过511项单元、78次API36模拟器专项、真实匿名Android桌面Release查询、原64合成缓存／偏好保留与明确opt-in的独立冷启动主页、设置重建／后台恢复检查；Lint为0错误、104警告、1提示。公开Release／下载／Android新旧更新器读回尚未完成，不能提前称已发布。正式版本仍为 [0.71.0-02 / code75](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-02)。计划正式入口 `v0.72.0-01` 与同字节latest兼容 `v0.2.67`。范围见[逐项对齐](docs/DESKTOP_072_ALIGNMENT.md)，78次的18＋54＋6批次、历史候选、升级与剩余门槛见[联合交接](docs/HANDOFF_0.72.0-01.md)，[10张最终包截图](docs/UI_072_VALIDATION.md)均为模拟器合成fixture。紧凑设置与日／月日历保留，Widget不恢复、R8不启用。可选Hub名称的 NAS PR #11仍open未部署；旧Hub保持诚实降级。
 
 
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。

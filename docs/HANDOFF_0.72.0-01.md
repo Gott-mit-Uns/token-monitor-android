@@ -1,5 +1,7 @@
 # Android 0.72.0-01 联合交接
 
+**当前状态：最终17b7封包完成511单元、78专项及明确opt-in冷启动／升级等本地验收；候选等待正式公开发布与读回。历史事件保留，最新结果见文末。**
+
 本轮目标固定桌面 v0.72.0 `126e9a43dcc51d3d7b2609231eac9974ba73bed7`，Android `0.72.0-01` / code76，latest兼容计划为 `v0.2.67`。包名、正式证书、历史版本及未提交原工作区保持；Widget不恢复，R8不实施。完整提交/排除/数据依赖清单见 [逐项对齐](DESKTOP_072_ALIGNMENT.md)。
 
 ## 联合范围
@@ -40,4 +42,52 @@
 
 合并前7c951cb对应正式签名候选453476…实际完成63次UI（普通及真实320dp系统font2、浅深色、分组/额度/日历/设置/更新）以及原64缓存与四偏好经75→候选76、真实默认Store75→候选76冷主页保留。首次截图检查发现大字体指标速度被省略，因此这63次不是最后联合包完成声明；后续将活动行自然换行，补无ellipsis/无视觉溢出/无祖先裁切断言，并在联合包复验。
 
-跨绑定名称测试补充真实ViewModel A有名→B旧Hub无名、同地址更换credential、旧有名响应迟到不复活、缓存跟随新绑定；实际snapshot→forged freshness→无名stats链保持计数及费用并清除旧名。姓名不再在独立设置或未隔离的缓存中存储。
+跨绑定名称测试补充真实ViewModel A有名→B旧Hub无名、同地址更换credential、旧有名响应迟到不复活、缓存跟随新绑定；实际snapshot→forged freshness→无名stats链保持计数及费用并清除旧名。名称不另存于独立设置或未隔离的缓存。
+
+
+## 历史前候选f7验收回执（随后已被17b7替代）
+
+生产 APK 对应源码 `434c5110d4fb62677ca32dc02b7661a62ffc20ee`，app tree `131c8f1282d71cc4ddbc4afab1a302b2bea73e00`；`evidence/desktop-072/joint76/app-release.apk` 为 15,305,354 bytes，SHA-256 `f7bdecde08f7a4bab32d21ef94988a64afa8a67a51e800c7da998cf45530f2e1`。包名 `dev.bing.tokenmonitor.nativeclient`、版本 `0.72.0-01` / code76、既有正式证书保持。最终文档或纯测试提交若后续变化，必须在发布材料记录最终 Tag commit 与上述生产 app tree 的关系；用户随后新增范围触发新封包，旧f7保留为前候选证据，后续新包必须另记身份和复验结果。
+
+- 完整单元 **511 通过，0 失败／错误／跳过**；完整 Lint **0 error、104 warning、1 hint**。这些现存告警没有被隐去，不宣称零告警。
+- 最终 f7 生产包的模拟器验收 **78 次通过**：`ui-joint/summary.json` 中成功40次，`ui-joint-remaining/summary.json` 成功34次，`session-geometry-final/summary.json` 成功4次。包括日／月日历、紧凑字体／只读价格／额度设置、订阅入口与去重、Hub两列卡及离线名称、Cursor独立额度和预付、Android更新、加密缓存与会话指标；普通和真实320dp系统fontScale2、浅深色范围以各测试实际记录为准，不把每项都扩称四种配置全通过。
+- 前74次使用测试 APK SHA `7aa0b789699b99df9f9665ae98f3247524d38f1bb5f5ea5c5b97f62255a7db12`。会话用例首轮在测试几何断言处失败，保留原日志／图；后续仅修正测试断言，生产APK仍为同一 f7，最终4次使用测试 APK SHA `4504878671a74df71ce28cc60070dde92c91cd9d9ab942161553319c51ee6411`。最后普通及320dp/font2两轮各2项通过，实际大字体会话调用／缓存率／速度自然换行且不省略。不能把初次失败写成一次性78全绿。
+- 最终 f7 已实际覆盖安装，`joint76/app-release.apk-install.txt` 为 Success，`joint76/cold/installed-sha.txt` 回读安装包与f7一致。独立冷启动记录 `LaunchState: COLD`，`ColdProcessAcceptanceTest` 通过；初始64公开fixture及四份偏好在冷启动后由 `SignedUpgradeTest` 再次检查通过。路径 `evidence/desktop-072/joint76/cold/`。
+- 真实匿名Android OkHttp桌面最新版查询另1项通过，记录 `joint76/desktop-public-client.txt`；这是桌面Release查询，不能代替发布后Android自身latest链路验收。
+- 当前产品源码 `434c511` 的自动代码审查 completed、无发现／无未解决发现；security_review 返回空状态，不能称安全审查通过。仓库未配置 GitHub Actions，不存在本轮远程CI成功记录。
+
+### 必须保留的升级链边界
+
+真实官方旧 APK `0.2.64` / code73（SHA `df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56`）先生成一次隔离公开测试缓存和四份偏好，再覆盖至官方 `0.71.0-02` / code75（SHA `d66aaa321ed8de6c8021f709141266018ee50a8c06114f05fe0f431518320ef3`）。随后覆盖到退役候选 code76（SHA `4534763381303b08e71cf4580929b3c9cc78428f0b4ae0b15bc2b673a67605b3`），再原位覆盖到最终 f7 code76，并实际校验缓存／偏好保留。全程保留原应用数据，不卸载／清数据。退役候选从未公开发布，最终相同versionCode的原位替换只属于本地候选验证；正式75→76版本顺序与同证书安装仍成立。此前63次UI属于退役候选，不计入最终78。
+
+真实默认HubStore的75→退役76冷主页检查是此前独立路径；最终f7又实际冷启动并执行默认Store主页及原64隔离fixture保留检查，不能把两类存储或真实用户历史混为一谈。这里证明合成缓存与选定偏好的保留，不证明所有用户私有历史已真机迁移。
+
+### 发布前后仍需收尾
+
+目前是本地验收完成，正式Release未完成。仍须核对最终Tag提交、同字节正式／兼容APK和SHA附件、更新说明、公开Release/附件下载回读，并分别用旧更新器和当前候选读取实际公开metadata。拟发布metadata的旧APK验收不能代替发布后验收。现场Hub只读观察、主机端网络读取与模拟器fixture均不能冒称真实手机Hub/公网验收。
+
+可选友好Hub名称的 NAS PR #11 仍未合并／部署，本次Android支持字段及明确降级不以该服务端功能已上线为前提。新版真机、真实Cursor X账号／余额、真实OpenCode采集和公网Hub、Wi-Fi/蜂窝/OEM后台仍未验证。关键截图仅选最终f7成功记录，见 [最终候选界面证据](UI_072_VALIDATION.md)。
+
+
+## 历史阶段：0cf041e补丁纳入并触发重新封包
+
+前述f7、511单元、78专项、冷启动及真实桌面查询均属于生产源码434c511的前候选，证据保留。侧边新增 `0cf041e`：会话Text使用fillMaxWidth，两个Hub fixture补上主题背景；这三处修复按用户联合范围纳入。生产APK即将重新构建，当前不能将f7称作待发布最终附件，也不能把其78次直接改写成新包执行通过。后续追加新源码／app tree／生产APK及测试APK指纹、单元Lint与受影响模拟器／冷启动／升级回执，再定最终发布材料。截图文档暂保留明确标记的前候选来源，Hub深色需以新主题背景图补充。
+
+NAS PR #11当前头为 `1a0e570`，仍open，未merge／部署。此状态不因Android重新封包而改变。
+
+
+## 最终17b7封包：本地验收完成，候选等待公开发布／读回
+
+本节取代前述阶段性的“重新封包待收尾”状态；原始失败及历史候选记录保留。最终生产APK位于 `evidence/desktop-072/joint-final76/app-release.apk`，**SHA-256 `17b7470e0a52b23a5e624d88f66999f9a3f91197b0cc964edab814dc70ac1991`**，15,305,354 bytes，Android0.72.0-01/code76。buildCommit为 `16f92a759c62522da94070f8acd5dd04e5ab5b45`，构建时整个app树 `17ca03a297a669515f58796af4fef03c43e9d8ad`（含androidTest，仅作构建记录）；包括会话完整行宽与Hub测试主题背景修复。包名和正式签名连续性保持。
+
+- **511单元通过，0失败／错误／跳过；Lint 0错误、104警告、1提示**。证据 `joint-final76/unit-summary.json`、`lint-summary.json`。
+- **同一17b7生产APK的78次API36模拟器专项完成**：`ui-joint-final` 成功18，`ui-joint-final-remaining` 成功54，`ui-joint-final-shared` 成功6。18＋54＝72次使用测试APK SHA `c116eb6e3b968b4ec183a6eba06efc478c75d082c8c143d8805aeadd17dfc200`；最后6次使用 `6439190bbc9a405a48b8bfca870ac2f77100acc9a29a419f5baec195f2354502`。生产APK始终17b7，不能把f7的78移记到本包。
+- SharedData首轮及独立复跑两次 `ComposeNotIdle` 失败原样保留。测试未注入仓库时钟，retarget的 `System.nanoTime` 与Compose虚拟 `withFrameNanos` 混用；仅在SharedData测试补已有 `CompositionLocalProvider` 时钟，未关闭动画、修改产品或放宽断言。校正后普通浅深各2项和系统320dp/font2浅深各1项，共6项通过。成功78为明确分批结果，不称一次运行全绿。
+- 最终包**真实匿名Android OkHttp桌面Release查询1项通过**（`joint-final76/desktop-public-client.txt`）；原64合成缓存／历史及四份偏好在最终包的 `SignedUpgradeTest` **1项通过**（`joint-final76/cold/original64-retained.txt`）。这些独立于78，不膨胀UI用例数；桌面查询不能替代公开Android自身latest检查。
+- 最终包独立启动为 **LaunchState: COLD**，安装包SHA回读与17b7一致。明确带 `ownedEmulator=true` 的默认Store主页检查 `default-home-opted-in.txt` 和设置重建／后台恢复 `settings-recreate-opted-in.txt` 各实际 **OK(1 test)**，均有执行点号。早先不带opt-in的 `default-store.txt` 输出OK3，但三项受assumption跳过，**不计作三项冷启动通过**；原记录保留。证据均在 `joint-final76/cold/`。这些是模拟器公开fixture和选定偏好，不代表真实用户全部私有历史。
+- [最终界面证据](UI_072_VALIDATION.md) 的10张图已全部更新为17b7成功记录：会话来自新包，Hub深色补正确主题背景，订阅来自校正时钟后的成功测试。来源及每张SHA见 `docs/images/alignment-072/manifest.json`；无旧候选图冒充新包。
+
+正式v0.72.0-01／latest兼容v0.2.67尚未在本记录宣称发布。最终Tag提交若随后增加纯测试／文档，须对比 `app/src/main` 与全部Gradle生产构建输入的对象ID和buildCommit16f92a7一致，不能要求含测试的整个app树不变；上传同字节17b7正式／兼容APK后执行公开元数据、附件下载校验与新旧更新器读回。公开回执追加后才能更新“正式发布完成”。NAS PR #11仍open未合并部署，真机／真实Cursor账号与生产Android网络边界保持。
+
+
+最终源码绑定以 `joint-final76/production-source-trees.json` 的六条输入为准：`app/src/main`、`app/build.gradle.kts`、`build.gradle.kts`、`settings.gradle.kts`、`gradle.properties`、`gradle/wrapper/gradle-wrapper.properties`。最终Tag与16f92a7逐项比较这些对象ID，发布 `SOURCE.json` 载入同一记录。SharedData测试变更会改变整个app树，故17ca仅为build时历史树记录，不作最终Tag必须相等的门槛。APK未声称嵌入源码commit：AGP报告 `NO_VALID_GIT_FOUND`，绑定依据是封包SHA、构建记录及上述生产输入比对。
