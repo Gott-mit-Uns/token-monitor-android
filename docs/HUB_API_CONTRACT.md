@@ -1,3 +1,5 @@
+2026-10-16 本轮固定桌面v0.72.0，Android0.72.0-01/code76联合候选：逐项实现、Hub依赖和桌面排除见[对齐清单](DESKTOP_072_ALIGNMENT.md)，实际验证/发布状态见[本轮交接](HANDOFF_0.72.0-01.md)。此前0.71设置与日历优化已包含，配套NAS0.72发行纳入协议核对；不代表生产部署或全平台完整对齐。
+
 # v0.70 可选供应商字段增量
 
 2026-10-14。CatPaw沿用`clients.catpaw`、clientModels及session client，不新增必需字段；MiniMax按量余额是billing/credits窗口的`remaining`金额及`currency`（CNY/USD），不是Token限额或百分比。不跨币种加总、不转换余额、缺失不作零；旧Hub无字段保留原展示。全量/HTTP/SSE/freshness/旧缓存兼容和生产无provider观察见HUB_070_DEPENDENCIES.md。以下原合同保留。

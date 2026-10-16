@@ -81,6 +81,8 @@ class SessionPerformance070Test {
         assertEquals("waiting",SessionDisplay.activity(SessionDisplay.recent(snapshot,now).first {it.id=="waiting-older"},now))
         assertEquals(snapshot.periods.getValue("month").tokens,base.periods.getValue("month").tokens)
     }
+    private fun legacyColumns(rows:List<SessionListRow>)=rows.map {it.copy(groupMetrics=null,groupRole=null)}
+    private fun legacyPage(page:SessionListPage)=page.copy(rows=legacyColumns(page.rows))
     @Test fun titleGroupingPaginationAndAccountingMatchFrozenAndroid061() {
         for(size in listOf(2_000,10_000)) for(related in listOf(false,true)) for(hidden in listOf(false,true)) {
             val snapshot=fixture(size,related)
@@ -88,10 +90,10 @@ class SessionPerformance070Test {
             assertEquals(expectedRaw,actualRaw)
             val expected=LegacySessionList070.grouped(expectedRaw,now=now,zone=zone)
             val actual=SessionListDisplay.grouped(actualRaw,now=now,zone=zone)
-            assertEquals(expected,actual)
+            assertEquals(legacyColumns(expected),legacyColumns(actual))
             assertEquals(actualRaw.fold(BigInteger.ZERO) {sum,row->sum+row.tokens},actual.fold(BigInteger.ZERO) {sum,row->sum+row.tokens})
             assertEquals(actualRaw.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)},actual.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)})
-            for(page in listOf(-1,0,1,19,99,999)) assertEquals(LegacySessionList070.page(expected,page),SessionListDisplay.page(actual,page))
+            for(page in listOf(-1,0,1,19,99,999)) assertEquals(legacyPage(LegacySessionList070.page(expected,page)),legacyPage(SessionListDisplay.page(actual,page)))
         }
     }
     @Test fun pairedSameDataBenchmarkReportsMedianAndP95WithoutChangingAcceptance() {
@@ -119,8 +121,8 @@ class SessionPerformance070Test {
             val related=raw(fixture(size,true),false)
             val grouped=SessionListDisplay.grouped(related,now=now,zone=zone)
             println("SESSION_070_COUNTS size=$size sourceRows=${snapshot.periods.values.sumOf {it.sessions.size}} homeEligible=${SessionDisplay.source(snapshot).size} homeDisplayed=${SessionDisplay.recent(snapshot,now).size} rawProjected=${rows.size} independentGroups=${SessionRelationshipGroups.group(rows,"Grok Bot",{"$it"},now).size} relatedGroups=${grouped.size} relatedMembers=${grouped.sumOf {if(it.review) it.reviews.size else 1}} pageDisplayed=${SessionListDisplay.page(grouped,0).rows.size}")
-            compare(size,"related-review-group",{LegacySessionList070.grouped(related,now=now,zone=zone)},
-                {SessionListDisplay.grouped(related,now=now,zone=zone)})
+            compare(size,"related-review-group",{legacyColumns(LegacySessionList070.grouped(related,now=now,zone=zone))},
+                {legacyColumns(SessionListDisplay.grouped(related,now=now,zone=zone))})
         }
     }
 }

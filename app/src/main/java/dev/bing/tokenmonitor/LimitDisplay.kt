@@ -29,6 +29,8 @@ internal object LimitDisplay {
         return remaining?.let { if (showUsed) 100 - it else it }
     }
     fun creditsPercent(window: Limit): Double? {
+        // Cash balances have no quota denominator; historical spend is separate.
+        if (window.provider == "cursor" && window.metric == "credits") return null
         finite(window.presentation.usedPercent)?.let { return 100 - it }
         finite(window.remaining)?.let { return it }
         val funds = (number(window.amount) ?: number(window.presentation.balanceAmount))?.coerceAtLeast(0.0) ?: return null
@@ -53,6 +55,7 @@ internal object LimitDisplay {
         fun rawCount() = pair(used?.let { if (showUsed) it else (cap?.minus(it) ?: return@let null) })
         fun remainingMoney() = pair(remaining?.let { if (showUsed) (cap?.minus(it) ?: return@let null).coerceAtLeast(0.0) else it },true)
         if (isSpend(window)) return LimitWindowText(used?.let { if (cap != null) "${money(it,window.currency)} / ${money(cap,window.currency)}" else "${money(it,window.currency)} spent" })
+        if (window.provider == "cursor" && window.metric == "credits") return LimitWindowText(creditsMoney(window))
         return when (window.provider.lowercase(Locale.ROOT)) {
             "notion" -> LimitWindowText(detail=rawCount())
             "commandcode" -> if (billing) LimitWindowText(detail=remainingMoney(),percentLeads=window.presentation.showMeter) else LimitWindowText()

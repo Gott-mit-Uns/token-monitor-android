@@ -13,7 +13,8 @@ internal data class SessionListRow(val id:String,val source:UsageRow?,val name:S
     val detail:String,val tokens:BigInteger,val cost:String,val unpriced:Long?,val sortTime:Long,val review:Boolean=false,
     val reviews:List<SessionListRow> = emptyList(),val groupKind:String?=null,val groupClient:String?=null,
     val groupModels:Map<String,BigInteger> = emptyMap(),val groupState:String?=null,val groupRole:String?=null,
-    val unpricedTotal:BigInteger?=unpriced?.let(BigInteger::valueOf))
+    val unpricedTotal:BigInteger?=unpriced?.let(BigInteger::valueOf),
+    val groupMetrics:SessionFamilyMetrics?=null)
 internal data class SessionListPage(val rows:List<SessionListRow>,val page:Int,val pageCount:Int,val start:Int,val end:Int,val total:Int) {
     val paginated get()=total>100
 }
@@ -52,12 +53,12 @@ internal object SessionListDisplay {
     fun cachePercent(row:UsageRow):Double? {
         val a=row.session?.accounting ?: return null
         val read=a.cacheRead.coerceAtLeast(0.0);val write=a.cacheWrite.coerceAtLeast(0.0)
-        if(read<=0 && write<=0) return null
+        if(!a.inputKnown || !a.cacheReadKnown || (row.tool!="goose" && !a.cacheWriteKnown) || (read<=0 && write<=0 && !a.cacheReported)) return null
         if(row.tool?.trim()?.lowercase(Locale.ROOT)=="goose") return a.input.takeIf {it>0}?.let {(read/it*100).coerceIn(0.0,100.0)}
-        return read/(a.input.coerceAtLeast(0.0)+read+write)*100
+        return (a.input.coerceAtLeast(0.0)+read+write).takeIf {it>0}?.let {read/it*100}
     }
     fun rate(row:UsageRow):Double {
-        val a=row.session?.accounting ?: return 0.0
+        val a=row.session?.accounting?.takeIf {it.timingKnown} ?: return 0.0
         val output=minOf(a.output.coerceAtLeast(0.0),a.timedOutput.coerceAtLeast(0.0))
         return if(a.timedDurationMs>0 && output>0) output*1000/a.timedDurationMs else 0.0
     }
@@ -70,7 +71,7 @@ internal object SessionListDisplay {
             val cache=cachePercent(row)?.let {if(it>0 && it<1) "<1%" else "${floor(it.coerceAtMost(100.0)+0.5).toInt()}%"}.orEmpty()
             val rate=floor(rate(row)+0.5).takeIf {it>0}?.let {"${integer(it)} tok/s"}.orEmpty()
             val activity=listOf(if(row.session?.archived==true) archivedLabel else "",time(at,now,zone),
-                if(!accounting.callsKnown) "Calls unknown" else if(accounting.calls>0) "${integer(accounting.calls)} ${if(accounting.calls==1.0) "call" else "calls"}" else "",cache,rate).filter(String::isNotEmpty).joinToString(" · ")
+                if(!accounting.callsKnown && row.tool=="goose") "Calls unknown" else if(accounting.callsKnown && accounting.calls>0) "${integer(accounting.calls)} ${if(accounting.calls==1.0) "call" else "calls"}" else "",cache,rate).filter(String::isNotEmpty).joinToString(" · ")
             SessionListRow(row.id,row,title.ifEmpty {parts},if(title.isEmpty()) activity else parts,if(title.isEmpty()) "" else activity,
                 idLabel(row.session?.sessionId ?: row.id),BigInteger.valueOf(row.tokens!!),row.cost?.let {runCatching {BigDecimal(it)}.getOrNull()}?.toPlainString() ?: "0",row.unpriced,at)
         }.let(::sorted)
@@ -92,7 +93,7 @@ internal object SessionListDisplay {
         val tokens=reviews.fold(BigInteger.ZERO) {sum,row->sum+row.tokens};val cost=reviews.fold(BigDecimal.ZERO) {sum,row->sum+BigDecimal(row.cost)}
         val first=reviews.first();val clock=time(first.sortTime,now,zone)
         val summary=SessionListRow("session-group:codex-auto-review",null,label,listOf(if(clock.isNotEmpty()) latest(clock) else "",if(first.tokens.signum()>0) compact(first.tokens) else "").filter(String::isNotEmpty).joinToString(" · "),"",count(reviews.size),tokens,cost.toPlainString(),null,first.sortTime,true,reviews)
-        sorted(SessionRelationshipGroups.group(rows.filter {it.source?.session?.kind?.trim()!="background-review"},grokLabel,subagentCount,now)+summary.copy(groupKind="review",groupClient="codex",unpricedTotal=reviews.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)}))
+        sorted(SessionRelationshipGroups.group(rows.filter {it.source?.session?.kind?.trim()!="background-review"},grokLabel,subagentCount,now)+summary.copy(groupKind="review",groupClient="codex",groupMetrics=SessionFamilyMetrics.from(reviews),unpricedTotal=reviews.fold(BigInteger.ZERO) {sum,row->sum+(row.unpricedTotal ?: BigInteger.ZERO)}))
     }
     fun page(rows:List<SessionListRow>,requested:Int):SessionListPage = HubWorkTrace.trace(HubWorkStage.SESSION_PAGE,units=rows.size.toLong()) {
         val count=((rows.size+99)/100).coerceAtLeast(1);val page=requested.coerceIn(0,count-1);val start=page*100

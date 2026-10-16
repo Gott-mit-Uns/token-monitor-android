@@ -57,8 +57,16 @@ internal object SessionRelationshipGroups {
         eligible.forEach {row->val parent=root(row);if(parent.id!=row.id) {
             children.getOrPut(parent.id) {mutableListOf()}.add(row);folded+=row.id
         }}
+        fun delegatedRole(row:SessionListRow):String? {
+            val id=identity(row)
+            if(id in conflicts) return null
+            val parent=links[id] ?: parentKey(row) ?: return null
+            // A link to another alias of the same conversation cannot delegate itself.
+            val parentIdentity=byKey[parent]?.let(::identity) ?: "session:$parent"
+            return "subagent".takeIf {parentIdentity!=id}
+        }
         val result=rows.filterNot {it.id in folded || bot(it)}.map {row->
-            val members=children[row.id] ?: return@map row
+            val members=children[row.id] ?: return@map row.copy(groupRole=delegatedRole(row))
             val same=identity(row)
             val all=(listOf(row)+members).distinctBy {it.id}
             val main=all.filter {identity(it)==same}.sortedByDescending {it.sortTime}
@@ -68,7 +76,7 @@ internal object SessionRelationshipGroups {
             val suffix=if(same in conflicts) ":root:"+URLEncoder.encode("session:${row.id}","UTF-8") else ""
             summarize("session-group:subagents:${same.removePrefix("session:")}$suffix",main.first().name,
                 ordered,"relationship",row.source?.tool.orEmpty(),now,
-                if(subagents>0) count(subagents) else "")
+                if(subagents>0) count(subagents) else "").copy(groupRole=delegatedRole(row))
         }.toMutableList()
         if(bots.isNotEmpty()) result+=summarize("session-group:cursor-grok-bot",grokLabel,bots.sortedByDescending {it.sortTime},"grok","cursor",now,"${bots.size}")
         return SessionListDisplay.sorted(result)
@@ -82,7 +90,8 @@ internal object SessionRelationshipGroups {
         val state=listOf("running","waiting").firstOrNull {target->members.any {it.source?.let {source->SessionDisplay.activity(source,now)}==target}}
             ?: members.first().source?.let {SessionDisplay.activity(it,now)}
         val latest=members.maxOf {it.sortTime}
+        val metrics=SessionFamilyMetrics.from(members)
         return SessionListRow(id,null,name,members.first().subtitle,"",detail,tokens,cost.toPlainString(),
-            unpriced.takeIf {it.signum()>0 && it<=BigInteger.valueOf(Long.MAX_VALUE)}?.toLong(),latest,true,members,kind,client,models,state,unpricedTotal=unpriced.takeIf {it.signum()>0})
+            unpriced.takeIf {it.signum()>0 && it<=BigInteger.valueOf(Long.MAX_VALUE)}?.toLong(),latest,true,members,kind,client,models,state,unpricedTotal=unpriced.takeIf {it.signum()>0},groupMetrics=metrics)
     }
 }

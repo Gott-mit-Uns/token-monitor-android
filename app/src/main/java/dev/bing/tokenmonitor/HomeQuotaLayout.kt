@@ -72,9 +72,9 @@ internal object HomeQuotaLayout {
                     val percent=remaining?.let {if(used) 100-it else it}
                     val value=fixed ?: if(w.detail.equals("unlimited",true)) "Unlimited" else if(credits) LimitDisplay.creditsMoney(w) else percent?.let {"${Math.round(it)}% ${if(used) "used" else "left"}"} ?: "—"
                     // homeOverview supplies the raw kind as the label of an unnamed billing window.
-                    val caption=when {provider=="notion"->if(w.kind=="session") {if(locale.language=="zh") "滚动 6 小时" else "Rolling 6 hours"} else {if(locale.language=="zh") "月度" else "Monthly"};singleGroup->"${group(w)} ${if(w.kind=="session") "5-hour" else "Weekly"}";named && labels.distinct().size==labels.size->group(w)!!;provider=="zai" && w.kind=="daily" && !w.label.isNullOrBlank()->w.label;w.kind=="billing"->w.label?.takeIf {it.isNotBlank()} ?: "billing";else->when(w.kind) {"session"->"Session";"daily"->"Daily";"weekly"->"Weekly";"monthly"->"Monthly";else->w.label.orEmpty()}}
+                    val caption=when {provider=="cursor" && !w.label.isNullOrBlank()->w.label;provider=="notion"->if(w.kind=="session") {if(locale.language=="zh") "滚动 6 小时" else "Rolling 6 hours"} else {if(locale.language=="zh") "月度" else "Monthly"};singleGroup->"${group(w)} ${if(w.kind=="session") "5-hour" else "Weekly"}";named && labels.distinct().size==labels.size->group(w)!!;provider=="zai" && w.kind=="daily" && !w.label.isNullOrBlank()->w.label;w.kind=="billing"->w.label?.takeIf {it.isNotBlank()} ?: "billing";else->when(w.kind) {"session"->"Session";"daily"->"Daily";"weekly"->"Weekly";"monthly"->"Monthly";else->w.label.orEmpty()}}
                     val objectValue=windowObject(w)
-                    val boundary=if(provider=="notion" && w.resets.isNullOrEmpty()) {if(locale.language=="zh") "重置时间未知" else "Reset time unknown"} else if(!w.resets.isNullOrEmpty()) LimitProviderLayout.boundary(objectValue,now) else w.presentation.resetDescription?.takeIf {it.isNotEmpty()}?.let {"${if(locale.language=="zh") "重置" else "Reset"} $it"}.orEmpty()
+                    val boundary=if(provider=="cursor" && w.label=="Included usage") LimitProviderLayout.boundary(objectValue,now).ifEmpty {if(locale.language=="zh") "重置时间未知" else "Reset time unknown"} else if(provider=="notion" && w.resets.isNullOrEmpty()) {if(locale.language=="zh") "重置时间未知" else "Reset time unknown"} else if(!w.resets.isNullOrEmpty()) LimitProviderLayout.boundary(objectValue,now) else w.presentation.resetDescription?.takeIf {it.isNotEmpty()}?.let {"${if(locale.language=="zh") "重置" else "Reset"} $it"}.orEmpty()
                     HomeQuotaWindow(w,objectValue,remaining,caption,value,if(named && !singleGroup && boundary.isNotEmpty()) "${if(w.kind=="session") "5-hour" else "Weekly"} · $boundary" else boundary,percent)
                 }
                 val showProvider=prefs.showHomeProviderNames || !icons
@@ -82,7 +82,9 @@ internal object HomeQuotaLayout {
                 val accountTitle=LimitDisplay.accountTitle(first,peers,accountIndex,prefs.maskEmails)
                 val product=if(provider=="mimo") first.account?.takeIf {it in setOf("Console","Desktop Membership","Membership")} else null
                 val name=when {count>1->if(showProvider) "$title · $accountTitle" else accountTitle;product!=null->if(showProvider) "$title · $product" else product;else->title}
-                accounts+=HomeQuotaAccount(first.presentation.recordIndex ?: accounts.size,provider,windows,original,peers,accountIndex,name,LimitProviderLayout.plan(first,groups.size>1,prefs.maskEmails),windows.minOf {it.remaining ?: 100.0})
+                val plan=LimitProviderLayout.plan(first,groups.size>1,prefs.maskEmails)
+                val freshnessPlan=if(provider=="cursor" && first.stale==true) listOf(plan,if(locale.language=="zh") "数据过期" else "Stale").filter {it.isNotEmpty()}.joinToString(" · ") else plan
+                accounts+=HomeQuotaAccount(first.presentation.recordIndex ?: accounts.size,provider,windows,original,peers,accountIndex,name,freshnessPlan,windows.minOf {it.remaining ?: 100.0})
             }
         }
         return (if(prefs.homeProviderOrder.isNotEmpty()) accounts else accounts.sortedBy {it.lowest}).take(prefs.homeAccountCount)

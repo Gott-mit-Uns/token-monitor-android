@@ -1,6 +1,6 @@
 <resources>
     <string name="android_update_heading">Android 客户端更新</string>
-    <string name="android_update_manual_note">Android 更新仅在点击时检查；桌面端最新版在打开关于应用时查询。下载与安装由浏览器和 Android 系统完成。</string>
+    <string name="android_update_manual_note">Android 在启动或恢复前台时检查更新，成功后 24 小时内不重复自动检查，自动检查失败后间隔 1 小时重试。也可手动检查。桌面端最新版在打开关于应用时独立查询。下载需手动选择，并由浏览器和 Android 系统完成安装。</string>
     <string name="android_update_check">检查更新</string>
     <string name="android_update_current_notes">当前版本说明</string>
     <string name="android_update_releases">Android 发行页</string>

@@ -17,6 +17,7 @@ class LegacyUpdateCompatibilityScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     private val context get()=InstrumentationRegistry.getInstrumentation().targetContext
     private val installed get()=context.packageManager.getPackageInfo(context.packageName,0).versionName!!
+    private val compatibility get()=InstrumentationRegistry.getArguments().getString("compatibilityVersion") ?: "0.2.65"
     private fun metadata():String {
         val path=InstrumentationRegistry.getArguments().getString("releaseMetadataPath")
         if(path!=null) return File(path).readText()
@@ -35,15 +36,15 @@ class LegacyUpdateCompatibilityScreenTest {
     @Test fun exactInstalled064ParserRecognizesCanonicalReleaseAndShowsDownload() {
         assertEquals("0.2.64",installed)
         // Negative control distinguishes the installed legacy parser from the new main code.
-        val composite=metadata().replace("v0.2.65","v0.71.0-android.0.2.65").replace("token-monitor-android-0.2.65.apk","token-monitor-android-0.71.0-android.0.2.65.apk")
+        val composite=metadata().replace("v$compatibility","v0.72.0-android.$compatibility").replace("token-monitor-android-$compatibility.apk","token-monitor-android-0.72.0-android.$compatibility.apk")
         try {AndroidReleases.parse(composite);fail("Installed legacy parser must reject composite tags")}
         catch(failure:AndroidUpdateException) {assertEquals(AndroidUpdateFailure.INVALID_RELEASE,failure.reason)}
         val (urls,calls)=show();assertEquals(0,calls())
         compose.onNodeWithTag("android-update-check").performClick()
-        compose.onNodeWithTag("android-update-status").assertTextEquals("Android 0.2.65 is available.")
+        compose.onNodeWithTag("android-update-status").assertTextEquals("Android $compatibility is available.")
         compose.onNodeWithTag("android-update-new-notes").performClick()
         compose.onNodeWithTag("android-update-apk").performClick()
-        assertEquals(listOf("${AndroidReleases.repository}/releases/tag/v0.2.65","${AndroidReleases.repository}/releases/download/v0.2.65/token-monitor-android-0.2.65.apk"),urls)
+        assertEquals(listOf("${AndroidReleases.repository}/releases/tag/v$compatibility","${AndroidReleases.repository}/releases/download/v$compatibility/token-monitor-android-$compatibility.apk"),urls)
         assertEquals(1,calls())
     }
     @Test fun installedDualVersionIsCurrentAndItsNotesUseCanonicalTag() {

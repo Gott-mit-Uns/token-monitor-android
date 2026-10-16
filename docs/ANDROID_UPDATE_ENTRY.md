@@ -1,13 +1,15 @@
-# Android 客户端手动更新入口
+# Android 客户端更新入口
 
-关于页的 Android 客户端更新区与 Hub 构建版本分开显示。仅点击“检查更新”时发起一次匿名 HTTPS 请求；进入页面、恢复前台或 Hub SSE 更新不触发检查。进入后台或离开关于区取消在途检查；再次回前台仍须主动点击。检查失败不修改 Hub 状态、连接或缓存。
+关于页的 Android 客户端更新区与 Hub 构建版本分开显示。应用启动或恢复前台时按需发起一次匿名 HTTPS 请求，成功检查后持久化节流 24 小时，失败也持久化节流 1 小时，成功后清除失败退避记录。手动“检查更新”可立即重试；进入关于页复用应用级状态，Hub SSE 不触发更新检查。进入后台取消在途检查，取消不会记录成功检查或锁死下次前台重试。不创建后台调度或弹窗。检查失败不修改 Hub 状态、连接或缓存。时间倒退后允许重新检查。
 
 请求固定为 `https://api.github.com/repos/Gott-mit-Uns/token-monitor-android/releases/latest`，不读取或发送 GitHub 凭据，不接受重定向，不创建后台任务。GitHub 的 latest 正式发行端点加上本地 `draft=false` / `prerelease=false` 验证排除预发布和草稿。超时为 20 秒，响应上限 1 MiB。网络失败、仓库/API 无法访问、限流、发行材料不符各有提示，Android 发行页始终可用。
 
-Android 版本沿用现有正式发行的 `vMAJOR.MINOR.PATCH` 标签、三段非负整数版本规则，逐段数值比较；不比较字符串大小，不使用桌面版本或 Hub revision。未找到可复用的 Android 版本比较器，因此增加了局部纯函数 `AndroidReleaseVersion`，拒绝 dev/rc、额外构建标记、非规范前导零和数字溢出。
+Android 正式版本采用 `<桌面基线>-<两位Android修订>`（例如 `0.72.0-01`），保留三段数字历史版本和历史组合名解析。`AndroidReleaseVersion` 逐段数值比较，正式修订号参与排序；不比较字符串大小，不使用 Hub revision 或桌面最新版查询结果决定 Android 更新。拒绝 dev/rc、额外构建标记、非规范前导零、00 修订和数字溢出。旧更新器使用三段数字兼容发行作为 latest，新客户端读取严格匹配的 `Token Monitor Android v<正式版本>` 标题比较正式版本并打开正式说明。兼容发行必须携带与正式APK字节相同的旧格式附件；不能覆盖既有Tag。
 
-发行说明必须来自指定 Android 仓库的精确标签页；APK 必须是同标签的 `token-monitor-android-MAJOR.MINOR.PATCH.apk`，状态 uploaded、大小大于零、唯一匹配，下载链接须与官方 GitHub 仓库/标签/名称精确相符。不选择 debug、其他仓库或相似名称的资产。此检查确认发行元数据与资产归属，Android 系统在安装时继续验证正式签名与升级兼容性；客户端不下载或自行安装 APK。
+发行说明必须来自指定 Android 仓库的精确标签页；APK 必须是同标签的 `token-monitor-android-<版本>.apk`（包括正式修订或兼容编号），状态 uploaded、大小大于零、唯一匹配，下载链接须与官方 GitHub 仓库/标签/名称精确相符。不选择 debug、其他仓库或相似名称的资产。此检查确认发行元数据与资产归属，Android 系统在安装时继续验证正式签名与升级兼容性；客户端不下载或自行安装 APK。
 
 “当前版本说明”、Android 发行页、新版本发行说明及 APK 链接交由浏览器打开。安装由 Android 系统完成。不存在静默安装、定时检查、后台下载服务或逐版本 Hub 请求。发行说明在浏览器展示，不把远端 Markdown 注入应用界面。
 
 定向验收入口：`AndroidUpdateTest` 覆盖数值比较、正式资产限制、失败恢复、检查去重及后台取消；`AndroidUpdateScreenTest` 覆盖可访问按钮、四种状态、精确浏览器链接和真实 Activity 生命周期，保存不可访问/可更新状态截图。测试结果、最终 APK 指纹和真机未验证项随本次统一发布交接记录；此文档不将测试存在或编译成功视为已执行通过。
+
+0.72 对齐、旧更新器桥接和 OpenCode 合同证据见 `docs/ALIGN_072_UPDATE_OPENCODE.md`。

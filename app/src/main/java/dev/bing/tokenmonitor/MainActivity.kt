@@ -37,19 +37,22 @@ import java.text.NumberFormat
 
 class MainActivity : ComponentActivity() {
     private val model: HubViewModel by viewModels()
+    private val androidUpdates: AndroidUpdateModel by viewModels()
     private val localAllowed = mutableStateOf(true)
     private val localPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { localAllowed.value = HubLocalPermission.granted(this) }
     private val networks by lazy { HubNetworkObserver(this, model::updateNetworkScope) }
-    override fun onStart() { super.onStart(); localAllowed.value = HubLocalPermission.granted(this); networks.start(); model.setForeground(true) }
-    override fun onStop() { networks.stop(); model.setForeground(false); super.onStop() }
+    override fun onStart() { super.onStart(); localAllowed.value = HubLocalPermission.granted(this); networks.start(); model.setForeground(true); androidUpdates.setForeground(true) }
+    override fun onStop() { networks.stop(); model.setForeground(false); androidUpdates.setForeground(false); super.onStop() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            CompositionLocalProvider(LocalAndroidUpdateController provides androidUpdates.controller) {
             HubApp(model, localAllowed.value,
                 requestLocal = { localPermission.launch(HubLocalPermission.NAME) },
                 openLocalSettings = { startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)) })
+            }
         }
     }
 }

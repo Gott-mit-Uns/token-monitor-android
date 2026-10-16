@@ -20,9 +20,21 @@ class SessionListTest {
         fixture["cases"]!!.jsonArray.forEachIndexed {index,element->
             val case=element.jsonObject;val parsed=snapshot(case["input"]!!).periods.getValue("today").sessions
             val native=SessionListDisplay.raw(parsed,case["now"]!!.jsonPrimitive.long,case["hidden"]!!.jsonPrimitive.boolean,label={when(it) {"codex"->"Codex";"claude"->"Claude";else->it}},zone=zone)
-            assertEquals("row $index",case["expected"]!!.jsonArray,JsonArray(native.map(::expected)))
+            // v0.72 Android rejects malformed negative counters instead of inventing a 0% cache hit.
+            // These four pinned 0.69 golden cases intentionally contained input=-5/read=-1.
+            val malformedCache=index in 116..119
+            if(malformedCache) {
+                assertEquals(-5.0,parsed.single().session!!.accounting.input,0.0)
+                assertEquals(-1.0,parsed.single().session!!.accounting.cacheRead,0.0)
+            }
+            val expectedRows=if(malformedCache) JsonArray(case["expected"]!!.jsonArray.map {element->
+                JsonObject(element.jsonObject.mapValues {(key,value)->
+                    if(key in setOf("subtitle","activity")) JsonPrimitive(value.jsonPrimitive.content.replace(" · 0%","")) else value
+                })
+            }) else case["expected"]!!.jsonArray
+            assertEquals("row $index",expectedRows,JsonArray(native.map(::expected)))
             val source=parsed.single();assertEquals("rate $index",case["rate"]!!.jsonPrimitive.double,SessionListDisplay.rate(source),1e-9)
-            val cache=case["cache"]?.takeUnless {it==JsonNull}?.jsonPrimitive?.double
+            val cache=case["cache"]?.takeUnless {malformedCache}?.takeUnless {it==JsonNull}?.jsonPrimitive?.double
             if(cache==null) assertNull(SessionListDisplay.cachePercent(source)) else assertEquals(cache,SessionListDisplay.cachePercent(source)!!,1e-9)
         }
         val tied=snapshot(Json.parseToJsonElement("""{"sessions":{"old":{"totalTokens":99,"lastUsedAt":"2026-10-09"},"b":{"totalTokens":5,"costUsd":0.2,"title":"Beta"},"a":{"totalTokens":5,"costUsd":0.2,"title":"Alpha"},"cost":{"totalTokens":5,"costUsd":1},"large":{"totalTokens":6}}}""")).periods.getValue("today").sessions
