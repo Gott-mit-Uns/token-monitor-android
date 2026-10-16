@@ -7,7 +7,7 @@ internal enum class SyncEndpointStatus { CONFIGURED, CURRENT, PREVIOUS }
 internal object SyncSettingsPresentation {
     /** Display-only mapping; the phone never becomes a collector or changes its sync identity. */
     fun phoneModel(model:String):String = when(model.trim()) {
-        "2304FPN60C"->"Xiaomi 13 Ultra"
+        "2304FPN60C", "2304FPN6DC"->"Xiaomi 13 Ultra"
         else->model.trim()
     }
     /** The Hub contract has no host display name. A DNS hostname is usable as-is, an IP is not a device name. */

@@ -56,7 +56,9 @@ class SharedDataScreenTest {
         compose.onNodeWithTag("shared-subscriptions-summary").assertTextEquals("1 笔订阅")
         show("shared-subscription-public-plan");compose.onNodeWithTag("shared-subscription-public-plan-title",useUnmergedTree=true).assertTextContains("Public account",substring=true)
         compose.onNodeWithTag("shared-subscription-public-plan-meta",useUnmergedTree=true).assertTextContains("Public Plus · $20.00 / 月",substring=true)
-        save("subscriptions",dark);show("settings-subscriptions-refresh");compose.onNodeWithTag("settings-subscriptions-refresh").performClick();assertEquals(1,actions.subscriptions)
+        compose.onNodeWithTag("settings-subscriptions-refresh").assertDoesNotExist()
+        assertEquals(0,actions.subscriptions)
+        save("subscriptions",dark)
         compose.onNodeWithTag("shared-subscription-public-plan").performClick()
         compose.onNodeWithTag("shared-subscription-paid").assertTextContains("累计 $60.00",substring=true)
         compose.runOnIdle {state.value=state.value.copy(subscriptions=listOf(plan.copy(autoRenew=false)))}
