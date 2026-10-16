@@ -33,4 +33,31 @@ class HubDisplayNameTest {
         assertNull(HubDisplayName.normalize("a\u200bb"))
         assertNull(HubDisplayName.normalize("\ud800"))
     }
+    @Test fun streamMergeKeepsAuthoritativeNameThroughFreshnessAndClearsItOnLegacyFullSnapshot() {
+        val initial = StreamMerge.apply(null, "snapshot", """{"stats":$body}""")!!
+        val original = HubParser.parse(initial, HubModelIndex.EMPTY)
+        assertEquals("DXP4800", original.hubDisplayName)
+        val changed = StreamMerge.apply(initial, "freshness", """{"stats":{
+            "hub":{"displayName":"Forged freshness name"},"updatedAt":"2026-10-16T00:00:00Z",
+            "periods":{"today":{"totalTokens":999}},"devices":[]
+        }}""")!!
+        val optimized = HubParser.applyFreshness(original, changed)
+        val reparsed = HubParser.parse(changed, HubModelIndex.EMPTY)
+        assertEquals(optimized, reparsed)
+        assertEquals("DXP4800", reparsed.hubDisplayName)
+        assertEquals(original.periods, reparsed.periods)
+        assertEquals(123L, reparsed.periods.getValue("today").tokens)
+        assertEquals("0.001", reparsed.periods.getValue("today").cost)
+        // A legacy full snapshot is authoritative, so absence removes a name
+        // rather than borrowing it from the previous full/freshness basis.
+        val legacy = StreamMerge.apply(changed, "stats", """{"stats":{
+            "periods":{"today":{"totalTokens":123,"costUsd":"0.001"}},"devices":[]
+        }}""")!!
+        val accepted = HubParser.parse(legacy, HubModelIndex.EMPTY)
+        assertNull(accepted.hubDisplayName)
+        assertEquals(original.periods, accepted.periods)
+        assertNull(SyncSettingsPresentation.hubHostName(HubState(snapshot=accepted,
+            connectedEndpoint="https://127.0.0.1:17321",lastSuccessfulEndpoint="https://127.0.0.1:17321")))
+    }
+
 }

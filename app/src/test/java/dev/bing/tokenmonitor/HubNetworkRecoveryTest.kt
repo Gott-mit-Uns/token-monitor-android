@@ -2,6 +2,7 @@ package dev.bing.tokenmonitor
 
 import android.app.Application
 import android.os.Looper
+import kotlinx.serialization.json.*
 import androidx.lifecycle.ViewModelStore
 import okhttp3.OkHttpClient
 import okhttp3.tls.HandshakeCertificates
@@ -31,11 +32,19 @@ class HubNetworkRecoveryTest {
         override fun save(record: SavedHub) { saved = record }
         override fun clear() { saved = null }
     }
-    private class Scenario : AutoCloseable {
+    private class Scenario(hubDisplayName: String? = null) : AutoCloseable {
         val app: Application = RuntimeEnvironment.getApplication()
         val secret = UUID.randomUUID().toString()
         val certificate = HeldCertificate.Builder().addSubjectAlternativeName("127.0.0.1").build()
-        val server = RecoveryFixtureHub(secret, HandshakeCertificates.Builder().heldCertificate(certificate).build())
+        val server = RecoveryFixtureHub(secret, HandshakeCertificates.Builder().heldCertificate(certificate).build(),
+            buildJsonObject {
+                put("periods", buildJsonObject { put("today", buildJsonObject { put("totalTokens", 123) }) })
+                put("devices", JsonArray(emptyList()))
+                hubDisplayName?.let { name ->
+                    require(name.codePointCount(0, name.length) in 1..80)
+                    put("hub", buildJsonObject { put("displayName", name) })
+                }
+            }.toString())
         val trust = HandshakeCertificates.Builder().addTrustedCertificate(certificate.certificate).build()
         val failures = AtomicInteger()
         var failingPath = "/api/health"
@@ -220,9 +229,10 @@ class HubNetworkRecoveryTest {
         assertEquals(reads + 1, s.healthAttempts.get()); assertFalse(s.model.state.value.live)
         assertEquals(123L, s.model.state.value.snapshot?.periods?.get("today")?.tokens)
     }
-    @Test fun lateStatsFromRetiredNetworkCannotOverwriteReplacementSnapshot() = Scenario().use { s ->
+    @Test fun lateStatsFromRetiredNetworkCannotOverwriteReplacementSnapshotOrRestoreRetiredHubName() = Scenario("Synthetic Hub A").use { s ->
         s.online(); val reads = s.statsAttempts.get(); val serverReads = s.server.statsRequests.get(); val gate = CountDownLatch(1)
-        s.server.statsBody.set("""{"periods":{"today":{"totalTokens":456}},"devices":[]}""")
+        assertEquals("Synthetic Hub A", s.model.state.value.snapshot?.hubDisplayName)
+        s.server.statsBody.set("""{"hub":{"displayName":"Retired response name"},"periods":{"today":{"totalTokens":456}},"devices":[]}""")
         s.server.statsGate.set(gate); s.model.updateNetworkScope(s.scope(2))
         try {
             s.await("Retiring response must be captured before releasing the gate") {
@@ -233,13 +243,17 @@ class HubNetworkRecoveryTest {
             s.server.statsBody.set("""{"periods":{"today":{"totalTokens":789}},"devices":[]}""")
             s.model.updateNetworkScope(s.scope(3))
             s.await("Replacement network snapshot must be live") { s.model.state.value.live && s.model.state.value.snapshot?.periods?.get("today")?.tokens == 789L }
+            assertNull(s.model.state.value.snapshot?.hubDisplayName)
+            assertNull(SyncSettingsPresentation.hubHostName(s.model.state.value))
             gate.countDown(); s.advance(15)
             assertEquals(789L, s.model.state.value.snapshot?.periods?.get("today")?.tokens)
+            assertNull("Retired HTTP response must not restore the old name", s.model.state.value.snapshot?.hubDisplayName)
+            assertNull(SyncSettingsPresentation.hubHostName(s.model.state.value))
             assertEquals(reads + 2, s.statsAttempts.get())
         } finally { gate.countDown() }
     }
-    @Test fun replacingConnectionCancelsRecoveryForTheOldAuthority() = Scenario().use { s ->
-        s.online(); s.failures.set(1); val reads = s.healthAttempts.get()
+    @Test fun replacingConnectionCancelsRecoveryForTheOldAuthorityAndDropsItsHubName() = Scenario("Synthetic Hub A").use { s ->
+        s.online(); assertEquals("Synthetic Hub A", s.model.state.value.snapshot?.hubDisplayName); s.failures.set(1); val reads = s.healthAttempts.get()
         s.model.updateNetworkScope(s.scope(2))
         s.await("Old authority validation must fail") { s.healthAttempts.get() == reads + 1 && !s.model.state.value.loading }
         val secret = UUID.randomUUID().toString()
@@ -251,6 +265,34 @@ class HubNetworkRecoveryTest {
             s.advance(15)
             assertEquals(oldRequests, s.server.requests.get())
             assertEquals(reads + 2, s.healthAttempts.get())
+            assertNull(s.model.state.value.snapshot?.hubDisplayName)
+            assertNull(SyncSettingsPresentation.hubHostName(s.model.state.value))
+            assertEquals("https://127.0.0.1:${other.port}", s.model.state.value.connectedEndpoint)
+            assertNull(HubParser.parse(s.store.load()!!.snapshot).hubDisplayName)
         }
     }
+    @Test fun replacingCredentialAtSameEndpointDropsOldHubNameAndPersistsOnlyAcceptedSnapshot() = Scenario("Account A Hub").use { s ->
+        s.online()
+        assertEquals("Account A Hub", s.model.state.value.snapshot?.hubDisplayName)
+        val previousRevision = s.model.state.value.connectionRevision
+        val nextCredential = UUID.randomUUID().toString()
+        s.server.acceptedCredential.set(nextCredential)
+        s.server.statsBody.set("""{"periods":{"today":{"totalTokens":987}},"devices":[]}""")
+        s.model.connect(s.base, nextCredential, "")
+        s.await("New credential must receive its own legacy snapshot") {
+            s.model.state.value.live && s.model.state.value.snapshot?.periods?.get("today")?.tokens == 987L
+        }
+        assertEquals(previousRevision + 1, s.model.state.value.connectionRevision)
+        assertNull(s.model.state.value.snapshot?.hubDisplayName)
+        assertNull(SyncSettingsPresentation.hubHostName(s.model.state.value))
+        assertEquals(s.base, s.model.state.value.connectedEndpoint)
+        assertEquals(s.base, s.model.state.value.lastSuccessfulEndpoint)
+        s.advance(15)
+        assertEquals(987L, s.model.state.value.snapshot?.periods?.get("today")?.tokens)
+        assertNull(s.model.state.value.snapshot?.hubDisplayName)
+        val restored = HubParser.parse(s.store.load()!!.snapshot)
+        assertEquals(987L, restored.periods.getValue("today").tokens)
+        assertNull(restored.hubDisplayName)
+    }
+
 }
