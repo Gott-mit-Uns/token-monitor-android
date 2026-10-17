@@ -2,6 +2,7 @@
 """Small, dependency-free policy guard. Human review validates evidence and authority."""
 import argparse
 import hashlib
+from html.parser import HTMLParser
 from pathlib import Path
 import re
 import subprocess
@@ -59,6 +60,24 @@ def without_fences(text):
     return '\n'.join(lines)
 
 
+class DocumentHTML(HTMLParser):
+    def __init__(self, text):
+        super().__init__(convert_charrefs=True)
+        self.links, self.ids = [], set()
+        self.feed(text)
+
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            if value is None:
+                continue
+            if (tag == 'a' and key == 'href') or (tag == 'img' and key == 'src'):
+                self.links.append(value)
+            if key == 'id' or (tag == 'a' and key == 'name'):
+                self.ids.add(value)
+
+    handle_startendtag = handle_starttag
+
+
 def anchors(text):
     text = re.sub(r'<!--[\s\S]*?-->', '', without_fences(text))
     found, counts = set(), {}
@@ -85,7 +104,7 @@ def anchors(text):
             candidate = title + f'-{count}'
         counts[title] = count + 1
         found.add(candidate)
-    found.update(re.findall(r'\b(?:id|name)=[\"\x27]([^\"\x27]+)', text, re.I))
+    found.update(DocumentHTML(re.sub(r'(`+)(?!`)(.*?)(?<!`)\1(?!`)', '', text, flags=re.S)).ids)
     return found
 
 
@@ -128,7 +147,7 @@ def check(root, base):
         text = re.sub(r'(`+)(?!`)(.*?)(?<!`)\1(?!`)', '', text, flags=re.S)
         refs = re.findall(r'^\s*\[([^]]+)\]:\s*(\S+)', text, re.M)
         links = re.findall(r'!?\[[^]]*\]\(([^)]+)\)', text)
-        links += re.findall(r'<(?:img|a)\b[^>]*?\b(?:src|href)=[\"\x27]([^\"\x27]+)', text, re.I)
+        links += DocumentHTML(text).links
         # Validate definitions directly: full, collapsed and shortcut references share these targets.
         links += [target for _, target in refs]
         for target in links:
@@ -259,6 +278,14 @@ def self_test():
         assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n<A HREF=\"missing.md\">real</A>\n')
         assert any('missing local link' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        for html in ['<IMG SRC=missing.png>', '<a href = missing.md>bad</a>']:
+            (root / 'docs/HANDOFF.md').write_text('# Current\n' + html + '\n')
+            assert any('missing local link' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('<a id = "real"></a>\n<a name=legacy></a>\n[valid](#real) [legacy](#legacy)\n')
+        assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('<span data-id="fake"></span>\n`<a id="inline"></a>`\n[bad](#fake) [bad](#inline)\n')
+        assert sum('missing anchor' in e for e in check(root, 'HEAD')) == 2
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         (root / 'reports/example.markdown').write_text('# Example\n[broken](missing.md)\n')
         assert any('example.markdown' in e for e in check(root, 'HEAD'))
