@@ -36,7 +36,7 @@ def anchors(text):
 def check(root, base):
     errors = []
     files = git(root, 'ls-files', '--cached', '--others', '--exclude-standard')
-    added = git(root, 'diff', '--name-only', '--diff-filter=A', base, '--')
+    added = git(root, 'diff', '--no-renames', '--name-only', '--diff-filter=A', base, '--')
     added += git(root, 'ls-files', '--others', '--exclude-standard')
     for name in set(added):
         if name.startswith('docs/archive/'):
@@ -45,7 +45,7 @@ def check(root, base):
                 errors.append(f'{name}: frozen archive; explain unique evidence and obtain specific approval')
             continue
         # Governance covers documentation, not business code, fixtures or releases.
-        if name in CURRENT or not (name.startswith('docs/') or '/' not in name):
+        if name in CURRENT or name.startswith(('app/src/test/', 'app/src/androidTest/', 'app/src/sharedTest/')):
             continue
         if RECORD.match(Path(name).name) or re.match(r'^(?:release[_-]summary|new[_-]readme|新版介绍|发布总结)', Path(name).stem, re.I):
             errors.append(f'{name}: use the current document instead of a duplicate record')
@@ -73,7 +73,7 @@ def check(root, base):
                     except subprocess.CalledProcessError:
                         errors.append(f'{name}: missing historical target {target}')
                 continue
-            dest = root / unquote(parsed.path).lstrip('/') if parsed.path.startswith('/') else p.parent / unquote(parsed.path)
+            dest = p if not parsed.path else (root / unquote(parsed.path).lstrip('/') if parsed.path.startswith('/') else p.parent / unquote(parsed.path))
             if name in MIGRATION_ARCHIVES and not dest.exists() and any(str(dest.resolve()).startswith(str((root / prefix).resolve()) + '/') for prefix in EXTERNAL_EVIDENCE):
                 continue  # Existing local evidence pointers are not delivered or verified here.
             if not dest.exists():
@@ -116,6 +116,18 @@ def self_test():
         (root / 'docs/HANDOFF_1.md').unlink()
         (root / 'docs/HANDOFF.md').write_text('[bad](missing.md)\n[bad](../README.md#absent)')
         assert len(check(root, 'HEAD')) == 2
+        (root / 'docs/HANDOFF.md').write_text('# Current\n[bad](#absent)')
+        assert any('missing anchor' in e for e in check(root, 'HEAD'))
+        (root / 'reports').mkdir()
+        (root / 'reports/HANDOFF_3.md').write_text('# Report\n')
+        assert any('duplicate' in e for e in check(root, 'HEAD'))
+        (root / 'reports/HANDOFF_3.md').unlink()
+        (root / 'reports/notes.md').write_text('# Notes\n')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        run('add', '.'); run('commit', '-m', 'ordinary note')
+        run('mv', 'reports/notes.md', 'reports/VALIDATION_4.md')
+        assert any('duplicate' in e for e in check(root, 'HEAD'))
+        run('mv', 'reports/VALIDATION_4.md', 'reports/notes.md')
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         (root / 'README.md').write_text('# Changed\n')
         assert any('SHA256' in e for e in check(root, 'HEAD'))
@@ -135,7 +147,7 @@ def self_test():
         assert any('frozen archive' in e for e in check(root, 'HEAD'))
         (root / 'docs/archive/HANDOFF_2.md').unlink()
         (root / 'RELEASE.md').write_text('# Release\n')
-        (root / 'tests').mkdir(); (root / 'tests/VALIDATION_fixture.md').write_text('# Fixture\n')
+        (root / 'app/src/test/fixtures').mkdir(parents=True); (root / 'app/src/test/fixtures/VALIDATION_fixture.md').write_text('# Fixture\n')
         assert not check(root, 'HEAD')
     print('Document guard self-test passed (duplicates, links, anchors, README authority and narrow exceptions)')
 
