@@ -76,7 +76,7 @@ def anchors(text):
         count = counts.get(title, 0)
         counts[title] = count + 1
         found.add(title + (f'-{count}' if count else ''))
-    found.update(re.findall(r'\b(?:id|name)=[\"\x27]([^\"\x27]+)', text))
+    found.update(re.findall(r'\b(?:id|name)=[\"\x27]([^\"\x27]+)', text, re.I))
     return found
 
 
@@ -111,9 +111,10 @@ def check(root, base):
             continue
         text = p.read_text(encoding='utf-8')
         text = without_fences(text)
+        text = re.sub(r'(`+)(?!`)(.*?)(?<!`)\1(?!`)', '', text, flags=re.S)
         refs = dict(re.findall(r'^\s*\[([^]]+)\]:\s*(\S+)', text, re.M))
         links = re.findall(r'!?\[[^]]*\]\(([^)]+)\)', text)
-        links += re.findall(r'<(?:img|a)\b[^>]*?\b(?:src|href)=[\"\x27]([^\"\x27]+)', text)
+        links += re.findall(r'<(?:img|a)\b[^>]*?\b(?:src|href)=[\"\x27]([^\"\x27]+)', text, re.I)
         # Validate definitions directly: full, collapsed and shortcut references share these targets.
         links += list(refs.values())
         for target in links:
@@ -239,6 +240,11 @@ def self_test():
         assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('Guide\n-----\n\n[bad](#guide-1)\n')
         assert any('missing anchor' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n`[example](missing.md)` and ``[example](missing.md)``\n')
+        assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n<A HREF=\"missing.md\">real</A>\n')
+        assert any('missing local link' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md', 'HANDOFF_2027', 'VALIDATION_2027.adoc', 'HANDOFF_2027.html']:
             candidate = root / 'reports' / duplicate
