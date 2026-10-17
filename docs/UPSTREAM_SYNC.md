@@ -12,11 +12,11 @@
 
 # 本轮固定上游 v0.70.0
 
-2026-10-15 后续授权：正式 GitHub 发布，编号改用 NAS 风格 `0.71.0-01` / code74；旧更新检查兼容入口另保留 v0.2.65。以下候选描述为此前阶段记录，正式交付以 [补充交接](HANDOFF_0.71.0-01.md) 为准。手机用户自装，NAS 未修改。
+2026-10-15 后续授权：正式 GitHub 发布，编号改用 NAS 风格 `0.71.0-01` / code74；旧更新检查兼容入口另保留 v0.2.65。以下候选描述为此前阶段记录，正式交付以 [补充交接](archive/history/HANDOFF_0.71.0-01.md) 为准。手机用户自装，NAS 未修改。
 
 ## 2026-10-15: Fixed v0.71.0
 
-Target `a514e2063563e318ef73c2a17fad68057c4e300c`; compare only v0.70.0 to v0.71.0. Android candidate `0.71.0-android.0.2.65` /74; reference 0.71.0, fullyAligned=false. Provider/account presentation and the exact fixed Hub registry are updated. Electron/local parsers and later main commits are outside this round. See [increment](DESKTOP_071_DIFF.md) and [handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md).
+Target `a514e2063563e318ef73c2a17fad68057c4e300c`; compare only v0.70.0 to v0.71.0. Android candidate `0.71.0-android.0.2.65` /74; reference 0.71.0, fullyAligned=false. Provider/account presentation and the exact fixed Hub registry are updated. Electron/local parsers and later main commits are outside this round. See [increment](DESKTOP_071_DIFF.md) and [handoff](archive/history/HANDOFF_0.71.0_ANDROID_0.2.65.md).
 
 
 2026-10-14。固定compare起点`3f106ae3d4712b26cced8272f0d488eaab0de1e6`、终点`ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`，不使用main。完整分类、源码链接和验收在DESKTOP_070_DIFF.md，Hub真实新字段边界在HUB_070_DEPENDENCIES.md。以下是历史0.69审计，保留可追溯性。
@@ -64,7 +64,7 @@ Node `src/hub/server.js`无diff，shared/Worker usage有diff；事件名保持�
 
 2026-10-12完成891ac79对应的Android单组双周期与标签分支。直接执行固定目标providerPresentation函数生成15组定向selection/label fixture，记录源文件SHA256；旧limit-display fixture只更新受影响的单组case，并附独立sourceCommit，不回写其余v0.68来源。空kind准入与空provider状态占位采用Android保守语义，未把畸形输入假称全部桌面DOM对等。
 
-没有重新扫描上游16提交，未处理其它会话/设备/网络功能；全局桌面已实现参考仍为v0.68。交接与验证见 [HANDOFF_ANTIGRAVITY_DUAL_WINDOWS](HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。
+没有重新扫描上游16提交，未处理其它会话/设备/网络功能；全局桌面已实现参考仍为v0.68。交接与验证见 [HANDOFF_ANTIGRAVITY_DUAL_WINDOWS](archive/history/HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。
 
 ## V4合同与UI增量
 

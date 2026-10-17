@@ -40,4 +40,4 @@
 
 实际窗口诊断使用自有API36模拟器、真实Android Choreographer／Window回调及公开30×8、366×80柱图和366日K线，各预热两次、记录三次。它测指定Dashboard owner和趋势绘制，不测实体手机FPS、实际Hub导航或总览热图运行性能。完整普通回归另覆盖真实Root导航、模型规则更新、连续像素过渡和减少动态效果。
 
-实体手机暂不可连接，实际Lucky入口未提供，不重复要求或探测未知地址。生产Hub/NAS/路由未修改。本阶段不重跑真实Hub网络或旧版本覆盖升级；这些历史报告继续保留原包范围。整体目标仍包含 [手动历史回执](HISTORY_READ_RECEIPT_PLAN.md)、[大Hub容量](HUB_CAPACITY_PLAN.md)与实际设备/公网验证。
+实体手机暂不可连接，实际Lucky入口未提供，不重复要求或探测未知地址。生产Hub/NAS/路由未修改。本阶段不重跑真实Hub网络或旧版本覆盖升级；这些历史报告继续保留原包范围。整体目标仍包含 [手动历史回执](archive/history/HISTORY_READ_RECEIPT_PLAN.md)、[大Hub容量](HUB_CAPACITY_PLAN.md)与实际设备/公网验证。

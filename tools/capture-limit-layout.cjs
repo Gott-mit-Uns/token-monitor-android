@@ -126,8 +126,8 @@ return [...rendered.querySelectorAll('.limit-window')].map(node=>{
    return {cases:results,hiddenCases};
   },{providers,now,providerColors});
   const {cases,hiddenCases}=captured;
-  fs.writeFileSync(path.join(root,'app/src/test/resources/limit-layout-parity.json'),JSON.stringify({source:'v0.68.0/5d2db368d8313415763860d594de00e46a663418; actual windowsView DOM builder; full numeric formatter',now,zone:'Asia/Shanghai',cases,hiddenCases},null,2)+'\n');
-  const assets=path.join(root,'app/src/androidTest/assets');fs.mkdirSync(assets,{recursive:true});fs.copyFileSync(path.join(root,'app/src/test/resources/limit-layout-parity.json'),path.join(assets,'limit-layout-parity.json'));
+  fs.mkdirSync(path.join(root,'app/src/sharedTest/resources'),{recursive:true});
+  fs.writeFileSync(path.join(root,'app/src/sharedTest/resources/limit-layout-parity.json'),JSON.stringify({source:'v0.68.0/5d2db368d8313415763860d594de00e46a663418; actual windowsView DOM builder; full numeric formatter',now,zone:'Asia/Shanghai',cases,hiddenCases},null,2)+'\n');
   if(await page.locator('.limit-icon').first().evaluate(node=>getComputedStyle(node).maskImage)==='none') throw new Error('Original icon mask stylesheet not installed');
   await page.screenshot({path:path.join(evidence,'desktop-provider-reference-dark.png'),fullPage:true});
   for(const id of ['codex','factory','antigravity','openrouter','kiro']) await page.locator(`[data-fixture-provider="${id}"]`).first().screenshot({path:path.join(evidence,`desktop-${id}-reference-dark.png`)});

@@ -117,7 +117,8 @@ const scripts=['src/shared/clientCatalog.js','src/shared/vendorPresentation.js',
    return {cases:results,cards,wording};
   },{pure,identityFixtures,appFunctions,now});
   const data={source:'v0.68.0/5d2db368d8313415763860d594de00e46a663418; original subscription row DOM, account matching and CSS',today:'2026-10-10',...captured};
-  const file=path.join(root,'app/src/test/resources/subscription-layout-parity.json');fs.writeFileSync(file,JSON.stringify(data,null,2)+'\n');fs.copyFileSync(file,path.join(root,'app/src/androidTest/assets/subscription-layout-parity.json'));
+  fs.mkdirSync(path.join(root,'app/src/sharedTest/resources'),{recursive:true});
+  const file=path.join(root,'app/src/sharedTest/resources/subscription-layout-parity.json');fs.writeFileSync(file,JSON.stringify(data,null,2)+'\n');
   const literal=value=>JSON.stringify(value).replaceAll('$','\\$');
   const maps=Object.entries(captured.wording).map(([lang,labels])=>literal(lang)+' to mapOf(\n'+Object.entries(labels).map(([key,value])=>'        '+literal(key)+' to '+literal(value)).join(',\n')+'\n    )').join(',\n    ');
   fs.writeFileSync(path.join(root,'app/src/main/java/dev/bing/tokenmonitor/DesktopSubscriptionWording.kt'),'// Fixed desktop v0.68.0 subscription wording; upstream MIT notice is retained.\npackage dev.bing.tokenmonitor\n\ninternal val desktopSubscriptionWording=mapOf(\n    '+maps+'\n)\n');

@@ -10,7 +10,7 @@
 
 - [来源执行脚本](../evidence/desktop-source-motion/reference/capture-original-motion.cjs)：调用固定提交的完整 `renderTrends()`、原始捕获/趋势动画函数、headline 动画器、连续 early-return/render 分支、同步周期 handler 片段以及减少动态效果收敛链。
 - [公开结果 JSON](../evidence/desktop-source-motion/reference/original-motion.json)与[文字报告](../evidence/desktop-source-motion/reference/original-motion.txt)：保留输入、源码片段/文件校验、输出及测量边界。
-- [实施前计划](DESKTOP_SOURCE_MOTION_PLAN.md)保留来源行号与原先差异；本文记录本轮已写入代码的行为。
+- [实施前计划](archive/history/DESKTOP_SOURCE_MOTION_PLAN.md)保留来源行号与原先差异；本文记录本轮已写入代码的行为。
 
 | 当前来源文件 | SHA-256 |
 | --- | --- |
@@ -76,9 +76,9 @@
 | [TrendsBarMotionScreenTest](../app/src/androidTest/java/dev/bing/tokenmonitor/TrendsBarMotionScreenTest.kt) | 实际 Canvas 像素、静态零线、尺寸延续、STOP/减少动态效果、不可见零值；检查帧变化不提交 holder 或组件。 |
 | [TrendsMotionNavigationScreenTest](../app/src/androidTest/java/dev/bing/tokenmonitor/TrendsMotionNavigationScreenTest.kt) | 实际 HubScreen 进入、详情/Settings 返回、数据续接、不同主视图返回及零额外读取。 |
 
-本包实际证据位于 [evidence/desktop-source-motion/final/](../evidence/desktop-source-motion/final/)，[build-checks.json](../evidence/desktop-source-motion/final/build-checks.json) 与 [package-verification.json](../evidence/desktop-source-motion/final/package-verification.json) 绑定上述 APK。8 份视觉报告包含 22 次测试方法执行、66 张公开 PNG，另有 [main-journey](../evidence/desktop-source-motion/final/main-journey/actual-navigation.txt) 的 4 张真实 HubScreen 进入/稳定/更新/完成阶段图。静态阶段图使用不同于桌面对照的公开 fixture，不证明 FPS。可从[实际预览](../evidence/desktop-source-motion/final/preview.html)查看图像；本地 gallery 的9个页面选择均加载通过，全部图片可读、无错误或外部请求，见[浏览器报告](../evidence/desktop-source-motion/final/gallery-browser-checks.json)。[证据清单](../evidence/desktop-source-motion/EVIDENCE_SHA256SUMS)共156个文件逐项核实，清单SHA-256为`2ab96639552af60f54890ab0f307aec3c5adc1b57271a7d56de1cb03bd239f7f`。
+本包实际证据位于 [evidence/desktop-source-motion/final/](../evidence/desktop-source-motion/final)，[build-checks.json](../evidence/desktop-source-motion/final/build-checks.json) 与 [package-verification.json](../evidence/desktop-source-motion/final/package-verification.json) 绑定上述 APK。8 份视觉报告包含 22 次测试方法执行、66 张公开 PNG，另有 [main-journey](../evidence/desktop-source-motion/final/main-journey/actual-navigation.txt) 的 4 张真实 HubScreen 进入/稳定/更新/完成阶段图。静态阶段图使用不同于桌面对照的公开 fixture，不证明 FPS。可从[实际预览](../evidence/desktop-source-motion/final/preview.html)查看图像；本地 gallery 的9个页面选择均加载通过，全部图片可读、无错误或外部请求，见[浏览器报告](../evidence/desktop-source-motion/final/gallery-browser-checks.json)。[证据清单](../evidence/desktop-source-motion/EVIDENCE_SHA256SUMS)共156个文件逐项核实，清单SHA-256为`2ab96639552af60f54890ab0f307aec3c5adc1b57271a7d56de1cb03bd239f7f`。
 
-原始 22/82 证明位于 [reference/](../evidence/desktop-source-motion/reference/)，`source/` 按字节保留既有 44 来源副本：42 张桌面捕获、55 份来源资产复用、167 个来源文件指纹。构建/lint 结果为 0 error、92 warnings、1 hint。封存器还核实 640 对语言资源、四份不变 assets、权限与签名、20 个 optional 测试隔离、54 个历史归档及自有测试应用状态清理/恢复，见[统一构建与回归记录](../evidence/desktop-source-motion/final/build-and-regressions.txt)、[归档核对](../evidence/desktop-source-motion/final/archive-checks.txt)和[验证摘要](../evidence/desktop-source-motion/final/validation-summary.json)。运行诊断结束后，普通 test APK 已按字节恢复，应用 APK hash 未变；没有用诊断包替代普通回归产物。
+原始 22/82 证明位于 [reference/](../evidence/desktop-source-motion/reference)，`source/` 按字节保留既有 44 来源副本：42 张桌面捕获、55 份来源资产复用、167 个来源文件指纹。构建/lint 结果为 0 error、92 warnings、1 hint。封存器还核实 640 对语言资源、四份不变 assets、权限与签名、20 个 optional 测试隔离、54 个历史归档及自有测试应用状态清理/恢复，见[统一构建与回归记录](../evidence/desktop-source-motion/final/build-and-regressions.txt)、[归档核对](../evidence/desktop-source-motion/final/archive-checks.txt)和[验证摘要](../evidence/desktop-source-motion/final/validation-summary.json)。运行诊断结束后，普通 test APK 已按字节恢复，应用 APK hash 未变；没有用诊断包替代普通回归产物。
 
 首轮针对性运行 17 项中有 4 个 failure，完整保留于 [targeted-first-run.txt](../evidence/desktop-source-motion/initial-review/targeted-first-run.txt)。其中 fixed live900 的夹具只更新了精简 `DeviceUsage`，完整 `periodDetails.today` 仍为500，计算300历史+500live=800符合当时输入；修正两份解析投影一致性后，Projects 1200 静态与 Home 返回继续由原断言检查。首次 commit 的手动时钟 barrier 和导航菜单/滚动 harness 也作了修正。一次暂停时钟下菜单滚动未完成，主动停止的运行保留于 [targeted-second-interrupted.txt](../evidence/desktop-source-motion/initial-review/targeted-second-interrupted.txt)及[navigation-paused-scroll.txt](../evidence/desktop-source-motion/initial-review/navigation-paused-scroll.txt)，不计为通过。随后一项 entry 断言失败来自 `TokenTheme` 内层有效系统比例0覆盖外层 fixture 的1，记录于 [navigation-system-reduction-fixture.txt](../evidence/desktop-source-motion/initial-review/navigation-system-reduction-fixture.txt)。修正夹具、时钟 barrier 与导航 harness 后，完整158项通过；没有删除断言，也没有为这些失败改动原生生产实现。
 
@@ -92,4 +92,4 @@
 
 测量范围为自有60Hz模拟器的公开负载与 Window 指标。cadence 不是物理显示 FPS；Hub/Total提交观察只证明这两个指定区域的范围，不证明整个界面树的所有提交，也不保证手机卡顿已解决。既有工具中的可选帧采样仍是诊断手段，不把固定33帧导出恢复为必做交付。
 
-本轮没有物理 Xiaomi 13 Ultra FPS 或体验验证，没有 Lucky 公网 HTTPS 的安装后读取验证。整体桌面一致性也不以本轮动效测试代替用户验收。独立 Dashboard 整页、手动历史读取 receipt 及大 Hub 有界读取/兼容压缩缓存仍未实施，分别见 [DASHBOARD_PARITY_PLAN.md](DASHBOARD_PARITY_PLAN.md)、[HISTORY_READ_RECEIPT_PLAN.md](HISTORY_READ_RECEIPT_PLAN.md) 与 [HUB_CAPACITY_PLAN.md](HUB_CAPACITY_PLAN.md)。
+本轮没有物理 Xiaomi 13 Ultra FPS 或体验验证，没有 Lucky 公网 HTTPS 的安装后读取验证。整体桌面一致性也不以本轮动效测试代替用户验收。独立 Dashboard 整页、手动历史读取 receipt 及大 Hub 有界读取/兼容压缩缓存仍未实施，分别见 [DASHBOARD_PARITY_PLAN.md](archive/history/DASHBOARD_PARITY_PLAN.md)、[HISTORY_READ_RECEIPT_PLAN.md](archive/history/HISTORY_READ_RECEIPT_PLAN.md) 与 [HUB_CAPACITY_PLAN.md](HUB_CAPACITY_PLAN.md)。

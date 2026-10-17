@@ -43,7 +43,7 @@
 
 GitHub Actions工作流/运行均为0，不宣称远程CI通过。没有实体手机或实际认证Hub网络验收；模拟器不是Xiaomi真机。真实桌面renderer与有限像素已查，REA部分覆盖、后续深层像素受锁屏限制。原工作区三项修改保留，未恢复Widget、推进R8或改生产服务。
 
-详细指纹、首失败、继承证据和边界见[联合交接](HANDOFF_COMPACT_UI.md)及[36张改前改后原图](UI_COMPACT_COMPARISON_0.71.0-02.md)。本回执只补文档，不修改固定标签、APK或已公开附件。
+详细指纹、首失败、继承证据和边界见[联合交接](archive/history/HANDOFF_COMPACT_UI.md)及[36张改前改后原图](UI_COMPACT_COMPARISON_0.71.0-02.md)。本回执只补文档，不修改固定标签、APK或已公开附件。
 
 术语校正：附件VALIDATION.md中的four preference ciphertexts应为four binary preference files；只有Hub/历史缓存为既有加密存储。数据保留的SHA及读取验证结论不变，不覆盖固定发布附件。
 
@@ -55,7 +55,7 @@ GitHub Actions工作流/运行均为0，不宣称远程CI通过。没有实体�
 
 正式 APK **15,238,142 bytes / 14.53 MiB**，SHA-256 `df7ab620f0ca9d086ff30da761a232cb5bd99a9053356a3688c61006f1ab8c56`。沿用既有 `dev.bing.tokenmonitor.nativeclient` 包名与正式证书，版本 **0.2.64 / code73**，Release 非 debuggable。APK 为精确已验收候选字节，仅改正式文件名，未重建。原产品构建提交 `ab9a6acee07ddee302f23dd7e033cd19803e9f2e`、最终测试提交 `fc206065daf9b9fc29fd1c9b3136b619f83ae2bf` 和 Tag 发布提交由 manifest 分开记录；主源码树 `5e4703784f62bc2e59735c6283b9c54cb1ff6dfe`、Gradle 构建输入与原构建一致。APK 内嵌 VCS 为 `NO_VALID_GIT_FOUND`，不声称内嵌 Tag 提交；通过源树和外部指纹关联。
 
-455 Release 单元通过；Lint 0错误／96警告／1提示。精确最终产品原功能回归49/49、浅色布局10/10、深色网格／统一设置范围10方法、删除及真实常规2/2、网络／设置范围18方法、语言修复后5/5、真实系统旧绑定及缓存偏好保留升级2方法通过。失败整组、首失败指纹和后续定向复测分别保留，未把原深色12项或网络23项失败整组写成全绿。升级实测为正式签名0.2.63候选→0.2.64，不声称新做0.2.62直接升级。全部本轮运行界面／安装为模拟器，详见 [交接](HANDOFF_0.2.64.md)及 Release VALIDATION.md。
+455 Release 单元通过；Lint 0错误／96警告／1提示。精确最终产品原功能回归49/49、浅色布局10/10、深色网格／统一设置范围10方法、删除及真实常规2/2、网络／设置范围18方法、语言修复后5/5、真实系统旧绑定及缓存偏好保留升级2方法通过。失败整组、首失败指纹和后续定向复测分别保留，未把原深色12项或网络23项失败整组写成全绿。升级实测为正式签名0.2.63候选→0.2.64，不声称新做0.2.62直接升级。全部本轮运行界面／安装为模拟器，详见 [交接](archive/history/HANDOFF_0.2.64.md)及 Release VALIDATION.md。
 
 APK、SHA256SUMS.txt、release-manifest.json、VALIDATION.md **四附件草稿阶段完整下载**，逐文件大小及 SHA 一致后才正式发布；发布后四附件再次完整下载一致，公开无需认证 APK 及校验文件也完整下载核对。已核验 release/latest、Tag 指向和 main 包含 Tag。草稿按 Tag 查询首次404的错误保留，改用官方 Release ID 413156120 查询成功并完成下载核验，没有绕过失败。证据 `evidence/publication-064/draft-full-readback.json`、`final-full-readback.json`、两轮资产下载和公开下载；本地交付 `dist/release-0.2.64/`。发布后仅补文档回执，不改变固定 Tag／APK／四附件。
 
@@ -87,7 +87,7 @@ APK、SHA256SUMS.txt、release-manifest.json、VALIDATION.md四附件草稿阶�
 
 2026-10-13，[v0.2.61 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.61)已正式发布并标记最新，非草稿、非预发行。版本 **0.2.61 / code70**，唯一 annotated Tag 固定产品提交 `29121e4e4d36e98e56a389d22a1381a78a1a385f`。main与release/0.2.61已正常快进推送，正式包名和原证书保持；原源码工作区的NEXT_TASKS修改、AGENTS-original和REA审计未提交状态保留，开发在独立发布工作区完成。
 
-同版完成开关180ms续接与减少动态效果/真实零比例/后台收束、Android自身显式前台正式Release更新入口、只读加密缓存额度Widget，以及Dashboard日柱图和Records日柱/折线长按拖动逐日查看。用户后续明确确认的紧凑普通设置下拉和已内置两款字体菜单也合入本版。没有扩展导出、诊断、会话ID复制、7天Widget或采集功能。实现与范围见[联合交接](HANDOFF_0.2.61.md)。
+同版完成开关180ms续接与减少动态效果/真实零比例/后台收束、Android自身显式前台正式Release更新入口、只读加密缓存额度Widget，以及Dashboard日柱图和Records日柱/折线长按拖动逐日查看。用户后续明确确认的紧凑普通设置下拉和已内置两款字体菜单也合入本版。没有扩展导出、诊断、会话ID复制、7天Widget或采集功能。实现与范围见[联合交接](archive/history/HANDOFF_0.2.61.md)。
 
 Release单元 **446项**通过，Lint **0错误/101警告/1提示**，67运行依赖通知和685中英文资源对校验通过。最终精确APK **27项定向Android回归**通过；320/411dp × 系统字号1.0/2.0 × 浅深主题8组窗口 **56次执行**全部通过，统计不当作更多独立方法。额度Widget实际系统宿主覆盖两主题、四个尺寸/字号场景，含280×360dp/font2的严格文字和48dp入口边界。图表验证普通滑动/横滚、缺失/零值、更新中拖动与零额外读取；更新页验证状态、目标链接和前后台取消。首失败、修正过程、每轮APK指纹和实际合成数据截图均保留。
 
@@ -109,7 +109,7 @@ APK、SHA256SUMS.txt、release-manifest.json、VALIDATION.md四附件草稿阶�
 
 正式APK **15,183,070 bytes**，SHA256 `7d9ddcc4395d9d87b5daa6d3c98b26cf627083c4d31b0b8e75f754a4fa0eab5f`。同最终提交、版本、正式签名和Release参数的字体基线 **11,488,341 bytes**，全部字体增量 **3,694,729 bytes ≤ 5,000,000 bytes**。两包内嵌VCS提交相同；基线仅反向移除原17项字体差异，没有安装到设备。
 
-APK、SHA256SUMS.txt、release-manifest.json和VALIDATION.md四附件在草稿阶段全部完整下载，逐文件哈希与本地一致，随后正式发布；发布后再次完整下载APK，SHA256一致。回执位于 `evidence/unified-060/publication/`，交付 `dist/release-0.2.60/`；首次失败、截图、APK/测试指纹、侧任务Red及恢复过程均保留。范围见 [联合交接](HANDOFF_0.2.60.md) 与Release附件。
+APK、SHA256SUMS.txt、release-manifest.json和VALIDATION.md四附件在草稿阶段全部完整下载，逐文件哈希与本地一致，随后正式发布；发布后再次完整下载APK，SHA256一致。回执位于 `evidence/unified-060/publication/`，交付 `dist/release-0.2.60/`；首次失败、截图、APK/测试指纹、侧任务Red及恢复过程均保留。范围见 [联合交接](archive/history/HANDOFF_0.2.60.md) 与Release附件。
 
 未连接实体手机；新版蜂窝→Wi-Fi、真实Lucky/家庭LAN、持续锁屏/厂商后台、真机后台请求/SSE数与性能/FPS未验证。**原0.2.59 Xiaomi13Ultra蜂窝→Wi-Fi首次及两次复测失败、手动刷新恢复的结论不变**。未修改Hub/Lucky/NAS/Agent/路由器/桌面生产服务。本次仅此一个正式Release，发布后仅补本文档回执，固定Tag/APK不重建/覆盖，到此停止。
 
@@ -178,13 +178,13 @@ README重写并入库四张实际模拟器演示截图；通过GitHub内容API�
 
 发布 APK 为 0.2.53/code62，SHA256 `dff4af8483554533d517000636d687144258cf120f7f6499876b10781525b292`。APK、SHA256SUMS、release-manifest.json、VALIDATION.md 上传后在草稿阶段全部下载回读校验一致，正式发布后 APK 再次下载校验一致。私有仓库需要已获授权的 GitHub 账号访问；未更改可见性，旧预发布和资产保留。
 
-本轮本地 404 单元、16 Debug UI、18 Release UI和11 Window边界通过，Lint无错误；没有 GitHub Actions 或实体手机验收。签名密钥只在仓库外，不上传。旧 Debug 安装不能直接覆盖，禁止先卸载/清数据绕过签名；详情见 [HANDOFF_0.2.53.md](HANDOFF_0.2.53.md) 和 [RELEASE_SIGNING.md](RELEASE_SIGNING.md)。发布后仅文档状态更新，不重建或覆盖固定 Tag/APK。
+本轮本地 404 单元、16 Debug UI、18 Release UI和11 Window边界通过，Lint无错误；没有 GitHub Actions 或实体手机验收。签名密钥只在仓库外，不上传。旧 Debug 安装不能直接覆盖，禁止先卸载/清数据绕过签名；详情见 [HANDOFF_0.2.53.md](archive/history/HANDOFF_0.2.53.md) 和 [RELEASE_SIGNING.md](RELEASE_SIGNING.md)。发布后仅文档状态更新，不重建或覆盖固定 Tag/APK。
 
 ## 历史源码同步
 
 2026-10-12，用户确认本 Native 项目的正式仓库地址为 https://github.com/Gott-mit-Uns/token-monitor-android，并明确要求先发布 GitHub。本次将本地桌面 0.69 部分对齐、0.2.52-dev/code61 版本记录及合并后的根目录 `AGENTS.md` 同步至既有私有仓库；默认分支继续使用 `main`。远端 `main` 为本地开发分支祖先，保留全部提交历史，使用快进同步，不强制推送、不覆盖旧 Tag 或 Release。
 
-产品源码交付提交为 `138d7b7`，规则合并提交为 `cd653e2`；本次发布文档提交附在其后。开发分支 `feat/desktop-069-parity-ui` 同步保留，供异地任务按需求接续。新任务应读取 `AGENTS.md`、`docs/NEXT_TASKS.md`、`docs/HANDOFF_0.2.52.md` 和 `docs/HANDOFF_DESKTOP_069_UI.md`，核对实际 HEAD、工作区和未合并工作，不能把桌面部分对齐声称为完整对齐。
+产品源码交付提交为 `138d7b7`，规则合并提交为 `cd653e2`；本次发布文档提交附在其后。开发分支 `feat/desktop-069-parity-ui` 同步保留，供异地任务按需求接续。新任务应读取 `AGENTS.md`、`docs/NEXT_TASKS.md`、`docs/archive/history/HANDOFF_0.2.52.md` 和 `docs/archive/history/HANDOFF_DESKTOP_069_UI.md`，核对实际 HEAD、工作区和未合并工作，不能把桌面部分对齐声称为完整对齐。
 
 本次仅发布已有源码和工程文档，不修改 Android 产品代码、不递增版本、不构建 APK、不上传 APK、不创建新的 GitHub Release或推送新的版本 Tag。0.2.52-dev 本地交付仍是 Debug 验证包，正式签名来源和正式 APK 发布流程尚待确认。历史开发预发布及其资产保留。
 
@@ -202,10 +202,10 @@ README重写并入库四张实际模拟器演示截图；通过GitHub内容API�
 
 [预发布下载](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/dev-hub-failover-20261012)附开发验证APK、SHA256SUMS.txt和VALIDATION.md；原始测试输出留在本机evidence/hub-connection-failover。应用SHA256为d27c8fa3f43f264ad7de4a156320a187f9382a3760b5b2eaf4a3ac8d8013729a，code60/versionName0.2.51-dev与签名未变；未覆盖原dist交付。无需重建或重复测试纯发布文档。
 
-46单元及38Android/Compose定向通过；Lint0错误/97警告/1提示，新增0。身份保证限制、旧APK降级缓存限制、手机/蜂窝/Lucky未验证边界，均在预发布说明和[网络专项交接](HANDOFF_HUB_CONNECTION_FAILOVER.md)中明确保留。
+46单元及38Android/Compose定向通过；Lint0错误/97警告/1提示，新增0。身份保证限制、旧APK降级缓存限制、手机/蜂窝/Lucky未验证边界，均在预发布说明和[网络专项交接](archive/history/HANDOFF_HUB_CONNECTION_FAILOVER.md)中明确保留。
 
 远程提交、标签及下载校验回执保存在本地evidence/github-publication/，发布完毕停止，不继续开发或修改生产服务。
 
 ## 2026-10-15：0.71.0-01 正式发布
 
-固定桌面 v0.71.0，Android 编号参照 NAS 的上游基础＋两位修订号，code74。正式 Release 为 [v0.71.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-01)，旧更新解析兼容 latest 为 [v0.2.65](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.65)，均指向 `ac37728cd79d8bdb9b4e6104fb25586a3b6f7d11`，同字节签名 APK。SHA-256 `2e62a0239f6f6917d321d30152ccb6986e77a95e36fa693accb26d5594c3ccbb`。双草稿/正式8附件、双匿名APK与实际旧/新版公开更新元数据回归均已验证；完整回执、测试范围及未验证手机边界见 [补充交接](HANDOFF_0.71.0-01.md)。原0.2.64发布回执保留为历史。
+固定桌面 v0.71.0，Android 编号参照 NAS 的上游基础＋两位修订号，code74。正式 Release 为 [v0.71.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.71.0-01)，旧更新解析兼容 latest 为 [v0.2.65](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.65)，均指向 `ac37728cd79d8bdb9b4e6104fb25586a3b6f7d11`，同字节签名 APK。SHA-256 `2e62a0239f6f6917d321d30152ccb6986e77a95e36fa693accb26d5594c3ccbb`。双草稿/正式8附件、双匿名APK与实际旧/新版公开更新元数据回归均已验证；完整回执、测试范围及未验证手机边界见 [补充交接](archive/history/HANDOFF_0.71.0-01.md)。原0.2.64发布回执保留为历史。

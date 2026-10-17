@@ -130,7 +130,8 @@ const scripts=['src/shared/clientCatalog.js','src/shared/vendorPresentation.js',
    return results;
   },{providers,now,vendor,appFunctions});
   const data={source:'v0.68.0/5d2db368d8313415763860d594de00e46a663418; original Home application functions and stylesheet; full numeric formatter',now,zone:'Asia/Shanghai',cases};
-  const file=path.join(root,'app/src/test/resources/home-quota-parity.json');fs.writeFileSync(file,JSON.stringify(data,null,2)+'\n');fs.copyFileSync(file,path.join(root,'app/src/androidTest/assets/home-quota-parity.json'));
+  fs.mkdirSync(path.join(root,'app/src/sharedTest/resources'),{recursive:true});
+  const file=path.join(root,'app/src/sharedTest/resources/home-quota-parity.json');fs.writeFileSync(file,JSON.stringify(data,null,2)+'\n');
   for(const name of ['text','bars']) await page.locator(`[data-fixture-home="${name}"]`).screenshot({path:path.join(evidence,`desktop-home-${name}-reference-dark.png`)});
   fs.writeFileSync(path.join(evidence,'source-reference-summary.txt'),`Actual original Home DOM: ${cases.length} multi-account/options/locale cases\nPublic fixtures; remote requests blocked; independent browser profile\n`);
   process.stdout.write(`Captured ${cases.length} actual desktop Home cases\n`);

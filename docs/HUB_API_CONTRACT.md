@@ -93,7 +93,7 @@ Android复用现有GET /api/health的验证响应，保留可选hubBuild.schemaV
 
 宿主验证证据：`evidence/v5-unified/network/host-dual-entry.json`。Android 当前模拟器与真实 NAS 不同子网，直接 LAN 准入应保守拒绝；通过 Mac 回环只读桥接读取真实 LAN 数据的测试，须明确标为桥接。真实 Lucky HTTPS 可由模拟器正式客户端直接读取，系统证书校验不变；具体 APK 指纹、生命周期和缓存结果见 V5 网络交接。
 
-V5 Android 实际联调已完成：真实 LAN 数据经受控只读回环桥接、真实 Lucky 原域名/系统 TLS 经仅转发加密字节的本地 CONNECT 诊断路线。实际 snapshot/history/标题/timed 平均速率及受限 Codex 可选字段解析、加密缓存、Home/Launcher/SSE 与冷模型恢复通过。直接 Android LAN 和直接公网/蜂窝/IPv6 仍未验证，详见 `docs/HANDOFF_V5_NETWORK.md`，不将诊断路线等同于手机网络。
+V5 Android 实际联调已完成：真实 LAN 数据经受控只读回环桥接、真实 Lucky 原域名/系统 TLS 经仅转发加密字节的本地 CONNECT 诊断路线。实际 snapshot/history/标题/timed 平均速率及受限 Codex 可选字段解析、加密缓存、Home/Launcher/SSE 与冷模型恢复通过。直接 Android LAN 和直接公网/蜂窝/IPv6 仍未验证，详见 `docs/archive/history/HANDOFF_V5_NETWORK.md`，不将诊断路线等同于手机网络。
 
 真实 TLS 还暴露并修复 Android 连接池主线程清理异常：空闲 TLS Socket 关闭可发送 close_notify，原 ViewModel 清理/网络替换会触发 NetworkOnMainThreadException。现在捕获原池后在独立 IO 调度中关闭，不改变鉴权、证书/主机名、端点准入、取消/epoch、SSE 或有效缓存规则。相同真实 Conscrypt keep-alive/StrictMode 测试 APK 的修复前后失败→通过，以及最终真实联调均有指纹证据。
 

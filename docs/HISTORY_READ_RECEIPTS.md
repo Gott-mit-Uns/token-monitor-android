@@ -4,7 +4,7 @@
 
 ## 桌面依据与结果接受
 
-固定桌面v0.68.0，提交`5d2db368d8313415763860d594de00e46a663418`。原始app.js的loadHomeHistory与homeOverview.js的结果/重试函数使用本次请求结果，以及开始时冻结的预览状态；forceHistory在stats成功后重置有限周期。原始捕获见[历史函数证据](../evidence/theme-history-actions/reference-history.txt)，实施前约定见[计划](HISTORY_READ_RECEIPT_PLAN.md)。
+固定桌面v0.68.0，提交`5d2db368d8313415763860d594de00e46a663418`。原始app.js的loadHomeHistory与homeOverview.js的结果/重试函数使用本次请求结果，以及开始时冻结的预览状态；forceHistory在stats成功后重置有限周期。原始捕获见[历史函数证据](../evidence/theme-history-actions/reference-history.txt)，实施前约定见[计划](archive/history/HISTORY_READ_RECEIPT_PLAN.md)。
 
 47的请求拥有连接修订+业务签名、cycleId、requestId和实际start次数。旧非空内容只负责显示，不能证明新手动读取成功。historyRenderRevision仍是接受并应用数据的显示事件，与请求回执分别管理。
 
@@ -37,4 +37,4 @@ SSE非认证断开的重连timer若遇到长时间loading，47会在读取/保�
 - 最终Lint无错误，签名/权限/资源/附件核对通过；56份APK归档校验通过，模拟器公开数据清除、测试包卸载。0.2.46既有证据保持原哈希，不覆盖首次失败。
 - 首次封存的安装哈希检查发现普通回归结束后应用已被移除，因此未发布final。随后在同一专用模拟器重新安装最终相同APK，再核对已安装字节、签名与版本并清理；已不存在的测试包直接核对缺席。该操作不计为覆盖升级，初次检查日志保留。
 
-证据目录：[history-read-receipts](../evidence/history-read-receipts/)。Dashboard多配置截图及Window性能仍属于0.2.46，主窗口Window仍属于0.2.45；本轮不将其改写为新包测量。大Hub容量、旧API图形/图片回退、实体手机和实际Lucky成功链路仍未确认。
+证据目录：[history-read-receipts](../evidence/history-read-receipts)。Dashboard多配置截图及Window性能仍属于0.2.46，主窗口Window仍属于0.2.45；本轮不将其改写为新包测量。大Hub容量、旧API图形/图片回退、实体手机和实际Lucky成功链路仍未确认。
