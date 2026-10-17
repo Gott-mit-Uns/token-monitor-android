@@ -89,7 +89,7 @@ def anchors(text):
             headings.append(atx[1])
         elif line.strip() and index + 1 < len(lines) and re.match(r'^ {0,3}(?:=+|-+)\s*$', lines[index + 1]):
             start = index
-            while start > 0 and lines[start - 1].strip() and not re.match(r'^ {0,3}(?:#{1,6}\s|(?:=+|-+)\s*$)', lines[start - 1]):
+            while start > 0 and lines[start - 1].strip() and not re.match(r'^ {0,3}(?:#{1,6}\s|(?:=+|-+)\s*$|(?:(?:\*\s*){3,}|(?:_\s*){3,}|(?:-\s*){3,})$)', lines[start - 1]):
                 start -= 1
             headings.append(' '.join(part.strip() for part in lines[start:index + 1]))
     for title in headings:
@@ -303,6 +303,9 @@ def self_test():
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         (root / 'docs/HANDOFF.md').write_text('[Guide]\n[Guide]: missing.md\n[Guide]: ../README.md\n')
         assert any('missing local link' in e for e in check(root, 'HEAD'))
+        for divider in ['***', '_ _ _', '- - -']:
+            (root / 'docs/HANDOFF.md').write_text(divider + '\nTitle\n---\n[valid](#title)\n')
+            assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('First\n---\nSecond\n---\n[valid](#first) [valid](#second)\n')
         assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('Foo\nbar\n---\n[valid](#foo-bar)\n')
