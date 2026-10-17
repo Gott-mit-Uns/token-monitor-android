@@ -22,11 +22,11 @@ LAN限私网字面IPv4、Wi-Fi/有线本地子网、系统许可与绑定Network
 
 ## 可选字段、设备与会话
 
-鉴权full snapshot可含hub.displayName：非空、≤80 Unicode码点、无控制/格式/孤立代理码点。名称只属于显示元数据，不是Hub身份；随原始快照加密保存，freshness不能改名，新的无名称full回到DNS/未知降级。公开health/collector/IP/产品型号不能猜名称。服务端发行与部署分别核验。
+鉴权full snapshot可含hub.displayName：非空、≤80 Unicode码点、无控制/格式/孤立代理码点。名称只属于显示元数据，不是Hub身份；随原始快照加密保存，freshness不能改名，新的无名称full使用当前连接显示别名或未知降级。公开health/collector/IP/产品型号不能猜名称。服务端发行与部署分别核验。
 
 session nativeSessionId、t3ThreadId、parentSessionId/parentClient均按验证后可选证据处理，冲突不猜。记账键仍client:sessionId；一个成员只计一次，父total不再与组摘要叠加。liveActivity有独立观测时钟，未来值拒绝，30秒租约过期回退；waitingForInput按lastUsedAt保留true/false/缺失，turnEnded/归档压制，10分钟窗口，不能当批准原因。title限160码点，源端撤销不可由本机补取。
 
-分组调用数成员缺失/非法则未知；缓存率累加原分子分母，常规input+read+write，Goose input已含read；分母0不出读数，不平均比例。速度先逐成员cap(timedOutput,output)，只汇总有效正duration的计时部分，乘1000换tok/s；不代表未计时成员。最近活动取最大时间，不平均。缺少远程批准原因/逐轮正文/Grok历史增强合同，不用Android本地采集补齐。
+分组调用数成员缺失/非法则未知；缓存率累加原分子分母，常规input+read+write，Goose input已含read；分母0不出读数，不平均比例。v0.73生产端的timedOutputTokens来自实际计时消息小计（明确零为权威，不用coverage推算）；旧Agent原样计数仍按其近似范围消费，Android不补算未提供的计时。速度先逐成员cap(timedOutput,output)，只汇总有效正duration的计时部分，乘1000换tok/s；不代表未计时成员。最近活动取最大时间，不平均。缺少远程批准原因/逐轮正文/Grok历史增强合同，不用Android本地采集补齐。
 
 ## 共享数据与历史
 

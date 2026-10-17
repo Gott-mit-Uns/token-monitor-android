@@ -1,6 +1,29 @@
 # 当前验收记录
 
-## 本次正式发行验证：0.72.0-02 / code77
+## 当前开发验收：桌面 v0.73.0 / Android候选0.73.0-01
+
+检查日期：2026-10-18（Asia/Shanghai）。分支起点 `20d6df77cd0fc759a96386e658422a448e097649`；上游latest正式版Tag固定为 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`，收尾再次查询仍为同版。线上Android仍为0.72.0-02/code77，本次仅交付PR，候选code78未合并、未发布。逐上游增量处理及合同限制只见 [HANDOFF](HANDOFF.md)。
+
+| 本轮检查 | 实跑证据与范围 |
+|---|---|
+| 完整JVM | 最终523项、99类，0失败/错误/跳过；Wrapper/JDK17/SDK37 release变体离线执行。固定桌面sessionRows直接生成48个标题参考，覆盖私用区三平面、正常/非匹配前缀、非OMP工具、隐私隐藏及原始元数据保留；完整registry逐项比较。固定桌面生产代码生成6个Hub wire样例，覆盖部分计时、明确零、旧二进制行为、无duration、reasoning及上限，验证period/session/model消费，不在手机补算。 |
+| 业务更正 | stats完整替换旧正值为明确零，经JSON投影、解析及带恶意旧业务字段的freshness后仍为零；旧会话不重现。模拟器独立加密缓存冷读保留原始OMP标题、零值与计时字段。不是生产采集端或生产Hub联调。 |
+| 正式签名覆盖 | 临时只读克隆API36 ARM64 emulator-5592，正式0.72.0-02/code77先写入独立公开合成加密Hub历史和四份显示偏好，install -r覆盖到候选code78，无卸载/清数据。UID10213、五份文件哈希逐项一致，升级包成功解密还原；实际安装APK回读SHA与候选完全相同。实体手机私有数据未验证。 |
+| 既有要求回归 | 候选APK上17项通过：SignedUpgrade、AndroidUpdateScreen、LauncherLabel、SyncDeviceGrid、FontRowAlignment和新增OMP首页/列表/摘要/缓存检查；包括纯手动更新、前后台不自动检查、重置语义及Hub别名隔离。此次测试包SHA为007087e4…（下文完整值）；后续仅在新增测试类增加长标题像素检查，产品APK与上述测试类既有逻辑不变。 |
+| 真实窗口矩阵 | 约320/393/411dp（880/1080/1130px、density440）× 系统字号1/2 × 浅/深色，共12组36项；新增测试类检查首页/列表/摘要标题一致、长标题全文换行与可见行边界、原始缓存保留。矩阵不通过缩小字体、截断数据或清应用数据取得结果。结束还原1080×2400、density420、系统字号1。 |
+| 构建/静态 | 正式release APK和测试APK构建成功；最终Lint 0错误、102警告、1提示，与原基线告警数量相同。670对中英资源、文档门禁、git diff --check通过。未改依赖、签名、加密存储格式或R8。 |
+
+候选应用APK：versionName0.73.0-01/code78，applicationId仍 `dev.bing.tokenmonitor.nativeclient`，15,307,246字节，SHA256 `3c5b6c00c85bb362a67036c1b7bab97f448b24c10f0eb3b4bdd973fecb814453`；正式证书SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。17项专项测试包SHA256 `007087e4e8537ad78f42e0c47cfdd5914c947a636f5cefecb7774a7e67c5a1cf`；最终矩阵测试包1,801,737字节、SHA256 `cdce2c4b8b9d7fd3855d1ef6cab6523b8ea675018657afcd02495e976b1eae97`。产品源码在上述两批测试间不变。
+
+本轮原始日志及公开指纹：`/tmp/token-monitor-073-build.log`、`/tmp/token-monitor-073-final-unit-lint.log`、`/tmp/token-monitor-073-ui-after-standard.log`、`/tmp/token-monitor-073-upgrade-receipts.log`、`/tmp/token-monitor-073-matrix/summary.json`及每组instrumentation.log，最终摘要在`/tmp/token-monitor-073-final-evidence/`；本地临时路径不宣称随Git发布。
+
+原图：[OMP修改前](../design/sessions-omp-before.png)、[OMP修改后](../design/sessions-omp-after.png)、[首页浅色](../design/sessions-omp-home.png)、[320dp字号2长标题浅色](../design/sessions-omp-large-light.png)、[同配置深色](../design/sessions-omp-large-dark.png)。前后列表两图均为1080×2400/density420/字号1深色、相同公开样例，时间为各次实际渲染时刻；其余是明确配置的产品原始渲染，长标题图截取实际摘要区域。均不是生产Hub或小米截图，已实际查看前后列表及大字体双主题摘要；没有P图补字。
+
+首次失败保留：新增JVM测试错误假设HubParser不trim标题边缘，实际既有解析规则会trim；修正为验证获准元数据后，通过全部48个桌面参考，未修改解析规则。首次UI在打开摘要后的截图onRoot匹配两个窗口根节点而失败，标题断言已通过；改为定位已有摘要Tag，未修改产品弹层或断言标准。首次日志为`/tmp/token-monitor-073-unit-first.log`、`/tmp/token-monitor-073-unit-first-failure.xml`、`/tmp/token-monitor-073-ui-before.log`，首次UI应用为正式code77/SHA727f78c9…，测试APK SHA256 `101fafbc3166fd1c146e3f57c8be343680dd419f2ef0832272c52a3a595aebb9`。修正后旧包浅/深基线共5项（含升级资料准备）通过。
+
+本轮未操作NAS、桌面运行服务或生产连接；OMP逐回合正文缺Hub合同，Cursor新采集逻辑和新scanner实际运行效果未验证。实体手机、生产Hub、实际账号、真实切网与OEM行为未验证，按项目规则不构成真机发布门槛。fullyAligned=false保留；不把本轮模拟器或固定源码样例称为生产端到端对齐。README未修改，既有背景图和其他历史待办未扩入本轮。
+
+## 已发布基线验证：0.72.0-02 / code77
 
 检查时间：2026-10-17（Asia/Shanghai）。用户已明确授权发布Android；所有更新均不要求真机测试，真机未测仅标未验证，不阻塞交付或已授权发布。未改NAS、未实施0.73对齐。构建提交 `e308802a9611be1b93c446e7eea3e64447719a7c`；PR #13已合并，发布Tag `v0.72.0-02` 指向 `8917d8032acd2d460ceb0db025c0f86a3c765c2a`，其生产构建输入与构建提交逐项相同。
 
