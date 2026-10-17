@@ -60,7 +60,7 @@
 
 每次开发任务开始前：
 
-1. 阅读本文件、`docs/TAKEOVER_AUDIT_0.2.51.md` 和 `docs/NEXT_TASKS.md`，再按问题查 `docs/ARCHITECTURE.md`、`docs/FEATURE_MATRIX.md`、`docs/HUB_API_CONTRACT.md`。历史入口为 `docs/HANDOFF_0.2.51.md` 和 `docs/USER_FEEDBACK_048.md`；桌面合同及 UI 增量交接另见 `docs/HANDOFF_DESKTOP_069_UI.md`；当前交付与目标状态以最新交接和证据为准。
+1. 阅读本文件、`docs/INDEX.md` 和 `docs/NEXT_TASKS.md`，再按问题查 `docs/ARCHITECTURE.md`、`docs/FEATURE_MATRIX.md`、`docs/HUB_API_CONTRACT.md` 和当前版本交接。历史接管、旧计划及已取消功能只从 `docs/archive/INDEX.md` 按需查阅，不把历史阶段状态当作当前任务。
 2. 检查 Git HEAD、当前分支和工作区状态。
 3. 确认当前最新已验证的代码基线。
 4. 定位本次任务涉及的代码和测试。

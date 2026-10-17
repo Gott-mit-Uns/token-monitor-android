@@ -44,6 +44,9 @@ android {
     testBuildType = if (providers.gradleProperty("tokenMonitorReleaseTest").orNull == "true") "release" else "debug"
     buildFeatures { compose = true }
     testOptions { unitTests.isIncludeAndroidResources = true }
+    // Public fixtures shared by JVM resources and instrumentation assets only.
+    sourceSets.getByName("test").resources.directories.add("src/sharedTest/resources")
+    sourceSets.getByName("androidTest").assets.directories.add("src/sharedTest/resources")
     bundle { language { enableSplit = false } }
     if (providers.gradleProperty("tokenMonitorLiveTest").orNull == "true") {
         sourceSets.getByName("androidTest").kotlin.directories.add("src/liveTest/java")

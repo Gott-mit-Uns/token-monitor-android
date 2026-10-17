@@ -2,9 +2,9 @@
 
 0.2.60/69正式发布完成：同最终提交正式Release候选 15,183,070 bytes、字体基线 11,488,341 bytes，增量 **3,694,729 bytes**，通过5,000,000 bytes门槛。当前状态见 [发布回执](../../docs/GITHUB_PUBLICATION.md)。以下分阶段记录保留。
 
-2026-10-13 Mac联合候选已完成真实Android字形、系统后备、浅深/真实窗口/最大字号及偏好保留检查；初期正式Release字体增量3,694,729 bytes，最终同提交封包增量以Release四附件为准。运行字体仅四个Token UI/Token Data派生TTF，完整Noto原始设计源不打包。见 [0.2.60交接](../../docs/HANDOFF_0.2.60.md)。以下为历史暂存说明。
+2026-10-13 Mac联合候选已完成真实Android字形、系统后备、浅深/真实窗口/最大字号及偏好保留检查；初期正式Release字体增量3,694,729 bytes，最终同提交封包增量以Release四附件为准。运行字体仅四个Token UI/Token Data派生TTF，完整Noto原始设计源不打包。见 [0.2.60交接](../../docs/archive/history/HANDOFF_0.2.60.md)。以下为历史暂存说明。
 
-2026-10-13 最新接续状态：轻量字体已接入 release/0.2.60 源码，默认界面/总量为 Inter + Noto 常用中文合成，数据为 JetBrains Mono；派生名称 Token UI/Token Data，指纹见 bundled-manifest.json。Windows 已完成单元、编译和 Lint，设备字形/布局、真实系统后备及同配置正式 APK ≤5 MB 增量尚待 Mac 验证；详见 docs/HANDOFF_UNIFIED_0.2.60_MAC.md。以下是原始暂存阶段的说明。
+2026-10-13 最新接续状态：轻量字体已接入 release/0.2.60 源码，默认界面/总量为 Inter + Noto 常用中文合成，数据为 JetBrains Mono；派生名称 Token UI/Token Data，指纹见 bundled-manifest.json。Windows 已完成单元、编译和 Lint，设备字形/布局、真实系统后备及同配置正式 APK ≤5 MB 增量尚待 Mac 验证；详见 [历史联合交接](../../docs/archive/history/HANDOFF_UNIFIED_0.2.60_MAC.md)。以下是原始暂存阶段的说明。
 
 日期：2026-10-13。状态：**用户已接受预览方案；资源入库，等待下次其他功能更新时一起集成。**
 

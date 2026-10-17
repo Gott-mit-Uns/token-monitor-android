@@ -8,7 +8,7 @@
 
 - Fixed desktop 0.71 increment: Goose identity/goose-db and unknown real call counts; Notion dual allowance windows, unknown resets and independent account hashes; WorkBuddy exact account binding and complete/compatible display totals.
 - Combined version name, original package/signature and old Hub compatibility. Existing Pi/CodeBuddy summary refresh state is tested; remote chat Detail still lacks a protocol.
-- Keep Widget removal, compact About, two-column devices, both addresses/actual endpoint, themes/fonts/motion/network recovery. No R8/shrinking. 464 unit tests plus scoped native/cache/network/signed-upgrade checks passed. Formal release and phone installation await confirmation. See [handoff](HANDOFF_0.71.0_ANDROID_0.2.65.md).
+- Keep Widget removal, compact About, two-column devices, both addresses/actual endpoint, themes/fonts/motion/network recovery. No R8/shrinking. 464 unit tests plus scoped native/cache/network/signed-upgrade checks passed. Formal release and phone installation await confirmation. See [handoff](archive/history/HANDOFF_0.71.0_ANDROID_0.2.65.md).
 
 
 ## 0.2.62 / 71 — 2026-10-14

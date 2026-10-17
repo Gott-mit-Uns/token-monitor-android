@@ -1,5 +1,7 @@
 # Hub 容量性能计划：第 49 阶段
 
+> 当前适用边界：Android 小组件已取消，下文 widget 测量与候选仅保留历史依据，不再作为待执行工作。当前性能任务只覆盖应用前台、网络、解析、页面与完整缓存；不得恢复小组件来复跑旧计划。
+
 状态：**粗粒度测量基线与 B1 typed freshness 复用已完成，整体性能优化继续**。0.2.49-dev / code58 是测量基线；0.2.50-dev / code59 完成同一 SSE generation 的 typed freshness 复用，通过 316 项单元、206 项普通 API36 回归、7 项容量路径、3 项独立集成，以及空首页与默认四模块首页各 5 次独立进程测量。具体范围、原始记录与 P50/P95 见 [49 测量基线](HUB_CAPACITY_PERFORMANCE_BASELINE.md) 和 [50 B1 比较](HUB_CAPACITY_FRESHNESS_REUSE.md)。局部 typed 重建减少没有证明整个动作或主线程等待一致改善；精确分配、对象存活与采样调用栈尚未取得。推荐安装包仍为 [已封存的 48](HUB_CAPACITY.md)。后续先补 [48 导航、语言和动效反馈](USER_FEEDBACK_048.md)，之后继续 B2/B3 和页面准备；原目标不变。
 
 目标是在现有 **192 MiB Java 堆预算**内保留完整来源业务，减少大对象并存和主线程全表派生，验证实际页面是否更快、更稳定。不得增加堆或输入上限、缩减 fixture、删除顶层会话/项目/历史、改变费用与未定价语义，或关闭必要数字动效来通过验收。用户额外强调首页Token动效的要求已撤销；此处只保持桌面本来已有的统一过渡、帧状态隔离与减少动态效果规则，不恢复固定帧交付要求。继续使用固定桌面 v0.68.0，提交 `5d2db368d8313415763860d594de00e46a663418`；不修改 Hub 服务、采集、远端数据或读写职责。
@@ -40,7 +42,7 @@
 | Main 上的结构相等检查 | freshness 重建等价 Period/UsageRow 后，`remember(rawPeriod,currency)`、today Period 与 sessions 列表的 key 可以比较大量明细 | 测量 Period/UsageRow equality；按实际字段或可信 revision/引用作 key，不能用全树 hashCode 替代。Snapshot.updated 改变时首字段通常短路，不能笼统称每次 Snapshot key 都全树扫描 |
 | Projects 的归一化/汇总/排序 | [ProjectDisplay](../app/src/main/java/dev/bing/tokenmonitor/ProjectDeviceDisplay.kt) 在 Projects 页把全表归一化、精确汇总并排序；费用比较器重复构造 BigDecimal。路由已 gating，不是隐藏 Projects 全表计算 | 缓存当前选期输入与显示参数；排序键预解析一次；必要时唯一后台任务准备显示表，Main 只选择/提交/渲染 |
 | 投影与解析临时容器 | [HubJsonProjection](../app/src/main/java/dev/bing/tokenmonitor/HubJsonProjection.kt) 每个模型候选调用构造 `position + ordinal` 列表，重复 ID 也会构造；HubData 和 SessionMetadataParser 的 mapNotNull/toMap 创建 Pair 与中间表 | 仪表确认后，用可复用路径栈、仅接受候选时复制位置；解析小 map 用保持顺序的直接循环，避免中间 Pair/List |
-| 保存后的 widget 完整恢复 | persist 调用 updateAll；只有存在 widget 时，[HubWidget](../app/src/main/java/dev/bing/tokenmonitor/HubWidgetProvider.kt) 才 load 完整 SavedHub；[HubStore](../app/src/main/java/dev/bing/tokenmonitor/HubStore.kt) 恢复完整 Snapshot | 分别测无 widget / 有 widget 的保存峰值。1.89 ms 只测已解析模型的小投影，不能当作完整 widget load 的成本；只有确认瓶颈后才设计内部只读最小读取路径 |
+| 保存后的 widget 完整恢复 | persist 调用 updateAll；只有存在 widget 时，[历史 HubWidget 规格](archive/widgets/widget-spec.md) 才 load 完整 SavedHub；[HubStore](../app/src/main/java/dev/bing/tokenmonitor/HubStore.kt) 恢复完整 Snapshot | 分别测无 widget / 有 widget 的保存峰值。1.89 ms 只测已解析模型的小投影，不能当作完整 widget load 的成本；只有确认瓶颈后才设计内部只读最小读取路径 |
 
 这些是可避免工作或并存表示的具体候选，**不是 2,513 ms 停顿的因果结论**。Java 的 String/StringWriter、JSON 树和容器的实际字节成本应从分配与存活数据测量，不能简单把 UTF-8 长度乘一个固定系数当作峰值。
 
