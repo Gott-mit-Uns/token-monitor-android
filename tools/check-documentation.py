@@ -60,7 +60,7 @@ def without_fences(text):
 
 
 def anchors(text):
-    text = without_fences(text)
+    text = re.sub(r'<!--[\s\S]*?-->', '', without_fences(text))
     found, counts = set(), {}
     headings = []
     lines = text.splitlines()
@@ -76,8 +76,12 @@ def anchors(text):
         title = re.sub(r'<[^>]+>', '', title).strip().lower()
         title = re.sub(r'[^\w\-\s]', '', title).replace(' ', '-')
         count = counts.get(title, 0)
+        candidate = title + (f'-{count}' if count else '')
+        while candidate in found:
+            count += 1
+            candidate = title + f'-{count}'
         counts[title] = count + 1
-        found.add(title + (f'-{count}' if count else ''))
+        found.add(candidate)
     found.update(re.findall(r'\b(?:id|name)=[\"\x27]([^\"\x27]+)', text, re.I))
     return found
 
@@ -259,6 +263,11 @@ def self_test():
         (root / 'reports/file(1).md').write_text('# Encoded target\n')
         (root / 'docs/HANDOFF.md').write_text('# Current\n[encoded](../reports/file%281%29.md)\n')
         assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        (root / 'docs/HANDOFF.md').write_text('# foo\n# foo-1\n# foo\n[valid](#foo-2)\n')
+        assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n<!--\n# Hidden\n-->\n[bad](#hidden)\n')
+        assert any('missing anchor' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md', 'HANDOFF_2027', 'VALIDATION_2027.adoc', 'HANDOFF_2027.html']:
             candidate = root / 'reports' / duplicate
