@@ -27,5 +27,7 @@ interface HubUiActions {
     fun loadHistory(manual: Boolean): Boolean { loadHistory(); return true }
     fun loadSubscriptions()
     fun forget()
+    /** Local display metadata for the accepted connection, never server identity. */
+    fun renameHubDisplay(input:String) {}
     fun renameDevice(id: String, input: String)
 }

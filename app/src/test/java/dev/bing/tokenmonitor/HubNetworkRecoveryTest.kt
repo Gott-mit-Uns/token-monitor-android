@@ -252,6 +252,33 @@ class HubNetworkRecoveryTest {
             assertEquals(reads + 2, s.statsAttempts.get())
         } finally { gate.countDown() }
     }
+    @Test fun connectionAliasPersistsAcrossRefreshAndColdRestoreButNotReplacementOrForget() = Scenario().use { s ->
+        s.online()
+        s.model.renameHubDisplay("DXP4800")
+        s.await("Local alias must persist") {s.store.load()?.hubDisplayAlias=="DXP4800"}
+        assertEquals("DXP4800",SyncSettingsPresentation.hubHostName(s.model.state.value))
+        val coldOwner=ViewModelStore()
+        val cold=HubViewModel(s.app,s.store,s.client).also {coldOwner.put("cold",it)}
+        try {
+            s.await("Alias must cold restore") {cold.state.value.hubDisplayAlias=="DXP4800"}
+        } finally {coldOwner.clear()}
+        s.model.refreshSaved()
+        s.await("Same binding refresh must finish") {!s.model.state.value.loading && s.model.state.value.connectedEndpoint!=null}
+        assertEquals("DXP4800",s.model.state.value.hubDisplayAlias)
+        val otherSecret=UUID.randomUUID().toString()
+        RecoveryFixtureHub(otherSecret,HandshakeCertificates.Builder().heldCertificate(s.certificate).build()).use { next ->
+            val base="https://127.0.0.1:${next.port}"
+            s.model.connect(base,otherSecret,"")
+            s.await("Replacement connection must commit") {s.model.state.value.connectedEndpoint==base && !s.model.state.value.loading}
+            assertNull(s.model.state.value.hubDisplayAlias)
+            assertNull(s.store.load()?.hubDisplayAlias)
+            assertNull(SyncSettingsPresentation.hubHostName(s.model.state.value))
+            s.model.renameHubDisplay("Other alias")
+            s.await("New alias must persist") {s.store.load()?.hubDisplayAlias=="Other alias"}
+            s.model.forget()
+            s.await("Forget must clear binding and alias") {s.store.load()==null && s.model.state.value.hubDisplayAlias==null}
+        }
+    }
     @Test fun replacingConnectionCancelsRecoveryForTheOldAuthorityAndDropsItsHubName() = Scenario("Synthetic Hub A").use { s ->
         s.online(); assertEquals("Synthetic Hub A", s.model.state.value.snapshot?.hubDisplayName); s.failures.set(1); val reads = s.healthAttempts.get()
         s.model.updateNetworkScope(s.scope(2))

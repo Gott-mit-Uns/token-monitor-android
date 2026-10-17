@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CompositionLocalProvider(LocalAndroidUpdateController provides androidUpdates.controller) {
+            CompositionLocalProvider(LocalAndroidUpdateController provides androidUpdates.controller, LocalDesktopReleaseController provides androidUpdates.desktopController) {
             HubApp(model, localAllowed.value,
                 requestLocal = { localPermission.launch(HubLocalPermission.NAME) },
                 openLocalSettings = { startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null))

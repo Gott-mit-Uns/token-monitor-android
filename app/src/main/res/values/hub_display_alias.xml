@@ -1,0 +1,5 @@
+<resources>
+    <string name="hub_display_alias">Hub display alias</string>
+    <string name="hub_display_alias_note">Used only for this saved connection when the Hub provides no name. It does not verify Hub identity. Leave empty to remove.</string>
+    <string name="error_hub_display_alias">Use a Hub display alias of up to 80 characters without control characters.</string>
+</resources>

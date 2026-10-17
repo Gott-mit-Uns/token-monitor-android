@@ -8,4 +8,5 @@
     <string name="desktop_latest_rate">GitHub rate limit reached. Retry Desktop latest later.</string>
     <string name="desktop_latest_access">Cannot access the upstream desktop release API. Tap Desktop latest to retry.</string>
     <string name="desktop_latest_invalid">Cannot verify the desktop release. Tap Desktop latest to retry.</string>
+    <string name="desktop_latest_notes">View desktop release notes</string>
 </resources>

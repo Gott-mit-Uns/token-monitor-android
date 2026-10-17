@@ -53,21 +53,21 @@ class SyncDeviceGridScreenTest {
         screenshot("empty-320-font1")
     }
 
-    @Test fun hubLabelUsesCurrentHostAndOfflineStatusDoesNotClaimConnection() {
+    @Test fun unnamedHubsNeverUseTheirHostAndOfflineStatusDoesNotClaimConnection() {
         val value=mutableStateOf(HubState(connectedEndpoint="https://first.example.invalid",lastSuccessfulEndpoint="https://first.example.invalid"))
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
             Column(Modifier.width(320.dp).background(MaterialTheme.colorScheme.background).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
         }}}
-        complete("sync-hub-destination","Hub: first.example.invalid")
+        complete("sync-hub-destination","Hub: 名称未知")
         complete("sync-hub-status","已连接")
         compose.runOnIdle {value.value=value.value.copy(connectedEndpoint="https://second.example.invalid",lastSuccessfulEndpoint="https://second.example.invalid")}
-        complete("sync-hub-destination","Hub: second.example.invalid")
+        complete("sync-hub-destination","Hub: 名称未知")
         compose.runOnIdle {value.value=value.value.copy(connectedEndpoint=null,error=R.string.error_no_network)}
-        complete("sync-hub-destination","Hub: second.example.invalid")
+        complete("sync-hub-destination","Hub: 名称未知")
         complete("sync-hub-status","离线 · 上次连接的 Hub")
         compose.runOnIdle {value.value=HubState(connectedEndpoint="http://192.168.31.12:17321")}
         complete("sync-hub-destination","Hub: 名称未知")
-        complete("sync-hub-address","http://192.168.31.12:17321")
+        compose.onNodeWithTag("sync-hub-address").assertDoesNotExist()
         compose.runOnIdle {value.value=HubState()}
         complete("sync-hub-status","尚未连接")
         screenshot("hub-dynamic-offline")
@@ -81,7 +81,9 @@ class SyncDeviceGridScreenTest {
             Column(Modifier.width(320.dp).background(MaterialTheme.colorScheme.background).verticalScroll(rememberScrollState())) {HubSyncDevices(value.value,now)}
         }}}
         complete("sync-hub-destination","Hub: DXP4800")
-        complete("sync-hub-address",endpoint)
+        complete("sync-viewer-model",SyncSettingsPresentation.phoneModel(android.os.Build.MODEL))
+        complete("sync-viewer-os","Android ${android.os.Build.VERSION.RELEASE}")
+        compose.onNodeWithTag("sync-hub-address").assertDoesNotExist()
         compose.runOnIdle {value.value=value.value.copy(connectedEndpoint=null,error=R.string.error_no_network)}
         complete("sync-hub-destination","Hub: DXP4800")
         complete("sync-hub-status","离线 · 上次连接的 Hub")
@@ -130,7 +132,7 @@ class SyncDeviceGridScreenTest {
         val name="Fixture office workstation with a long uploaded name 长设备名称完整显示"
         val platform="Fixture operating system with a long description"
         val version="0.70.0-01-fixture-long-version-for-natural-wrap"
-        val snapshot=HubParser.parse("""{"periods":{"today":{}},"devices":[
+        val snapshot=HubParser.parse("""{"hub":{"displayName":"Synthetic long Hub display name for complete wrapping"},"periods":{"today":{}},"devices":[
           {"deviceId":"long","displayName":"$name","osName":"$platform","osVersion":"27.0.1 fixture edition","agentRuntime":"headless-agent","agentVersion":"$version","stale":false,"receivedAt":"2026-10-14T03:57:00Z"},
           {"deviceId":"peer","displayName":"Fixture Peer","stale":false,"receivedAt":"2026-10-14T03:56:00Z"},
           {"deviceId":"missing"}
@@ -149,7 +151,7 @@ class SyncDeviceGridScreenTest {
         assertEquals(2f,enlargedName.layoutInput.density.fontScale,0f)
         complete("sync-viewer-role","本机 · 只读查看手机",wrap=true)
         complete("sync-viewer-note","查看 Hub 数据；此手机不是采集设备。",wrap=true)
-        complete("sync-hub-destination","Hub: sync-fixture.example.invalid",wrap=true)
+        complete("sync-hub-destination","Hub: Synthetic long Hub display name for complete wrapping",wrap=true)
         screenshot("grid-$width-font2-long-name")
         complete("sync-device-platform-long","$platform 27.0.1 fixture edition",wrap=true)
         complete("sync-device-version-long","Agent v$version",wrap=true)

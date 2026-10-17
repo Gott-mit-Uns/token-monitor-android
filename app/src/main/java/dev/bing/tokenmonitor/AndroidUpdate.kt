@@ -90,9 +90,19 @@ internal object AndroidReleases {
 internal fun interface AndroidReleaseSource { suspend fun latest(): AndroidRelease }
 
 /** Anonymous foreground request. No shared Hub client, credentials or background scheduler. */
+/** One HTTP attempt per explicit check, including service-unavailable responses. */
+internal fun manualReleaseCheckClient():OkHttpClient = OkHttpClient.Builder()
+    .retryOnConnectionFailure(false).followRedirects(false).followSslRedirects(false)
+    .connectTimeout(10,TimeUnit.SECONDS).readTimeout(15,TimeUnit.SECONDS).callTimeout(20,TimeUnit.SECONDS)
+    .addNetworkInterceptor {chain ->
+        val response=chain.proceed(chain.request())
+        // OkHttp otherwise follows a 503 Retry-After: 0 even with connection retries off.
+        if(response.code==503) {response.close();throw AndroidUpdateException(AndroidUpdateFailure.NETWORK)}
+        response
+    }.build()
+
 internal class GitHubAndroidReleaseSource: AndroidReleaseSource {
-    private val client = OkHttpClient.Builder().followRedirects(false).followSslRedirects(false)
-        .connectTimeout(10, TimeUnit.SECONDS).readTimeout(15, TimeUnit.SECONDS).callTimeout(20, TimeUnit.SECONDS).build()
+    private val client = manualReleaseCheckClient()
     override suspend fun latest(): AndroidRelease {
         val call = client.newCall(Request.Builder().url(AndroidReleases.apiUrl)
             .header("Accept", "application/vnd.github+json").header("X-GitHub-Api-Version", "2022-11-28").build())
@@ -123,15 +133,7 @@ internal class GitHubAndroidReleaseSource: AndroidReleaseSource {
 }
 
 /** Explicit foreground ownership also guards stale responses after cancellation/re-entry. */
-internal class AndroidUpdateController(private val current: String, private val source: AndroidReleaseSource, private val scope: CoroutineScope,
-    private val now: () -> Long = System::currentTimeMillis,
-    private val loadLastAutomaticCheck: () -> Long = { 0L },
-    private val saveLastAutomaticCheck: (Long) -> Unit = {},
-    private val loadLastAutomaticFailure: () -> Long? = { null },
-    private val saveLastAutomaticFailure: (Long?) -> Unit = {}
-) {
-    private var lastAutomaticCheck = loadLastAutomaticCheck()
-    private var lastAutomaticFailure: Long? = loadLastAutomaticFailure()
+internal class AndroidUpdateController(private val current: String, private val source: AndroidReleaseSource, private val scope: CoroutineScope) {
     private val mutableState = MutableStateFlow<AndroidUpdateState>(AndroidUpdateState.Idle)
     val state = mutableState.asStateFlow()
     private var foreground = false
@@ -145,16 +147,8 @@ internal class AndroidUpdateController(private val current: String, private val 
             if (mutableState.value == AndroidUpdateState.Checking) mutableState.value = AndroidUpdateState.Idle
         }
     }
-    /** Called only by the application foreground owner. Failures and cancellation remain retryable. */
-    fun checkOnForeground() {
-        val time = now()
-        val elapsed = time - lastAutomaticCheck
-        if (lastAutomaticFailure?.let { time - it in 0 until AUTOMATIC_FAILURE_INTERVAL_MS } == true) return
-        if (lastAutomaticCheck > 0L && elapsed in 0 until AUTOMATIC_CHECK_INTERVAL_MS) return
-        check(automatic = true)
-    }
-    fun check() = check(automatic = false)
-    private fun check(automatic: Boolean) {
+    /** Only an explicit user action starts a request. Lifecycle changes never retry. */
+    fun check() {
         if (!foreground || mutableState.value == AndroidUpdateState.Checking) return
         val id = ++generation
         mutableState.value = AndroidUpdateState.Checking
@@ -165,25 +159,7 @@ internal class AndroidUpdateController(private val current: String, private val 
                 if (latest.version > installed) AndroidUpdateState.Available(latest) else AndroidUpdateState.Current
             } catch (cancelled: CancellationException) {throw cancelled}
             catch (failure: Exception) {AndroidUpdateState.Failed((failure as? AndroidUpdateException)?.reason ?: AndroidUpdateFailure.NETWORK)}
-            if (foreground && generation == id) {
-                mutableState.value = result
-                if (automatic && result is AndroidUpdateState.Failed) {
-                    lastAutomaticFailure = now()
-                    saveLastAutomaticFailure(lastAutomaticFailure)
-                }
-                if (result !is AndroidUpdateState.Failed) {
-                    lastAutomaticFailure = null
-                    saveLastAutomaticFailure(null)
-                }
-                if (result !is AndroidUpdateState.Failed) {
-                    lastAutomaticCheck = now()
-                    saveLastAutomaticCheck(lastAutomaticCheck)
-                }
-            }
+            if (foreground && generation == id) mutableState.value = result
         }
-    }
-    companion object {
-        const val AUTOMATIC_CHECK_INTERVAL_MS = 24L * 60L * 60L * 1000L
-        const val AUTOMATIC_FAILURE_INTERVAL_MS = 60L * 60L * 1000L
     }
 }

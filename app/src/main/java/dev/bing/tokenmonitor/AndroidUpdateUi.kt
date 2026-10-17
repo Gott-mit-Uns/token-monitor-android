@@ -50,13 +50,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
         onDispose {lifecycle.removeObserver(observer); controller.setForeground(false)}
     }
     val desktopReleaseSource=remember(desktopSource) {desktopSource ?: GitHubDesktopReleaseSource()}
-    val desktopController=remember(desktopReleaseSource,scope) {DesktopReleaseController(desktopReleaseSource,scope)}
+    val sharedDesktopController=LocalDesktopReleaseController.current.takeIf { desktopSource == null }
+    val desktopController=sharedDesktopController ?: remember(desktopReleaseSource,scope) {DesktopReleaseController(desktopReleaseSource,scope)}
     val desktopState by desktopController.state.collectAsState()
-    DisposableEffect(desktopController,lifecycle) {
+    DisposableEffect(desktopController,lifecycle,sharedDesktopController) {
+        if(sharedDesktopController!=null) return@DisposableEffect onDispose {}
         fun update() {
             val active=lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
             desktopController.setForeground(active)
-            if(active && desktopController.state.value==DesktopReleaseState.Idle) desktopController.check()
         }
         update()
         val observer=LifecycleEventObserver {_,_->update()}
@@ -77,11 +78,14 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
         val actions=listOf(
             AboutAction("android-update-check",strings.getString(R.string.android_update_check),R.drawable.desktop_refresh,state!=AndroidUpdateState.Checking,check),
             AboutAction("about-desktop-latest",if(desktopState is DesktopReleaseState.Ready) strings.getString(R.string.desktop_latest_version,desktopState.release.version) else strings.getString(R.string.desktop_latest),R.drawable.desktop_arrow_right,desktopState!=DesktopReleaseState.Checking) {
-                if(desktopState is DesktopReleaseState.Ready) open(desktopState.release.notesUrl) else checkDesktop()
+                checkDesktop()
             },
             AboutAction("android-update-current-notes",strings.getString(R.string.android_update_current_notes),R.drawable.desktop_view_session,true) {open(AndroidReleases.currentNotes(currentVersion))}
         ) + listOfNotNull(onLicenses?.let {AboutAction("about-open-licenses",strings.getString(R.string.open_licenses),R.drawable.desktop_project_row,true,it)})
         AboutActionGroup(actions)
+        if(desktopState is DesktopReleaseState.Ready) DesktopTextButton({open(desktopState.release.notesUrl)},Modifier.testTag("desktop-release-notes")) {
+            Text(strings.getString(R.string.desktop_latest_notes),style=quotaTextStyle(10))
+        }
         val desktopMessage=when(desktopState) {
             DesktopReleaseState.Idle->strings.getString(R.string.desktop_latest_idle)
             DesktopReleaseState.Checking->strings.getString(R.string.desktop_latest_checking)

@@ -8,4 +8,5 @@
     <string name="desktop_latest_rate">GitHub 请求已限流，请稍后重试“桌面端最新版”。</string>
     <string name="desktop_latest_access">无法访问上游桌面端发行接口。点按“桌面端最新版”重试。</string>
     <string name="desktop_latest_invalid">无法核实桌面端发行信息。点按“桌面端最新版”重试。</string>
+    <string name="desktop_latest_notes">查看桌面端更新说明</string>
 </resources>

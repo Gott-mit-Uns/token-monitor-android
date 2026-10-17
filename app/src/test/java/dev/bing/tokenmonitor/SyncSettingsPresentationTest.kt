@@ -12,11 +12,11 @@ class SyncSettingsPresentationTest {
         assertEquals("2304FPN60G",SyncSettingsPresentation.phoneModel("2304FPN60G"))
         assertEquals("Pixel 10",SyncSettingsPresentation.phoneModel("Pixel 10"))
     }
-    @Test fun actualHubEndpointChangesNameWithoutGuessingHostFromCollectors() {
+    @Test fun endpointHostNeverSubstitutesForAuthenticatedHubName() {
         val state=HubState(lastSuccessfulEndpoint="https://previous.example.invalid",connectedEndpoint="https://current.example.invalid")
-        assertEquals("current.example.invalid",SyncSettingsPresentation.hubHostName(state))
-        assertEquals("previous.example.invalid",SyncSettingsPresentation.hubHostName(state.copy(connectedEndpoint=null)))
-        assertEquals("new.example.invalid",SyncSettingsPresentation.hubHostName(state.copy(connectedEndpoint="https://new.example.invalid")))
+        assertNull(SyncSettingsPresentation.hubHostName(state))
+        assertNull(SyncSettingsPresentation.hubHostName(state.copy(connectedEndpoint=null)))
+        assertNull(SyncSettingsPresentation.hubHostName(state.copy(connectedEndpoint="https://new.example.invalid")))
         assertNull(SyncSettingsPresentation.hubHostName(HubState()))
         assertNull(SyncSettingsPresentation.hubHostName(HubState(connectedEndpoint="http://192.168.31.12:17321")))
         assertNull(SyncSettingsPresentation.hubHostName(HubState(connectedEndpoint="http://[2001:db8::1]:17321")))

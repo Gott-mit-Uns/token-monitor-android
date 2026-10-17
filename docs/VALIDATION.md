@@ -1,5 +1,27 @@
 # 当前验收记录
 
+## 本次设置优化：实际执行范围
+
+检查时间：2026-10-17（Asia/Shanghai）；Git 基线 `0a93e1e`，独立分支 `fix/manual-updates-device-cards`。正式编号不变，本地正式签名候选仅用于覆盖/界面检查，未发布。`app/` 源码及测试相对基线的 binary diff SHA256：`bfe2d0f3ea1a0bc4aca2054e09cd31aa5a46aeb109b097883df2bab0a22a5c66`。下面为本轮实际执行，不借用历史结果充当当前设备验收。
+
+| 检查 | 本轮结果与范围 |
+|---|---|
+| 定向 JVM | 49项通过，0失败/错误/跳过；AndroidUpdate、AndroidUpdateLifecycle、DesktopRelease、HubDisplayName、SyncSettingsPresentation、HubNetworkRecovery、ManualReleaseTransport、DesktopAppearance。旧自动时间戳存在时也不触发两类检查；保留单请求跨配置重建、后台取消后只手动重试；本地HTTP夹具验证408/503/302不隐式重试/跳转；别名冷恢复、刷新保留、替换/忘记清除及真实名称优先通过。Hub网络恢复测试证明必要同步仍运行。 |
+| 字体真实窗口矩阵 | API36 ARM64、临时只读克隆 `emulator-5592`；约320/393/411dp × 系统字体1/2 × 深浅色共12组，再加320dp系统2/应用最大字号的深浅2组，共14组28项通过。真实改变窗口/系统字体，未用替代Density冒充系统设置。实测两行边界、共用断点、8dp间距、48dp触控、完整无省略文本/原sp字号及原重置默认值。 |
+| 设置/设备/缓存/已签名替换 | 深色22个定向场景分批最终通过：SignedUpgrade读取、LauncherLabel、AndroidUpdateScreen、SyncDeviceGrid、HubStore、ConnectionSettings、CompactSettingsDropdown及Appearance字体/Activity恢复；浅色另12项更新入口/设备卡片/别名表单通过。真实系统版本分行、不重复显示卡片地址、上方HTTP/HTTPS及连接状态保留、其它连接不沿用别名均有断言。 |
+| 正式证书覆盖安装 | 从模拟器已安装的正式 `0.72.0-01`（APK `db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977`）执行 `install -r` 到候选；未卸载/清数据。两包证书SHA256均 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。UID10213、公开合成Hub缓存及四份字体/显示偏好加密文件哈希前后相同，新包可解密历史数据。仅同code替换，不声称未来新版本号的升级或真实用户资料证明。 |
+| 构建/静态 | JDK17/SDK37/既有Wrapper，正式签名release及测试APK构建成功；Release Lint 0错误、102警告、1提示。全values目录736个字符串名两语言一致且各无重复；既有语言门禁、文档门禁及diff检查通过。未改依赖、R8、包名或签名配置。 |
+
+最终应用APK SHA256：`5c75594b34146e0985d8f361b37c7a4b17be7b9b8cfd53b5b7219901db7bb038`；最终正式签名测试APK：`163784a73cb3b6574acf2386681589052bb40aeceefbf9ccd0bc21de936f4c9b`。均保留本机构建目录，不上传或创建Release。49项JVM回执在 `app/build/test-results/testReleaseUnitTest/`，本轮原始运行日志临时保留 `/tmp/token-monitor-*.log`，完整窗口截图在本次聊天的可视化目录；仓库仅选择公开交付图放入既有design目录，不新增过程报告或证据目录。
+
+对比截图：[常规修改前](../design/settings-fonts-before.png)、[常规修改后](../design/settings-fonts-after.png)、[320大字修改前](../design/settings-fonts-large-before.png)、[320大字修改后](../design/settings-fonts-large-after.png)、[长名称深色](../design/settings-fonts-long-dark.png)、[设备卡片](../design/settings-devices-after.png)、[纯手动更新](../design/settings-updates-after.png)。320大字体基线已采用上下布局，该场景视觉保持，主要修复常规宽度右侧空白；截图均为生产Compose组件的公开样例渲染，不是小米或生产Hub截图。
+
+首次失败没有抹除：Debug包与既有正式测试包签名不兼容、隔离测试包固定Provider冲突，改用隔离包并使测试Provider authority跟随测试applicationId；不卸载旧包。字体测试首次缺少Dp扩展导入、随后未指定unmerged语义节点，均修正测试代码，保留应用/测试指纹和日志。设备测试两项仍按旧域名回退预期断言，改为服务端明确提供的长名称样例，保留严格完整显示/换行检查。弹层外点击两次失败，屏幕及焦点证据确认模拟器SystemUI无响应弹窗截获输入；未证实的坐标调整已撤回，关闭临时模拟器系统弹窗后，原坐标/原断言专项通过，产品弹层及该测试最终均无修改。之前一次混用release测试配置与debug单元任务的选择错误已更正为release任务，不作测试执行结果。
+
+未验证：实体小米覆盖/新装、启动器缓存/OEM行为、真实用户数据、手机旋转及后台条件下的实网请求、实际鉴权Hub名称/缓存与真实切Hub、公网匿名更新成功请求。客户端已提供连接专属别名，但尚未给手机实际配置写入DXP4800；未读取或修改NAS服务。不能将公开样例显示DXP4800、模拟器语义操作或组件截图当作这些条件的验收。
+
+## 继承的正式版本与文档治理证据
+
 适用：Android `0.72.0-01` / code76；治理基线：`cfab5438ed5dac6537c68affb385517ccfa44c0e`；检查日期：2026-10-17（Asia/Shanghai）。来源：固定基线的联合交接、发布回执、上轮整理记录及保留的原始证据指针。本次文档治理不重新构建APK，不执行设备/生产网络验收；下面历史结果按各自提交和工件继承，不能改称本轮实跑。
 
 ## 现行验证方法

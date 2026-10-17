@@ -10,12 +10,9 @@ internal object SyncSettingsPresentation {
         "2304FPN60C", "2304FPN6DC"->"Xiaomi 13 Ultra"
         else->model.trim()
     }
-    /** Prefer the accepted snapshot's name. Legacy Hubs fall back to a DNS host, never a collector/IP guess. */
-    fun hubHostName(state:HubState):String? = HubDisplayName.normalize(state.snapshot?.hubDisplayName) ?: runCatching {
-        val endpoint=state.connectedEndpoint ?: state.lastSuccessfulEndpoint ?: return null
-        val host=java.net.URI(ConnectionDisplay.address(endpoint) ?: return null).host ?: return null
-        host.takeUnless {it.contains(':') || it.removeSurrounding("[","]").all {c->c.isDigit() || c=='.'}}
-    }.getOrNull()
+    /** Only authenticated metadata or an explicit local alias can name a Hub. */
+    fun hubHostName(state:HubState):String? = HubDisplayName.normalize(state.snapshot?.hubDisplayName)
+        ?: HubDisplayName.normalize(state.hubDisplayAlias)
     // Mac syncDevicePanel.syncedAt uses Hub receipt time for remote collection devices.
     fun syncedAt(device:Device):String? = listOfNotNull(device.received,device.updated).firstOrNull {SessionDisplay.timestamp(it)!=null}
     fun devices(devices:List<Device>):List<Device> = devices.sortedWith(

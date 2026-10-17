@@ -28,10 +28,23 @@ class HubDisplayNameTest {
         }
         val old=HubParser.parse("""{"periods":{"today":{}},"devices":[]}""")
         assertNull(old.hubDisplayName)
-        assertEquals("legacy.example.invalid",SyncSettingsPresentation.hubHostName(HubState(snapshot=old,connectedEndpoint="https://legacy.example.invalid")))
+        assertNull(SyncSettingsPresentation.hubHostName(HubState(snapshot=old,connectedEndpoint="https://legacy.example.invalid")))
         assertEquals("机".repeat(80),HubDisplayName.normalize("机".repeat(80)))
         assertNull(HubDisplayName.normalize("a\u200bb"))
         assertNull(HubDisplayName.normalize("\ud800"))
+    }
+    @Test fun localAliasRequiresExplicitBindingAndRealMetadataAlwaysWins() {
+        val first=HubState(snapshot=HubParser.parse(body),hubDisplayAlias="Office alias")
+        assertEquals("DXP4800",SyncSettingsPresentation.hubHostName(first))
+        assertEquals("Office alias",SyncSettingsPresentation.hubHostName(first.copy(snapshot=null)))
+        assertNull(SyncSettingsPresentation.hubHostName(HubState(connectedEndpoint="https://dxp4800.example.invalid")))
+        val a="https://a.example.invalid";val b="http://192.0.2.1:17321"
+        assertTrue(HubDisplayName.sameConfiguration(a,b,"binding",a,b,"binding"))
+        assertTrue(HubDisplayName.sameConfiguration(a,b,"binding",b,a,"binding"))
+        assertFalse(HubDisplayName.sameConfiguration(a,b,"binding","https://other.example.invalid",b,"binding"))
+        assertFalse(HubDisplayName.sameConfiguration(a,b,"binding",a,b,"replacement"))
+        assertFalse(HubDisplayName.sameConfiguration(a,b,"binding",a,null,"binding"))
+        assertFalse(HubDisplayName.sameConfiguration(null,null,null,a,b,"binding"))
     }
     @Test fun streamMergeKeepsAuthoritativeNameThroughFreshnessAndClearsItOnLegacyFullSnapshot() {
         val initial = StreamMerge.apply(null, "snapshot", """{"stats":$body}""")!!

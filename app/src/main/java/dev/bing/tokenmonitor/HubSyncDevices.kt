@@ -34,7 +34,8 @@ import androidx.compose.ui.unit.dp
                 collectionItemInfo=CollectionItemInfo(0,1,0,1)
             }) {
                 SyncCardTitle(strings.getString(R.string.sync_viewer_role),painterResource(R.drawable.desktop_view_device),Modifier.testTag("sync-viewer-role"))
-                Text("${SyncSettingsPresentation.phoneModel(android.os.Build.MODEL)} · Android ${android.os.Build.VERSION.RELEASE}",Modifier.fillMaxWidth().testTag("sync-viewer-model"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                Text(SyncSettingsPresentation.phoneModel(android.os.Build.MODEL),Modifier.fillMaxWidth().testTag("sync-viewer-model"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
+                Text("Android ${android.os.Build.VERSION.RELEASE}",Modifier.fillMaxWidth().testTag("sync-viewer-os"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                 Text(strings.getString(R.string.sync_viewer_note),Modifier.fillMaxWidth().testTag("sync-viewer-note"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
             }
             SyncDeviceCard(Modifier.weight(1f).fillMaxHeight().testTag("sync-hub-information").semantics {
@@ -47,9 +48,6 @@ import androidx.compose.ui.unit.dp
                 Text(strings.getString(R.string.sync_hub_destination,host),Modifier.fillMaxWidth().testTag("sync-hub-destination"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
                 val revisions=if(build?.coreRevision!=null && build.runtimeRevision!=null) strings.getString(R.string.hub_build_version,runtime,build.coreRevision,build.runtimeRevision) else strings.getString(R.string.hub_version_unknown)
                 Text(revisions,Modifier.fillMaxWidth(),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-                ConnectionDisplay.address(state.connectedEndpoint ?: state.lastSuccessfulEndpoint)?.let {
-                    Text(it,Modifier.fillMaxWidth().testTag("sync-hub-address"),style=quotaTextStyle(10),color=colors.onSurfaceVariant)
-                }
                 val status=when {
                     connected->R.string.sync_hub_connected
                     state.lastSuccessfulEndpoint!=null && (state.error!=null || state.connectionFailure!=null)->R.string.sync_hub_offline
