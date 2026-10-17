@@ -88,7 +88,8 @@ def check(root, base):
         refs = dict(re.findall(r'^\s*\[([^]]+)\]:\s*(\S+)', text, re.M))
         links = re.findall(r'!?\[[^]]*\]\(([^)]+)\)', text)
         links += re.findall(r'<(?:img|a)\b[^>]*?\b(?:src|href)=[\"\x27]([^\"\x27]+)', text)
-        links += [refs[key] for key in re.findall(r'\[[^]]+\]\[([^]]+)\]', text) if key in refs]
+        # Validate definitions directly: full, collapsed and shortcut references share these targets.
+        links += list(refs.values())
         for target in links:
             target = target.strip().split(' "', 1)[0].strip('<>')
             parsed = urlsplit(target)
@@ -104,6 +105,11 @@ def check(root, base):
                         errors.append(f'{name}: missing historical target {target}')
                 continue
             dest = p if not parsed.path else (root / unquote(parsed.path).lstrip('/') if parsed.path.startswith('/') else p.parent / unquote(parsed.path))
+            try:
+                dest.resolve().relative_to(root.resolve())
+            except ValueError:
+                errors.append(f'{name}: local link escapes repository {target}')
+                continue
             if name in MIGRATION_ARCHIVES and not dest.exists() and any(str(dest.resolve()).startswith(str((root / prefix).resolve()) + '/') for prefix in EXTERNAL_EVIDENCE):
                 continue  # Existing local evidence pointers are not delivered or verified here.
             if not dest.exists():
@@ -114,12 +120,17 @@ def check(root, base):
     for name in sorted(changed):
         if not re.match(r'^README(?:[.\-_].+)?$', Path(name).name, re.I):
             continue
-        marker = 'README_SHA256' if name == 'README.md' else 'README_SHA256 ' + name
+        exists = (root / name).is_file()
+        marker = ('README_SHA256' if name == 'README.md' else 'README_SHA256 ' + name) if exists else 'README_DELETED_SHA256 ' + name
         if name not in changed:
             continue
         handoff = root / 'docs/HANDOFF.md'
         record = handoff.read_text(encoding='utf-8') if handoff.exists() else ''
-        digest = hashlib.sha256((root / name).read_bytes()).hexdigest() if (root / name).exists() else ''
+        try:
+            content = (root / name).read_bytes() if exists else subprocess.check_output(['git', '-C', str(root), 'show', f'{base}:{name}'], stderr=subprocess.DEVNULL)
+            digest = hashlib.sha256(content).hexdigest()
+        except (OSError, subprocess.CalledProcessError):
+            digest = ''
         try:
             old = '\n'.join(git(root, 'show', f'{base}:docs/HANDOFF.md'))
         except subprocess.CalledProcessError:
@@ -153,7 +164,14 @@ def self_test():
         run('add', '.'); run('commit', '-m', 'auxiliary readme')
         run('mv', 'reports/README.md', 'reports/notes.md')
         assert any('reports/README.md' in e and 'SHA256' in e for e in check(root, 'HEAD'))
+        prior = hashlib.sha256(subprocess.check_output(['git', '-C', str(root), 'show', 'HEAD:reports/README.md'])).hexdigest()
+        handoff = root / 'docs/HANDOFF.md'
+        handoff.write_text(f'授权来源：synthetic rename; 适用基线：`{git(root, "rev-parse", "HEAD")[0]}`\nREADME_DELETED_SHA256 reports/README.md: {prior}\n')
+        assert not check(root, 'HEAD')
+        handoff.write_text(handoff.read_text().replace(prior, '0' * 64))
+        assert any('SHA256' in e for e in check(root, 'HEAD'))
         run('mv', 'reports/notes.md', 'reports/README.md')
+        handoff.write_text('# Current\n')
         (root / '中文目录').mkdir()
         (root / '中文目录/HANDOFF_2026.md').write_text('# Report\n')
         run('add', '.')
@@ -168,6 +186,19 @@ def self_test():
         assert any('missing anchor' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text('# Current\n[bad](#pretend)\n~~~md\n# pretend\n~~~\n')
         assert any('missing anchor' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        outside = root.parent / (root.name + '-outside.md')
+        outside.write_text('# Outside\n')
+        try:
+            (root / 'docs/HANDOFF.md').write_text(f'[outside](../../{outside.name})\n')
+            assert any('escapes repository' in e for e in check(root, 'HEAD'))
+        finally:
+            outside.unlink()
+        for reference in ['[Guide][]', '[Guide]', '[text][guide]']:
+            (root / 'docs/HANDOFF.md').write_text(reference + '\n[Guide]: missing.md\n')
+            assert any('missing local link' in e for e in check(root, 'HEAD'))
+            (root / 'docs/HANDOFF.md').write_text('# Current\n' + reference + '\n[Guide]: #current\n')
+            assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         (root / 'docs/HANDOFF_1.md').write_text('old')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
