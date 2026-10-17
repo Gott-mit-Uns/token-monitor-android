@@ -62,7 +62,15 @@ def without_fences(text):
 def anchors(text):
     text = without_fences(text)
     found, counts = set(), {}
-    for title in re.findall(r'^ {0,3}#{1,6}\s+(.+?)\s*#*$', text, re.M):
+    headings = []
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        atx = re.match(r'^ {0,3}#{1,6}\s+(.+?)\s*#*$', line)
+        if atx:
+            headings.append(atx[1])
+        elif line.strip() and index + 1 < len(lines) and re.match(r'^ {0,3}(?:=+|-+)\s*$', lines[index + 1]):
+            headings.append(line.strip())
+    for title in headings:
         title = re.sub(r'<[^>]+>', '', title).strip().lower()
         title = re.sub(r'[^\w\-\s]', '', title).replace(' ', '-')
         count = counts.get(title, 0)
@@ -225,6 +233,11 @@ def self_test():
         assert any('missing local link' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text("# Current\n<a href='missing.md'>real</a>\n")
         assert any('missing local link' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        (root / 'docs/HANDOFF.md').write_text('Guide\n=====\n\n# Guide\n\n[one](#guide) [two](#guide-1)\n')
+        assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('Guide\n-----\n\n[bad](#guide-1)\n')
+        assert any('missing anchor' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md']:
             candidate = root / 'reports' / duplicate
