@@ -9,7 +9,7 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-RECORD = re.compile(r'^(?:handoff|validation|cost[_-]validation|cost[_-]model)(?:[_-].+)?\.(?:md|txt|rst)$', re.I)
+RECORD = re.compile(r'^(?:v?\d[\d. _-]*)?(?:handoff|validation|cost[ ._-]?validation|cost[ ._-]?model)(?:[ ._-].+|v?\d.*)?\.(?:md|txt|rst)$', re.I)
 CURRENT = {'docs/HANDOFF.md', 'docs/VALIDATION.md', 'docs/COST_MODEL.md'}
 MIGRATION_BASE = 'cfab5438ed5dac6537c68affb385517ccfa44c0e'
 MIGRATION_ARCHIVES = {'docs/archive/PHONE_ACCEPTANCE_0.2.53.md', 'docs/archive/REA_NATIVE_WIDGET_063.md', 'docs/archive/ALIGN_072_SESSIONS.md', 'docs/archive/UI_072_VALIDATION.md', 'docs/archive/WIDGET_LAUNCHER_EVIDENCE.md', 'docs/archive/DESKTOP_071_DIFF.md', 'docs/archive/LIST_INTERACTION_AUDIT.md', 'docs/archive/APK_SIZE_COMPARISON_064.md', 'docs/archive/MAC_ANDROID_WIDGET_COMPARISON_063.md', 'docs/archive/INDEX.md', 'docs/archive/DESKTOP_072_ALIGNMENT.md', 'docs/archive/ALIGN_072_CURSOR.md', 'docs/archive/HUB_CAPACITY_FRESHNESS_REUSE.md', 'docs/archive/HUB_CAPACITY.md', 'docs/archive/DESKTOP_070_DIFF.md', 'docs/archive/ALIGN_072_UPDATE_OPENCODE.md', 'docs/archive/V5_PERFORMANCE_EVIDENCE.md', 'docs/archive/HUB_CAPACITY_PERFORMANCE_BASELINE.md', 'docs/archive/USER_FEEDBACK_048.md', 'docs/archive/FULL_RENDERER_AUDIT.md', 'docs/archive/GIT_BASELINE_0.2.51.md', 'docs/archive/DESKTOP_SOURCE_MOTION_PARITY.md', 'docs/archive/DESKTOP_NUMBER_RUNTIME.md'}
@@ -200,6 +200,11 @@ def self_test():
             (root / 'docs/HANDOFF.md').write_text('# Current\n' + reference + '\n[Guide]: #current\n')
             assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md']:
+            candidate = root / 'reports' / duplicate
+            candidate.write_text('# Report\n')
+            assert any(duplicate in e and 'duplicate' in e for e in check(root, 'HEAD'))
+            candidate.unlink()
         (root / 'docs/HANDOFF_1.md').write_text('old')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF_1.md').unlink()
