@@ -151,7 +151,7 @@ def check(root, base):
         # Validate definitions directly: full, collapsed and shortcut references share these targets.
         links += [target for _, target in refs]
         for target in links:
-            target = target.strip().split(' "', 1)[0].strip('<>')
+            target = re.split(r'\s+"', target.strip(), maxsplit=1)[0].strip('<>')
             parsed = urlsplit(target)
             if parsed.scheme or parsed.netloc:
                 historic = re.match(r'https://github.com/Gott-mit-Uns/token-monitor-android/blob/([0-9a-f]{40})/(.+)', target)
@@ -293,6 +293,9 @@ def self_test():
         (root / 'docs/HANDOFF.md').write_text('# Current\n<!-- [example](missing.md) -->\n')
         assert not check(root, 'HEAD')
         (root / 'reports/file(1).md').write_text('# Encoded target\n')
+        for separator in ['  ', '\t', '\n']:
+            (root / 'docs/HANDOFF.md').write_text('[guide](../README.md' + separator + '"Guide")\n')
+            assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n[encoded](../reports/file%281%29.md)\n')
         assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
