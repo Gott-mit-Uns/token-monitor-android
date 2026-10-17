@@ -1,20 +1,36 @@
-# 当前验证入口
+# 当前验收记录
 
-沿用仓库 Gradle wrapper、JDK 17 和 Android SDK 37，不通过 clean、清数据、替换签名或放宽断言绕过问题。认证、签名等配置保留在仓库外，日志与证据不得含凭据。
+适用：Android `0.72.0-01` / code76；治理基线：`cfab5438ed5dac6537c68affb385517ccfa44c0e`；检查日期：2026-10-17（Asia/Shanghai）。来源：固定基线的联合交接、发布回执、上轮整理记录及保留的原始证据指针。本次文档治理不重新构建APK，不执行设备/生产网络验收；下面历史结果按各自提交和工件继承，不能改称本轮实跑。
 
-| 范围 | 入口与要求 |
-|---|---|
-| JVM 单元 | `./gradlew :app:testDebugUnitTest`；正式候选按现有流程执行 Release 对应任务 |
-| Android 测试编译 | `./gradlew :app:assembleDebugAndroidTest`；编译成功不代表执行通过 |
-| 定向模拟器测试 | 使用已有自有模拟器与 `tokenMonitorIsolatedTest=true` 隔离包，选择受影响测试类；不覆盖用户生产包 |
-| 可选测试 | live / permission / perf / capacity 由 app 构建配置中的对应 tokenMonitor 开关显式启用；普通套件不包含全部可选范围 |
-| 界面改动 | 根据范围检查深浅色、小屏、大字体、长文本；保存实际截图并记录应用/测试 APK 指纹 |
-| 发布 | 沿用[签名规则](RELEASE_SIGNING.md)、[版本规则](../VERSIONING.md)和[当前交接](HANDOFF_0.72.0-01.md)，区分实跑、继承和未验证范围 |
+## 现行验证方法
 
-## 共享测试样例
+沿用Wrapper/JDK17/SDK37，优先受影响的定向测试；不clean、清数据、换证书或放宽断言。JVM用`:app:testDebugUnitTest`，UI须区分测试编译与实际执行、隔离模拟器与真机、公开fixture与真实账号。可选live/permission/perf/capacity只在明确开关启用时计入范围。正式发行按VERSIONING和RELEASE_SIGNING，签名/源码/应用及测试APK指纹、安装/启动/数据保留分别留证。共享三份home/limit/subscription样例唯一来源为`app/src/sharedTest/resources/`，生成工具只写该目录；本次不改样例、配置和脚本。
 
-`app/src/sharedTest/resources/` 是三份公开样例 home-quota-parity.json、limit-layout-parity.json、subscription-layout-parity.json 的唯一来源。Gradle 同时将其加入 JVM test resources 和 androidTest assets，现有 classloader/assets 读取方式及文件名不变，不进入生产 main resources/assets。
+## 沿用产品验证（旧提交，未重跑）
 
-`tools/capture-home-quotas.cjs`、`capture-limit-layout.cjs`、`capture-subscription-layout.cjs` 只写入共享目录；不再复制到原两个位置。这些工具依赖固定上游源码与原有浏览器环境，未运行生成器不能声称重新采集桌面结果。其余未重复样例仍留在原目录。
+| 来源与工件 | 已记录结果 | 适用限制 |
+|---|---|---|
+| build5b1fb38 / APK db90f7e9…，最终Tag3c4d2d6；2026-10-16旧回执 | 514单元0失败/错误/跳过；Lint0错误/104警告/1提示；受影响9项+明确opt-in冷启动2项 | 本次未重跑，不称零告警。release76原日志、unit/lint-summary和affected-ui/cold各分批记录 |
+| 旧候选16f92a7 / APK17b7470e… | API36视觉78次分批通过；10张归属原图 | 仅限定继承未改视觉源；不冒称db90重新跑全78；SharedData首次ComposeNotIdle和未opt-in assumption跳过保持 |
+| 正式公开db90 / 同证书code73→75→76 | 旧记录公开升级链及合成加密缓存/历史/四偏好冷保留；公开附件大小/digest/SHA/SOURCE核对 | 不代表真实用户资料或手机升级；早期同code退役候选链与公开链分开 |
+| 2026-10-16正式命名更正 / 同字节db90 | 12项JVM、最终公开APK上2项模拟器更新入口检查 | 新正式latest已停止旧兼容发现；旧更新器曾通过记录仅属更名前，需手动安装一次。首次匿名API403保留 |
+| 旧0.2.53/code62 / a3f03cf基线 / 已安装SHA dff4af84… | 小米13Ultra人工启动、有限菜单/额度/设置/Wi-Fi HTTPS与前后台恢复 | 未安装/卸载/清数据，不算升级；font2裁切/动态字号疑点、蜂窝/完整SSE/软键盘矩阵仍缺，见档案 |
+| 上轮整理da3edc2起点→cfab543 / DOCS_CLEANUP旧记录 | 定向10及完整514 JVM；额度/订阅7浅+7深；构建成功 | 两次并行Gradle失败保留；临时Provider适配测试包不等于最终PR测试包全跑；额外背景3项2过1失败未定位 |
 
-本轮资料整理的实际验证与限制见[整理记录](DOCS_CLEANUP_VALIDATION.md)。历史验证流水完整保留在[整理前快照](archive/history/VALIDATION_BEFORE_CLEANUP.md)，首次失败、原 APK 指纹和证据目录不删除，不改写为新版通过。
+原始 `evidence/desktop-072/`、`evidence/docs-cleanup/`、`evidence/phone-053/` 等不在Git内，本次不删除、不迁移、不宣称新checkout具备这些文件或已复验。首次Lint内部异常、磁盘不足、旧版本harness签名不兼容、截图省略、SharedData虚拟时钟问题及各候选指纹在固定历史提交仍可恢复。沿用结果的详细源路径见[历史索引](archive/INDEX.md)；合成截图/manifest及合法release-records逐字保留。
+
+## 本轮文档治理实跑
+
+检查范围：全文档本地目标/锚点、历史迁移引用、README授权/hash、禁止新增过程命名、档案新增限制、门禁正反例、语言资源与最终差异。实际通过：文档门禁及其正反例（新增重复命名、断链/锚点、README缺授权/旧授权复用、冻结档案新增、合法发布输入/测试夹具）；全仓相对Markdown及HTML图片链接、固定历史Git目标/锚点检查0问题；语言资源670对一致；git diff --check通过。22份保留审计逐字核对，除链接/HTML图片相对路径重定位外正文一致。既有非Markdown跟踪文件零变更：全部app源码/测试/夹具、Gradle输入、字体/截图及manifest、来源/签名和release-records保持字节不变。新增仅文档门禁及独立PR工作流，不触发APK构建。
+
+数量按Git跟踪文件统计：962→854，Markdown156→46；移除114份旧路径（其中2个索引/方法入口原位重写），22份独有证据改为有限同一档案目录，普通逐版本过程用固定Git历史恢复。原主工作区3项未提交内容保持。工作流语法经结构检查；实际GitHub运行与自动审查须另记，未返回不能算通过。
+
+本轮不做APK构建/安装、真机、Hub实网或生产部署。未完成事项与背景图失败只在 [HANDOFF](HANDOFF.md) 持续跟进，不因删历史流水而关闭。
+
+## 远程检查与审查收敛
+
+2026-10-17继续复审：此前3fb6a6a的[文档CI](https://github.com/Gott-mit-Uns/token-monitor-android/actions/runs/38997913257)实际成功。此次补充复验发现子目录README改名为普通文件时，Git rename折叠可能漏掉旧路径授权；改为无rename折叠的全部变更检查，新增辅助README重命名负例，修复前该断言失败，修复后通过。同时补上NUL分隔Git路径解析，避免中文/引号路径漏检；围栏内标题不再产生真实锚点，支持反引号与波浪线围栏，均有拒绝反例。40ec19b复审的两项P2已处理：辅助README删除/改名须记录原路径基线字节摘要及本次授权，既能拒绝未授权删除，也允许精确授权；引用定义统一校验，覆盖完整、折叠及快捷引用。另补仓库外真实文件误通过的拒绝反例，链接解析后必须仍在仓库内。重复记录命名同时覆盖日期/版本前缀，以及空格、点号和紧邻数字版本形式，必要反例通过。合法顶层缩进代码示例不扫描假链接，嵌套列表与HTML表格内的真实链接仍检查，单引号HTML链接断链亦有拒绝反例。标准下划线式标题与重复标题锚点有通过/拒绝反例，避免合法标题误报。记录命名覆盖无扩展名及常用文档扩展名（含adoc/HTML），普通业务代码扩展名保持不误拦，均有反例/例外测试。行内代码中的示例链接不当真实链接，HTML标签/属性大小写不敏感，均有针对性正反例。实际文档树中以保留记录名建立日期目录同样拒绝，普通链接式标题按可见文字生成锚点；均有定向回归。Markdown扩展名与HTML注释有扫描/忽略回归；保留字符路径按百分号编码的既定有限约定验证，复杂Markdown解析仍由人工审查，不宣称完整CommonMark。重复标题后缀分配避开已有slug，隐藏注释不生成锚点，两类小范围回归通过。引用定义保留所有出现位置，避免同名定义掩盖断链；多行Setext按完整段落生成锚点，并在前一标题下划线或分隔线处停止回溯；点分隔纯版本记录不误当扩展名。三类定向回归通过。HTML链接和显式锚点改由标准库解析实际标签属性，覆盖大小写、无引号、等号空格，并拒绝data-id和行内示例伪锚点；正反例通过。双引号链接标题前的空格、制表和换行分隔均有通过回归。当前全部门禁正反例、本地链接/锚点、固定历史目标和git diff检查通过。门禁文件SHA256：`549dcf89aa8565c712671da46d4744c84068264e4cb8b70c39fe25961eee8f4d`。
+
+初始自动审查提出的同页锚点和封存证据保护问题已修复并保留对应反例。此次任务的最新自动审查/CI动态结果以[本PR检查](https://github.com/Gott-mit-Uns/token-monitor-android/pull/12/checks)和review实际绑定的commit为准；不能沿用旧提交结论或空security_review状态宣称最终通过。本文件仅保留有来源的实测与适用边界，不逐轮追加运行流水。
+
+本轮不改应用源码、Gradle输入、依赖、签名、版本或产物；不构建APK，不操作真机/Hub/生产配置。历史真机与背景图未完成项仍在HANDOFF。

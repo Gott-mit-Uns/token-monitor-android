@@ -1,0 +1,20 @@
+name: Documentation governance
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Guard regression cases
+        run: python3 tools/check-documentation.py --self-test
+      - name: Current documentation
+        env:
+          DOCS_BASE: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+        run: python3 tools/check-documentation.py --base "$DOCS_BASE"

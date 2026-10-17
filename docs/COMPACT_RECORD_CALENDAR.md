@@ -1,8 +1,8 @@
-# Record calendar implementation and acceptance scope
+# Record calendar behavior
 
-This is part of the single compact UI delivery. It does not change the version or release independently.
+Applies to Android `0.72.0-01` / code76; checked 2026-10-17 against the governance base. Source: `HistoryTrend`, `HistoryReadPresentation`, `RecordCalendarProjectionTest` and the fixed-source audit in [archive](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/archive/INDEX.md). Execution results belong only in [VALIDATION](VALIDATION.md).
 
-## Source and behavior
+
 
 The actual installed desktop v0.72.0 renderer extracted by REA is retained in `evidence/compact-ui/desktop-shipped/src/electron/renderer/`. `dashboard.css` defines the 13px title, compact 11–12px controls and 14px page inset; `dashboard.js::renderTrends` uses its existing clamped daily source. That is the density and hierarchy reference. The Android month calendar and 12-month selector are the user's requested mobile adaptation, not a claim that the desktop contains the same picker.
 
@@ -14,43 +14,11 @@ Known zero, unknown token fields, absent records, unrequested data, loading, fai
 
 Seven 48dp-wide daily targets fit within the ordinary viewport. A smaller viewport scrolls the 336dp grid horizontally instead of shrinking targets or text. Rows grow with natural text height. The month grid has three columns, four rows. Exact values remain in selected details and accessibility descriptions while cells use the shared compact-token formatter and current compact-unit preference.
 
-## Verification to execute with combined delivery
-
-- `RecordCalendarProjectionTest`: source rows, zero/unknown/missing/future, range gaps, direct monthly authority, loading/error/cache semantics, duplicates, leap February/week offset, payload replacement, source-row precedence across phone/source timezones and next-month/year navigation.
-- `RecordCalendarScreenTest`: daily and monthly selection, Sep/month switching, cross-year grid switching, filters, full counts, error/cache, unloaded/loading/failed/empty, daily and monthly saved-state restoration, payload replacement, and two actual fixed-clock timezone scenarios (Los Angeles phone vs Shanghai source) across month and year boundaries.
-- `HistoryUiTest`, `HistoryRangeScreenTest`: retained exact cost/unpriced/range/chart/activity behavior adapted to inline selection.
-- Retain existing `TrendsNavigationScreenTest`, `HistoryTest`, `HistoryAnalyticsTest`, `HistorySummaryScreenTest` coverage for unchanged navigation/source/summary semantics.
-- The calendar test saves `compact-records-daily.png` and `compact-records-monthly.png`; run it in both themes. Include a narrow viewport and enlarged system text in the combined matrix. Native Compose measurement/screenshots are the relevant gate; this repository has no browser-based `accuracy_report.mjs` harness.
-
-This document describes implementation and planned coverage. Only the combined test receipts establish executed passes. No physical-phone validation is asserted here.
-
-## Source date boundary correction
-
-A pre-release read-only review found that an earlier cell branch checked `date > phoneToday` before checking for an existing Hub row, and navigation ended at the phone's month/year. In timezones behind the Hub this could hide an already supplied row even though the range summary included it. The correction prioritizes existing rows after the unchanged range check and extends navigation only as far as supplied rows. `HistoryRanges.summarize` already anchors to the maximum supplied daily key and has no phone-today cutoff; it was inspected and left unchanged. New tests retain normal future-without-row behavior and the existing unknown/duplicate/range rules. Their execution belongs to the final combined build, rather than the earlier candidate's 7-unit/4-UI calendar results.
 
 ## Dimension availability
 
-`HistoryParser` has always accepted either a daily or monthly array, and legacy fixtures exercise daily-only responses. The current Android document `docs/PROTOCOL.md` (line 17: missing fields do not imply empty content; line 42: missing days/tokens remain unknown and monthly rows are those supplied) records the conservative display contract. This reference is the Android repository's `docs/PROTOCOL.md`, not a root-level file or desktop snapshot. The previous record UI used “Hub did not provide daily/monthly history” when a dimension had no rows.
-
-The parser now retains `dailyProvided` and `monthlyProvided` on `HubHistory`, set only when the respective wire field is an array. An explicit empty array is a successful known-empty dimension; an omitted, null or non-array field is unavailable. Existing manually constructed histories default both flags to true, preserving their explicit-list semantics. `DashboardHistoryPresentation.project` uses `history.copy`, which retains the flags; a targeted test forces an alias-changing projection and checks both directions. Raw encrypted history bodies and their parsing path remain unchanged, so restored partial responses retain the same distinction without a cache migration.
-
-The calendar still prioritizes existing rows and the unchanged range rule; absent future dates remain future. Loading and failed-read states precede the new dimension-level unavailable state. A selected unavailable cell explicitly says the Hub did not provide this dimension, rather than claiming no record or displaying zero. Only an explicitly supplied array can support `NO_RECORD` for its gaps. No statistics, totals, request scheduling or Hub wire capability is added. Current calendar suites now contain 12 projection unit methods and 7 UI methods, including missing/null/non-array/empty arrays in both directions, copy metadata, retained rows, loading/failure/future precedence and a visible daily/monthly unavailable-versus-empty transition. These additions require execution in the final combined candidate.
+`dailyProvided` and `monthlyProvided` are true only for wire arrays: omitted/null/non-array dimensions are unavailable, explicit empty arrays are known empty. Projection copies retain these flags and the raw encrypted cache requires no migration. Existing authoritative rows take precedence over the phone future-date boundary; loading and failed history reads retain their own states.
 
 ## History-owned read status
 
-PR #5 review [discussion_r4288927581](https://github.com/Gott-mit-Uns/token-monitor-android/pull/5#discussion_r4288927581) identified that the Records host passed shared `HubState.loading/error` into the calendar. The same serial `readPart` flags also describe model aliases, prices, subscriptions and device details. An automatic alias read after accepted history could therefore mark valid calendar gaps as loading or failed. The earlier candidate and its first review finding remain evidence, not a final acceptance claim; the finding is retained under `evidence/compact-ui/review-history-status/`.
-
-`HistoryReadPresentation` now derives display status solely from `HistoryReadReceipt` matching the current `HistoryReadKey(connectionRevision, homeHistorySignature(snapshot))`. Only STARTED indicates an actual in-flight history request. FAILED displays a history-specific read failure; AUTH_BLOCKED uses the credential/reconnect message independently of whatever error a later shared request recorded. QUEUED is not an actual start, and cached/resolved/cancelled/stale receipts do not invent an in-flight or failed read. A missing or old-binding/signature receipt does not borrow shared request status. The Records header and calendar both use this projection. The refresh action retains the global serial busy gate, so unrelated in-flight reads cannot be overlapped.
-
-The projection does not accept responses or retain its own request ordering. Existing `HistoryReadCoordinator` and ViewModel request/connection/revision checks still decide which payload may enter `dashboardRawHistory`; their trust policy, requests, statistics and filtering are unchanged. A row remains based on the current accepted history. The calendar's day/month range changes are local and issue no reads.
-
-New suites requiring execution on the rebuilt signed candidate:
-
-- `HistoryReadPresentationTest` (3 methods): phase ownership, explicit auth failure, missing/old key rejection and the existing coordinator's stale-response isolation.
-- `RecordHistoryReadScreenTest#unrelatedAliasPricingSubscriptionAndDeviceReadsDoNotPolluteLoadedRecords`: actual HubScreen → Trends → Dashboard → Records, automatic aliases occupy shared loading, then unrelated shared failures leave selected gaps and known values unchanged; range changes issue no history request.
-- `RecordHistoryReadScreenTest#historyPendingFailedAuthCacheAndOlderTargetKeepTheirOwnStateAcrossRecordFilters`: the actual Records host handles cached, started, failed and auth-blocked history separately; after a new history target, an old response is rejected by the existing coordinator and an old-key receipt cannot overwrite new data/status.
-
-These screen tests use public synthetic data and a frozen existing retry-clock injection to keep the owned state transitions deterministic. They are UI/state integration tests, not real Hub network or physical-phone evidence. They deliberately assert both the Records header and selected-cell status. Version remains the same internal 0.71.0-02/code75 candidate; the corrected package needs a new build, hash and final test receipt before publication.
-
-
-The corrected signed APK SHA-256 `6768f853c1c86adee91806288656d93f49e5388ca8a35a9f49c705d54b5765c4` and test APK `904b42d19ca94326f2c512da6beb638eca353be62bb86b23b5dc27681df57937` passed the combined build (487 unit methods, zero failures/errors/skips) and 32 targeted UI executions: RecordCalendar7x4 actual theme/window configurations plus RecordHistoryRead2x2 normal themes. Receipts, installed hashes, raw screenshots and restored system configuration are under `evidence/compact-ui/ui-calendar-review-fixed/`. No physical-phone execution is implied.
+Only a matching `HistoryReadReceipt` for the current connection revision and history signature controls calendar status. STARTED means in-flight; FAILED and AUTH_BLOCKED stay history-specific; QUEUED, cancelled, cached, resolved or old-key receipts cannot borrow unrelated alias/pricing/subscription/device loading or errors. Existing coordinator/ViewModel trust, ordering, cancellation and serial busy rules still decide acceptance. Local range/day/month selection issues no reads.

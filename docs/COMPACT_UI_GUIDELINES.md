@@ -1,6 +1,6 @@
 # Compact UI Guidelines — Token Monitor Android
 
-Status: Implemented and validated for V5 / 0.2.59. This document defines **semantic** layout guidance, not mandatory fixed heights. Current evidence and limitations: `HANDOFF_V5_UNIFIED.md`.
+Applies to the current compact layout; reviewed 2026-10-17 against governance base cfab543. This document defines **semantic** layout guidance, not mandatory fixed heights. Current execution evidence and limitations: [VALIDATION](VALIDATION.md) and [HANDOFF](HANDOFF.md).
 
 ## Purpose
 Align the Trends page's information density with the already compact Home and Settings pages, without changing Hub data, chart meaning, accessibility or established phone layouts.
@@ -18,7 +18,7 @@ Align the Trends page's information density with the already compact Home and Se
 
 Values must be refined through **real Compose measurement**, existing UI tests and screenshots; they are not unconditional exact values. Actual natural text height, non-linear Android font scaling, legends, axis ticks and content may increase heights. Display-only rows may be compact; their actions must retain accessible touch targets.
 
-## Scope for V5
+## Layout scope
 - Apply compact design tokens to Trends charts, overview metric cards and data-like rows.
 - Review Home and Settings for consistency **without changing already-validated geometry** unless a targeted regression test proves a defect.
 - Keep chart geometry meaningful (bar heights, zero markers, axes, dates, labels), no global Canvas scaling shortcut or truncation to force a fixed size.
@@ -31,7 +31,7 @@ Before V5, `DesktopTrendsMain.kt` derived spark height as `maxOf(48.dp + padding
 `DetailRowMinHeight` applies to display-only metrics, not natural-height legend captions. Legends retain their small existing rows, wrap long names and scroll above the secondary120dp cap. Clickable record rows use the48dp interactive minimum. Home and Settings retain their existing verified geometry.
 
 ## Acceptance evidence
-Record old/new main and secondary chart heights and metric row heights, screenshots from identical fixtures, readable axis labels, 48dp touch targets, full/empty data, window/font/locale matrices, scrolling, and non-regression. Distinguish simulation from physical-device evidence. Do not claim V5 complete until Hub, performance, networking and UI checks all meet their individual gates; release only once.
+Record old/new main and secondary chart heights and metric row heights, screenshots from identical fixtures, readable axis labels, 48dp touch targets, full/empty data, window/font/locale matrices, scrolling, and non-regression. Distinguish simulation from physical-device evidence. Results belong only in VALIDATION; release requires its own authorization.
 
 ## Settings dropdown exception (user approved 2026-10-13)
 
@@ -39,4 +39,4 @@ All ordinary setting-value dropdowns use the shared `DesktopSettingSelect` → `
 
 This is an explicit user-approved exception to the general 48dp interactive minimum for popup option rows. Adjacent targets must not overlap. The settings row and collapsed dropdown control retain their existing 48dp targets. Navigation, period and business menus keep their existing geometry and typography. Shared popup anchoring, visible screen/IME bounds, height cap, scrolling, dismissal, keyboard navigation and selected/accessibility semantics are preserved. No search, grouping or extra motion is added.
 
-Gate: `CompactSettingsDropdownScreenTest` checks real popup geometry, selected semantics, exact adjacent touch edges, complete natural text, long-list scroll and keyboard/outside dismissal; capture both themes at narrow/ordinary widths and standard/large system font. Added tests are not executed evidence until the combined release coordinator runs them. Evidence and APK fingerprints belong with the combined four-feature release.
+Gate: `CompactSettingsDropdownScreenTest` checks real popup geometry, selected semantics, exact adjacent touch edges, complete natural text, long-list scroll and keyboard/outside dismissal; capture both themes at narrow/ordinary widths and standard/large system font. Added tests are not executed evidence until the combined release coordinator runs them. Evidence and APK fingerprints belong in VALIDATION, with the actual source and execution scope.

@@ -10,6 +10,4 @@ Android 正式版本采用 `<桌面基线>-<两位Android修订>`（例如 `0.72
 
 “当前版本说明”、Android 发行页、新版本发行说明及 APK 链接交由浏览器打开。安装由 Android 系统完成。不存在静默安装、定时检查、后台下载服务或逐版本 Hub 请求。发行说明在浏览器展示，不把远端 Markdown 注入应用界面。
 
-定向验收入口：`AndroidUpdateTest` 覆盖数值比较、正式资产限制、失败恢复、检查去重及后台取消；`AndroidUpdateScreenTest` 覆盖可访问按钮、四种状态、精确浏览器链接和真实 Activity 生命周期，保存不可访问/可更新状态截图。测试结果、最终 APK 指纹和真机未验证项随本次统一发布交接记录；此文档不将测试存在或编译成功视为已执行通过。
-
-0.72 对齐、旧更新器桥接和 OpenCode 合同证据见 `docs/ALIGN_072_UPDATE_OPENCODE.md`。
+验收结果仅记录在 [VALIDATION](VALIDATION.md)，待办见 [HANDOFF](HANDOFF.md)。
