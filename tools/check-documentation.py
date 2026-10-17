@@ -111,10 +111,11 @@ def check(root, base):
             errors.append(f'{name}: use the current document instead of a duplicate record')
     for name in sorted(set(files)):
         p = root / name
-        if p.suffix.lower() != '.md' or not p.is_file():
+        if p.suffix.lower() not in ('.md', '.markdown') or not p.is_file():
             continue
         text = p.read_text(encoding='utf-8')
         text = without_fences(text)
+        text = re.sub(r'<!--[\s\S]*?-->', '', text)
         text = re.sub(r'(`+)(?!`)(.*?)(?<!`)\1(?!`)', '', text, flags=re.S)
         refs = dict(re.findall(r'^\s*\[([^]]+)\]:\s*(\S+)', text, re.M))
         links = re.findall(r'!?\[[^]]*\]\(([^)]+)\)', text)
@@ -145,7 +146,7 @@ def check(root, base):
                 continue  # Existing local evidence pointers are not delivered or verified here.
             if not dest.exists():
                 errors.append(f'{name}: missing local link {target}')
-            elif parsed.fragment and dest.suffix.lower() == '.md' and unquote(parsed.fragment) not in anchors(dest.read_text(encoding='utf-8')):
+            elif parsed.fragment and dest.suffix.lower() in ('.md', '.markdown') and unquote(parsed.fragment) not in anchors(dest.read_text(encoding='utf-8')):
                 errors.append(f'{name}: missing anchor {target}')
     changed = set(git_paths(root, 'diff', '--no-renames', '--name-only', base, '--')) | set(git_paths(root, 'ls-files', '--others', '--exclude-standard'))
     for name in sorted(changed):
@@ -249,6 +250,15 @@ def self_test():
         assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n<A HREF=\"missing.md\">real</A>\n')
         assert any('missing local link' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        (root / 'reports/example.markdown').write_text('# Example\n[broken](missing.md)\n')
+        assert any('example.markdown' in e for e in check(root, 'HEAD'))
+        (root / 'reports/example.markdown').write_text('# Example\n')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n<!-- [example](missing.md) -->\n')
+        assert not check(root, 'HEAD')
+        (root / 'reports/file(1).md').write_text('# Encoded target\n')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n[encoded](../reports/file%281%29.md)\n')
+        assert not check(root, 'HEAD')
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md', 'HANDOFF_2027', 'VALIDATION_2027.adoc', 'HANDOFF_2027.html']:
             candidate = root / 'reports' / duplicate
