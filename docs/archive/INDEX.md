@@ -1,66 +1,37 @@
-# 历史资料索引
+# 有限历史证据索引
 
-本目录只保留过去的计划、候选阶段、首次失败、验收和已取消功能，不表示现行要求，也不自动授权开发或生产操作。当前入口见[开发文档索引](../INDEX.md)。迁移只调整本地引用；原始内容可由 Git 历史逐字追溯，原证据目录、图片及 APK 不删除。
+冻结日期：2026-10-17；来源提交 `cfab5438ed5dac6537c68affb385517ccfa44c0e`。本目录仅保留下表22份独有审计/测量/失败/来源资料，属于封存证据，不是当前验收或交接。文中“当前/待办/通过”均限原版本，不能覆盖现行HANDOFF/VALIDATION。不再自动向本目录新增过程记录；新增历史证据须先说明不可替代原因并由用户具体确认。
 
-## 已取消的小组件
+| 保留资料 | 原因 |
+|---|---|
+| [DESKTOP_070_DIFF.md](DESKTOP_070_DIFF.md) | 独有源码/字段逐项审计 |
+| [DESKTOP_071_DIFF.md](DESKTOP_071_DIFF.md) | 独有源码/字段逐项审计 |
+| [DESKTOP_072_ALIGNMENT.md](DESKTOP_072_ALIGNMENT.md) | 独有源码/字段逐项审计 |
+| [ALIGN_072_CURSOR.md](ALIGN_072_CURSOR.md) | 独有源码/字段逐项审计 |
+| [ALIGN_072_SESSIONS.md](ALIGN_072_SESSIONS.md) | 独有源码/字段逐项审计 |
+| [ALIGN_072_UPDATE_OPENCODE.md](ALIGN_072_UPDATE_OPENCODE.md) | 独有源码/字段逐项审计 |
+| [FULL_RENDERER_AUDIT.md](FULL_RENDERER_AUDIT.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [LIST_INTERACTION_AUDIT.md](LIST_INTERACTION_AUDIT.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [DESKTOP_SOURCE_MOTION_PARITY.md](DESKTOP_SOURCE_MOTION_PARITY.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [DESKTOP_NUMBER_RUNTIME.md](DESKTOP_NUMBER_RUNTIME.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [HUB_CAPACITY.md](HUB_CAPACITY.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [HUB_CAPACITY_PERFORMANCE_BASELINE.md](HUB_CAPACITY_PERFORMANCE_BASELINE.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [HUB_CAPACITY_FRESHNESS_REUSE.md](HUB_CAPACITY_FRESHNESS_REUSE.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [V5_PERFORMANCE_EVIDENCE.md](V5_PERFORMANCE_EVIDENCE.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [PHONE_ACCEPTANCE_0.2.53.md](PHONE_ACCEPTANCE_0.2.53.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [USER_FEEDBACK_048.md](USER_FEEDBACK_048.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [APK_SIZE_COMPARISON_064.md](APK_SIZE_COMPARISON_064.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [GIT_BASELINE_0.2.51.md](GIT_BASELINE_0.2.51.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [UI_072_VALIDATION.md](UI_072_VALIDATION.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [REA_NATIVE_WIDGET_063.md](REA_NATIVE_WIDGET_063.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [MAC_ANDROID_WIDGET_COMPARISON_063.md](MAC_ANDROID_WIDGET_COMPARISON_063.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
+| [WIDGET_LAUNCHER_EVIDENCE.md](WIDGET_LAUNCHER_EVIDENCE.md) | 独有测量、失败、运行/来源归属证据；不可用摘要替代 |
 
-Android 小组件已按用户要求移除，以下文件不再作为有效设计规格。
+已移除普通过程记录由正常Git历史恢复，无改写历史：
 
-- [CACHED_QUOTA_WIDGET.md](widgets/CACHED_QUOTA_WIDGET.md)
-- [HANDOFF_0.2.63.md](widgets/HANDOFF_0.2.63.md)
-- [HANDOFF_WIDGET_REALIGNMENT.md](widgets/HANDOFF_WIDGET_REALIGNMENT.md)
-- [MAC_ANDROID_WIDGET_COMPARISON_063.md](widgets/MAC_ANDROID_WIDGET_COMPARISON_063.md)
-- [REA_NATIVE_WIDGET_063.md](widgets/REA_NATIVE_WIDGET_063.md)
-- [widget-spec.md](widgets/widget-spec.md)
+- [整理前全部docs](https://github.com/Gott-mit-Uns/token-monitor-android/tree/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs)包含各专项PARITY、旧计划和验收，代码/测试保留。
+- [原联合交接](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/HANDOFF_0.72.0-01.md)保留4534/f7/17b7/db90候选、首次失败、生产输入绑定、公开升级和命名回执原文。
+- [原发布回执](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/GITHUB_PUBLICATION.md)、[前轮整理验收](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/DOCS_CLEANUP_VALIDATION.md)、[原旧档案](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/archive/INDEX.md)提供历史入口，不复制多套工作区快照。
+- [原性能方法](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/HUB_CAPACITY_PERFORMANCE_PLAN.md)、[原R8提案](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/APK_SIZE_OPTIMIZATION_PROMPT.md)只供追溯，后者仍延后，不构成执行授权。
 
-## 历史交接、已结束计划与入口快照
-
-整理前的架构、功能矩阵、待办、安装和验证快照完整保留旧阶段描述。部分旧计划涉及的未验证项仍可能有效，是否继续以[当前待办](../NEXT_TASKS.md)及用户授权为准。容量性能计划保留在现行目录，不将尚未完成的验证标成完成。
-
-- [ACCEPTANCE_HISTORY_THROUGH_0.2.38.md](history/ACCEPTANCE_HISTORY_THROUGH_0.2.38.md)
-- [ARCHITECTURE_BEFORE_CLEANUP.md](history/ARCHITECTURE_BEFORE_CLEANUP.md)
-- [BACKGROUND_IMAGE_PLAN.md](history/BACKGROUND_IMAGE_PLAN.md)
-- [COMPLETION_AUDIT.md](history/COMPLETION_AUDIT.md)
-- [COMPLETION_AUDIT_0.1.7_HISTORY.md](history/COMPLETION_AUDIT_0.1.7_HISTORY.md)
-- [DASHBOARD_PARITY_PLAN.md](history/DASHBOARD_PARITY_PLAN.md)
-- [DESKTOP_SOURCE_MOTION_PLAN.md](history/DESKTOP_SOURCE_MOTION_PLAN.md)
-- [DEVELOPMENT_PLAN.md](history/DEVELOPMENT_PLAN.md)
-- [FEATURE_MATRIX_BEFORE_CLEANUP.md](history/FEATURE_MATRIX_BEFORE_CLEANUP.md)
-- [HANDOFF_0.2.51.md](history/HANDOFF_0.2.51.md)
-- [HANDOFF_0.2.52.md](history/HANDOFF_0.2.52.md)
-- [HANDOFF_0.2.53.md](history/HANDOFF_0.2.53.md)
-- [HANDOFF_0.2.54.md](history/HANDOFF_0.2.54.md)
-- [HANDOFF_0.2.55.md](history/HANDOFF_0.2.55.md)
-- [HANDOFF_0.2.56.md](history/HANDOFF_0.2.56.md)
-- [HANDOFF_0.2.57.md](history/HANDOFF_0.2.57.md)
-- [HANDOFF_0.2.58.md](history/HANDOFF_0.2.58.md)
-- [HANDOFF_0.2.60.md](history/HANDOFF_0.2.60.md)
-- [HANDOFF_0.2.61.md](history/HANDOFF_0.2.61.md)
-- [HANDOFF_0.2.62.md](history/HANDOFF_0.2.62.md)
-- [HANDOFF_0.2.64.md](history/HANDOFF_0.2.64.md)
-- [HANDOFF_0.71.0-01.md](history/HANDOFF_0.71.0-01.md)
-- [HANDOFF_0.71.0_ANDROID_0.2.65.md](history/HANDOFF_0.71.0_ANDROID_0.2.65.md)
-- [HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md](history/HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)
-- [HANDOFF_BUNDLED_FONT_MENU.md](history/HANDOFF_BUNDLED_FONT_MENU.md)
-- [HANDOFF_COLD_START.md](history/HANDOFF_COLD_START.md)
-- [HANDOFF_COMPACT_SETTINGS_DROPDOWNS.md](history/HANDOFF_COMPACT_SETTINGS_DROPDOWNS.md)
-- [HANDOFF_COMPACT_UI.md](history/HANDOFF_COMPACT_UI.md)
-- [HANDOFF_DAILY_CHART_INSPECTION.md](history/HANDOFF_DAILY_CHART_INSPECTION.md)
-- [HANDOFF_DESKTOP_069_UI.md](history/HANDOFF_DESKTOP_069_UI.md)
-- [HANDOFF_HOME_PERIOD_ROW_0.2.60.md](history/HANDOFF_HOME_PERIOD_ROW_0.2.60.md)
-- [HANDOFF_HUB_CONNECTION_FAILOVER.md](history/HANDOFF_HUB_CONNECTION_FAILOVER.md)
-- [HANDOFF_HUB_DISPLAY_NAME.md](history/HANDOFF_HUB_DISPLAY_NAME.md)
-- [HANDOFF_NETWORK_RECOVERY.md](history/HANDOFF_NETWORK_RECOVERY.md)
-- [HANDOFF_P1_09_HISTORY_DIAGNOSIS.md](history/HANDOFF_P1_09_HISTORY_DIAGNOSIS.md)
-- [HANDOFF_SCOPED_UI_0.2.56.md](history/HANDOFF_SCOPED_UI_0.2.56.md)
-- [HANDOFF_SOURCE_LICENSE_ATTRIBUTION.md](history/HANDOFF_SOURCE_LICENSE_ATTRIBUTION.md)
-- [HANDOFF_UNIFIED_0.2.60_MAC.md](history/HANDOFF_UNIFIED_0.2.60_MAC.md)
-- [HANDOFF_V5_NETWORK.md](history/HANDOFF_V5_NETWORK.md)
-- [HANDOFF_V5_UNIFIED.md](history/HANDOFF_V5_UNIFIED.md)
-- [HISTORY_READ_RECEIPT_PLAN.md](history/HISTORY_READ_RECEIPT_PLAN.md)
-- [INSTALL_BEFORE_CLEANUP.md](history/INSTALL_BEFORE_CLEANUP.md)
-- [NEXT_TASKS_BEFORE_CLEANUP.md](history/NEXT_TASKS_BEFORE_CLEANUP.md)
-- [REA_MOBILE_GAP_AUDIT_0.2.60.md](history/REA_MOBILE_GAP_AUDIT_0.2.60.md)
-- [TAKEOVER_AUDIT_0.2.51.md](history/TAKEOVER_AUDIT_0.2.51.md)
-- [TRENDS_MAIN_WINDOW_PLAN.md](history/TRENDS_MAIN_WINDOW_PLAN.md)
-- [VALIDATION_BEFORE_CLEANUP.md](history/VALIDATION_BEFORE_CLEANUP.md)
+许可证、所有测试/夹具、固定上游来源指纹、截图及manifest、改名前校验清单均不删除。缺失于Git的本地evidence/dist/work只保留历史指针，本轮未验证可用，也不得伪造。普通已提交过程记录能从固定commit完整恢复，不需要为每版留一份工作区副本。

@@ -1,6 +1,6 @@
 # Android 当前架构与模块索引
 
-客户端使用 Kotlin + Jetpack Compose，只读取 Hub。Android 不执行本地会话采集、不维护 Electron 窗口、不提供桌面小组件。固定版本与验收边界见[当前待办](NEXT_TASKS.md)及[功能矩阵](FEATURE_MATRIX.md)。以下是模块职责，不能替代真机或生产部署验收。
+客户端使用 Kotlin + Jetpack Compose，只读取 Hub。Android 不执行本地会话采集、不维护 Electron 窗口、不提供桌面小组件。固定版本与验收边界见[当前待办](HANDOFF.md)及[功能矩阵](FEATURE_MATRIX.md)。以下是模块职责，不能替代真机或生产部署验收。
 
 生产 Kotlin 文件位于 `app/src/main/java/dev/bing/tokenmonitor/`。
 
@@ -32,6 +32,4 @@
 
 双入口只在用户明确关联并验证后使用；用户声明不等于密码学身份。认证与 TLS 失败不能通过切换入口绕过。网络恢复使用有界前台重试，不添加后台采集或无限轮询。
 
-HubViewModel 和页面派生仍较集中，大帧解析、保存及冷恢复的内存和交互成本需要依据[性能计划](HUB_CAPACITY_PERFORMANCE_PLAN.md)实测；本轮不做核心重构。当前真机、实网和生产字段的未验证范围统一放在[NEXT_TASKS](NEXT_TASKS.md)。
-
-历次架构增量、旧行号与小组件历史完整保留于[整理前架构快照](archive/history/ARCHITECTURE_BEFORE_CLEANUP.md)，不再作为当前架构描述。
+HubViewModel 和页面派生仍较集中，大帧解析、保存及冷恢复的内存和交互成本需要依据[性能计划](HANDOFF.md#性能后续条件)实测；本轮不做核心重构。当前真机、实网和生产字段的未验证范围统一放在[HANDOFF](HANDOFF.md)。

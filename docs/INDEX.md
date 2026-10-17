@@ -1,15 +1,16 @@
-# Android 开发文档索引
+# 文档入口
 
-当前文档描述现行客户端职责；历史计划、阶段测试与已取消功能从[归档索引](archive/INDEX.md)按需查阅。README 保持产品介绍，不承载更新流水。
-
-| 用途 | 入口 |
+| 主题 | 唯一权威入口 |
 |---|---|
-| 开发约束与当前待办 | [AGENTS](../AGENTS.md)、[NEXT_TASKS](NEXT_TASKS.md) |
-| 当前架构与功能边界 | [ARCHITECTURE](ARCHITECTURE.md)、[FEATURE_MATRIX](FEATURE_MATRIX.md) |
-| Hub 数据、缺失字段与兼容 | [HUB_API_CONTRACT](HUB_API_CONTRACT.md)、[PROTOCOL](PROTOCOL.md)、[COMPATIBILITY](COMPATIBILITY.md) |
-| 当前桌面对齐基线 | [UPSTREAM_SYNC](UPSTREAM_SYNC.md)、[0.72 对齐清单](DESKTOP_072_ALIGNMENT.md)、[当前版本交接](HANDOFF_0.72.0-01.md) |
-| 构建、测试与安装 | [VALIDATION](VALIDATION.md)、[INSTALL](INSTALL.md)、[紧凑 UI 规范](COMPACT_UI_GUIDELINES.md) |
-| 正式编号、签名与交付追溯 | [VERSIONING](../VERSIONING.md)、[RELEASE_SIGNING](RELEASE_SIGNING.md)、[GITHUB_PUBLICATION](GITHUB_PUBLICATION.md) |
-| 历史决定与失败记录 | [归档索引](archive/INDEX.md)、[本地 Git 基线](GIT_BASELINE_0.2.51.md) |
+| 产品与安装 | [README](../README.md)、[覆盖升级](INSTALL.md) |
+| 开始开发与当前待办 | [AGENTS](../AGENTS.md)、[HANDOFF](HANDOFF.md) |
+| 当前验收 | [VALIDATION](VALIDATION.md) |
+| 费用规则 | [COST_MODEL](COST_MODEL.md) |
+| 架构与功能边界 | [ARCHITECTURE](ARCHITECTURE.md)、[FEATURE_MATRIX](FEATURE_MATRIX.md) |
+| 数据、连接与读取 | [Hub合同](HUB_API_CONTRACT.md)、[历史读取合同](HISTORY_READ_RECEIPTS.md) |
+| 界面规范 | [紧凑布局](COMPACT_UI_GUIDELINES.md)、[记录日历](COMPACT_RECORD_CALENDAR.md) |
+| 正式版本、签名与上游方法 | [VERSIONING](../VERSIONING.md)、[RELEASE_SIGNING](RELEASE_SIGNING.md)、[UPSTREAM_SYNC](UPSTREAM_SYNC.md)、[Android更新机制](ANDROID_UPDATE_ENTRY.md) |
+| 来源及许可 | [THIRD_PARTY_NOTICES](../THIRD_PARTY_NOTICES.md)、[依赖许可](DEPENDENCY_LICENSES.md) |
+| 固定历史与有限审计 | [历史索引](archive/INDEX.md) |
 
-发布回执和当前版本交接保留各候选的独立指纹、首次失败、实跑与继承范围；查阅时以最终交付及后续命名更正节为准，不能把早期候选当成当前产品。
+检查日期2026-10-17；适用提交与证据见HANDOFF和VALIDATION。当前入口原位更新，不新增逐版本/日期报告；普通任务总结放PR，不扩大README。

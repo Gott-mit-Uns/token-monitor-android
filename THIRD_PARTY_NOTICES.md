@@ -1,6 +1,6 @@
 # 来源说明
 
-本应用参照 [Javis603/token-monitor](https://github.com/Javis603/token-monitor) 的Hub协议、统计显示、订阅日期和模型名称语义，以Kotlin/Compose独立实现。具体参考版本与提交属于开发追溯信息，见 [UPSTREAM_SYNC.md](docs/UPSTREAM_SYNC.md)；不作为项目来源或完整兼容性声明。没有引入旧Android fork的业务源码。
+本应用参照 [Javis603/token-monitor](https://github.com/Javis603/token-monitor) 的Hub协议、统计显示、订阅日期和模型名称语义，以Kotlin/Compose独立实现。具体参考版本与提交属于开发追溯信息，见 [UPSTREAM_SYNC.md](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/UPSTREAM_SYNC.md)；不作为项目来源或完整兼容性声明。没有引入旧Android fork的业务源码。
 
 上游Token Monitor由Javis维护，采用MIT许可证。其完整版权与许可文本保留在app/src/main/assets/token-monitor-upstream-MIT.txt，并随APK包含。模型别名与订阅显示逻辑依据上游行为重新实现，仍保留来源说明。
 

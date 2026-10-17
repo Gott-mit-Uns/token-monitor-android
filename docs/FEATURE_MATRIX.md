@@ -1,6 +1,6 @@
 # Android 当前功能与数据边界
 
-当前记录基线为 Android `0.72.0-01` / code76，固定桌面 `v0.72.0` / `126e9a43dcc51d3d7b2609231eac9974ba73bed7`。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。逐上游提交、代码、字段和验收映射见[0.72 清单](DESKTOP_072_ALIGNMENT.md)，既有增量见[0.70](DESKTOP_070_DIFF.md)与[0.71](DESKTOP_071_DIFF.md)。
+当前记录基线为 Android `0.72.0-01` / code76，固定桌面 `v0.72.0` / `126e9a43dcc51d3d7b2609231eac9974ba73bed7`。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。逐上游提交、代码、字段和验收映射见[0.72 清单](archive/DESKTOP_072_ALIGNMENT.md)，既有增量见[0.70](archive/DESKTOP_070_DIFF.md)与[0.71](archive/DESKTOP_071_DIFF.md)。
 
 | 功能 | Android 当前范围 | Hub / Agent 依赖及限制 |
 |---|---|---|
@@ -14,9 +14,9 @@
 | 设置、字体、订阅与价格 | 紧凑页内设置、现有内置字体、额度比例/间距与去重订阅入口；模型价格只读 | 已加载订阅区手动刷新按钮已删除，保留未加载读取和现有自动同步 |
 | Android 自身更新 | 启动/恢复时前台节流，与关于页共用状态；手动检查和说明入口保留 | 只使用正式版本编号；旧三段编号客户端需手动覆盖安装一次，见[版本规则](../VERSIONING.md) |
 | 桌面最新版查询 | 保留独立桌面稳定发行查询 | 不与 Android APK 版本或 Hub build 混为一谈 |
-| 桌面小组件 | 已取消，现行产品不提供 | [取消功能档案](archive/INDEX.md#已取消的小组件)只作追溯，未经用户要求不恢复 |
 | 本地采集及桌面系统集成 | 不适用 | Electron、Windows Edge Dock、SQLite恢复、鼠标悬停、桌面安装器和后台解锁检查不移植 |
 
-客户端自动化、模拟器、真实账号、真实 Hub 和实体手机分别记账；NAS 发行存在不证明已部署。当前证据与未验证项见[当前交接](HANDOFF_0.72.0-01.md)、[UI证据](UI_072_VALIDATION.md)和[当前待办](NEXT_TASKS.md)。
+客户端自动化、模拟器、真实账号、真实 Hub 和实体手机分别记账；NAS 发行存在不证明已部署。当前证据与未验证项见[当前交接](HANDOFF.md)、[UI证据](archive/UI_072_VALIDATION.md)和[当前待办](HANDOFF.md)。
 
-历史 A/B/C/D/E 分类原文保留于[整理前矩阵](archive/history/FEATURE_MATRIX_BEFORE_CLEANUP.md)。现行约束中的 C 类继续指缺远程必要数据的能力；不得通过手机本地采集补齐。
+
+桌面小组件已取消；历史调查保留在有限档案，未经用户明确要求不恢复。本机采集及桌面系统集成不适用。

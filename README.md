@@ -63,7 +63,7 @@
 
 Android 客户端读取 Hub 数据，本机不扫描 AI 工具日志、不采集本机 Token，也不承担后台 Agent 的工作。连接信息及缓存通过现有加密存储保存；应用退到后台后关闭常规 HTTP/SSE 连接。
 
-本项目以桌面端的显示语义为参考，针对手机触控和屏幕宽度适配。桌面参考版本与具体实现范围单独记录，不代表所有桌面能力均已移植。真实手机、蜂窝网络和生产端新增字段的验收范围见 [最新交接](docs/HANDOFF_0.72.0-01.md)。
+本项目以桌面端的显示语义为参考，针对手机触控和屏幕宽度适配。桌面参考版本与具体实现范围单独记录，不代表所有桌面能力均已移植。真实手机、蜂窝网络和生产端新增字段的验收范围见 [最新交接](docs/HANDOFF.md)。
 
 ## 开发
 
@@ -77,7 +77,7 @@ Android 客户端读取 Hub 数据，本机不扫描 AI 工具日志、不采集
 
 正式构建需要仓库外安全配置的既有签名，详见 [RELEASE_SIGNING.md](docs/RELEASE_SIGNING.md)。
 
-[架构说明](docs/ARCHITECTURE.md) · [Hub 合同](docs/HUB_API_CONTRACT.md) · [功能范围](docs/FEATURE_MATRIX.md) · [上游追溯](docs/UPSTREAM_SYNC.md) · [后续任务](docs/NEXT_TASKS.md)
+[架构说明](docs/ARCHITECTURE.md) · [Hub 合同](docs/HUB_API_CONTRACT.md) · [功能范围](docs/FEATURE_MATRIX.md) · [上游追溯](docs/UPSTREAM_SYNC.md) · [后续任务](docs/HANDOFF.md)
 
 ## 来源与许可
 

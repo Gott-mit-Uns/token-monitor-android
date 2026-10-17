@@ -1,71 +1,7 @@
-2026-10-16 用户新要求：当前APK统一正式编号，正式v0.72.0-01直接作为latest，停止旧编号兼容发行；旧更新器需手动覆盖安装一次。原APK/签名/code76不变，后续发布遵循[VERSIONING](../VERSIONING.md)。下方双编号说明仅为历史记录。
+# 上游同步规范
 
-2026-10-16 **Android0.72.0-01/code76已正式公开**：正式v0.72.0-01与latest兼容v0.2.67两Tag同PR #7源码3c4d2d6，最终APK db90保持；514单元、Lint0错误及受影响9＋2通过，17b7视觉78限定继承。公开Android查询／旧原解析器与真实官方64→75→匿名公开76升级／冷保留已验；两Release共8附件已匿名完整下载并核验，两APK字节相同，size／GitHub digest／SHA256SUMS／SOURCE全部匹配。完整回执见[GITHUB_PUBLICATION.md](GITHUB_PUBLICATION.md)及[联合交接最新节](HANDOFF_0.72.0-01.md)。NAS PR #11已合并并随NAS0.72.0-02发布，实际部署未验收；真机／真实Cursor／生产手机网络边界保持。以下为历史阶段记录。
+开始先读取 AGENTS、HANDOFF、VALIDATION 和 FEATURE_MATRIX。按当前HANDOFF的固定目标，只比较上一基线之后的增量；固定tag及解析后的commit，禁止以浮动main代替交付基线。
 
-2026-10-16 最新：最终候选db90（build5b1fb38）完成514单元、Lint0错误／104警告／1提示，db90实际受影响9项与明确opt-in冷主页／设置恢复2项通过。17b7的78次视觉专项及原图凭生产UI源未变限定继承，不称db90全78重跑。当前等待最终自动审查和正式公开Release／附件／新旧更新器读回；未宣称发布完成。桌面目标仍v0.72.0，NAS PR #11未合并部署，详见[联合交接最新节](HANDOFF_0.72.0-01.md)。以下阶段记录保留。
+逐提交判断生产端、Hub合同、Android消费和桌面专属范围；URL/事件名不变仍可能有payload增量。新字段检查HTTP、SSE full/freshness、解析、缓存冷恢复及展示；本地采集、SQLite恢复、Electron updater、窗口/鼠标/桌面系统集成排除，不以UI相似宣称完整对齐。
 
-2026-10-16 最新：自动审查53d25bf的P2配置重建重复更新请求已由5b1fb38修复，正在重新封包并统一跑完整单元／Lint及受影响验收；新增3项生命周期测试尚不预称通过或514总数。桌面仍锁定v0.72.0，17b7候选78专项及截图作为未受影响视觉UI参考限定继承，不冒称新APK全78实跑。最终新包指纹和公开Release／附件／新旧更新器读回待完成，详见[联合交接最新节](HANDOFF_0.72.0-01.md)。以下较早状态按历史保留。
-
-2026-10-16 本轮固定桌面v0.72.0 / `126e9a43dcc51d3d7b2609231eac9974ba73bed7`；最终Android0.72.0-01/code76封包17b7完成511单元、78次API36专项、Lint0错误及明确opt-in冷主页／设置恢复检查。当前候选等待公开发布读回，不把UI参考或旧候选结果写成功能／最终包已发布。逐项范围见[0.72对齐](DESKTOP_072_ALIGNMENT.md)，实际状态见[联合交接](HANDOFF_0.72.0-01.md)。下一轮增量从本固定目标继续；NAS PR #11未合并部署。
-
-2026-10-16 本轮固定桌面v0.72.0，Android0.72.0-01/code76联合候选：逐项实现、Hub依赖和桌面排除见[对齐清单](DESKTOP_072_ALIGNMENT.md)，实际验证/发布状态见[本轮交接](HANDOFF_0.72.0-01.md)。此前0.71设置与日历优化已包含，配套NAS0.72发行纳入协议核对；不代表生产部署或全平台完整对齐。
-
-# 本轮固定上游 v0.70.0
-
-2026-10-15 后续授权：正式 GitHub 发布，编号改用 NAS 风格 `0.71.0-01` / code74；旧更新检查兼容入口另保留 v0.2.65。以下候选描述为此前阶段记录，正式交付以 [补充交接](archive/history/HANDOFF_0.71.0-01.md) 为准。手机用户自装，NAS 未修改。
-
-## 2026-10-15: Fixed v0.71.0
-
-Target `a514e2063563e318ef73c2a17fad68057c4e300c`; compare only v0.70.0 to v0.71.0. Android candidate `0.71.0-android.0.2.65` /74; reference 0.71.0, fullyAligned=false. Provider/account presentation and the exact fixed Hub registry are updated. Electron/local parsers and later main commits are outside this round. See [increment](DESKTOP_071_DIFF.md) and [handoff](archive/history/HANDOFF_0.71.0_ANDROID_0.2.65.md).
-
-
-2026-10-14。固定compare起点`3f106ae3d4712b26cced8272f0d488eaab0de1e6`、终点`ac4eeb2c4aea239dd94b67f074c73f69aafc46f8`，不使用main。完整分类、源码链接和验收在DESKTOP_070_DIFF.md，Hub真实新字段边界在HUB_070_DEPENDENCIES.md。以下是历史0.69审计，保留可追溯性。
-
-# 上游同步方法与本次差异证据
-
-2026-10-12接管；只分析v0.68→v0.69，未修改生产实现或生成APK。
-
-- 上游仓库：[Javis603/token-monitor](https://github.com/Javis603/token-monitor)。
-- 已实现参考：v0.68.0 commit `5d2db368d8313415763860d594de00e46a663418`；现有只读checkout位于兄弟目录 `../work/token-monitor-reference/desktop-v0.68.0`，detached HEAD，检查时干净。
-- 目标：[v0.69.0发布说明](https://github.com/Javis603/token-monitor/releases/tag/v0.69.0)，commit `3f106ae3d4712b26cced8272f0d488eaab0de1e6`。标签对象 `e94c8ac34b0179391479f268da1808755cc3aa28` 与commit不是同一SHA。
-- [真实比较](https://github.com/Javis603/token-monitor/compare/v0.68.0...v0.69.0)共16提交。GitHub connector比较与独立公开远端tag抓取交叉核对。
-- 本地证据：`work/audit-069-source/upstream.git` 为独立审计bare仓库；`diff-stat.txt`、`relevant.diff`、`v0.69.0/`中仅定向源码；`fetch.log`。未切换/修改旧参考checkout。
-
-## 已覆盖的提交与因果路径
-
-| 提交 | 变化 | Android范围 |
-|---|---|---|
-| ad3f9aa、8891608、050f983 | Electron、headless文档、Windows dock置顶 | D，不移植 |
-| 945a23f、eac5837 | Cursor活动触发云刷新、turn结束检测 | 生产端D，Android通用turnEnded消费/字段验证 |
-| c62544e、4129b5e | 设备名统一、Lucide导航 | 小范围展示/资源对齐 |
-| 80fc301 | Antigravity原生timing、reasoning总量/历史、vendor pin | 生产端修正；Android已有counter消费，不自行重算 |
-| 891ac79 | Antigravity单可见组保留双周期及标签 | 首个独立Android开发任务 |
-| bb6ec57、22ff2ba | 等待活动、Codex问题等待、T3轮询测试时长 | 新可选字段和TTL；local-only部分排除 |
-| 3e98bff | Grok Bot识别/分组、历史身份证据overlay | 基本分组可用旧Hub；历史增强远程不完整 |
-| 2c927c5 | Antigravity摘要标题读取、重命名watch | Android已有title显示，生产端与标题策略待验证 |
-| 12ec522、6d36168 | Codex父子/原生续接、T3跨provider关系 | 新wire元数据、账目去重、分组和成员详情 |
-| 3f106ae | 发布0.69.0 | 桌面参考版本独立；新Android交付按版本策略递增 |
-
-已读的不仅是公告：API.diff、shared usage normalize/merge、sessionLive、collector增量、Antigravity metadata、T3 metadata、renderer sessionRows、deviceBreakdown/providerPresentation、syncDisplayStats本地overlay、sessionRelationshipWire测试，以及Android对应parser/纯展示/网络状态机。
-
-Node `src/hub/server.js`无diff，shared/Worker usage有diff；事件名保持但字段合同变。Agent关闭持续sessionActivityPolling，桌面局部活动并非每次都上传。公开health对应core74；目标core78。因此不能只更新Android就宣称所有v0.69功能已经可见。
-
-## 后续一次同步的固定输出
-
-1. 固定tag与解析后的commit，保留diff文件清单；不以main当已交付版本。
-2. 按 [FEATURE_MATRIX](FEATURE_MATRIX.md) 标记A/B/C/D/E，区分当前部署、目标源码、生产端和桌面local-only。
-3. 针对变化字段检查HTTP、SSE full/freshness、模型、缓存、页面；先补协议证据，后写独立实现任务。
-4. 复用现有测试，运行受影响子集。旧失败日志保留，新的通过报告绑定源码/应用/测试包。
-5. 新功能实际验收后才更新“已实现参考”；不批量重构/递增版本/发包。
-
-首次本地promisor clone获取失败与后续成功范围记录在 `evidence/takeover-069-2026-10-12/acquisition-notes.md`；失败仓库不是上游证据来源。
-
-## 第二阶段独立增量
-
-2026-10-12完成891ac79对应的Android单组双周期与标签分支。直接执行固定目标providerPresentation函数生成15组定向selection/label fixture，记录源文件SHA256；旧limit-display fixture只更新受影响的单组case，并附独立sourceCommit，不回写其余v0.68来源。空kind准入与空provider状态占位采用Android保守语义，未把畸形输入假称全部桌面DOM对等。
-
-没有重新扫描上游16提交，未处理其它会话/设备/网络功能；全局桌面已实现参考仍为v0.68。交接与验证见 [HANDOFF_ANTIGRAVITY_DUAL_WINDOWS](archive/history/HANDOFF_ANTIGRAVITY_DUAL_WINDOWS.md)。
-
-## V4合同与UI增量
-
-固定3f106ae3d4712b26cced8272f0d488eaab0de1e6，只取sessionLive/sessionRows及直接依赖生成12分组+12状态参考。Android采用BigInteger/BigDecimal精确账目；跨端参考费用用可精确表示的0.125，避免将JavaScript 0.1浮点误差当作Android汇总错误。五项Lucide资源取自固定上游，保留MIT许可。等待批准、zero-token/local overlays、Grok历史身份无远程完整证据。部分对齐不证明生产升级；review仍列表末尾，与桌面混合排序有局部差异。详见HANDOFF_DESKTOP_069_UI.md。
+复用受影响测试，区分源码样例、模拟器、实网和真机；源端发布不证明部署。运行结果只更新 VALIDATION，待办/固定目标只更新 HANDOFF，费用语义只更新 COST_MODEL。逐提交审计保留在有限[档案](https://github.com/Gott-mit-Uns/token-monitor-android/blob/cfab5438ed5dac6537c68affb385517ccfa44c0e/docs/archive/INDEX.md)，普通任务总结放PR，不再新增逐版本报告。发布仍遵循 [VERSIONING](../VERSIONING.md) 和 [RELEASE_SIGNING](RELEASE_SIGNING.md)，必须获得该操作授权。
