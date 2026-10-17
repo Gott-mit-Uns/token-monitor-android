@@ -30,6 +30,7 @@ def git_paths(root, *args):
 
 def without_fences(text):
     lines, fence = [], None
+    indented, blank, in_list, in_html = False, True, False, False
     for line in text.splitlines():
         marker = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', line)
         if fence:
@@ -38,7 +39,23 @@ def without_fences(text):
         elif marker:
             fence = (marker[1][0], len(marker[1]))
         else:
-            lines.append(line)
+            stripped = line.strip()
+            if re.match(r'^ {0,3}<(?:table|div|pre|section|details)\b', line, re.I):
+                in_html = True
+            if re.match(r'^ {0,3}(?:[-+*]|\d+[.)])\s', line):
+                in_list = True
+            elif stripped and not line[0].isspace() and not in_html:
+                in_list = False
+            has_indent = line.startswith('    ') or line.startswith('\t')
+            if indented and stripped and not has_indent:
+                indented = False
+            if has_indent and (indented or (blank and not in_list and not in_html)):
+                indented = True
+            else:
+                lines.append(line)
+            if re.search(r'</(?:table|div|pre|section|details)>', line, re.I):
+                in_html = False
+            blank = not stripped
     return '\n'.join(lines)
 
 
@@ -199,6 +216,15 @@ def self_test():
             assert any('missing local link' in e for e in check(root, 'HEAD'))
             (root / 'docs/HANDOFF.md').write_text('# Current\n' + reference + '\n[Guide]: #current\n')
             assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n\n    [example](missing.md)\n')
+        assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n\n- Parent\n\n    - [real](missing.md)\n')
+        assert any('missing local link' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n\n<table>\n    <img src=\"missing.png\">\n</table>\n')
+        assert any('missing local link' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text("# Current\n<a href='missing.md'>real</a>\n")
+        assert any('missing local link' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md']:
             candidate = root / 'reports' / duplicate
