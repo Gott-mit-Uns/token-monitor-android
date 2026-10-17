@@ -65,7 +65,7 @@ internal object SessionListDisplay {
     fun raw(rows:List<UsageRow>,now:Long,hideTitles:Boolean=false,archivedLabel:String="Archived",label:(String)->String={it},zone:ZoneId=ZoneId.systemDefault(),names:ModelNames?=null,observed:Collection<String> = rows.flatMap {SessionDisplay.models(it).keys}):List<SessionListRow> = HubWorkTrace.trace(HubWorkStage.SESSION_RAW,units=rows.size.toLong()) {
         rows.filter {(it.tokens ?: 0)>0 && !synthetic(it)}.map {row->
             val model=modelLabel(row,names,observed);val client=row.tool.orEmpty().trim();val clientLabel=label(client).ifEmpty {"Session"}
-            val title=row.session?.title?.takeUnless {hideTitles}.orEmpty();val parts=listOf(clientLabel,model).filter(String::isNotEmpty).joinToString(" · ")
+            val title=SessionDisplay.sharedTitle(row)?.takeUnless {hideTitles}.orEmpty();val parts=listOf(clientLabel,model).filter(String::isNotEmpty).joinToString(" · ")
             val at=SessionDisplay.timestamp(row.lastUsed?.takeIf {it.isNotEmpty()} ?: row.session?.startedAt) ?: 0L
             val accounting=row.session?.accounting ?: SessionAccounting()
             val cache=cachePercent(row)?.let {if(it>0 && it<1) "<1%" else "${floor(it.coerceAtMost(100.0)+0.5).toInt()}%"}.orEmpty()

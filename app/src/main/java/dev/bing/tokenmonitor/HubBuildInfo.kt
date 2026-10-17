@@ -48,7 +48,7 @@ data class HubBuildInfo(val runtime:String, val schemaVersion:Long?=null,
     }
 }
 
-/** Exact build registry from desktop v0.71.0 (a514e206), under its MIT license. */
+/** Exact build registry from desktop v0.73.0 (1190260a), under its MIT license. */
 internal object HubBuildRegistry {
     val entries=mapOf(
         "core" to mapOf(
@@ -134,7 +134,9 @@ internal object HubBuildRegistry {
             80L to "sha256:04f734afadd03540a3db992734808c07803460c4bf4296d912dbf2816102a32a",
             81L to "sha256:1bdf526dd665a840e2ed280103aa16511ed7b6fec06655a25026af8c88fcf9ba",
             82L to "sha256:139183e108139b528f8ed24ce079a74fa317a4b156dd6debf9a1968b1fc37d82",
-            83L to "sha256:597ec1ee025bdf3bca0ca1509d60a6b3317c138f0573c06e2a6eecbb86206c9b"
+            83L to "sha256:597ec1ee025bdf3bca0ca1509d60a6b3317c138f0573c06e2a6eecbb86206c9b",
+            84L to "sha256:2b9f3aca4c51b909d494f73729a2cbe3d47df5ba5de251a59dcf5f209b3a18e4",
+            85L to "sha256:70ba30f37087c2036c542749bfa4edc4f6e5be8eff622e0afbfba912af8974e4"
         ),
         "node-hub" to mapOf(
             1L to "sha256:dbdaa0b2aa2e8d627b939d6ab76a9029aa2807839fdbe4e7918edcab592fe749",

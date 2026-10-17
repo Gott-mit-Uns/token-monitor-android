@@ -1,0 +1,245 @@
+{
+  "sourceCommit": "1190260afdcacd8998938de311e0435c306a18ed",
+  "cases": [
+    {
+      "client": "omp",
+      "title": "󰙮 PLAN: Plan carefully",
+      "display": "PLAN: Plan carefully"
+    },
+    {
+      "client": "omp",
+      "title": "󰂓 FLAKY: Fix flaky tests",
+      "display": "FLAKY: Fix flaky tests"
+    },
+    {
+      "client": "omp",
+      "title": " Z3: 标题 ",
+      "display": "Z3: 标题 "
+    },
+    {
+      "client": "omp",
+      "title": "􀀀 CACHE: Keep 󰙮 inside",
+      "display": "CACHE: Keep 󰙮 inside"
+    },
+    {
+      "client": "omp",
+      "title": "Plain 中文 title",
+      "display": "Plain 中文 title"
+    },
+    {
+      "client": "omp",
+      "title": "󰙮 Custom title",
+      "display": "󰙮 Custom title"
+    },
+    {
+      "client": "omp",
+      "title": "󰙮 lowercase: Custom title",
+      "display": "󰙮 lowercase: Custom title"
+    },
+    {
+      "client": "omp",
+      "title": "󰙮 TOOLONG: Custom title",
+      "display": "󰙮 TOOLONG: Custom title"
+    },
+    {
+      "client": "omp",
+      "title": "󰙮 PLAN:",
+      "display": "󰙮 PLAN:"
+    },
+    {
+      "client": "omp",
+      "title": "󰙮",
+      "display": "󰙮"
+    },
+    {
+      "client": "omp",
+      "title": "Custom 󰙮 PLAN: title",
+      "display": "Custom 󰙮 PLAN: title"
+    },
+    {
+      "client": "omp",
+      "title": "  󰙮 PLAN: Trim edges  ",
+      "display": "PLAN: Trim edges"
+    },
+    {
+      "client": "pi",
+      "title": "󰙮 PLAN: Plan carefully",
+      "display": "󰙮 PLAN: Plan carefully"
+    },
+    {
+      "client": "pi",
+      "title": "󰂓 FLAKY: Fix flaky tests",
+      "display": "󰂓 FLAKY: Fix flaky tests"
+    },
+    {
+      "client": "pi",
+      "title": " Z3: 标题 ",
+      "display": " Z3: 标题 "
+    },
+    {
+      "client": "pi",
+      "title": "􀀀 CACHE: Keep 󰙮 inside",
+      "display": "􀀀 CACHE: Keep 󰙮 inside"
+    },
+    {
+      "client": "pi",
+      "title": "Plain 中文 title",
+      "display": "Plain 中文 title"
+    },
+    {
+      "client": "pi",
+      "title": "󰙮 Custom title",
+      "display": "󰙮 Custom title"
+    },
+    {
+      "client": "pi",
+      "title": "󰙮 lowercase: Custom title",
+      "display": "󰙮 lowercase: Custom title"
+    },
+    {
+      "client": "pi",
+      "title": "󰙮 TOOLONG: Custom title",
+      "display": "󰙮 TOOLONG: Custom title"
+    },
+    {
+      "client": "pi",
+      "title": "󰙮 PLAN:",
+      "display": "󰙮 PLAN:"
+    },
+    {
+      "client": "pi",
+      "title": "󰙮",
+      "display": "󰙮"
+    },
+    {
+      "client": "pi",
+      "title": "Custom 󰙮 PLAN: title",
+      "display": "Custom 󰙮 PLAN: title"
+    },
+    {
+      "client": "pi",
+      "title": "  󰙮 PLAN: Trim edges  ",
+      "display": "󰙮 PLAN: Trim edges"
+    },
+    {
+      "client": "codex",
+      "title": "󰙮 PLAN: Plan carefully",
+      "display": "󰙮 PLAN: Plan carefully"
+    },
+    {
+      "client": "codex",
+      "title": "󰂓 FLAKY: Fix flaky tests",
+      "display": "󰂓 FLAKY: Fix flaky tests"
+    },
+    {
+      "client": "codex",
+      "title": " Z3: 标题 ",
+      "display": " Z3: 标题 "
+    },
+    {
+      "client": "codex",
+      "title": "􀀀 CACHE: Keep 󰙮 inside",
+      "display": "􀀀 CACHE: Keep 󰙮 inside"
+    },
+    {
+      "client": "codex",
+      "title": "Plain 中文 title",
+      "display": "Plain 中文 title"
+    },
+    {
+      "client": "codex",
+      "title": "󰙮 Custom title",
+      "display": "󰙮 Custom title"
+    },
+    {
+      "client": "codex",
+      "title": "󰙮 lowercase: Custom title",
+      "display": "󰙮 lowercase: Custom title"
+    },
+    {
+      "client": "codex",
+      "title": "󰙮 TOOLONG: Custom title",
+      "display": "󰙮 TOOLONG: Custom title"
+    },
+    {
+      "client": "codex",
+      "title": "󰙮 PLAN:",
+      "display": "󰙮 PLAN:"
+    },
+    {
+      "client": "codex",
+      "title": "󰙮",
+      "display": "󰙮"
+    },
+    {
+      "client": "codex",
+      "title": "Custom 󰙮 PLAN: title",
+      "display": "Custom 󰙮 PLAN: title"
+    },
+    {
+      "client": "codex",
+      "title": "  󰙮 PLAN: Trim edges  ",
+      "display": "󰙮 PLAN: Trim edges"
+    },
+    {
+      "client": "claude",
+      "title": "󰙮 PLAN: Plan carefully",
+      "display": "󰙮 PLAN: Plan carefully"
+    },
+    {
+      "client": "claude",
+      "title": "󰂓 FLAKY: Fix flaky tests",
+      "display": "󰂓 FLAKY: Fix flaky tests"
+    },
+    {
+      "client": "claude",
+      "title": " Z3: 标题 ",
+      "display": " Z3: 标题 "
+    },
+    {
+      "client": "claude",
+      "title": "􀀀 CACHE: Keep 󰙮 inside",
+      "display": "􀀀 CACHE: Keep 󰙮 inside"
+    },
+    {
+      "client": "claude",
+      "title": "Plain 中文 title",
+      "display": "Plain 中文 title"
+    },
+    {
+      "client": "claude",
+      "title": "󰙮 Custom title",
+      "display": "󰙮 Custom title"
+    },
+    {
+      "client": "claude",
+      "title": "󰙮 lowercase: Custom title",
+      "display": "󰙮 lowercase: Custom title"
+    },
+    {
+      "client": "claude",
+      "title": "󰙮 TOOLONG: Custom title",
+      "display": "󰙮 TOOLONG: Custom title"
+    },
+    {
+      "client": "claude",
+      "title": "󰙮 PLAN:",
+      "display": "󰙮 PLAN:"
+    },
+    {
+      "client": "claude",
+      "title": "󰙮",
+      "display": "󰙮"
+    },
+    {
+      "client": "claude",
+      "title": "Custom 󰙮 PLAN: title",
+      "display": "Custom 󰙮 PLAN: title"
+    },
+    {
+      "client": "claude",
+      "title": "  󰙮 PLAN: Trim edges  ",
+      "display": "󰙮 PLAN: Trim edges"
+    }
+  ]
+}

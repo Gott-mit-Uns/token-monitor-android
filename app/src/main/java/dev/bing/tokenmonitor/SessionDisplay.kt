@@ -139,7 +139,13 @@ internal object SessionDisplay {
             }
         }
     }.minOrNull()
-    fun title(row:UsageRow)=row.session?.title ?: row.session?.projectLabel ?: row.session?.sessionId?.take(12) ?: "—"
+    // Desktop v0.73 sessionRows.js: only OMP's leading private-use title-card icon.
+    // Keep raw synchronized metadata unchanged, including icons elsewhere in the title.
+    private val ompTitlePrefix=Regex("^[\\x{E000}-\\x{F8FF}\\x{F0000}-\\x{FFFFD}\\x{100000}-\\x{10FFFD}] (?=[A-Z0-9]{1,6}: \\S)")
+    fun sharedTitle(row:UsageRow):String?=row.session?.title?.trim()?.let {
+        if(row.tool=="omp") ompTitlePrefix.replaceFirst(it,"") else it
+    }
+    fun title(row:UsageRow)=sharedTitle(row)?.takeIf {it.isNotEmpty()} ?: row.session?.projectLabel ?: row.session?.sessionId?.take(12) ?: "—"
     fun models(row:UsageRow)=row.session?.models.orEmpty().filterValues {it>0}
     fun displayModels(row:UsageRow,names:ModelNames?=null,observed:Collection<String> = models(row).keys)=names?.project(models(row),observed) ?: models(row).mapValues {BigInteger.valueOf(it.value)}
     fun modelShares(row:UsageRow,names:ModelNames?=null,observed:Collection<String> = models(row).keys):List<SessionModelShare> {
