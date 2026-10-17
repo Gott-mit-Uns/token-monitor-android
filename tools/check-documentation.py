@@ -9,7 +9,7 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-RECORD = re.compile(r'^(?:v?\d[\d. _-]*)?(?:handoff|validation|cost[ ._-]?validation|cost[ ._-]?model)(?:[ ._-].+|v?\d.*)?\.(?:md|txt|rst)$', re.I)
+RECORD = re.compile(r'^(?:v?\d[\d. _-]*)?(?:handoff|validation|cost[ ._-]?validation|cost[ ._-]?model)(?:[ ._-].+|v?\d.*)?\.(?:md|markdown|txt|rst|adoc|asciidoc|html?|pdf|docx)$', re.I)
 CURRENT = {'docs/HANDOFF.md', 'docs/VALIDATION.md', 'docs/COST_MODEL.md'}
 MIGRATION_BASE = 'cfab5438ed5dac6537c68affb385517ccfa44c0e'
 MIGRATION_ARCHIVES = {'docs/archive/PHONE_ACCEPTANCE_0.2.53.md', 'docs/archive/REA_NATIVE_WIDGET_063.md', 'docs/archive/ALIGN_072_SESSIONS.md', 'docs/archive/UI_072_VALIDATION.md', 'docs/archive/WIDGET_LAUNCHER_EVIDENCE.md', 'docs/archive/DESKTOP_071_DIFF.md', 'docs/archive/LIST_INTERACTION_AUDIT.md', 'docs/archive/APK_SIZE_COMPARISON_064.md', 'docs/archive/MAC_ANDROID_WIDGET_COMPARISON_063.md', 'docs/archive/INDEX.md', 'docs/archive/DESKTOP_072_ALIGNMENT.md', 'docs/archive/ALIGN_072_CURSOR.md', 'docs/archive/HUB_CAPACITY_FRESHNESS_REUSE.md', 'docs/archive/HUB_CAPACITY.md', 'docs/archive/DESKTOP_070_DIFF.md', 'docs/archive/ALIGN_072_UPDATE_OPENCODE.md', 'docs/archive/V5_PERFORMANCE_EVIDENCE.md', 'docs/archive/HUB_CAPACITY_PERFORMANCE_BASELINE.md', 'docs/archive/USER_FEEDBACK_048.md', 'docs/archive/FULL_RENDERER_AUDIT.md', 'docs/archive/GIT_BASELINE_0.2.51.md', 'docs/archive/DESKTOP_SOURCE_MOTION_PARITY.md', 'docs/archive/DESKTOP_NUMBER_RUNTIME.md'}
@@ -102,7 +102,8 @@ def check(root, base):
         # Governance covers documentation, not business code, fixtures or releases.
         if name in CURRENT or name.startswith(('app/src/test/', 'app/src/androidTest/', 'app/src/sharedTest/')):
             continue
-        if RECORD.match(Path(name).name) or re.match(r'^(?:release[_-]summary|new[_-]readme|新版介绍|发布总结)', Path(name).stem, re.I):
+        document_name = Path(name).name if Path(name).suffix else Path(name).name + '.md'
+        if RECORD.match(document_name) or re.match(r'^(?:release[_-]summary|new[_-]readme|新版介绍|发布总结)', Path(name).stem, re.I):
             errors.append(f'{name}: use the current document instead of a duplicate record')
     for name in sorted(set(files)):
         p = root / name
@@ -239,7 +240,7 @@ def self_test():
         (root / 'docs/HANDOFF.md').write_text('Guide\n-----\n\n[bad](#guide-1)\n')
         assert any('missing anchor' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
-        for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md']:
+        for duplicate in ['HANDOFF 2027.md', '2027.HANDOFF.md', 'VALIDATION.2.md', 'v2.0HANDOFF.md', 'HANDOFFv2.md', 'HANDOFF_2027', 'VALIDATION_2027.adoc', 'HANDOFF_2027.html']:
             candidate = root / 'reports' / duplicate
             candidate.write_text('# Report\n')
             assert any(duplicate in e and 'duplicate' in e for e in check(root, 'HEAD'))
@@ -290,6 +291,7 @@ def self_test():
         assert any('frozen archive' in e for e in check(root, 'HEAD'))
         run('mv', 'docs/archive/renamed.md', 'docs/archive/audit.md')
         (root / 'RELEASE.md').write_text('# Release\n')
+        (root / 'reports/validation.py').write_text('# Business helper\n')
         (root / 'app/src/test/fixtures').mkdir(parents=True); (root / 'app/src/test/fixtures/VALIDATION_fixture.md').write_text('# Fixture\n')
         assert not check(root, 'HEAD')
     print('Document guard self-test passed (duplicates, links, anchors, README authority and narrow exceptions)')
