@@ -71,6 +71,8 @@ def anchors(text):
         elif line.strip() and index + 1 < len(lines) and re.match(r'^ {0,3}(?:=+|-+)\s*$', lines[index + 1]):
             headings.append(line.strip())
     for title in headings:
+        title = re.sub(r'!?\[([^]]*)\]\([^)]*\)', r'\1', title)
+        title = re.sub(r'\[([^]]*)\]\[[^]]*\]', r'\1', title)
         title = re.sub(r'<[^>]+>', '', title).strip().lower()
         title = re.sub(r'[^\w\-\s]', '', title).replace(' ', '-')
         count = counts.get(title, 0)
@@ -103,7 +105,9 @@ def check(root, base):
         if name in CURRENT or name.startswith(('app/src/test/', 'app/src/androidTest/', 'app/src/sharedTest/')):
             continue
         document_name = Path(name).name if Path(name).suffix else Path(name).name + '.md'
-        if RECORD.match(document_name) or re.match(r'^(?:release[_-]summary|new[_-]readme|新版介绍|发布总结)', Path(name).stem, re.I):
+        parts = Path(name).parts
+        directory_records = parts[1:-1] if parts[0] in ('docs', 'reports', 'notes') and Path(name).suffix.lower() in ('.md', '.markdown', '.txt', '.rst', '.adoc', '.asciidoc', '.html', '.htm', '.pdf', '.docx', '') else ()
+        if RECORD.match(document_name) or any(RECORD.match(part + '.md') for part in directory_records) or re.match(r'^(?:release[_-]summary|new[_-]readme|新版介绍|发布总结)', Path(name).stem, re.I):
             errors.append(f'{name}: use the current document instead of a duplicate record')
     for name in sorted(set(files)):
         p = root / name
@@ -251,6 +255,16 @@ def self_test():
             candidate.write_text('# Report\n')
             assert any(duplicate in e and 'duplicate' in e for e in check(root, 'HEAD'))
             candidate.unlink()
+        (root / 'docs/VALIDATION_2027').mkdir()
+        (root / 'docs/VALIDATION_2027/index.md').write_text('# Annual record\n')
+        assert any('duplicate' in e for e in check(root, 'HEAD'))
+        (root / 'docs/VALIDATION_2027/index.md').unlink()
+        (root / 'docs/VALIDATION_2027').rmdir()
+        (root / 'docs/HANDOFF.md').write_text('# [Guide](../README.md)\n\n[valid](#guide)\n')
+        assert not check(root, 'HEAD')
+        (root / 'docs/HANDOFF.md').write_text('# [Guide][ref]\n\n[ref]: ../README.md\n[valid](#guide)\n[bad](#guide-1)\n')
+        assert any('missing anchor' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
         (root / 'docs/HANDOFF_1.md').write_text('old')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF_1.md').unlink()
