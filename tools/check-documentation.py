@@ -35,6 +35,9 @@ def anchors(text):
 
 def check(root, base):
     errors = []
+    for required in ('README.md', 'AGENTS.md', 'docs/HANDOFF.md', 'docs/VALIDATION.md', 'docs/COST_MODEL.md'):
+        if not (root / required).is_file():
+            errors.append(f'{required}: required current entry must exist')
     files = git(root, 'ls-files', '--cached', '--others', '--exclude-standard')
     added = git(root, 'diff', '--no-renames', '--name-only', '--diff-filter=A', base, '--')
     added += git(root, 'ls-files', '--others', '--exclude-standard')
@@ -112,10 +115,17 @@ def self_test():
             subprocess.run(['git', '-C', str(root), *args], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         run('init'); run('config', 'user.name', 'Synthetic'); run('config', 'user.email', 'synthetic@example.invalid')
         (root / 'README.md').write_text('# Product\n')
-        run('add', '.'); run('commit', '-m', 'baseline')
+        (root / 'AGENTS.md').write_text('# Rules\n')
         (root / 'docs').mkdir()
+        for name in ['HANDOFF', 'VALIDATION', 'COST_MODEL']:
+            (root / f'docs/{name}.md').write_text('# Current\n')
+        run('add', '.'); run('commit', '-m', 'baseline')
+        (root / 'docs').mkdir(exist_ok=True)
         (root / 'docs/HANDOFF.md').write_text('# Current\n')
         assert not check(root, 'HEAD')
+        (root / 'docs/VALIDATION.md').unlink()
+        assert any('required current entry' in e for e in check(root, 'HEAD'))
+        (root / 'docs/VALIDATION.md').write_text('# Current\n')
         (root / 'docs/HANDOFF_1.md').write_text('old')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF_1.md').unlink()
