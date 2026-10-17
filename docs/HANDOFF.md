@@ -40,9 +40,9 @@
 
 适用：Android `0.72.0-01` / versionCode76；治理检查基线：`cfab5438ed5dac6537c68affb385517ccfa44c0e`；检查时间：2026-10-17（Asia/Shanghai）。来源：该提交的联合交接、NEXT_TASKS、DOCS_CLEANUP_VALIDATION与已保留审计，及本次只读源码/差异核对。下述发行和产品测试是沿用旧记录，本次未重新发版、下载APK、操作手机或生产Hub。
 
-## 当前产品与发行边界
+## 继承的0.72产品与发行边界
 
-固定桌面目标 `v0.72.0` / `126e9a43dcc51d3d7b2609231eac9974ba73bed7`，fullyAligned=false。Android是只读Hub查看端，不作本地采集；小组件已移除，不恢复；R8瘦身延后，本次不执行。现行正式编号及发行方式遵循 [VERSIONING](../VERSIONING.md)，旧0.2.x兼容发行不再创建，旧更新器须手动覆盖安装一次，不卸载/清数据。
+以下为0.72基线的历史范围：固定桌面目标 `v0.72.0` / `126e9a43dcc51d3d7b2609231eac9974ba73bed7`，fullyAligned=false。Android是只读Hub查看端，不作本地采集；小组件已移除，不恢复；R8瘦身延后，本次不执行。现行正式编号及发行方式遵循 [VERSIONING](../VERSIONING.md)，旧0.2.x兼容发行不再创建，旧更新器须手动覆盖安装一次，不卸载/清数据。
 
 仓库旧回执记录正式Tag指向 `3c4d2d673605ba9359d66a577dce4488c4bfc083`，产品buildCommit `5b1fb385b731bd7081fcf54e108510df4f6943c7`，APK 15,305,354 bytes，SHA256 `db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977`。命名更正后正式Release作为latest，公开签名/包名/code76沿用，改名前清单仍在release-records。产品通过范围、历史候选继承与失败见 [VALIDATION](VALIDATION.md)，不能从本段推定当前线上/手机已验收。
 
