@@ -38,11 +38,16 @@ def check(root, base):
     files = git(root, 'ls-files', '--cached', '--others', '--exclude-standard')
     added = git(root, 'diff', '--no-renames', '--name-only', '--diff-filter=A', base, '--')
     added += git(root, 'ls-files', '--others', '--exclude-standard')
+    actual_base = git(root, 'rev-parse', base)[0]
+    changed_archives = set(git(root, 'diff', '--no-renames', '--name-only', base, '--', 'docs/archive/'))
+    changed_archives.update(name for name in added if name.startswith('docs/archive/'))
+    legacy_archives = set(git(root, 'ls-tree', '-r', '--name-only', MIGRATION_BASE, '--', 'docs/archive/')) if actual_base == MIGRATION_BASE else set()
+    for name in changed_archives:
+        sanctioned_migration = actual_base == MIGRATION_BASE and (name in MIGRATION_ARCHIVES or (name in legacy_archives and not (root / name).exists()))
+        if not sanctioned_migration:
+            errors.append(f'{name}: frozen archive; additions, edits, deletions and renames require specific approval')
     for name in set(added):
         if name.startswith('docs/archive/'):
-            actual_base = git(root, 'rev-parse', base)[0]
-            if actual_base != MIGRATION_BASE or name not in MIGRATION_ARCHIVES:
-                errors.append(f'{name}: frozen archive; explain unique evidence and obtain specific approval')
             continue
         # Governance covers documentation, not business code, fixtures or releases.
         if name in CURRENT or name.startswith(('app/src/test/', 'app/src/androidTest/', 'app/src/sharedTest/')):
@@ -146,6 +151,16 @@ def self_test():
         (root / 'docs/archive/HANDOFF_2.md').write_text('# New archive\n')
         assert any('frozen archive' in e for e in check(root, 'HEAD'))
         (root / 'docs/archive/HANDOFF_2.md').unlink()
+        (root / 'docs/archive/audit.md').write_text('# Original evidence\n')
+        run('add', '.'); run('commit', '-m', 'frozen audit')
+        (root / 'docs/archive/audit.md').write_text('# Overwritten evidence\n')
+        assert any('frozen archive' in e for e in check(root, 'HEAD'))
+        (root / 'docs/archive/audit.md').unlink()
+        assert any('frozen archive' in e for e in check(root, 'HEAD'))
+        (root / 'docs/archive/audit.md').write_text('# Original evidence\n')
+        run('mv', 'docs/archive/audit.md', 'docs/archive/renamed.md')
+        assert any('frozen archive' in e for e in check(root, 'HEAD'))
+        run('mv', 'docs/archive/renamed.md', 'docs/archive/audit.md')
         (root / 'RELEASE.md').write_text('# Release\n')
         (root / 'app/src/test/fixtures').mkdir(parents=True); (root / 'app/src/test/fixtures/VALIDATION_fixture.md').write_text('# Fixture\n')
         assert not check(root, 'HEAD')
