@@ -29,8 +29,8 @@
 
 ## 远程检查与审查收敛
 
-门禁实现324249f8的[文档CI](https://github.com/Gott-mit-Uns/token-monitor-android/actions/runs/38997723721)实际成功；本节只收敛验收表述，未改变该门禁实现。测试覆盖固定五入口存在性、跨目录重复命名、Git rename、同页/跨页锚点、README缺授权/删除/旧授权复用、冻结档案新增/修改/删除/改名及合法夹具/发布输入；当前全部本地通过。
+2026-10-17继续复审：此前3fb6a6a的[文档CI](https://github.com/Gott-mit-Uns/token-monitor-android/actions/runs/38997913257)实际成功。此次补充复验发现子目录README改名为普通文件时，Git rename折叠可能漏掉旧路径授权；改为无rename折叠的全部变更检查，新增辅助README重命名负例，修复前该断言失败，修复后通过。当前全部门禁正反例、本地链接/锚点、固定历史目标和git diff检查通过。门禁文件SHA256：`1b572dd7dd523d0c77021f56da3d9d905586210e982a16d8536ebc13909f3e47`。
 
-自动审查对79f1f06提出的两项P2均已复现并修复：空路径链接现在解析为当前文档；档案保护覆盖全部changed status。本轮迁移例外只适用于固定初始基线的精确保留名单及旧档案删除，未来封存证据修改默认拒绝并需具体授权审查。最终提交的自动复审尚未返回，不称无发现或安全审查通过。
+初始自动审查提出的同页锚点和封存证据保护问题已修复并保留对应反例。此次任务的最新自动审查/CI动态结果以[本PR检查](https://github.com/Gott-mit-Uns/token-monitor-android/pull/12/checks)和review实际绑定的commit为准；不能沿用旧提交结论或空security_review状态宣称最终通过。本文件仅保留有来源的实测与适用边界，不逐轮追加运行流水。
 
-网络中断后的门禁补强曾通过GitHub连接器按expected_sha/force=false正常推进同一PR分支；本地及远端树逐项相同，网络恢复后canonical分支已同步，原本地传输提交另分支保留。没有重写历史或改发布机制。
+本轮不改应用源码、Gradle输入、依赖、签名、版本或产物；不构建APK，不操作真机/Hub/生产配置。历史真机与背景图未完成项仍在HANDOFF。

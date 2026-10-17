@@ -88,7 +88,7 @@ def check(root, base):
                 errors.append(f'{name}: missing local link {target}')
             elif parsed.fragment and dest.suffix.lower() == '.md' and unquote(parsed.fragment) not in anchors(dest.read_text(encoding='utf-8')):
                 errors.append(f'{name}: missing anchor {target}')
-    changed = set(git(root, 'diff', '--name-only', base, '--')) | set(git(root, 'ls-files', '--others', '--exclude-standard'))
+    changed = set(git(root, 'diff', '--no-renames', '--name-only', base, '--')) | set(git(root, 'ls-files', '--others', '--exclude-standard'))
     for name in sorted(changed):
         if not re.match(r'^README(?:[.\-_].+)?$', Path(name).name, re.I):
             continue
@@ -126,6 +126,12 @@ def self_test():
         (root / 'docs/VALIDATION.md').unlink()
         assert any('required current entry' in e for e in check(root, 'HEAD'))
         (root / 'docs/VALIDATION.md').write_text('# Current\n')
+        (root / 'reports').mkdir()
+        (root / 'reports/README.md').write_text('# Auxiliary guide\n')
+        run('add', '.'); run('commit', '-m', 'auxiliary readme')
+        run('mv', 'reports/README.md', 'reports/notes.md')
+        assert any('reports/README.md' in e and 'SHA256' in e for e in check(root, 'HEAD'))
+        run('mv', 'reports/notes.md', 'reports/README.md')
         (root / 'docs/HANDOFF_1.md').write_text('old')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF_1.md').unlink()
@@ -133,7 +139,7 @@ def self_test():
         assert len(check(root, 'HEAD')) == 2
         (root / 'docs/HANDOFF.md').write_text('# Current\n[bad](#absent)')
         assert any('missing anchor' in e for e in check(root, 'HEAD'))
-        (root / 'reports').mkdir()
+        (root / 'reports').mkdir(exist_ok=True)
         (root / 'reports/HANDOFF_3.md').write_text('# Report\n')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
         (root / 'reports/HANDOFF_3.md').unlink()
