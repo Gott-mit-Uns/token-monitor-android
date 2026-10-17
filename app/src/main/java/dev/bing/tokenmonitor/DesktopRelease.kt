@@ -10,7 +10,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.json.*
 import okhttp3.*
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -49,8 +48,7 @@ internal fun interface DesktopReleaseSource {suspend fun latest():DesktopRelease
 
 /** A separate anonymous client; never shares Hub authentication or Android update state. */
 internal class GitHubDesktopReleaseSource:DesktopReleaseSource {
-    private val client=OkHttpClient.Builder().followRedirects(false).followSslRedirects(false)
-        .connectTimeout(10,TimeUnit.SECONDS).readTimeout(15,TimeUnit.SECONDS).callTimeout(20,TimeUnit.SECONDS).build()
+    private val client=manualReleaseCheckClient()
     override suspend fun latest():DesktopRelease {
         val call=client.newCall(Request.Builder().url(DesktopReleases.apiUrl)
             .header("Accept","application/vnd.github+json").header("X-GitHub-Api-Version","2022-11-28").build())

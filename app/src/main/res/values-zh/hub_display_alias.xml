@@ -1,0 +1,5 @@
+<resources>
+    <string name="hub_display_alias">Hub 显示别名</string>
+    <string name="hub_display_alias_note">仅在 Hub 未返回名称时用于当前保存的连接，不作为 Hub 身份验证。留空可移除。</string>
+    <string name="error_hub_display_alias">Hub 显示别名最多 80 个字符，不能包含控制字符。</string>
+</resources>

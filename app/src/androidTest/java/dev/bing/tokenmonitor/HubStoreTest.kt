@@ -40,10 +40,12 @@ class HubStoreTest {
             assertFalse(loaded.endpointsAssociated)
             assertNull(loaded.lastSuccessfulEndpoint) // Existing records do not invent a successful connection.
             record.lastSuccessfulEndpoint=record.alternate
+            record.hubDisplayAlias = "Local display alias"
             record.lanEnabled = false
             record.endpointsAssociated = true
             store.save(record)
             val policy = HubStore(context, name).load()!!
+            assertEquals("Local display alias",policy.hubDisplayAlias)
             assertFalse(policy.lanEnabled)
             assertTrue(policy.endpointsAssociated)
             assertEquals(record.alternate,policy.lastSuccessfulEndpoint)

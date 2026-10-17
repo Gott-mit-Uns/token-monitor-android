@@ -33,6 +33,7 @@ data class SavedHub(val address: String, val credential: String, val snapshot: S
     internal var parsedSnapshot: Snapshot? = null
     var lanEnabled: Boolean = true
     var endpointsAssociated: Boolean = false
+    var hubDisplayAlias: String? = null
     var hubBuild: HubBuildInfo? = null
     var lastSuccessfulEndpoint: String? = null
     override fun toString() = "SavedHub(private connection and cached data)"
@@ -152,6 +153,7 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         fun optional(name: String, value: String?) { if (value != null) writer.name(name).value(value) }
         optional("alternate", record.alternate)
         optional("hubBuild",record.hubBuild?.cache())
+        optional("hubDisplayAlias",HubDisplayName.normalize(record.hubDisplayAlias))
         optional("lastSuccessfulEndpoint",record.lastSuccessfulEndpoint?.takeIf {it in listOfNotNull(record.address,record.alternate)})
         if (!record.lanEnabled) writer.name("lanEnabled").value(false)
         if (record.endpointsAssociated) writer.name("endpointsAssociated").value(true)
@@ -180,6 +182,7 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         var alternate: String? = null
         var lanEnabled = true
         var associated = false
+        var hubDisplayAlias:String? = null
         var hubBuild:HubBuildInfo? = null
         var lastSuccessfulEndpoint:String? = null
         var history: String? = null
@@ -206,6 +209,7 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
                 "address" -> address = string()
                 "credential" -> credential = string()
                 "snapshot" -> snapshot = string()
+                "hubDisplayAlias" -> hubDisplayAlias = string(true)?.let(HubDisplayName::normalize)
                 "hubBuild" -> hubBuild = string(true)?.let(HubBuildInfo::parse)
                 "lastSuccessfulEndpoint" -> lastSuccessfulEndpoint = string(true)?.let {runCatching {HubAddress.normalize(it)}.getOrNull()}
                 "savedAt" -> {
@@ -255,13 +259,13 @@ open class HubStore(context: Context, recordName: String = "hub-state.bin", priv
         require(address != null && credential != null && snapshot != null && savedAt != null) { "Incomplete cache envelope" }
         return SavedHub(HubAddress.normalize(address!!), credential!!, snapshot!!, savedAt!!,
             alternate?.let(HubAddress::normalize), history, subscriptions, aliases, modelNames, pricing, deviceHistory, historySignature, observed).also {
-                it.lanEnabled = lanEnabled; it.endpointsAssociated = associated; it.hubBuild=hubBuild
+                it.lanEnabled = lanEnabled; it.endpointsAssociated = associated; it.hubBuild=hubBuild; it.hubDisplayAlias=hubDisplayAlias
                 it.lastSuccessfulEndpoint=lastSuccessfulEndpoint?.takeIf {value->value in listOfNotNull(it.address,it.alternate)}
             }
     }
 
     private val ENVELOPE_FIELDS = setOf("address", "credential", "snapshot", "savedAt", "alternate", "history", "historySignature",
-        "deviceHistory", "modelNames", "pricing", "subscriptions", "deviceAliases", "observedModelIds", "lanEnabled", "endpointsAssociated", "hubBuild", "lastSuccessfulEndpoint")
+        "deviceHistory", "modelNames", "pricing", "subscriptions", "deviceAliases", "observedModelIds", "lanEnabled", "endpointsAssociated", "hubBuild", "lastSuccessfulEndpoint", "hubDisplayAlias")
 
     private class LimitedInput(private val input: InputStream, private val limit: Int) : InputStream() {
         private var count = 0L

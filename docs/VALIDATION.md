@@ -1,5 +1,28 @@
 # 当前验收记录
 
+## 本次正式发行验证：0.72.0-02 / code77
+
+检查时间：2026-10-17（Asia/Shanghai）。用户已明确授权发布Android；所有更新均不要求真机测试，真机未测仅标未验证，不阻塞交付或已授权发布。未改NAS、未实施0.73对齐。构建提交 `e308802a9611be1b93c446e7eea3e64447719a7c`；发布Tag提交及GitHub工件身份须在上传后核对，不能把本地构建写成已发布。
+
+| 检查 | 实跑结果与适用范围 |
+|---|---|
+| 完整JVM | 当前release变体518项、98类，0失败/错误/跳过；包括纯手动检查、旧自动配置失效、重建/取消、单请求、408/503/302无隐式重试、本地别名隔离/冷恢复及Hub网络恢复。本轮完整执行，取代此前仅49项定向结果作为本次JVM证据。 |
+| 当前正式包UI | API36 ARM64临时只读克隆emulator-5592，最终包20项通过：正式升级读取、LauncherLabel、AndroidUpdateScreen、SyncDeviceGrid、ConnectionSettings、HubStore、字体行常规深色；另320dp/系统字体2/应用最大字号浅色字体2项通过，共22项。不是实体手机或生产Hub测试。 |
+| 正式签名覆盖 | 已安装正式0.72.0-01/code76，SHA256 `db90f7e985cfa14c9f799171c0e114228a3a369ccf55834ab89f602d13c2b977`，用旧包写入独立公开合成加密Hub缓存及四份显示偏好，再install -r到code77；无卸载/清数据。UID10213及五个加密文件哈希前后逐项一致，新包成功解密并还原历史、连接配置和偏好。 |
+| 包身份 | 实际APK applicationId `dev.bing.tokenmonitor.nativeclient`，versionName0.72.0-02/code77，min26/target37；应用及启动入口最终标签Token Monitor。新旧正式证书SHA256均 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。 |
+| 构建/静态 | Wrapper/JDK17/SDK37正式release与签名测试包构建成功；Release Lint 0错误、102警告、1提示。语言门禁、文档门禁、diff检查通过。无依赖/签名变更或R8优化。 |
+| 有界继承 | 本PR此前code76候选APK `5c75594b34146e0985d8f361b37c7a4b17be7b9b8cfd53b5b7219901db7bb038` 的14组/28项真实窗口字体矩阵、深色22场景分批及浅色12项结果仅继承未改UI范围。本次只增发行编号与文档，app/src/main与该候选的Git树相同；未将旧28项写成本包重跑。矩阵为约320/393/411dp × 系统字体1/2 × 两主题，加320系统2/应用最大字号两主题；检查共用列/断点、8dp间距、48dp触控、无缩字/省略和原重置语义。 |
+
+最终应用APK SHA256：`727f78c982174817e6602f5946a47b3c0d3b5590d68bb4bd2ac6563fd3f1154b`；最终测试APK：`163784a73cb3b6574acf2386681589052bb40aeceefbf9ccd0bc21de936f4c9b`。原始本轮日志：`/tmp/token-monitor-release77-build.log`、`/tmp/token-monitor-release77-seed.log`、`/tmp/token-monitor-release77-ui.log`及`/tmp/token-monitor-release77-fontlarge.log`，JVM XML在app/build/test-results/testReleaseUnitTest。仅公开指纹，不保存生产凭据或统计明细。
+
+对比截图：[常规修改前](../design/settings-fonts-before.png)、[常规修改后](../design/settings-fonts-after.png)、[320大字修改前](../design/settings-fonts-large-before.png)、[320大字修改后](../design/settings-fonts-large-after.png)、[长名称深色](../design/settings-fonts-long-dark.png)、[设备卡片](../design/settings-devices-after.png)、[纯手动更新](../design/settings-updates-after.png)。这些是此前相同UI源的公开样例原图，不是小米或生产Hub截图。
+
+首次失败仍可追溯至本PR先前提交的当前记录及原始日志：Debug/正式签名冲突、固定测试Provider冲突、字体测试导入及unmerged语义节点问题、旧域名回退预期均已处理；弹层外点击因模拟器SystemUI无响应遮挡失败，试验坐标修改已撤回，原坐标/断言专项通过。产品弹层没有因此修改。本轮临时模拟器启动同样出现SystemUI弹窗，先关闭该弹窗再执行UI验收，未改应用或清数据。
+
+用户提供的SSH诊断：生产Hub支持TOKEN_MONITOR_HUB_DISPLAY_NAME但未配置，所以当前鉴权响应不带hub.displayName；本聊天未复验该生产响应，未改服务端。客户端真实名称优先及当前连接别名通过公开快照/模拟服务验证；不宣称生产名称已显示。未验证范围还包括实体手机私有数据、OEM生命周期、生产网络/真实切Hub及公网匿名手动更新成功请求；真机未测不是发布门槛。README保持原样，不新建逐版本报告。
+
+## 继承的正式版本与文档治理证据
+
 适用：Android `0.72.0-01` / code76；治理基线：`cfab5438ed5dac6537c68affb385517ccfa44c0e`；检查日期：2026-10-17（Asia/Shanghai）。来源：固定基线的联合交接、发布回执、上轮整理记录及保留的原始证据指针。本次文档治理不重新构建APK，不执行设备/生产网络验收；下面历史结果按各自提交和工件继承，不能改称本轮实跑。
 
 ## 现行验证方法

@@ -58,13 +58,12 @@ import kotlinx.coroutines.launch
     }
 }
 
-/** Both rows measure from the same labels and values, so neither control drifts horizontally. */
+/** Shared label/minimum-control columns choose the same breakpoint; controls fill to the reset target. */
 @Composable internal fun FontSettingsControls(preferences:DisplayPreferences,change:(DisplayChange)->Unit) {
     val strings=LocalResources.current;val density=LocalDensity.current;val style=quotaTextStyle(11)
     val titles=listOf(R.string.appearance_interface_font,R.string.appearance_display_font).map(strings::getString)
-    val labels=fontChoices(true).map {strings.getString(it.second)}
     val titleWidth=with(density) {rememberDesktopLabelWidths(titles,style).max().toDp()}
-    val controlWidth=with(density) {(rememberDesktopLabelWidths(labels,style).max()+2*8.dp.roundToPx()+8.dp.roundToPx()+10.dp.roundToPx()).toDp()}.coerceAtLeast(48.dp)
+    val controlWidth=104.dp // Minimum useful dropdown width; long names wrap instead of moving the reset.
     Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
         FontControl(preferences.appearance.interfaceFont,false,titleWidth,controlWidth,change)
         FontControl(preferences.appearance.displayFont,true,titleWidth,controlWidth,change)
@@ -78,7 +77,7 @@ private fun fontChoices(display:Boolean)=buildList {if(display) add("follow" to 
     val current=DesktopAppearance.fontPreset(value,display)
     var custom by rememberSaveable(current) {mutableStateOf(current=="custom")}
     var draft by rememberSaveable(value) {mutableStateOf(if(current=="custom") value else "")}
-    DesktopSettingSelect(strings.getString(if(display) R.string.appearance_display_font else R.string.appearance_interface_font),fontChoices(display).map {(id,label)->id to strings.getString(label)},if(custom) "custom" else current,"appearance-$role",controlWidth=controlWidth,titleColumnWidth=titleWidth,trailing={
+    DesktopSettingSelect(strings.getString(if(display) R.string.appearance_display_font else R.string.appearance_interface_font),fontChoices(display).map {(id,label)->id to strings.getString(label)},if(custom) "custom" else current,"appearance-$role",controlWidth=controlWidth,titleColumnWidth=titleWidth,fillControlWidth=true,trailing={
         DesktopEditAction("↺",strings.getString(if(display) R.string.compact_reset_display_font else R.string.compact_reset_interface_font),"appearance-$role-reset",visualSize=18,glyphSize=10) {custom=false;draft="";change(DisplayChange.Font(display,if(display) DesktopAppearance.defaultDisplayFont else ""))}
     }) {id->
         custom=id=="custom";if(!custom) change(DisplayChange.Font(display,DesktopAppearance.fontFor(id,display=display)))

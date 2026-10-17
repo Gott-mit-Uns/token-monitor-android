@@ -129,6 +129,8 @@ internal class HubConnectionDraft {
                 if(model.endpointsAssociated()) Text(strings.getString(R.string.lan_associated),style=quotaTextStyle(9),color=MaterialTheme.colorScheme.onSurfaceVariant)
             }
             HubSyncDevices(state,now)
+            if(state.snapshot!=null && HubDisplayName.normalize(state.snapshot.hubDisplayName)==null) HubDisplayAliasControl(state,model)
+
             ConnectionButton(strings.getString(R.string.forget_connection),"connection-forget",!state.loading) {clearDraft();model.forget();onForgot()}
         }
     }
@@ -180,5 +182,20 @@ internal class HubConnectionDraft {
         if(live) {drawLine(color,point(8f,12f),point(11f,15f),stroke,StrokeCap.Round);drawLine(color,point(11f,15f),point(16f,9f),stroke,StrokeCap.Round)}
         else if(pending) drawArc(color,-90f,90f,false,topLeft=point(3f,3f),size=androidx.compose.ui.geometry.Size(size.width*.75f,size.height*.75f),style=Stroke(stroke,cap=StrokeCap.Round))
         else drawLine(color,point(6f,6f),point(18f,18f),stroke,StrokeCap.Round)
+    }
+}
+
+/** This draft belongs to the accepted connection revision, never a pending connection form. */
+@Composable private fun HubDisplayAliasControl(state:HubState,model:HubUiActions) {
+    val strings=LocalResources.current
+    var draft by remember(state.connectionRevision,state.hubDisplayAlias) {mutableStateOf(state.hubDisplayAlias.orEmpty())}
+    DesktopSettingNoteGroup(strings.getString(R.string.hub_display_alias_note),"hub-display-alias") {
+        Text(strings.getString(R.string.hub_display_alias),style=quotaTextStyle(11))
+        Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+            val valid=draft.isBlank() || HubDisplayName.normalize(draft)!=null
+            DesktopEditField(draft,{draft=it.take(160)},strings.getString(R.string.hub_display_alias),"hub-display-alias-field",Modifier.weight(1f),
+                done={if(valid && !state.loading) model.renameHubDisplay(draft)})
+            DesktopEditAction("✓",strings.getString(R.string.appearance_apply),"hub-display-alias-apply",!state.loading && valid && draft.trim()!=state.hubDisplayAlias.orEmpty()) {model.renameHubDisplay(draft)}
+        }
     }
 }

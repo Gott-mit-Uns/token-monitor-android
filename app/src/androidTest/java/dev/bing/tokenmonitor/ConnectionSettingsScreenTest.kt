@@ -26,6 +26,8 @@ class ConnectionSettingsScreenTest {
     private class Actions:HubUiActions {
         var urls=emptyList<String>();var calls=0;var replacement:String?=null
         var accepted:()->Unit={}
+        var aliasChanged:(String)->Unit={}
+        override fun renameHubDisplay(input:String) {aliasChanged(input)}
         override fun connectionEndpoints()=urls
         override fun connect(address:String,credential:String,alternate:String) {calls++;replacement=credential;urls=listOf(address,alternate);accepted()}
         override fun editConnection(address:String,alternate:String,replacementCredential:String?) {calls++;replacement=replacementCredential;urls=listOf(address,alternate);accepted()}
@@ -41,6 +43,31 @@ class ConnectionSettingsScreenTest {
     }
     private fun save(page:String)=saveVisualEvidence(compose.activity,compose.onRoot(),"connection-$page-${if(dark) "dark" else "light"}.png")
     private fun click(tag:String) {compose.onNodeWithTag(tag).performScrollTo().performClick()}
+    @Test fun localAliasEditStaysWithAcceptedConfigurationAndKeepsEndpointStatusVisible() {
+        val https="https://public.example.invalid";val http="http://192.0.2.12:17321"
+        val state=mutableStateOf(HubState(snapshot=snapshot,connectedEndpoint=https,lastSuccessfulEndpoint=https,connectionRevision=1))
+        val actions=Actions().also {it.urls=listOf(https,http)}
+        actions.aliasChanged={state.value=state.value.copy(hubDisplayAlias=it.trim().takeIf(String::isNotEmpty))}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.CHINESE) {
+            Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(12.dp).verticalScroll(rememberScrollState())) {
+                HubConnectionSettings(state.value,actions,true,null,null,{},HubConnectionDraft())
+            }
+        }}}
+        compose.onNodeWithTag("hub-display-alias-field").performScrollTo().performTextReplacement("DXP4800")
+        click("hub-display-alias-apply")
+        compose.onNodeWithTag("sync-hub-destination").performScrollTo().assertTextEquals("Hub: DXP4800")
+        compose.onNodeWithTag("sync-hub-address").assertDoesNotExist()
+        compose.onNodeWithTag("sync-endpoint-address-https").performScrollTo().assertTextEquals(https)
+        compose.onNodeWithTag("sync-endpoint-status-https").assertIsDisplayed()
+        compose.onNodeWithTag("sync-endpoint-address-http").performScrollTo().assertTextEquals(http)
+        compose.runOnIdle {
+            actions.urls=listOf("https://other.example.invalid")
+            state.value=HubState(snapshot=snapshot,connectionRevision=2,connectedEndpoint=actions.urls[0],lastSuccessfulEndpoint=actions.urls[0])
+        }
+        compose.onNodeWithTag("hub-display-alias-field").performScrollTo().assertTextEquals("")
+        compose.onNodeWithTag("sync-hub-destination").performScrollTo().assertTextEquals("Hub: 名称未知")
+        save("alias-other-hub")
+    }
     @Test fun firstConnectionThenCancelRetainAndReplaceHaveSeparateActions() {
         val state=mutableStateOf(HubState());val draft=HubConnectionDraft();val actions=Actions()
         actions.accepted={state.value=HubState(snapshot=snapshot,live=true,connectionAttempt=actions.calls.toLong(),connectionRevision=actions.calls.toLong(),lastSuccessfulEndpoint=actions.urls.firstOrNull(),connectedEndpoint=actions.urls.firstOrNull())}

@@ -93,7 +93,7 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
     }
 }
 
-@Composable internal fun DesktopSettingSelect(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,stacked:Boolean=false,controlWidth:Dp?=null,titleColumnWidth:Dp?=null,trailing:(@Composable ()->Unit)?=null,description:String?=null,change:(String)->Unit) {
+@Composable internal fun DesktopSettingSelect(title:String,choices:List<Pair<String,String>>,selected:String,tag:String,stacked:Boolean=false,controlWidth:Dp?=null,titleColumnWidth:Dp?=null,fillControlWidth:Boolean=false,trailing:(@Composable ()->Unit)?=null,description:String?=null,change:(String)->Unit) {
     var menu by remember {mutableStateOf(false)}
     var menuWidth by remember {mutableStateOf(200.dp)}
     val density=LocalDensity.current;val strings=LocalResources.current
@@ -124,7 +124,7 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
                 Text(title,Modifier.fillMaxWidth().testTag("$tag-title"),style=style)
                 if(description!=null) Text(description,Modifier.fillMaxWidth().testTag("$tag-description"),style=quotaTextStyle(9),color=colors.onSurfaceVariant)
             }
-            control(Modifier.width(naturalControlWidth.coerceAtMost(availableWidth)))
+            control(if(fillControlWidth) Modifier.weight(1f) else Modifier.width(naturalControlWidth.coerceAtMost(availableWidth)))
             trailing?.invoke()
         } else Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(4.dp)) {
             if(title.isNotEmpty()) Column(Modifier.fillMaxWidth(),verticalArrangement=Arrangement.spacedBy(2.dp)) {
@@ -133,7 +133,7 @@ internal val LocalDesktopSettingsRowHeight=staticCompositionLocalOf {48.dp}
             }
             Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                 val reserved=if(trailing!=null) 56.dp else 0.dp
-                control(if(controlWidth==null) Modifier.weight(1f) else Modifier.width(naturalControlWidth.coerceAtMost((availableWidth-reserved).coerceAtLeast(48.dp))))
+                control(if(fillControlWidth || controlWidth==null) Modifier.weight(1f) else Modifier.width(naturalControlWidth.coerceAtMost((availableWidth-reserved).coerceAtLeast(48.dp))))
                 trailing?.invoke()
             }
         }

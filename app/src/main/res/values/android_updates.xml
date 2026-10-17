@@ -1,6 +1,6 @@
 <resources>
     <string name="android_update_heading">Android client updates</string>
-    <string name="android_update_manual_note">Android updates are checked on startup or return to the foreground, at most once every 24 hours after a successful check; failed automatic checks retry after an hour. You can also check manually. The latest desktop release is queried separately when About opens. Choose to download in your browser and install with Android.</string>
+    <string name="android_update_manual_note">Android and desktop releases are checked only when you tap their check entries. No automatic checks or retries. Choose downloads manually in your browser; Android completes installation.</string>
     <string name="android_update_check">Check for updates</string>
     <string name="android_update_current_notes">Current version notes</string>
     <string name="android_update_releases">Android releases</string>

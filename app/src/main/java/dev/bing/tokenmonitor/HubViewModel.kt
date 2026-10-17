@@ -24,7 +24,7 @@ import javax.net.SocketFactory
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
-data class HubState(val snapshot: Snapshot? = null, val loading: Boolean = false, val error: Int? = null, val savedAt: Long? = null, val history: HubHistory? = null, val subscriptions: List<Subscription>? = null, val live: Boolean = false, val deviceAliases: Map<String, String> = emptyMap(), val modelNames: ModelNames? = null, val pricing: HubPricing? = null, val deviceHistories: DeviceHistories? = null, val connectionFailure:Int? = null, val connectionRevision:Long = 0, val connectionAttempt:Long = 0,
+data class HubState(val snapshot: Snapshot? = null, val loading: Boolean = false, val error: Int? = null, val savedAt: Long? = null, val history: HubHistory? = null, val subscriptions: List<Subscription>? = null, val live: Boolean = false, val deviceAliases: Map<String, String> = emptyMap(), val hubDisplayAlias:String? = null, val modelNames: ModelNames? = null, val pricing: HubPricing? = null, val deviceHistories: DeviceHistories? = null, val connectionFailure:Int? = null, val connectionRevision:Long = 0, val connectionAttempt:Long = 0,
     // A successful read is a Dashboard render event even if its history equals the previous payload.
     val historyRenderRevision:Long = 0,
     val historyReadReceipt:HistoryReadReceipt? = null, val lanPolicyRevision:Long = 0, val hubBuild:HubBuildInfo? = null,
@@ -163,7 +163,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     private fun currentRecord(): SavedHub? {
         return SavedHub(currentHub ?: return null, credential ?: return null,
             latestBody ?: return null, mutable.value.savedAt ?: System.currentTimeMillis(), alternateHub, historyBody, subscriptionsBody, mutable.value.deviceAliases, modelNamesBody, pricingBody, deviceHistoryBody, historySignature,
-            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated; it.hubBuild=mutable.value.hubBuild; it.lastSuccessfulEndpoint=mutable.value.lastSuccessfulEndpoint }
+            mutable.value.snapshot?.observedModelIds).also { it.lanEnabled = lanEnabled; it.endpointsAssociated = endpointsAssociated; it.hubBuild=mutable.value.hubBuild; it.hubDisplayAlias=mutable.value.hubDisplayAlias; it.lastSuccessfulEndpoint=mutable.value.lastSuccessfulEndpoint }
     }
     private suspend fun saveCurrent(stillValid: (() -> Boolean)? = null): Boolean {
         val record = currentRecord() ?: return false
@@ -248,6 +248,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
             val sameHub=secret==credential && (base==currentHub || (endpointsAssociated && base==alternateHub))
             val baseline=if(sameHub) mutable.value.copy(connectionFailure=null) else HubState()
             val next=refreshedSnapshot(baseline,parsed,false).copy(loading=false,connectionFailure=null,hubBuild=build,
+                hubDisplayAlias=baseline.hubDisplayAlias.takeIf {HubDisplayName.sameConfiguration(currentHub,alternateHub,credential,base,alternate,secret)},
                 lastSuccessfulEndpoint=base,connectedEndpoint=base.takeIf {foreground && ticket==requestToken},
                 connectionRevision=mutable.value.connectionRevision + if(sameHub) 0 else 1,
                 connectionAttempt=mutable.value.connectionAttempt)
@@ -257,6 +258,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 historySignature.takeIf {next.history!=null}, parsed.observedModelIds).also {
                 it.lanEnabled = lanEnabled
                 it.hubBuild = build
+                it.hubDisplayAlias = next.hubDisplayAlias
                 it.lastSuccessfulEndpoint = base
                 it.endpointsAssociated = endpointsAssociated && secret == credential && setOf(base, alternate) == setOf(currentHub, alternateHub)
             }
@@ -526,7 +528,7 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
                 store.load()?.let { saved ->
                     val snapshot = saved.parsedSnapshot ?: HubParser.parse(saved.snapshot, saved.observedModelIds)
                     val history = saved.history?.let { runCatching { HistoryParser.parse(it) }.getOrNull() }
-                    HubState(snapshot = snapshot, savedAt = saved.savedAt, deviceAliases = saved.deviceAliases, hubBuild=saved.hubBuild,lastSuccessfulEndpoint=saved.lastSuccessfulEndpoint,
+                    HubState(snapshot = snapshot, savedAt = saved.savedAt, deviceAliases = saved.deviceAliases, hubDisplayAlias=saved.hubDisplayAlias, hubBuild=saved.hubBuild,lastSuccessfulEndpoint=saved.lastSuccessfulEndpoint,
                         modelNames = saved.modelNames?.let { runCatching { ModelNamesParser.parse(it) }.getOrNull() },
                         pricing = saved.pricing?.let { runCatching { PricingParser.parse(it) }.getOrNull() },
                         deviceHistories = saved.deviceHistory?.let { runCatching { DeviceHistoryParser.parse(it).takeIf { value -> value.signature == FixedPeriods.signature(snapshot) } }.getOrNull() },
@@ -647,6 +649,16 @@ class HubViewModel @JvmOverloads constructor(application: Application, private v
     }
     override fun hasAlternate() = alternateHub != null
     override fun endpointType() = if (currentHub?.startsWith("https://") == true) "https" else "http"
+    override fun renameHubDisplay(input:String) {
+        if (mutable.value.loading || currentHub == null || mutable.value.snapshot == null) return
+        val value=input.trim()
+        if (value.isNotEmpty() && HubDisplayName.normalize(value)==null) {
+            mutable.value=mutable.value.copy(error=R.string.error_hub_display_alias)
+            return
+        }
+        mutable.value=mutable.value.copy(hubDisplayAlias=value.takeIf(String::isNotEmpty),error=null)
+        viewModelScope.launch {if (!saveCurrent()) mutable.value=mutable.value.copy(error=R.string.error_device_save)}
+    }
     override fun renameDevice(id: String, input: String) {
         if (mutable.value.loading || mutable.value.snapshot?.devices?.none { it.id == id } != false) return
         val name = input.trim()

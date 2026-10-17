@@ -36,7 +36,7 @@ class BackgroundImageScreenTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private val target get() = instrumentation.targetContext
-    private val uri = Uri.parse("content://dev.bing.tokenmonitor.nativeclient.test.public-image/sample")
+    private val uri = Uri.parse("content://${InstrumentationRegistry.getInstrumentation().context.packageName}.public-image/sample")
     private fun await(condition: () -> Boolean) { compose.waitUntil(10000, condition) }
     private fun model(): BackgroundImageModel { lateinit var result: BackgroundImageModel; compose.activityRule.scenario.onActivity { result=ViewModelProvider(it)[BackgroundImageModel::class.java] }; return result }
     private fun stage(value:String)=instrumentation.sendStatus(2,android.os.Bundle().apply {putString("nativeBackgroundStage",value)})
