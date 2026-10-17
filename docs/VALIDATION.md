@@ -29,7 +29,7 @@
 
 ## 远程检查与审查收敛
 
-2026-10-17继续复审：此前3fb6a6a的[文档CI](https://github.com/Gott-mit-Uns/token-monitor-android/actions/runs/38997913257)实际成功。此次补充复验发现子目录README改名为普通文件时，Git rename折叠可能漏掉旧路径授权；改为无rename折叠的全部变更检查，新增辅助README重命名负例，修复前该断言失败，修复后通过。当前全部门禁正反例、本地链接/锚点、固定历史目标和git diff检查通过。门禁文件SHA256：`1b572dd7dd523d0c77021f56da3d9d905586210e982a16d8536ebc13909f3e47`。
+2026-10-17继续复审：此前3fb6a6a的[文档CI](https://github.com/Gott-mit-Uns/token-monitor-android/actions/runs/38997913257)实际成功。此次补充复验发现子目录README改名为普通文件时，Git rename折叠可能漏掉旧路径授权；改为无rename折叠的全部变更检查，新增辅助README重命名负例，修复前该断言失败，修复后通过。同时补上NUL分隔Git路径解析，避免中文/引号路径漏检；围栏内标题不再产生真实锚点，支持反引号与波浪线围栏，均有拒绝反例。当前全部门禁正反例、本地链接/锚点、固定历史目标和git diff检查通过。门禁文件SHA256：`311c5b116f979fa70724aa08d3504739433cfe7afea49a439b901a324e4dfdb5`。
 
 初始自动审查提出的同页锚点和封存证据保护问题已修复并保留对应反例。此次任务的最新自动审查/CI动态结果以[本PR检查](https://github.com/Gott-mit-Uns/token-monitor-android/pull/12/checks)和review实际绑定的commit为准；不能沿用旧提交结论或空security_review状态宣称最终通过。本文件仅保留有来源的实测与适用边界，不逐轮追加运行流水。
 

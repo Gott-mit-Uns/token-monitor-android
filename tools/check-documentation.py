@@ -21,7 +21,29 @@ def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args], text=True, stderr=subprocess.DEVNULL).splitlines()
 
 
+def git_paths(root, *args):
+    args = list(args)
+    args.insert(args.index('--') if '--' in args else len(args), '-z')
+    output = subprocess.check_output(['git', '-C', str(root), *args], text=True, stderr=subprocess.DEVNULL)
+    return [path for path in output.split('\0') if path]
+
+
+def without_fences(text):
+    lines, fence = [], None
+    for line in text.splitlines():
+        marker = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= fence[1] and not marker[2].strip():
+                fence = None
+        elif marker:
+            fence = (marker[1][0], len(marker[1]))
+        else:
+            lines.append(line)
+    return '\n'.join(lines)
+
+
 def anchors(text):
+    text = without_fences(text)
     found, counts = set(), {}
     for title in re.findall(r'^ {0,3}#{1,6}\s+(.+?)\s*#*$', text, re.M):
         title = re.sub(r'<[^>]+>', '', title).strip().lower()
@@ -38,13 +60,13 @@ def check(root, base):
     for required in ('README.md', 'AGENTS.md', 'docs/HANDOFF.md', 'docs/VALIDATION.md', 'docs/COST_MODEL.md'):
         if not (root / required).is_file():
             errors.append(f'{required}: required current entry must exist')
-    files = git(root, 'ls-files', '--cached', '--others', '--exclude-standard')
-    added = git(root, 'diff', '--no-renames', '--name-only', '--diff-filter=A', base, '--')
-    added += git(root, 'ls-files', '--others', '--exclude-standard')
+    files = git_paths(root, 'ls-files', '--cached', '--others', '--exclude-standard')
+    added = git_paths(root, 'diff', '--no-renames', '--name-only', '--diff-filter=A', base, '--')
+    added += git_paths(root, 'ls-files', '--others', '--exclude-standard')
     actual_base = git(root, 'rev-parse', base)[0]
-    changed_archives = set(git(root, 'diff', '--no-renames', '--name-only', base, '--', 'docs/archive/'))
+    changed_archives = set(git_paths(root, 'diff', '--no-renames', '--name-only', base, '--', 'docs/archive/'))
     changed_archives.update(name for name in added if name.startswith('docs/archive/'))
-    legacy_archives = set(git(root, 'ls-tree', '-r', '--name-only', MIGRATION_BASE, '--', 'docs/archive/')) if actual_base == MIGRATION_BASE else set()
+    legacy_archives = set(git_paths(root, 'ls-tree', '-r', '--name-only', MIGRATION_BASE, '--', 'docs/archive/')) if actual_base == MIGRATION_BASE else set()
     for name in changed_archives:
         sanctioned_migration = actual_base == MIGRATION_BASE and (name in MIGRATION_ARCHIVES or (name in legacy_archives and not (root / name).exists()))
         if not sanctioned_migration:
@@ -62,7 +84,7 @@ def check(root, base):
         if p.suffix.lower() != '.md' or not p.is_file():
             continue
         text = p.read_text(encoding='utf-8')
-        text = re.sub(r'^```[^\n]*\n.*?^```\s*$', '', text, flags=re.M | re.S)
+        text = without_fences(text)
         refs = dict(re.findall(r'^\s*\[([^]]+)\]:\s*(\S+)', text, re.M))
         links = re.findall(r'!?\[[^]]*\]\(([^)]+)\)', text)
         links += re.findall(r'<(?:img|a)\b[^>]*?\b(?:src|href)=[\"\x27]([^\"\x27]+)', text)
@@ -88,7 +110,7 @@ def check(root, base):
                 errors.append(f'{name}: missing local link {target}')
             elif parsed.fragment and dest.suffix.lower() == '.md' and unquote(parsed.fragment) not in anchors(dest.read_text(encoding='utf-8')):
                 errors.append(f'{name}: missing anchor {target}')
-    changed = set(git(root, 'diff', '--no-renames', '--name-only', base, '--')) | set(git(root, 'ls-files', '--others', '--exclude-standard'))
+    changed = set(git_paths(root, 'diff', '--no-renames', '--name-only', base, '--')) | set(git_paths(root, 'ls-files', '--others', '--exclude-standard'))
     for name in sorted(changed):
         if not re.match(r'^README(?:[.\-_].+)?$', Path(name).name, re.I):
             continue
@@ -132,6 +154,21 @@ def self_test():
         run('mv', 'reports/README.md', 'reports/notes.md')
         assert any('reports/README.md' in e and 'SHA256' in e for e in check(root, 'HEAD'))
         run('mv', 'reports/notes.md', 'reports/README.md')
+        (root / '中文目录').mkdir()
+        (root / '中文目录/HANDOFF_2026.md').write_text('# Report\n')
+        run('add', '.')
+        assert any('中文目录/HANDOFF_2026.md' in e and 'duplicate' in e for e in check(root, 'HEAD'))
+        run('rm', '--cached', '中文目录/HANDOFF_2026.md')
+        (root / '中文目录/HANDOFF_2026.md').unlink()
+        (root / '中文目录/指引.md').write_text('# Guide\n[bad](missing.md)\n')
+        run('add', '.')
+        assert any('中文目录/指引.md' in e and 'missing local link' in e for e in check(root, 'HEAD'))
+        (root / '中文目录/指引.md').write_text('# Guide\n')
+        (root / 'docs/HANDOFF.md').write_text('# Current\n[bad](#pretend)\n```md\n# pretend\n```\n')
+        assert any('missing anchor' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n[bad](#pretend)\n~~~md\n# pretend\n~~~\n')
+        assert any('missing anchor' in e for e in check(root, 'HEAD'))
+        (root / 'docs/HANDOFF.md').write_text('# Current\n')
         (root / 'docs/HANDOFF_1.md').write_text('old')
         assert any('duplicate' in e for e in check(root, 'HEAD'))
         (root / 'docs/HANDOFF_1.md').unlink()
