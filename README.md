@@ -1,21 +1,10 @@
 # Token Monitor Android
 
-当前正式版本为 **[0.72.0-01 / code76](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.72.0-01)**，正式Release直接作为GitHub latest。[下载正式签名APK：token-monitor-android-0.72.0-01.apk](https://github.com/Gott-mit-Uns/token-monitor-android/releases/download/v0.72.0-01/token-monitor-android-0.72.0-01.apk)。按用户最新要求，当前APK和后续发行只用正式编号，停止旧编号兼容发行；仅识别旧编号的旧更新器须手动覆盖安装一次。APK字节、正式签名、应用版本和code76保持本次已验收结果，未重新构建。校验、功能与实测边界见[发布回执](docs/GITHUB_PUBLICATION.md)、[联合交接](docs/HANDOFF_0.72.0-01.md)及[版本规则](VERSIONING.md)。
-
-
 在手机上查看各台设备的 AI 用量、费用、额度和会话活动。
 
 **Token Monitor Android** 是 [Token Monitor](https://github.com/Javis603/token-monitor) 的 Android Hub 查看客户端，使用 Kotlin 与 Jetpack Compose 实现。连接已有 Hub，即可集中查看桌面设备同步的统计数据。
 
 [下载最新版 APK](https://github.com/Gott-mit-Uns/token-monitor-android/releases/latest) · [全部版本](https://github.com/Gott-mit-Uns/token-monitor-android/releases) · [来源与许可](THIRD_PARTY_NOTICES.md)
-
-历史0.2.64 / 73 已合入主线并[正式发布](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.2.64)：按用户实际试用反馈彻底移除 Android 桌面小组件及常规相关设置，多设备同步的采集设备改为等宽两列。关于应用四入口、双协议地址与真实连接端点、设备信息和已有主页／趋势／额度／缓存功能保留。APK 为 15,238,142 bytes / 14.53 MiB，沿用原包名和正式签名；四个附件及公开 APK／校验文件均完整下载核对。验收边界见[当时交接](docs/HANDOFF_0.2.64.md)，发布指纹见[发布回执](docs/GITHUB_PUBLICATION.md)。手机由用户自行安装，NAS 未修改；本次没有合入 R8／资源瘦身实验。[包体积对比](docs/APK_SIZE_COMPARISON_064.md)和[后续优化提示词](docs/APK_SIZE_OPTIMIZATION_PROMPT.md)已另存。
-
-0.2.63 / 72 为历史候选，小组件重新对齐在用户试用后取消，其桌面小组件功能已于 0.2.64 删除；本轮保留关于应用和多设备同步改进。历史调查及测试见[0.2.63 交接](docs/HANDOFF_0.2.63.md)及[Mac/Android 对照](docs/MAC_ANDROID_WIDGET_COMPARISON_063.md)。
-
-0.2.62 以固定桌面 v0.70.0 为参考，新增可选逐位滚动动画，优化大量会话的近期选择和标题展示，集中外观高级选项，并支持 Hub 已上传的 CatPaw 用量及 MiniMax 本币余额。采集、计费、模型修正和额度刷新依赖 Hub／Agent；真实新供应商数据与实体手机网络仍未验证，见[本轮交接](docs/HANDOFF_0.2.62.md)。
-
-0.2.61 增加关于页 Android 自身更新入口、只读缓存额度小组件，以及 Dashboard/记录日图的长按拖动逐日查看。设置开关支持短过渡，普通设置下拉更紧凑，字体菜单可直接选用已有的 Inter + Noto Sans SC 和 JetBrains Mono。小组件标注缓存时间与过期信息，点按后在 App 前台刷新；下载与安装交给浏览器和 Android 系统。具体范围与验收边界见[联合更新交接](docs/HANDOFF_0.2.61.md)。
 
 ## 界面预览
 
