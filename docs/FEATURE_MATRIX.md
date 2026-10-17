@@ -1,6 +1,6 @@
 # Android 当前功能与数据边界
 
-当前开发候选为 Android `0.73.0-01` / code78（未发布），固定桌面 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`；线上仍为0.72.0-02/code77。本轮增量映射见[当前交接](HANDOFF.md)。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。逐上游提交、代码、字段和验收映射见[0.72 清单](archive/DESKTOP_072_ALIGNMENT.md)，既有增量见[0.70](archive/DESKTOP_070_DIFF.md)与[0.71](archive/DESKTOP_071_DIFF.md)。
+当前正式发行为 Android `0.73.0-01` / code78，固定桌面 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`。本轮增量映射见[当前交接](HANDOFF.md)。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。逐上游提交、代码、字段和验收映射见[0.72 清单](archive/DESKTOP_072_ALIGNMENT.md)，既有增量见[0.70](archive/DESKTOP_070_DIFF.md)与[0.71](archive/DESKTOP_071_DIFF.md)。
 
 | 功能 | Android 当前范围 | Hub / Agent 依赖及限制 |
 |---|---|---|

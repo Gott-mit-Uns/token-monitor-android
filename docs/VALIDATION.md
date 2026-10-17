@@ -1,11 +1,12 @@
 # 当前验收记录
 
-## 当前开发验收：桌面 v0.73.0 / Android候选0.73.0-01
+## 当前发行验收：桌面 v0.73.0 / Android 0.73.0-01
 
-检查日期：2026-10-18（Asia/Shanghai）。分支起点 `20d6df77cd0fc759a96386e658422a448e097649`；上游latest正式版Tag固定为 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`，收尾再次查询仍为同版。线上Android仍为0.72.0-02/code77，本次仅交付PR，候选code78未合并、未发布。逐上游增量处理及合同限制只见 [HANDOFF](HANDOFF.md)。
+检查日期：2026-10-18（Asia/Shanghai）。分支起点 `20d6df77cd0fc759a96386e658422a448e097649`；上游latest正式版Tag固定为 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`，收尾再次查询仍为同版。用户随后明确授权合并PR #15并发布客户端、不要求真机测试、不操作NAS；PR已合并，v0.73.0-01/code78已正式发布为latest。构建生产输入提交ac96e168与Tag合并提交a06c822b逐项相同；本次复核此前同一工件与原始验证记录，未重跑不受影响套件。逐上游增量处理及合同限制只见 [HANDOFF](HANDOFF.md)。
 
 | 本轮检查 | 实跑证据与范围 |
 |---|---|
+| 正式公开发行 | [v0.73.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.73.0-01)，draft=false、prerelease=false且为latest；Tag指向 `a06c822b6ce17afbca442d6d8564453862336a37`。匿名latest API返回正式Tag与唯一规范APK入口；公开URL无鉴权下载APK、SOURCE.json、SHA256SUMS.txt并逐字节匹配上传材料，APK版本/code78和正式证书再次核对一致。SOURCE区分构建与Tag提交，不冒称包内嵌VCS元数据。PR #15最新代码自动复审完成、无发现，文档CI成功。 |
 | 完整JVM | 最终523项、99类，0失败/错误/跳过；Wrapper/JDK17/SDK37 release变体离线执行。固定桌面sessionRows直接生成48个标题参考，覆盖私用区三平面、正常/非匹配前缀、非OMP工具、隐私隐藏及原始元数据保留；完整registry逐项比较。固定桌面生产代码生成6个Hub wire样例，覆盖部分计时、明确零、旧二进制行为、无duration、reasoning及上限，验证period/session/model消费，不在手机补算。 |
 | 业务更正 | stats完整替换旧正值为明确零，经JSON投影、解析及带恶意旧业务字段的freshness后仍为零；旧会话不重现。模拟器独立加密缓存冷读保留原始OMP标题、零值与计时字段。不是生产采集端或生产Hub联调。 |
 | 正式签名覆盖 | 临时只读克隆API36 ARM64 emulator-5592，正式0.72.0-02/code77先写入独立公开合成加密Hub历史和四份显示偏好，install -r覆盖到候选code78，无卸载/清数据。UID10213、五份文件哈希逐项一致，升级包成功解密还原；实际安装APK回读SHA与候选完全相同。实体手机私有数据未验证。 |
@@ -13,7 +14,7 @@
 | 真实窗口矩阵 | 约320/393/411dp（880/1080/1130px、density440）× 系统字号1/2 × 浅/深色，共12组36项；新增测试类检查首页/列表/摘要标题一致、长标题全文换行与可见行边界、原始缓存保留。矩阵不通过缩小字体、截断数据或清应用数据取得结果。结束还原1080×2400、density420、系统字号1。 |
 | 构建/静态 | 正式release APK和测试APK构建成功；最终Lint 0错误、102警告、1提示，与原基线告警数量相同。670对中英资源、文档门禁、git diff --check通过。未改依赖、签名、加密存储格式或R8。 |
 
-候选应用APK：versionName0.73.0-01/code78，applicationId仍 `dev.bing.tokenmonitor.nativeclient`，15,307,246字节，SHA256 `3c5b6c00c85bb362a67036c1b7bab97f448b24c10f0eb3b4bdd973fecb814453`；正式证书SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。17项专项测试包SHA256 `007087e4e8537ad78f42e0c47cfdd5914c947a636f5cefecb7774a7e67c5a1cf`；最终矩阵测试包1,801,737字节、SHA256 `cdce2c4b8b9d7fd3855d1ef6cab6523b8ea675018657afcd02495e976b1eae97`。产品源码在上述两批测试间不变。
+正式应用APK（此前候选同字节）：versionName0.73.0-01/code78，applicationId仍 `dev.bing.tokenmonitor.nativeclient`，15,307,246字节，SHA256 `3c5b6c00c85bb362a67036c1b7bab97f448b24c10f0eb3b4bdd973fecb814453`；正式证书SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。17项专项测试包SHA256 `007087e4e8537ad78f42e0c47cfdd5914c947a636f5cefecb7774a7e67c5a1cf`；最终矩阵测试包1,801,737字节、SHA256 `cdce2c4b8b9d7fd3855d1ef6cab6523b8ea675018657afcd02495e976b1eae97`。产品源码在上述两批测试间不变。
 
 本轮原始日志及公开指纹：`/tmp/token-monitor-073-build.log`、`/tmp/token-monitor-073-final-unit-lint.log`、`/tmp/token-monitor-073-ui-after-standard.log`、`/tmp/token-monitor-073-upgrade-receipts.log`、`/tmp/token-monitor-073-matrix/summary.json`及每组instrumentation.log，最终摘要在`/tmp/token-monitor-073-final-evidence/`；本地临时路径不宣称随Git发布。
 
