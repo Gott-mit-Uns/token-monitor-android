@@ -1,6 +1,28 @@
 # 当前验收记录
 
-## 开发候选验收：桌面 v0.74.0 / Android 0.74.0-01（未完成）
+## 当前开发验收：桌面 v0.74.0 / Android 0.74.0-01（PR交付，未合并或发布）
+
+检查日期2026-10-19（Asia/Shanghai）。本轮重新查询GitHub latest及非预览正式发行：Android仍为v0.73.0-01/code78，桌面为v0.74.0，annotated Tag解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`。接续既有PR #17，产品与测试输入提交 `73ba7b57f6b42e010a4dac594e9d630460b8b637`；开发候选0.74.0-01/code79。本轮未合并、打正式Tag、上传发行或操作NAS。
+
+| 本轮实跑 | 结果与边界 |
+|---|---|
+| 标准构建与完整JVM | 既有Wrapper Gradle9.8.0/JDK17/SDK37离线执行release单元测试、Lint、assembleRelease及release AndroidTest；最终构建成功。100类530项JVM，0失败/错误/跳过。没有使用独立编译替代正式构建。 |
+| Lint与静态 | Release Lint 0错误、102警告、1提示，与已发布基线数量一致；671对中英资源、文档门禁/self-test及git diff检查通过。测试截图的滚动定位修正后另构建最终测试APK，未重跑未受影响的产品套件。 |
+| 固定桌面来源 | 本轮Git fetch正式Tag并固定cbed591；上游projectRows/history/usage共121项通过。生成器校验三个源文件SHA；新增Unicode等价排序ID样例，共9组项目样例。固定输入receivedAt/now，仅规范化输出外壳updatedAt，全部usage保持真实固定生产函数输出；重复生成逐字节一致。 |
+| 分类边界修复 | 新增NFC/NFD不同模型ID参考后，定向7测首次1失败；原sorted map将排序等价键覆盖，改为稳定排序entry列表，保留各来源ID与总量。完整530项最终通过；不改变模型原始字段、费用或Hub合同。 |
+| 正式签名覆盖 | 独立只读API36 ARM64模拟器emulator-5684，先安装公开正式0.73.0-01，匹配旧版接口的正式测试包准备公开合成加密缓存、历史及四份偏好；install -r到code79，无卸载/清数据。升级测试通过，UID10213及五份文件SHA前后逐项一致；最终安装APK回读与候选逐字节一致。 |
+| Compose定向回归 | 最终测试包上ProjectDeviceScreenTest 4项全过，覆盖项目顺序/合并/隐私/工具颜色、设备/系统信息、展开后工具模型切换与跨项目共享、中英未知模型、48dp触控、V16主偏好字节不变、新模式旁文件降级/清理、合成加密项目models冷读。另SignedUpgrade读取1项通过；旧包数据准备1项通过，分开计数。 |
+| 实际窗口矩阵 | 约320/393/411dp（880/1080/1130px、density440）×系统fontScale1/2×浅/深色，共12组12项切换测试全部通过，每组含英中显示及公开截图。结束恢复模拟器1080×2400/density420/fontScale1；不是替换Compose Density。已实际查看320dp/fontScale2浅色英文及深色中文原图。 |
+
+候选应用APK：15,324,078字节，SHA256 `6f28ca11eeb6ef19f2d8673c42c90da4633956b5f2249c4e63b9b9711e44e299`；applicationId `dev.bing.tokenmonitor.nativeclient`，0.74.0-01/code79，min26/target37。正式证书SHA256仍为 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。最终测试APK SHA256 `b5e393b9d91d67407972e8f803282c922e32b6ecb5d02d944af3ea6d9b20b1f8`；旧版匹配测试APK SHA256 `cdce2c4b8b9d7fd3855d1ef6cab6523b8ea675018657afcd02495e976b1eae97`。生产/测试/构建输入清单（app/src/main、androidTest、test和五项Gradle输入，按路径/原始字节/NUL顺序）SHA256 `e4d72a7fcefa429957161a478e9fe73c575cb3e22647ba44ab06a89b7d56170d`。
+
+公开界面原图：[320dp大字体浅色模型分解](../design/project-models-large-light.png)、[320dp大字体深色中文未知模型](../design/project-models-large-dark.png)。本轮原始日志位于本机临时路径：`/tmp/token074-verification-build.log`（首轮530全过）、`/tmp/token074-verification-final2-build.log`、`/tmp/token074-verification-ui-test-build.log`、`/tmp/token074-verification-upstream.log`、`/tmp/token074-upgrade-receipts.log`、`/tmp/token074-upgrade-final.log`、`/tmp/token074-projects-standard.log`、`/tmp/token074-ui-summary.json`及`/tmp/token074-ui-<宽度>-font<字号>-<主题>.log`。不宣称这些临时文件随Git交付。
+
+首次失败保留：原接续前SocketException记录见下节，本轮同一工具链标准构建/ADB可用，未切换到其他主机。新Unicode样例失败在 `/tmp/token074-collation-repro.log` 与 `/tmp/token074-collation-first-failure.xml`；一次定向调用遗漏release测试开关导致任务选择失败在 `/tmp/token074-collation-before.log`。首跑升级准备误用新接口测试包调用旧APK，发生NoSuchMethodError（`/tmp/token074-verification-upgrade-seed.log`；旧应用SHA3c5b6c00…、测试SHA739d050e…），改用固定旧Tag构建的匹配测试包后成功，不改产品/断言/旧包。新增尺寸断言首次缺unit.height/width导入，编译失败在 `/tmp/token074-verification-final-build.log`，补导入后通过。UI首跑3过1失败，原因是对合并语义树中不存在的model子Tag执行滚动；保留原中英文字断言，改为滚动实际列表项，最终4项及矩阵通过（`/tmp/token074-projects-first-failure.log`；应用SHA6f28ca11…、测试SHAec04f9fb…）。
+
+未验证：真机/私有数据、生产Hub、真实账号及新采集器部署效果。Grok推理和固定范围分类修正仍依赖生产端；本轮只验证固定源样例的正确消费。OMP逐轮正文仍缺远程合同，macOS窗口/玻璃/刘海不适用；fullyAligned=false保持。真机按AGENTS为可选，不作为PR门槛。README未修改；自动审查及CI以PR #17最新提交实际状态为准。
+
+## 此前候选补充检查（2026-10-19，本轮接续前）
 
 检查日期2026-10-19（Asia/Shanghai）；源码基线 `d22209bbf45032f7f0af3588ae6259519dbe635d`，候选code79。固定桌面Tag/提交和逐增量处理见HANDOFF；本轮未产生候选应用APK或测试APK，故没有可填写的候选APK SHA、签名或安装记录。正式版仍为0.73.0-01，本节不得解读为已发版。
 
@@ -16,7 +38,7 @@
 
 首次失败与修正：Wrapper构建在创建FileLockContentionHandler时因 `java.net.SocketException: Operation not permitted` 终止；ADB启动本地监听也报Operation not permitted。没有改工具链、移除锁或降低断言绕过。首次独立编译准备曾误用不存在的android-37路径和旧工作区classes，改用实际android-37.0平台/当前完整源文件后通过；这一工具准备失败不是产品构建失败。定向JUnit首轮28项有1项失败：旧futureBuild样例core86已成为当前已知修订，改为仍未知的未来core89并保留remoteNewer断言。新增固定范围样例首跑误按周一推断Locale.US周起点，实际美国周日，按既有合同修正为WEEK/7D/30D都应保留200且分类为0；最终30项全通过。没有应用/测试APK可关联这些首次失败。
 
-尚未完成：标准Wrapper构建、完整必要回归/Lint、正式签名与覆盖安装、实际Compose/截图/大字体验收、真实Hub字段及生产新采集器效果。旧0.73的设备/签名/缓存结论仅作历史参考，本轮未把它们写成候选已通过。后续在具备本地通信权限的环境补齐；不要求提供真机，不清数据、不操作NAS。当前交付草稿PR，不能合并/发布为已验收版本。
+当时尚未完成（标准构建、Lint、签名、覆盖安装及受影响UI现由上节补齐）：标准Wrapper构建、完整必要回归/Lint、正式签名与覆盖安装、实际Compose/截图/大字体验收、真实Hub字段及生产新采集器效果。旧0.73的设备/签名/缓存结论仅作历史参考，本轮未把它们写成候选已通过。后续在具备本地通信权限的环境补齐；不要求提供真机，不清数据、不操作NAS。当前交付草稿PR，不能合并/发布为已验收版本。
 
 ## 当前发行验收：桌面 v0.73.0 / Android 0.73.0-01
 
