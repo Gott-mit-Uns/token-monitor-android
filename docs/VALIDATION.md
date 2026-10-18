@@ -1,5 +1,23 @@
 # 当前验收记录
 
+## 开发候选验收：桌面 v0.74.0 / Android 0.74.0-01（未完成）
+
+检查日期2026-10-19（Asia/Shanghai）；源码基线 `d22209bbf45032f7f0af3588ae6259519dbe635d`，候选code79。固定桌面Tag/提交和逐增量处理见HANDOFF；本轮未产生候选应用APK或测试APK，故没有可填写的候选APK SHA、签名或安装记录。正式版仍为0.73.0-01，本节不得解读为已发版。
+
+| 实跑项目 | 结果与证据边界 |
+|---|---|
+| 上游身份与本地源码 | GitHub latest=v0.74.0，正式非预览；Tag解引用cbed591，收尾再次查询latest仍为v0.74.0。比较数据中的103个变更文件逐个重新计算Git blob SHA，全部与固定比较响应一致（0不匹配）。未用浮动main。 |
+| 固定来源样例 | `tools/capture-project-models-074.cjs <固定源码目录>` 对renderer、usage、history三个输入先核验SHA256再生成公开8组项目样例、Grok/历史/真实aggregateDevices项目wire。新完整registry逐项对比；旧0.73标题/计时样例保留其自己的来源提交。 |
+| 上游定向测试 | Node24.21.0执行固定源码projectRows、history、usage三组共121项，全部通过；不是生产Hub联调。 |
+| Android全量源码编译补充检查 | Gradle受限后，使用既有JDK17、Kotlin/Compose编译器2.4.20及现有runtime-artifacts精确依赖，直接编译全部main Kotlin源码；平台37.0 AAPT2先编译/链接当前资源并生成真实R。全部通过。此为独立编译检查，未打包APK，不能替代Wrapper构建、Lint或签名验收。 |
+| Android定向JVM补充检查 | 同编译器编译并由JUnit4.13.2直接执行Desktop074Compatibility、Desktop073Compatibility、ProjectDevice、DesktopParityMetadata、HubBuildInfo五类共30项，0失败。覆盖固定renderer输出、HTTP式JSON投影、full/freshness业务隔离、旧Hub、缺失/异常/超额模型、会话回退与不完整禁用、别名、未知项、大整数、Grok不重复计数、三固定范围分类和registry。不是Gradle完整523项重跑。 |
+| Android设备测试源码编译 | ProjectDeviceScreenTest及VisualEvidence直接Kotlin/Compose编译通过。新增展开/折叠、共享选择、中英、无额外读取、V16偏好主文件一致与可选模式降级、加密缓存冷恢复断言；尚未实际运行，不能声称这些断言已通过。 |
+| 静态门禁 | 英中671对资源检查通过，git diff --check通过；文档门禁0发现，self-test全部通过。README未修改。 |
+
+首次失败与修正：Wrapper构建在创建FileLockContentionHandler时因 `java.net.SocketException: Operation not permitted` 终止；ADB启动本地监听也报Operation not permitted。没有改工具链、移除锁或降低断言绕过。首次独立编译准备曾误用不存在的android-37路径和旧工作区classes，改用实际android-37.0平台/当前完整源文件后通过；这一工具准备失败不是产品构建失败。定向JUnit首轮28项有1项失败：旧futureBuild样例core86已成为当前已知修订，改为仍未知的未来core89并保留remoteNewer断言。新增固定范围样例首跑误按周一推断Locale.US周起点，实际美国周日，按既有合同修正为WEEK/7D/30D都应保留200且分类为0；最终30项全通过。没有应用/测试APK可关联这些首次失败。
+
+尚未完成：标准Wrapper构建、完整必要回归/Lint、正式签名与覆盖安装、实际Compose/截图/大字体验收、真实Hub字段及生产新采集器效果。旧0.73的设备/签名/缓存结论仅作历史参考，本轮未把它们写成候选已通过。后续在具备本地通信权限的环境补齐；不要求提供真机，不清数据、不操作NAS。当前交付草稿PR，不能合并/发布为已验收版本。
+
 ## 当前发行验收：桌面 v0.73.0 / Android 0.73.0-01
 
 检查日期：2026-10-18（Asia/Shanghai）。分支起点 `20d6df77cd0fc759a96386e658422a448e097649`；上游latest正式版Tag固定为 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`，收尾再次查询仍为同版。用户随后明确授权合并PR #15并发布客户端、不要求真机测试、不操作NAS；PR已合并，v0.73.0-01/code78已正式发布为latest。构建生产输入提交ac96e168与Tag合并提交a06c822b逐项相同；本次复核此前同一工件与原始验证记录，未重跑不受影响套件。逐上游增量处理及合同限制只见 [HANDOFF](HANDOFF.md)。

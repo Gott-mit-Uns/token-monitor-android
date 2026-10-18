@@ -60,7 +60,7 @@ private val sourceFallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFF
     }
 }
 
-@Composable internal fun DesktopProjectRow(row:ProjectRow,max:BigInteger,hideTitles:Boolean,motion:State<BreakdownMotionFrame>?=null,motionKey:String="project:${row.id}") {
+@Composable internal fun DesktopProjectRow(row:ProjectRow,max:BigInteger,hideTitles:Boolean,motion:State<BreakdownMotionFrame>?=null,motionKey:String="project:${row.id}",mode:String="tool",names:ModelNames?=null,observed:Collection<String> = emptyList(),changeMode:((String)->Unit)?=null) {
     val strings=LocalResources.current;val colors=MaterialTheme.colorScheme;val palette=LocalDesktopVendorPalette.current
     val numbers=remember {NumberFormat.getIntegerInstance(Locale.US)}
     val observer=LocalHeadlineRenderObserver.current
@@ -68,8 +68,10 @@ private val sourceFallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFF
     val border=LocalDesktopOverlayColor.current.copy(alpha=.08f)
     val name=if(hideTitles) strings.getString(R.string.dimension_summary,strings.getString(R.string.dimension_projects)) else row.name
     val fallback=Color(sourceFallbackColors[ProjectDisplay.stableIndex(row.id)])
-    fun color(client:String)=palette[client]?.let {Color(it)} ?: fallback
-    val gradient=ProjectDisplay.gradient(row.clients).map {it.position to color(it.client)}
+    val byModel=mode=="model"
+    val shares=if(byModel) ProjectDisplay.modelShares(row,names,observed,strings.getString(R.string.project_unknown_model)) else row.clients
+    fun color(client:String)=if(byModel) {if(client.isEmpty()) colors.onSurfaceVariant else modelColor(client,palette)} else palette[client]?.let {Color(it)} ?: fallback
+    val gradient=ProjectDisplay.gradient(shares).map {it.position to color(it.client)}
     var expanded by rememberSaveable(row.id) {mutableStateOf(false)}
     var summary by rememberSaveable(row.id) {mutableStateOf(false)}
     Column(Modifier.fillMaxWidth().heightIn(min=48.dp).combinedClickable(role=Role.Button,onClick={expanded=!expanded},onLongClick={summary=true},onLongClickLabel=strings.getString(R.string.usage_summary)).semantics {stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)}.testTag("project-row-${row.id}")) {
@@ -85,7 +87,18 @@ private val sourceFallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFF
         SourceUsageBar(row.tokens,max,fallback,gradient,"project-bar-${row.id}",motion,motionKey)
         DesktopAccordion(expanded,"project-details-motion-${row.id}",kind=DesktopDisclosureKind.PROJECT_DETAILS) {
         Column(Modifier.fillMaxWidth().padding(start=4.dp).drawBehind {drawLine(border,Offset.Zero,Offset(0f,size.height),1.dp.toPx())}.padding(start=12.dp,top=5.dp,bottom=2.dp),verticalArrangement=Arrangement.spacedBy(5.dp)) {
-            row.clients.forEachIndexed {index,client->Row(Modifier.fillMaxWidth().testTag("project-tool-${row.id}-$index"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
+            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.End) {
+                for((id,label) in listOf("tool" to R.string.dimension_tools,"model" to R.string.dimension_models)) {
+                    DesktopTextButton(onClick={changeMode?.invoke(id)},enabled=changeMode!=null,
+                        modifier=Modifier.heightIn(min=48.dp).testTag("project-mode-${row.id}-$id").semantics {selected=mode==id},
+                        colors=ButtonDefaults.textButtonColors(contentColor=if(mode==id) colors.primary else colors.onSurfaceVariant)) {
+                        Text(strings.getString(label),style=quotaTextStyle(11))
+                    }
+                }
+            }
+            shares.forEachIndexed {index,client->
+                if(byModel) DetailMetric(client.label,numbers.format(client.tokens),"${floor(client.percent+0.5).toLong()}%",true,"project-model-${row.id}-$index",Modifier.testTag("project-model-${row.id}-$index"))
+                else Row(Modifier.fillMaxWidth().testTag("project-tool-${row.id}-$index"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 Row(Modifier.weight(1f),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                     Canvas(Modifier.size(7.dp)) {drawCircle(color(client.sourceClient))}
                     Text(client.label,Modifier.weight(1f,false),style=quotaTextStyle(11).copy(lineHeight=14.85.sp),color=colors.onSurfaceVariant,maxLines=1,overflow=TextOverflow.Ellipsis)

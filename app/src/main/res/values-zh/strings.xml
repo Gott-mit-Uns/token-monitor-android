@@ -678,4 +678,5 @@
     <string name="token_number_animation">Token 数字动画</string>
     <string name="token_animation_roll">逐位滚动</string>
     <string name="token_animation_count">数值递增</string>
+    <string name="project_unknown_model">未知模型</string>
 </resources>

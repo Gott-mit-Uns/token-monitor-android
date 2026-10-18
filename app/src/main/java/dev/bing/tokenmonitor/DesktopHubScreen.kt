@@ -374,7 +374,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
             val needed = buildList<Pair<String, () -> Unit>> {
                 if (regularReads && periodVisible && FixedPeriods.derived(range) && state.deviceHistories == null) add("devices:${state.snapshot?.let(FixedPeriods::signature)}" to model::loadDeviceHistory)
                 if (historyPolicy.ready) add("history" to { if(model.loadHistory(false)) historyPolicy.requested() })
-                if (regularReads && (trendsDetail || page in listOf(HubPage.TOOLS, HubPage.MODELS,HubPage.SESSIONS) || (page == HubPage.HOME && preferences.homeModules.any { it in listOf("tools", "models","sessions") })) && state.modelNames == null) add("models:${state.snapshot?.modelNamesRevision}" to model::loadModelNames)
+                if (regularReads && (trendsDetail || page in listOf(HubPage.TOOLS, HubPage.MODELS,HubPage.PROJECTS,HubPage.SESSIONS) || (page == HubPage.HOME && preferences.homeModules.any { it in listOf("tools", "models","sessions") })) && state.modelNames == null) add("models:${state.snapshot?.modelNamesRevision}" to model::loadModelNames)
                 if (regularReads && page == HubPage.PRICING && state.pricing == null) add("pricing:${state.snapshot?.pricingRevision}" to model::loadPricing)
                 if (regularReads && page in listOf(HubPage.SUBSCRIPTIONS,HubPage.LIMITS) && state.subscriptions == null) add("subscriptions:${state.snapshot?.subscriptionsRevision}" to model::loadSubscriptions)
             }
@@ -619,7 +619,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                         if(period?.projectsIncomplete==true) item {Text(strings.getString(R.string.projects_details_incomplete),style=quotaTextStyle(10),color=colors.onSurfaceVariant)}
                                         items(mainProjects,key={"project:${it.id}"}) {row->
                                             DesktopBreakdownMotionRow("project:${row.id}",rowPlacementToken,rowPlacementMotion) {
-                                                DesktopProjectRow(row,mainProjectMax,preferences.hideTitles,motion=breakdownMotion)
+                                                DesktopProjectRow(row,mainProjectMax,preferences.hideTitles,motion=breakdownMotion,mode=preferences.projectBreakdownMode,names=state.modelNames,observed=observedModels,changeMode=updateDisplay?.let {change->{mode->change(DisplayChange.ProjectBreakdownMode(mode))}})
                                             }
                                         }
                                     }

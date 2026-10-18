@@ -1,0 +1,497 @@
+{
+  "sourceCommit": "cbed5915e294abb4a210f7ebb385e9415f706821",
+  "grok": {
+    "capabilities": {
+      "tokenComponents": true,
+      "throughput": true
+    },
+    "totalTokens": 117,
+    "costUsd": 0.25,
+    "cacheReadTokens": 100,
+    "cacheWriteTokens": 0,
+    "outputTokens": 7,
+    "unclassifiedTokens": 0,
+    "timedTokens": 0,
+    "timedOutputTokens": 0,
+    "timedDurationMs": 0,
+    "modelThroughput": {},
+    "clients": {
+      "grok": 117
+    },
+    "clientCosts": {
+      "grok": 0.25
+    },
+    "clientCacheReads": {
+      "grok": 100
+    },
+    "clientCacheWrites": {},
+    "clientOutputs": {
+      "grok": 7
+    },
+    "clientUnclassifiedTokens": {},
+    "models": {
+      "grok-4": 117
+    },
+    "modelCosts": {
+      "grok-4": 0.25
+    },
+    "modelCacheReads": {
+      "grok-4": 100
+    },
+    "modelCacheWrites": {},
+    "modelOutputs": {
+      "grok-4": 7
+    },
+    "modelUnclassifiedTokens": {},
+    "clientModels": {
+      "grok": {
+        "grok-4": 117
+      }
+    },
+    "clientModelCosts": {
+      "grok": {
+        "grok-4": 0.25
+      }
+    },
+    "projects": {},
+    "sessions": {
+      "grok:s": {
+        "client": "grok",
+        "sessionId": "s",
+        "totalTokens": 117,
+        "costUsd": 0.25,
+        "messageCount": 0,
+        "inputTokens": 10,
+        "outputTokens": 7,
+        "cacheReadTokens": 100,
+        "cacheWriteTokens": 0,
+        "reasoningTokens": 2,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "startedAt": "",
+        "lastUsedAt": "",
+        "contextTokens": 0,
+        "contextWindow": 0,
+        "projectId": "",
+        "projectLabel": "",
+        "title": "",
+        "sessionKind": "",
+        "models": {
+          "grok-4": 117
+        },
+        "modelCosts": {
+          "grok-4": 0.25
+        },
+        "providers": {}
+      }
+    }
+  },
+  "history": {
+    "daily": [
+      {
+        "date": "2026-10-18",
+        "tokens": 200,
+        "cost": 2,
+        "messages": 0,
+        "activeTimeMs": 0,
+        "cacheReadTokens": 120,
+        "cacheWriteTokens": 20,
+        "outputTokens": 40,
+        "unclassifiedTokens": 0,
+        "tokenComponentsAvailable": true,
+        "perClient": {
+          "grok": {
+            "tokens": 200,
+            "cost": 2,
+            "messages": 0,
+            "cacheReadTokens": 120,
+            "cacheWriteTokens": 20,
+            "outputTokens": 40,
+            "unclassifiedTokens": 0
+          }
+        },
+        "perModel": {
+          "grok-4": {
+            "tokens": 200,
+            "cost": 2,
+            "cacheReadTokens": 120,
+            "cacheWriteTokens": 20,
+            "outputTokens": 40,
+            "unclassifiedTokens": 0
+          }
+        },
+        "tokenIntensity": 4,
+        "costIntensity": 4,
+        "intensity": 4
+      }
+    ],
+    "monthly": [],
+    "summary": {
+      "totalTokens": 0,
+      "totalCost": 0,
+      "activeDays": 1,
+      "currentStreak": 0,
+      "longestStreak": 1,
+      "peakDayTokens": 200,
+      "favoriteModel": "grok-4",
+      "messages": 0,
+      "activeTimeMs": 0
+    }
+  },
+  "projectWire": {
+    "updatedAt": "2026-10-18T22:36:26.169Z",
+    "periods": {
+      "today": {
+        "capabilities": {
+          "tokenComponents": false,
+          "throughput": false
+        },
+        "totalTokens": 150,
+        "costUsd": 0,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 150,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {},
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {},
+        "models": {},
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {},
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {
+          "app": {
+            "label": "App",
+            "tokens": 150,
+            "costUsd": 0,
+            "clients": {
+              "codex": 100,
+              "claude": 50
+            },
+            "models": {
+              "alpha": 70,
+              "beta": 50
+            }
+          }
+        },
+        "sessions": {
+          "codex:a": {
+            "client": "codex",
+            "sessionId": "a",
+            "totalTokens": 100,
+            "costUsd": 0,
+            "messageCount": 0,
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "reasoningTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "startedAt": "",
+            "lastUsedAt": "",
+            "contextTokens": 0,
+            "contextWindow": 0,
+            "projectId": "",
+            "projectLabel": "App",
+            "title": "",
+            "sessionKind": "",
+            "models": {
+              "alpha": 70,
+              "beta": 30
+            },
+            "modelCosts": {},
+            "providers": {}
+          },
+          "claude:b": {
+            "client": "claude",
+            "sessionId": "b",
+            "totalTokens": 50,
+            "costUsd": 0,
+            "messageCount": 0,
+            "inputTokens": 0,
+            "outputTokens": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "reasoningTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "startedAt": "",
+            "lastUsedAt": "",
+            "contextTokens": 0,
+            "contextWindow": 0,
+            "projectId": "",
+            "projectLabel": "App",
+            "title": "",
+            "sessionKind": "",
+            "models": {
+              "beta": 20
+            },
+            "modelCosts": {},
+            "providers": {}
+          }
+        }
+      },
+      "month": {
+        "capabilities": {
+          "tokenComponents": true,
+          "throughput": false
+        },
+        "totalTokens": 0,
+        "costUsd": 0,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 0,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {},
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {},
+        "models": {},
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {},
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {}
+      },
+      "allTime": {
+        "capabilities": {
+          "tokenComponents": true,
+          "throughput": false
+        },
+        "totalTokens": 0,
+        "costUsd": 0,
+        "cacheReadTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 0,
+        "unclassifiedTokens": 0,
+        "timedTokens": 0,
+        "timedOutputTokens": 0,
+        "timedDurationMs": 0,
+        "clients": {},
+        "clientCosts": {},
+        "clientCacheReads": {},
+        "clientCacheWrites": {},
+        "clientOutputs": {},
+        "clientUnclassifiedTokens": {},
+        "models": {},
+        "modelCosts": {},
+        "modelCacheReads": {},
+        "modelCacheWrites": {},
+        "modelOutputs": {},
+        "modelUnclassifiedTokens": {},
+        "clientModels": {},
+        "clientModelCosts": {},
+        "projects": {},
+        "sessions": {}
+      }
+    },
+    "devices": [
+      {
+        "deviceId": "public",
+        "hostname": "",
+        "platform": "",
+        "agentVersion": "",
+        "agentRuntime": "",
+        "updatedAt": "2026-10-18T10:00:00Z",
+        "receivedAt": "2026-10-18T22:36:26.169Z",
+        "ageMs": 0,
+        "stale": false,
+        "periods": {
+          "today": {
+            "capabilities": {
+              "tokenComponents": false,
+              "throughput": false
+            },
+            "totalTokens": 150,
+            "costUsd": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 150,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {},
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {},
+            "models": {},
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {},
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {
+              "app": {
+                "label": "App",
+                "tokens": 150,
+                "costUsd": 0,
+                "clients": {
+                  "codex": 100,
+                  "claude": 50
+                },
+                "models": {
+                  "alpha": 70,
+                  "beta": 50
+                }
+              }
+            },
+            "sessions": {
+              "codex:a": {
+                "client": "codex",
+                "sessionId": "a",
+                "totalTokens": 100,
+                "costUsd": 0,
+                "messageCount": 0,
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "cacheReadTokens": 0,
+                "cacheWriteTokens": 0,
+                "reasoningTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "startedAt": "",
+                "lastUsedAt": "",
+                "contextTokens": 0,
+                "contextWindow": 0,
+                "projectId": "",
+                "projectLabel": "App",
+                "title": "",
+                "sessionKind": "",
+                "models": {
+                  "alpha": 70,
+                  "beta": 30
+                },
+                "modelCosts": {},
+                "providers": {}
+              },
+              "claude:b": {
+                "client": "claude",
+                "sessionId": "b",
+                "totalTokens": 50,
+                "costUsd": 0,
+                "messageCount": 0,
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "cacheReadTokens": 0,
+                "cacheWriteTokens": 0,
+                "reasoningTokens": 0,
+                "timedOutputTokens": 0,
+                "timedDurationMs": 0,
+                "startedAt": "",
+                "lastUsedAt": "",
+                "contextTokens": 0,
+                "contextWindow": 0,
+                "projectId": "",
+                "projectLabel": "App",
+                "title": "",
+                "sessionKind": "",
+                "models": {
+                  "beta": 20
+                },
+                "modelCosts": {},
+                "providers": {}
+              }
+            }
+          },
+          "month": {
+            "capabilities": {
+              "tokenComponents": true,
+              "throughput": false
+            },
+            "totalTokens": 0,
+            "costUsd": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 0,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {},
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {},
+            "models": {},
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {},
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {}
+          },
+          "allTime": {
+            "capabilities": {
+              "tokenComponents": true,
+              "throughput": false
+            },
+            "totalTokens": 0,
+            "costUsd": 0,
+            "cacheReadTokens": 0,
+            "cacheWriteTokens": 0,
+            "outputTokens": 0,
+            "unclassifiedTokens": 0,
+            "timedTokens": 0,
+            "timedOutputTokens": 0,
+            "timedDurationMs": 0,
+            "clients": {},
+            "clientCosts": {},
+            "clientCacheReads": {},
+            "clientCacheWrites": {},
+            "clientOutputs": {},
+            "clientUnclassifiedTokens": {},
+            "models": {},
+            "modelCosts": {},
+            "modelCacheReads": {},
+            "modelCacheWrites": {},
+            "modelOutputs": {},
+            "modelUnclassifiedTokens": {},
+            "clientModels": {},
+            "clientModelCosts": {},
+            "projects": {},
+            "sessions": {}
+          }
+        },
+        "limits": {
+          "updatedAt": null,
+          "refreshMs": 300000,
+          "providers": []
+        }
+      }
+    ],
+    "projectsIncomplete": false,
+    "limits": {
+      "updatedAt": "2026-10-18T22:36:26.169Z",
+      "providers": []
+    }
+  }
+}

@@ -52,7 +52,7 @@ import java.text.NumberFormat
 }
 
 /** Compact label/share/count alignment. Long values stack to remain complete. */
-@Composable private fun DetailMetric(label: String, value: String, percent: String?, showPercent: Boolean, tag: String, modifier: Modifier=Modifier) {
+@Composable internal fun DetailMetric(label: String, value: String, percent: String?, showPercent: Boolean, tag: String, modifier: Modifier=Modifier) {
     val colors=MaterialTheme.colorScheme
     BoxWithConstraints(modifier.fillMaxWidth().testTag(tag)) {
         val stacked=effectiveTextScale()>1.15f || maxWidth<240.dp || value.length>15

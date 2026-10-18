@@ -136,7 +136,10 @@ internal object HubBuildRegistry {
             82L to "sha256:139183e108139b528f8ed24ce079a74fa317a4b156dd6debf9a1968b1fc37d82",
             83L to "sha256:597ec1ee025bdf3bca0ca1509d60a6b3317c138f0573c06e2a6eecbb86206c9b",
             84L to "sha256:2b9f3aca4c51b909d494f73729a2cbe3d47df5ba5de251a59dcf5f209b3a18e4",
-            85L to "sha256:70ba30f37087c2036c542749bfa4edc4f6e5be8eff622e0afbfba912af8974e4"
+            85L to "sha256:70ba30f37087c2036c542749bfa4edc4f6e5be8eff622e0afbfba912af8974e4",
+            86L to "sha256:834e4e2abcc39f7f5ef452601e94092c95efcb87ae10219438c93e5c430d1ca1",
+            87L to "sha256:dc51c5d0515e2309792e099db870837030ca9004f5fffd19a55a376e9a53827a",
+            88L to "sha256:43e2cae75b5d4023a92e01ad2a686cf7fcece84793984a779f4e0802300f7744"
         ),
         "node-hub" to mapOf(
             1L to "sha256:dbdaa0b2aa2e8d627b939d6ab76a9029aa2807839fdbe4e7918edcab592fe749",
