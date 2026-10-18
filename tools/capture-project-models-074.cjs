@@ -19,6 +19,7 @@ const cases=[
  {id:'sessions',period:{sessions:{s:{client:'codex',projectLabel:'App',totalTokens:100,models:{alpha:60}},t:{client:'claude',projectLabel:'App',totalTokens:50,models:{beta:50}}}}},
  {id:'incomplete-sessions',incomplete:true,period:{sessions:{s:{client:'codex',projectLabel:'App',totalTokens:100,models:{alpha:100}}}}},
  {id:'zero',period:{projects:{a:{label:'App',tokens:0,models:{alpha:100}}}}},
+ {id:'collation-equivalent-models',period:{projects:{a:{label:'App',tokens:100,models:{'é':60,'e\u0301':40}}}}},
  {id:'opaque-models',period:{projects:{a:{label:'App',tokens:100,models:{'__proto__':20,'constructor':30,'provider/alpha':10}}}}},
  {id:'malformed-models',period:{projects:{a:{label:'App',tokens:100,models:['alpha',20]}}}}
 ];
@@ -31,5 +32,8 @@ const exact={daily:[{date:'2026-10-18',tokens:100,cost:1,cacheReadTokens:60,cach
 const history=mergeHistories([exact,exact]);
 const sessions={a:{client:'codex',projectLabel:'App',totalTokens:100,models:{alpha:70,beta:30}},b:{client:'claude',projectLabel:'App',totalTokens:50,models:{beta:20}}};
 const projects=projectRollupFromSessions(sessions);
-const aggregate=aggregateDevices([{deviceId:'public',updatedAt:'2026-10-18T10:00:00Z',today:{totalTokens:150,projects,sessions}}],60000);
+const fixtureTime='2026-10-18T10:00:00.000Z';
+const aggregate=aggregateDevices([{deviceId:'public',updatedAt:fixtureTime,receivedAt:fixtureTime,today:{totalTokens:150,projects,sessions}}],60000,Date.parse(fixtureTime));
+// Only normalize the wall-clock envelope; all usage fields remain the fixed producer's output.
+aggregate.updatedAt=fixtureTime;
 fs.writeFileSync(path.resolve(__dirname,'../app/src/test/resources/desktop-074-producer.json'),JSON.stringify({sourceCommit:'cbed5915e294abb4a210f7ebb385e9415f706821',grok,history,projectWire:aggregate},null,2)+'\n');

@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.unit.height
+import androidx.compose.ui.unit.width
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.serialization.json.*
 import org.junit.Assert.*
@@ -113,6 +115,13 @@ class ProjectDeviceScreenTest {
         textIn("project-model-app-0","Model Alpha")
         textIn("project-model-app-1","beta")
         textIn("project-model-app-2","Unknown model")
+        show("project-mode-app-model")
+        for(mode in listOf("tool","model")) {
+            val bounds=compose.onNodeWithTag("project-mode-app-$mode").getUnclippedBoundsInRoot()
+            assertTrue("Project switch keeps a 48dp touch target",bounds.height.value>=47.5f && bounds.width.value>=47.5f)
+        }
+        val matrix=InstrumentationRegistry.getArguments().getString("matrixCase") ?: "current"
+        saveVisualEvidence(compose.activity,compose.onRoot(),"project074-$matrix-en-$suffix.png")
         compose.onNodeWithTag("project-row-app").performClick()
         compose.onNodeWithTag("project-mode-app-model").assertDoesNotExist()
         show("project-row-other");compose.onNodeWithTag("project-row-other").performClick()
@@ -120,6 +129,8 @@ class ProjectDeviceScreenTest {
         textIn("project-model-other-0","Unknown model")
         compose.runOnIdle {prefs.value=prefs.value.copy(language=LanguageChoice.CHINESE)}
         textIn("project-model-other-0","未知模型")
+        show("project-row-other")
+        saveVisualEvidence(compose.activity,compose.onRoot(),"project074-$matrix-zh-$suffix.png")
         compose.runOnIdle {assertEquals("model",prefs.value.projectBreakdownMode);assertEquals(0,actions.reads)}
     }
     @Test fun projectModelsColdRestoreAndOptionalModeKeepV16PreferenceBytesCompatible() {

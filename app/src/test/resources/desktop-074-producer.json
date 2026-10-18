@@ -139,7 +139,7 @@
     }
   },
   "projectWire": {
-    "updatedAt": "2026-10-18T22:36:26.169Z",
+    "updatedAt": "2026-10-18T10:00:00.000Z",
     "periods": {
       "today": {
         "capabilities": {
@@ -312,8 +312,8 @@
         "platform": "",
         "agentVersion": "",
         "agentRuntime": "",
-        "updatedAt": "2026-10-18T10:00:00Z",
-        "receivedAt": "2026-10-18T22:36:26.169Z",
+        "updatedAt": "2026-10-18T10:00:00.000Z",
+        "receivedAt": "2026-10-18T10:00:00.000Z",
         "ageMs": 0,
         "stale": false,
         "periods": {
@@ -490,7 +490,7 @@
     ],
     "projectsIncomplete": false,
     "limits": {
-      "updatedAt": "2026-10-18T22:36:26.169Z",
+      "updatedAt": "2026-10-18T10:00:00.000Z",
       "providers": []
     }
   }

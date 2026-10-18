@@ -30,7 +30,8 @@ internal object ProjectDisplay {
             sum.unpriced+=BigInteger.valueOf((unpriced ?: 0).coerceIn(0,value))
             // Bound each source's model attribution before merging projects. Missing shares stay unknown.
             var remaining=value
-            models.toSortedMap(compareBy(Collator.getInstance(Locale.ENGLISH)) {it}).forEach {(model,count)->
+            // A sorted map would discard distinct IDs that collate equally (for example NFC/NFD).
+            models.entries.sortedWith(compareBy(Collator.getInstance(Locale.ENGLISH)) {it.key}).forEach {(model,count)->
                 val tokens=count.coerceIn(0,remaining)
                 if(model.isNotEmpty() && tokens>0) {sum.models[model]=(sum.models[model] ?: BigInteger.ZERO)+BigInteger.valueOf(tokens);remaining-=tokens}
             }

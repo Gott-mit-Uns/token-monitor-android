@@ -267,6 +267,45 @@
       }
     },
     {
+      "id": "collation-equivalent-models",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 100,
+          "models": [
+            {
+              "id": "é",
+              "label": "é",
+              "tokens": 60,
+              "percent": 60
+            },
+            {
+              "id": "é",
+              "label": "é",
+              "tokens": 40,
+              "percent": 40
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "models": {
+                  "é": 60,
+                  "é": 40
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       "id": "opaque-models",
       "expected": [
         {
