@@ -75,7 +75,8 @@ class NavigationPolishScreenTest {
             {"provider":"claude","status":"notConfigured","windows":[]},
             {"provider":"gemini","status":"disabled","windows":[]},
             {"provider":"grok","status":"noSyncedData","windows":[]},
-            {"provider":"cursor","status":"unauthorized","windows":[]}]}}"""),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"),subscriptions=emptyList())
+            {"provider":"cursor","status":"unauthorized","windows":[]},
+            {"provider":"kimi","status":"noSyncedData","windows":[{"remainingPercent":0}]}]}}"""),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"),subscriptions=emptyList())
         val actions=object:HubUiActions {
             override fun connect(address:String,credential:String,alternate:String) {}
             override fun refreshSaved() {};override fun switchEndpoint() {};override fun hasAlternate()=false
@@ -91,6 +92,10 @@ class NavigationPolishScreenTest {
         for(index in 1..3) compose.onNodeWithTag("limit-account-$index").assertDoesNotExist()
         compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("limit-account-4"))
         compose.onNodeWithTag("limit-account-4").assertExists()
+        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("limit-account-5"))
+        compose.onNodeWithTag("limit-account-5").assertExists()
+        assertNull(state.snapshot!!.limits.last().kind)
+        assertEquals(0.0,state.snapshot.limits.last().remaining!!,0.0)
         save("limits")
     }
 }

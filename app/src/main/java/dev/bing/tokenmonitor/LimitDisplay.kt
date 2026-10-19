@@ -96,7 +96,9 @@ internal object LimitDisplay {
     }
     /** Hide catalog placeholders, while retaining configured errors and cached quota data. */
     fun usedAccounts(windows:List<Limit>):List<Limit> = groups(windows).filter {account->
-        account.any {it.kind!=null || it.presentation.balanceAmount!=null} ||
+        account.any {it.kind!=null || it.remaining!=null || it.presentation.usedPercent!=null ||
+            it.amount!=null || it.usedAmount!=null || it.limitAmount!=null ||
+            it.presentation.balanceAmount!=null || it.presentation.monthSpend!=null} ||
             account.first().status?.let {it !in setOf("disabled","notConfigured","noSyncedData")}==true
     }.flatten()
     fun groups(windows: List<Limit>): List<List<Limit>> = windows.groupBy { window ->

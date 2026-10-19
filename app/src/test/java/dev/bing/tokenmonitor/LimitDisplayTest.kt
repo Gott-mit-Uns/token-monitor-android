@@ -5,6 +5,21 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LimitDisplayTest {
+    @Test fun missingKindDoesNotDiscardLegacyNumericQuotaOrRealZeroReadings() {
+        val all=parsed(Json.parseToJsonElement("""[
+            {"provider":"legacy-percent","status":"noSyncedData","windows":[{"remainingPercent":0}]},
+            {"provider":"legacy-remaining","status":"disabled","windows":[{"remaining":0}]},
+            {"provider":"legacy-used","status":"notConfigured","windows":[{"used":1}]},
+            {"provider":"legacy-limit","windows":[{"limit":10}]},
+            {"provider":"legacy-used-percent","windows":[{"usedPercent":0}]},
+            {"provider":"legacy-spend","status":"noSyncedData","balance":{"monthSpend":0},"windows":[]},
+            {"provider":"empty","status":"noSyncedData","windows":[]}
+        ]""").jsonArray)
+        val kept=LimitDisplay.usedAccounts(all)
+        assertEquals(all.dropLast(1),kept)
+        assertTrue(kept.all {it.kind==null})
+        assertEquals(0.0,kept.first().remaining!!,0.0)
+    }
     @Test fun unusedCatalogEntriesAreHiddenWithoutDroppingConfiguredErrorsZeroQuotaOrCachedData() {
         val all=HubParser.parse("""{"periods":{},"limits":{"providers":[
             {"provider":"claude","status":"notConfigured","windows":[]},
