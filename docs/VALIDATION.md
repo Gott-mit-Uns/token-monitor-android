@@ -2,7 +2,7 @@
 
 ## 当前开发候选验收：Android 0.74.0-02 / code80（未合并或发布）
 
-检查日期2026-10-19（Asia/Shanghai）；基线 `45a6156b581d5c9ae484bd34bab48824ddc0915b`，GitHub latest正式Android已核实v0.74.0-01/code79。本轮仅额度占位过滤、关于去重、直接日历与两个等宽描边入口；功能和边界见HANDOFF。最终生产/测试输入提交 `9a296df175856dce8b8f50a040787f15da7b80cf`；没有创建发行Tag或Release，没有操作NAS。
+检查日期2026-10-19（Asia/Shanghai）；基线 `45a6156b581d5c9ae484bd34bab48824ddc0915b`，GitHub latest正式Android已核实v0.74.0-01/code79。本轮仅额度占位过滤、关于去重、直接日历与两个等宽描边入口；功能和边界见HANDOFF。最终生产/测试输入提交 `f4f732f5034aafc1aba6ac7cefc8814f605b169e`；没有创建发行Tag或Release，没有操作NAS。
 
 | 本轮实跑 | 结果与证据边界 |
 |---|---|
@@ -13,7 +13,7 @@
 | 审查前包复核 | About宽度修正后追加6项通过：正式升级读取1、占位过滤界面1、纯手动更新4。正式0.74.0-01/code79先在独立只读API36 ARM64 emulator-5684用匹配旧测试包写公开合成加密缓存/历史及四份偏好，install -r到code80，未卸载/清数据；最终包仍保留UID及五份文件SHA，并成功解密。安装APK回读与最终候选完全相同。旧包数据准备1项单列，不算新增版测试。 |
 | 静态与范围 | 最终Lint 0错误、113警告、1提示；较0.74.0-01多11条，来自已移除界面的未使用文案资源，不宣称全为既有警告，不删除资源或抑制规则掩盖。671对英中资源、文档门禁/self-test、git diff检查通过。无依赖/认证/SSE/数据格式改动；README不变。 |
 
-最终应用APK 15,324,082字节，SHA256 `ca3ce2440957bd9066caadf1a9bf79a56b6a66acb48ec765a0dc62c0e5c0dfb1`；包名仍dev.bing.tokenmonitor.nativeclient，min26/target37，正式证书SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。最终测试APK SHA256 `6f939bd62ab27ebedb6fe655d36e31084e6c1350ffb618edeb2fdca699f88612`。生产/测试及五项Gradle输入的既定路径/原始字节/NUL清单SHA256 `87b521aa3fee5faf93e49b665e1553199fc8d17585beaee4aeb39dfeba092a21`。
+最终应用APK 15,324,082字节，SHA256 `c2d367caeb161bc06beeaaab905a41e93f2e6c975e2677d098bba5f6d7154032`；包名仍dev.bing.tokenmonitor.nativeclient，min26/target37，正式证书SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。最终测试APK SHA256 `8a68a15d45cc97316483e27d3ef4d0c5e69f8248c5a70d09d9bccc84b90642b9`。生产/测试及五项Gradle输入的既定路径/原始字节/NUL清单SHA256 `5159b2e52a76c61eb48b3e4df2de56ddc86867cf6874327f9fd90d9ee638f119`。
 
 首次失败与修正保留：模拟器尚未boot completed时尝试安装被平台拒绝；确认启动完成后才安装正式旧包并准备数据，没有清数据。按钮文字最初按内容宽度取整触发溢出断言（应用e4601ee5…、测试d7b27435…），改为填满按钮可用宽度并居中，保留原字号/完整文字断言；诊断截图与日志在`/tmp/token07402-action-diagnostic.log`、`/tmp/token07402-actions-first-failure.log`。日历首次7项4过3失败（应用f51e36af…、测试c5a7dfbc…），旧测试仍点击已明确取消的All records并要求范围总量；改为验证这些元素不存在，保留月份/年份恢复、权威日期与具体数值断言，最终7项全过（`/tmp/token07402-calendar-first-failure.log`）。额度既有偏好重建测试首次没有打开实际设置页（应用f51e36af…、测试b98ee46f…），补真实设置导航，原偏好持久化断言保持，最终2项通过（`/tmp/token07402-limit-settings-first-failure.log`）。320dp首个矩阵About版本文字的内容宽度测量触发溢出（应用f51e36af…、测试388cbf7e…），改用剩余/整行宽度后12组通过，未放宽断言（`/tmp/token07402-about-first-failure.log`）。
 
@@ -21,7 +21,11 @@
 
 自动审查追加复核：PR #19在8c4bd0b发现P2——缺少kind但带remainingPercent/remaining/used/limit等合法数值的旧Hub窗口可能被误当空占位。新增六种缺kind数值/零值/余额消费样例，修复前LimitDisplay类8项1失败（`/tmp/token07402-missing-kind-before.log`及对应first-failure.xml）；修复后同时识别实际额度数值，四类领域27项全过。标准构建及Lint成功（`/tmp/token07402-review-fix-build2.log`），一次把--tests放在lint任务后导致选项归属错误的工具准备失败仍保留在review-fix-build.log，未改测试门槛。
 
-最终审查修正输入为9a296df。全新只读API36实例中重新安装正式code79、匹配旧测试包准备合成资料，再install -r到上列ca3ce244…候选；最终5项全过：SignedUpgrade1、NavigationPolish2（增加缺kind的真实零值账户可见断言）、LimitDisplay2。日志为`/tmp/token07402-review-upgrade-final.log`、review-navigation-final.log、review-limit-final.log，测试包为上列6f939bd6…。实际安装包回读与候选一致，签名不变。审查仅改额度过滤与其测试；About、Dashboard、History及窗口检查方法源码保持，继承7e5785f3…包的12组24项局部布局结果，不冒称ca3重新跑过全部矩阵；此前完整531项和最终26项记录也按各自阶段保留，不冒称新增测试已跑完整532项。已处理该确认问题，后续审查状态以最新PR提交为准。
+首轮审查修正输入为9a296df。全新只读API36实例中重新安装正式code79、匹配旧测试包准备合成资料，再install -r到上列ca3ce244…候选；最终5项全过：SignedUpgrade1、NavigationPolish2（增加缺kind的真实零值账户可见断言）、LimitDisplay2。日志为`/tmp/token07402-review-upgrade-final.log`、review-navigation-final.log、review-limit-final.log，测试包为上列6f939bd6…。实际安装包回读与候选一致，签名不变。审查仅改额度过滤与其测试；About、Dashboard、History及窗口检查方法源码保持，继承7e5785f3…包的12组24项局部布局结果，不冒称ca3重新跑过全部矩阵；此前完整531项和最终26项记录也按各自阶段保留，不冒称新增测试已跑完整532项。已处理该确认问题，后续审查状态以最新PR提交为准。
+
+二次复审追加：3c7a7d6发现另一P2——只保留在displayRecord内的giftBalance/cashBalance、套餐及分时消费可能被过滤。按现有显示合同识别余额数值（含真实零）、套餐过期、可显示的分组/到期信息、tranches、usageSummary、重置次数和balanceUsd；币种/周期等空元信息、畸形或非有限数值不作为实际读数，不递归接纳任意未知JSON。无kind的无限额度明示也保留。16种投影缓存及3种空/异常对照加入回归，修复前该类9项1失败，首次证据为`/tmp/token07402-balance-before.log`与balance-first-failure.xml；修复后四类领域28项全部通过。
+
+最终产品输入f4f732f，上列c2d367ca…APK及8a68a15d…测试APK标准构建/Lint成功，0错误/113警告/1提示不变（`/tmp/token07402-balance-fix-build.log`）。最终包重新执行5项全部通过：升级读取1、NavigationPolish2、LimitDisplay2；在额度页验证缺kind真零账户仍可见，以及仅有赠送/现金余额和套餐数据的缓存账户确实显示100%套餐剩余额度。独立只读模拟器重新用正式code79与匹配旧测试包准备资料，正常覆盖到code80，UID及五份加密/偏好文件保持；实际安装包回读与候选相同，签名再次核对。日志为balance-upgrade-seed.log、balance-upgrade-final.log、balance-navigation-final.log及balance-limit-final.log，均位于`/tmp/token07402-`前缀。本次复审只修改额度存在性判定与相关测试，继续明确继承前述未改布局的矩阵，不重复未受影响整套。
 
 未验证：真机/私有数据、生产Hub与真实账户。额度占位判定基于Hub状态和已有额度/余额，不声称生产响应已联调；不把配置/余额为零的账户误当未使用。当前未合并或发布；最终授权范围待用户确认。与本次无关的既有未使用资源和其他待办不扩入修复。
 
