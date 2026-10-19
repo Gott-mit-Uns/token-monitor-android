@@ -5,6 +5,28 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LimitDisplayTest {
+    @Test fun projectedBalanceAndUsageCachesAreNotEmptyCatalogAccounts() {
+        val balances=listOf("giftBalance","cashBalance","planUsed","planLimit","planPercent","todaySpend","weekSpend","allTimeSpend","requestCount")
+            .map {key->buildJsonObject {put("balance",buildJsonObject {put(key,0);put("currency","USD")})}}
+        val extra=listOf(
+            """{"balance":{"tranches":[{"amount":0,"currency":"USD"}]}}""",
+            """{"balance":{"planStatus":"expired"}}""",
+            """{"balance":{"quotaGroup":"Public group"}}""",
+            """{"balance":{"expiresAt":"2026-11-01T00:00:00Z"}}""",
+            """{"usageSummary":{"totalTokens":0,"requests":0}}""",
+            """{"resetCredits":{"availableCount":0}}""",
+            """{"balanceUsd":0}"""
+        ).map {Json.parseToJsonElement(it).jsonObject}
+        val empty=listOf(
+            """{"balance":{"currency":"USD"}}""",
+            """{"balance":{"giftBalance":"unknown","cashBalance":null,"planUsed":{"count":1}}}""",
+            """{"usageSummary":{"period":"202610"},"resetCredits":{}}"""
+        ).map {Json.parseToJsonElement(it).jsonObject}
+        val source=(balances+extra+empty).mapIndexed {index,body->JsonObject(body+mapOf("provider" to JsonPrimitive("cached-$index"),"status" to JsonPrimitive("noSyncedData")))}
+        val all=parsed(JsonArray(source))
+        assertEquals(all.take(balances.size+extra.size),LimitDisplay.usedAccounts(all))
+        assertEquals(source.size,all.size)
+    }
     @Test fun missingKindDoesNotDiscardLegacyNumericQuotaOrRealZeroReadings() {
         val all=parsed(Json.parseToJsonElement("""[
             {"provider":"legacy-percent","status":"noSyncedData","windows":[{"remainingPercent":0}]},
@@ -13,6 +35,7 @@ class LimitDisplayTest {
             {"provider":"legacy-limit","windows":[{"limit":10}]},
             {"provider":"legacy-used-percent","windows":[{"usedPercent":0}]},
             {"provider":"legacy-spend","status":"noSyncedData","balance":{"monthSpend":0},"windows":[]},
+            {"provider":"legacy-unlimited","status":"noSyncedData","windows":[{"showMeter":false,"detail":"unlimited"}]},
             {"provider":"empty","status":"noSyncedData","windows":[]}
         ]""").jsonArray)
         val kept=LimitDisplay.usedAccounts(all)
