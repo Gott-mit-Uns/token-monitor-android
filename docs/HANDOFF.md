@@ -1,8 +1,8 @@
 # 当前交接
 
-## 开发候选：桌面 v0.74.0 / Android 0.74.0-01（验收完成，待审查交付）
+## 当前发行：桌面 v0.74.0 / Android 0.74.0-01
 
-2026-10-19（Asia/Shanghai），按用户“将 token monitor Android 对齐桌面端最新版”从正式代码 `d22209bbf45032f7f0af3588ae6259519dbe635d` 开发。GitHub latest正式发行核实为 [v0.74.0](https://github.com/Javis603/token-monitor/releases/tag/v0.74.0)，annotated Tag `91e86b848102039cfdba017c69a6fb09ca6dee3e` 解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`；仅处理0.73之后15个提交。候选code79，`fullyAligned=false` 保留。本轮接续既有PR #17，重新核实Android最新正式版仍为0.73.0-01。标准构建、完整530项JVM、Lint、正式签名覆盖及受影响Compose/12组窗口检查现已完成；产品输入提交73ba7b5，正式签名候选APK已生成但未发布。未合并、未打Tag；原正式发行仍为下节0.73.0-01。旧工作区未提交内容未改。
+2026-10-19（Asia/Shanghai），本次桌面目标为正式 [v0.74.0](https://github.com/Javis603/token-monitor/releases/tag/v0.74.0)，annotated Tag `91e86b848102039cfdba017c69a6fb09ca6dee3e` 解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`；仅处理0.73之后15个提交。正式code79，`fullyAligned=false` 保留。用户随后明确授权“合并，发布”：PR #17按自动审查完成且无发现的24889bc合并至 `69a77f8b78cf3eae9bd98ba5434854f6afba70d1`；Tag `v0.74.0-01` 指向同提交，[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.74.0-01)已发布为latest。沿用此前验收的同一正式签名APK，未重建；构建输入73ba7b5与Tag提交逐项相同。530项JVM、Lint、签名覆盖及12组窗口检查为此前候选实跑，本次复核原材料而未重跑；公开三份附件逐字节匹配，匿名API配额限制见VALIDATION。旧工作区未提交内容未改，未操作NAS。
 
 | 固定上游增量 | Android处理与合同边界 |
 |---|---|
@@ -15,9 +15,9 @@
 
 本轮补齐：用固定桌面样例复现并修复Unicode排序等价模型ID丢失；按entry稳定排序保留所有ID。9组项目样例可重复生成；候选正式签名、code78→79保留UID/五份公开合成数据的覆盖升级、实际安装回读一致、4项项目设备定向与12组窄屏/大字/双主题测试通过。当前VALIDATION区分本轮与此前独立编译、记录首次失败和APK指纹。未操作真机、NAS或桌面运行服务；生产字段与新采集器实际效果未验证，不因手机消费样例通过而推定部署。
 
-下一步仅检查PR #17最新提交的自动审查/CI并交付，等待用户明确合并或发布授权；不自动发布。真实生产联调与OMP远程详情继续保留合同边界，真机为可选。回滚源代码即可；新可选模式旁文件被旧版忽略，原V16偏好不迁移、不清数据。
+本次授权的合并与发布已完成，不自动开展其他产品或环境任务。正式工件、来源和公开下载核验见VALIDATION。真实生产联调与OMP远程详情继续保留合同边界，真机为可选。回滚源代码即可；新可选模式旁文件被旧版忽略，原V16偏好不迁移、不清数据。
 
-## 当前发行：Android 0.73.0-01 / 桌面v0.73.0
+## 上一正式发行：Android 0.73.0-01 / 桌面v0.73.0
 
 2026-10-18（Asia/Shanghai），用户随后明确授权“合并 PR #15，发布最新版 Android 客户端，不要求真机测试，不操作 NAS”。PR #15已按复审通过的提交 `ac96e16814c0f22162553de8d65676c179bf8a96` 合并；[正式发行v0.73.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.73.0-01) / code78已发布为latest，Tag指向 `a06c822b6ce17afbca442d6d8564453862336a37`。发行使用此前已验证的同一正式签名APK，未重新构建；构建生产输入与Tag提交逐项一致，来源及公开附件核验见当前VALIDATION。未操作NAS。开发起点为 `20d6df77cd0fc759a96386e658422a448e097649`。桌面最新稳定正式发行经GitHub latest核对为 [v0.73.0](https://github.com/Javis603/token-monitor/releases/tag/v0.73.0)，Tag解析为 `1190260afdcacd8998938de311e0435c306a18ed`；仅比较v0.72.0之后的9个提交（含发布提交），不纳入浮动main后续代码。原主工作区三项修改保留。
 
