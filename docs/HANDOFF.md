@@ -1,8 +1,8 @@
 # 当前交接
 
-## 当前任务：桌面 v0.75.0 / Android 0.75.0-01 候选
+## 当前发行：桌面 v0.75.0 / Android 0.75.0-01 / code81
 
-2026-10-20（Asia/Shanghai），用户明确授权分别完成Android和NAS对齐、测试、提交PR、合并后发布。Android从最新主分支 `327d87c8fba2b3898c28796798e36936f58bb86f` 接续，固定最新桌面正式Tag v0.75.0（annotated d115ac27，解引用 `877fef6002a5fee84aa502fc3454b4f700b55813`），仅比较v0.74.0之后10个提交。候选0.75.0-01/code81，fullyAligned=false保持。
+2026-10-20（Asia/Shanghai），用户明确授权分别完成Android和NAS对齐、测试、提交PR、合并后发布。Android从最新主分支 `327d87c8fba2b3898c28796798e36936f58bb86f` 接续，固定最新桌面正式Tag v0.75.0（annotated d115ac27，解引用 `877fef6002a5fee84aa502fc3454b4f700b55813`），仅比较v0.74.0之后10个提交。正式0.75.0-01/code81，fullyAligned=false保持。
 
 | 上游增量 | Android处理与合同边界 |
 |---|---|
@@ -13,7 +13,7 @@
 | 3525c64、1f1b73b、8cd2727 / 扫描优先级与Claude探针 | 属于Windows/采集端行为，Android保持只读查看客户端，不启动探针或本地采集。 |
 | 877fef6 / 发行 | 固定桌面基准，登记core89精确指纹；未知构建仍unknown，不证明生产NAS已升级。 |
 
-此前0.74.0-02的额度过滤、关于去重、直接日历和两个等宽入口已在最新源码核对保留，不重复修改。无依赖、网络认证、SSE生命周期、缓存/偏好格式或费用规则变更，README未改。536项JVM、正式签名覆盖及新增Bot/冷恢复、大字号双主题验证通过；额外两项旧UI专项在code80/code81均按原断言失败，证据、边界及PR/发行状态只见当前VALIDATION。未发布前不得把候选称为正式发行；未操作真机或NAS/桌面运行服务。回退应以旧正式源码加新的更高versionCode修复版交付，不卸载、不清数据，不覆盖已发布Tag或工件。
+此前0.74.0-02的额度过滤、关于去重、直接日历和两个等宽入口已在最新源码核对保留，不重复修改。无依赖、网络认证、SSE生命周期、缓存/偏好格式或费用规则变更，README未改。536项JVM、正式签名覆盖及新增Bot/冷恢复、大字号双主题验证通过；额外两项旧UI专项在code80/code81均按原断言失败，证据、边界及PR/发行状态只见当前VALIDATION。PR #21最终head 6970eba的自动代码审查completed且无发现，文档CI通过，按本次用户授权合并至 `414ddd3afbc937db8aa0662f2d96a3ba3d966b5b`；Tag v0.75.0-01指向同提交，[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.75.0-01)已发布为latest。沿用同一已测APK，607项产品/测试/Gradle输入与f5db753逐项一致，未重建；公开三附件逐字节匹配。此后仅补发行回执，不改正式Tag、APK或产品输入。未操作真机或NAS/桌面运行服务。回退应以旧正式源码加新的更高versionCode修复版交付，不卸载、不清数据，不覆盖已发布Tag或工件。
 
 ## 当前发行：Android 0.74.0-02 / code80（四项界面修正）
 
