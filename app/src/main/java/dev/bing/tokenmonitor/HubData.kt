@@ -50,7 +50,7 @@ object HubParser {
                 (row.number("totalTokens") ?: row.number("tokens"))?.takeIf { it >= 0 }, row.text("costUsd"), row.text("client"), row.text("lastUsedAt"),
                 (row["turnEnded"] as? JsonPrimitive)?.booleanOrNull, row.number("unpricedTokens")?.takeIf { it >= 0 },
                 if(key=="sessions") SessionMetadataParser.parse(row,sharedTitle) else null,
-                if(key=="projects") ProjectMetadata(row.text("label"),row.number("tokens")?.coerceAtLeast(0),counters(row["clients"])) else null)
+                if(key=="projects") ProjectMetadata(row.text("label"),row.number("tokens")?.coerceAtLeast(0),counters(row["clients"]),counters(row["models"])) else null)
         }.orEmpty()
         fun costs(value: JsonElement?) = (value as? JsonObject)?.mapNotNull { (key, value) ->
             (value as? JsonPrimitive)?.contentOrNull?.takeIf { it.length <= 128 && runCatching { java.math.BigDecimal(it).let { amount -> amount.signum() >= 0 && amount.precision() <= 100 && amount.scale() in -100..100 } }.getOrDefault(false) }?.let { key to it }

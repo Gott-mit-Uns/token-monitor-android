@@ -17,13 +17,14 @@ data class DisplayPreferences(val theme: ThemeChoice = ThemeChoice.SYSTEM, val h
     val homeModules: List<String> = HomeModulePreferences.freshVisible, val hiddenTools: Set<String> = emptySet(),
     val pinnedTools: List<String> = emptyList(), val toolOrder: List<String> = emptyList(), val monthMode: String = "month", val lastPeriod: String = "today",
     val heatmapMetric: String = "cost", val homeActiveDaysWindow: String = "all", val currency: String = "USD", val currencyRates: Map<String, String> = emptyMap(),
-    val appearance: AppearancePreferences = AppearancePreferences(), val limits: LimitDisplayPreferences = LimitDisplayPreferences(),val main:MainDisplayPreferences = MainDisplayPreferences(),val modelRanking:String="tokens",val homeModuleOrder:List<String> = emptyList(), val sessionTitlesEnabled:Boolean=true) {
+    val appearance: AppearancePreferences = AppearancePreferences(), val limits: LimitDisplayPreferences = LimitDisplayPreferences(),val main:MainDisplayPreferences = MainDisplayPreferences(),val modelRanking:String="tokens",val homeModuleOrder:List<String> = emptyList(), val sessionTitlesEnabled:Boolean=true,val projectBreakdownMode:String="tool") {
     val hideSessionTitles:Boolean get() = hideTitles || !sessionTitlesEnabled
 }
 
 sealed interface DisplayChange {
     data class ReduceMotion(val mode:String):DisplayChange
     data class TokenNumberAnimation(val mode:String):DisplayChange
+    data class ProjectBreakdownMode(val mode:String):DisplayChange
     data class ModelRanking(val metric:String):DisplayChange
     data class MainViewVisible(val id:String,val visible:Boolean):DisplayChange
     data class MainViewMove(val id:String,val direction:Int):DisplayChange
@@ -95,6 +96,7 @@ sealed interface DisplayChange {
         is SwapMainActions -> current.copy(main=current.main.copy(swapActions=enabled))
         is TokenNumberAnimation -> current.copy(appearance=current.appearance.copy(tokenNumberAnimation=TokenNumberAnimationMode.normalize(mode)))
         is ReduceMotion -> current.copy(appearance=current.appearance.copy(reduceMotion=DesktopMotionPreference.normalize(mode)))
+        is ProjectBreakdownMode -> if(mode in listOf("tool","model")) current.copy(projectBreakdownMode=mode) else current
         is ModelRanking -> current.copy(modelRanking=if(metric=="cost") "cost" else "tokens")
         is Theme -> current.copy(theme = choice, appearance = current.appearance.copy(colors = emptyMap()))
         is ThemePreset -> DesktopAppearance.presetOverrides(id)?.let { colors -> current.copy(theme = if(DesktopAppearance.light(DesktopAppearance.presets.getValue(id).getValue("bg"))) ThemeChoice.LIGHT else ThemeChoice.DARK, appearance = current.appearance.copy(colors=colors)) } ?: current
@@ -155,7 +157,12 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
         val bytes=numberAnimationFile.readFully()
         if(bytes.contentEquals(byteArrayOf(1,1))) "count" else "roll"
     }.getOrDefault("roll")
-    private fun withNumberAnimation(value:DisplayPreferences)=value.copy(appearance=value.appearance.copy(tokenNumberAnimation=numberAnimation()))
+    private val projectBreakdownFile=AtomicFile(File(context.noBackupFilesDir,name+".project-breakdown"))
+    private fun projectBreakdownMode():String=runCatching {
+        require(projectBreakdownFile.baseFile.length()==2L)
+        if(projectBreakdownFile.readFully().contentEquals(byteArrayOf(1,1))) "model" else "tool"
+    }.getOrDefault("tool")
+    private fun withNumberAnimation(value:DisplayPreferences)=value.copy(appearance=value.appearance.copy(tokenNumberAnimation=numberAnimation()),projectBreakdownMode=projectBreakdownMode())
     fun load(): DisplayPreferences = synchronized(diskLock) {
         if (!file.baseFile.exists()) return withNumberAnimation(DisplayPreferences())
         require(file.baseFile.length() <= maxBytes)
@@ -253,6 +260,7 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
         require(preferences.currency in UsageCurrency.codes)
         require(preferences.currencyRates.size <= 3 && preferences.currencyRates.all { (code, value) -> code in UsageCurrency.codes && code != "USD" && UsageCurrency.validRate(value) })
         require(DesktopAppearance.valid(preferences.appearance))
+        require(preferences.projectBreakdownMode in listOf("tool","model"))
         require(preferences.modelRanking in listOf("tokens","cost"))
         require(MainDisplay.valid(preferences.main))
         val limits=preferences.limits
@@ -300,6 +308,12 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
             output.write(bytes)
             file.finishWrite(output)
         } catch (error: Exception) { file.failWrite(output); throw error }
+        if(preferences.projectBreakdownMode=="tool") projectBreakdownFile.delete()
+        else {
+            val modeOutput=projectBreakdownFile.startWrite()
+            try {modeOutput.write(byteArrayOf(1,1));projectBreakdownFile.finishWrite(modeOutput)}
+            catch(error:Exception) {projectBreakdownFile.failWrite(modeOutput);throw error}
+        }
         if(TokenNumberAnimationMode.normalize(preferences.appearance.tokenNumberAnimation)=="roll") numberAnimationFile.delete()
         else {
             val modeOutput=numberAnimationFile.startWrite()
@@ -307,5 +321,5 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
             catch(error:Exception) {numberAnimationFile.failWrite(modeOutput);throw error}
         }
     }
-    fun clear() = synchronized(diskLock) { file.delete();numberAnimationFile.delete() }
+    fun clear() = synchronized(diskLock) { file.delete();numberAnimationFile.delete();projectBreakdownFile.delete() }
 }

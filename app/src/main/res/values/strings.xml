@@ -682,4 +682,5 @@
     <string name="token_number_animation">Token number animation</string>
     <string name="token_animation_roll">Digit roll</string>
     <string name="token_animation_count">Count up</string>
+    <string name="project_unknown_model">Unknown model</string>
 </resources>

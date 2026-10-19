@@ -1,0 +1,387 @@
+{
+  "sourceCommit": "cbed5915e294abb4a210f7ebb385e9415f706821",
+  "cases": [
+    {
+      "id": "rollup",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 150,
+          "models": [
+            {
+              "id": "alpha",
+              "label": "alpha",
+              "tokens": 60,
+              "percent": 40
+            },
+            {
+              "id": "beta",
+              "label": "beta",
+              "tokens": 50,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown model",
+              "tokens": 40,
+              "percent": 26.666666666666668
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "costUsd": 1,
+                "clients": {
+                  "codex": 100
+                },
+                "models": {
+                  "alpha": 60,
+                  "beta": 20
+                }
+              },
+              "b": {
+                "label": "APP",
+                "tokens": 50,
+                "costUsd": 2,
+                "clients": {
+                  "claude": 50
+                },
+                "models": {
+                  "beta": 30
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "old-rollup-no-models",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 100,
+          "models": [
+            {
+              "id": "unknown",
+              "label": "Unknown model",
+              "tokens": 100,
+              "percent": 100
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "clients": {
+                  "codex": 100
+                }
+              }
+            },
+            "sessions": {
+              "s": {
+                "client": "codex",
+                "projectLabel": "App",
+                "totalTokens": 100,
+                "models": {
+                  "alpha": 100
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "bounded",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 150,
+          "models": [
+            {
+              "id": "alpha",
+              "label": "alpha",
+              "tokens": 90,
+              "percent": 60
+            },
+            {
+              "id": "beta",
+              "label": "beta",
+              "tokens": 60,
+              "percent": 40
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "models": {
+                  "alpha": 90,
+                  "beta": 90,
+                  "negative": -1,
+                  "zero": 0
+                }
+              },
+              "b": {
+                "label": "App",
+                "tokens": 50,
+                "models": {
+                  "beta": 100
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "sessions",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 150,
+          "models": [
+            {
+              "id": "alpha",
+              "label": "alpha",
+              "tokens": 60,
+              "percent": 40
+            },
+            {
+              "id": "beta",
+              "label": "beta",
+              "tokens": 50,
+              "percent": 33.33333333333333
+            },
+            {
+              "id": "unknown",
+              "label": "Unknown model",
+              "tokens": 40,
+              "percent": 26.666666666666668
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "sessions": {
+              "s": {
+                "client": "codex",
+                "projectLabel": "App",
+                "totalTokens": 100,
+                "models": {
+                  "alpha": 60
+                }
+              },
+              "t": {
+                "client": "claude",
+                "projectLabel": "App",
+                "totalTokens": 50,
+                "models": {
+                  "beta": 50
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "incomplete-sessions",
+      "incomplete": true,
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 100,
+          "models": [
+            {
+              "id": "unknown",
+              "label": "Unknown model",
+              "tokens": 100,
+              "percent": 100
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "sessions": {
+              "s": {
+                "client": "codex",
+                "projectLabel": "App",
+                "totalTokens": 100,
+                "models": {
+                  "alpha": 100
+                }
+              }
+            }
+          }
+        },
+        "periodProjectsOmitted": {
+          "today": 1
+        }
+      }
+    },
+    {
+      "id": "zero",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 0,
+          "models": []
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 0,
+                "models": {
+                  "alpha": 100
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "collation-equivalent-models",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 100,
+          "models": [
+            {
+              "id": "é",
+              "label": "é",
+              "tokens": 60,
+              "percent": 60
+            },
+            {
+              "id": "é",
+              "label": "é",
+              "tokens": 40,
+              "percent": 40
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "models": {
+                  "é": 60,
+                  "é": 40
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "opaque-models",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 100,
+          "models": [
+            {
+              "id": "unknown",
+              "label": "Unknown model",
+              "tokens": 60,
+              "percent": 60
+            },
+            {
+              "id": "constructor",
+              "label": "constructor",
+              "tokens": 30,
+              "percent": 30
+            },
+            {
+              "id": "provider/alpha",
+              "label": "provider/alpha",
+              "tokens": 10,
+              "percent": 10
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "models": {
+                  "constructor": 30,
+                  "provider/alpha": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "malformed-models",
+      "expected": [
+        {
+          "id": "app",
+          "tokens": 100,
+          "models": [
+            {
+              "id": "unknown",
+              "label": "Unknown model",
+              "tokens": 100,
+              "percent": 100
+            }
+          ]
+        }
+      ],
+      "wire": {
+        "periods": {
+          "today": {
+            "projects": {
+              "a": {
+                "label": "App",
+                "tokens": 100,
+                "models": [
+                  "alpha",
+                  20
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

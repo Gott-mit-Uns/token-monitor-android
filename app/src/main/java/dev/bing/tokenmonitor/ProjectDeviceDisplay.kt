@@ -8,36 +8,43 @@ import java.util.Locale
 import kotlin.math.floor
 
 /** Aggregate fields only. Native/local project telemetry is outside the Hub viewer. */
-data class ProjectMetadata(val label:String?,val tokens:Long?,val clients:Map<String,Long>)
+data class ProjectMetadata(val label:String?,val tokens:Long?,val clients:Map<String,Long>,val models:Map<String,Long> = emptyMap())
 internal data class AttributionRow(val id:String,val label:String,val tokens:BigInteger,val percent:Double,val models:List<Pair<String,Long>> = emptyList(),val sourceClient:String=id)
-internal data class ProjectRow(val id:String,val name:String,val tokens:BigInteger,val cost:String,val unpriced:BigInteger,val clients:List<AttributionRow>)
+internal data class ProjectRow(val id:String,val name:String,val tokens:BigInteger,val cost:String,val unpriced:BigInteger,val clients:List<AttributionRow>,val models:Map<String,BigInteger> = emptyMap())
 internal data class GradientStop(val position:Float,val client:String)
 internal data class HomeDeviceRow(val id:String,val name:String,val tokens:Long,val platform:String,val stale:Boolean,val local:Boolean=false)
 
 internal object ProjectDisplay {
     fun normalized(value:String)=Normalizer.normalize(value.trim {it.isWhitespace() || it=='\uFEFF'},Normalizer.Form.NFC)
     fun key(value:String)=Normalizer.normalize(normalized(value).lowercase(Locale.ROOT),Normalizer.Form.NFC)
-    private data class Sum(val id:String,var name:String,var tokens:BigInteger=BigInteger.ZERO,var cost:BigDecimal=BigDecimal.ZERO,var unpriced:BigInteger=BigInteger.ZERO,val clients:MutableMap<String,BigInteger> = linkedMapOf())
+    private data class Sum(val id:String,var name:String,var tokens:BigInteger=BigInteger.ZERO,var cost:BigDecimal=BigDecimal.ZERO,var unpriced:BigInteger=BigInteger.ZERO,val clients:MutableMap<String,BigInteger> = linkedMapOf(),val models:MutableMap<String,BigInteger> = linkedMapOf())
     fun rows(period:Period?,label:(String)->String={it},unknown:String="Unknown tool"):List<ProjectRow> = HubWorkTrace.trace(HubWorkStage.PROJECT_ROWS,
         units=(if(period?.projectsProvided==true || !period?.projects.isNullOrEmpty()) period?.projects?.size ?: 0 else period?.sessions?.size ?: 0).toLong()) {
         if(period==null) return@trace emptyList()
         val projects=linkedMapOf<String,Sum>()
-        fun add(name:String,count:Long?,cost:String?,unpriced:Long?,clients:Map<String,Long>) {
+        fun add(name:String,count:Long?,cost:String?,unpriced:Long?,clients:Map<String,Long>,models:Map<String,Long>) {
             val clean=normalized(name);val key=key(clean);if(key.isEmpty() || clean.isEmpty()) return
             val sum=projects.getOrPut(key) {Sum(key,clean)};sum.name=minOf(sum.name,clean)
             val value=(count ?: 0).coerceAtLeast(0);sum.tokens+=BigInteger.valueOf(value)
             sum.cost+=cost?.let {runCatching {BigDecimal(it)}.getOrNull()} ?: BigDecimal.ZERO
             sum.unpriced+=BigInteger.valueOf((unpriced ?: 0).coerceIn(0,value))
+            // Bound each source's model attribution before merging projects. Missing shares stay unknown.
+            var remaining=value
+            // A sorted map would discard distinct IDs that collate equally (for example NFC/NFD).
+            models.entries.sortedWith(compareBy(Collator.getInstance(Locale.ENGLISH)) {it.key}).forEach {(model,count)->
+                val tokens=count.coerceIn(0,remaining)
+                if(model.isNotEmpty() && tokens>0) {sum.models[model]=(sum.models[model] ?: BigInteger.ZERO)+BigInteger.valueOf(tokens);remaining-=tokens}
+            }
             clients.forEach {(client,tokens)->if(tokens>0) sum.clients[client]=(sum.clients[client] ?: BigInteger.ZERO)+BigInteger.valueOf(tokens)}
         }
         if(period.projectsProvided || period.projects.isNotEmpty()) {
             period.projects.forEach {row->
                 val meta=row.project;val raw=meta?.label?.takeIf {it.isNotEmpty()} ?: if(meta!=null) row.id else row.label
-                add(raw,if(meta!=null) meta.tokens else row.tokens,row.cost,row.unpriced,meta?.clients ?: row.tool?.let {mapOf(it to (row.tokens ?: 0))}.orEmpty())
+                add(raw,if(meta!=null) meta.tokens else row.tokens,row.cost,row.unpriced,meta?.clients ?: row.tool?.let {mapOf(it to (row.tokens ?: 0))}.orEmpty(),meta?.models.orEmpty())
             }
         } else period.sessions.forEach {row->
             val name=row.session?.projectLabel ?: return@forEach
-            add(name,row.tokens,row.cost,row.unpriced,row.tool?.takeIf(String::isNotEmpty)?.let {mapOf(it to (row.tokens ?: 0))}.orEmpty())
+            add(name,row.tokens,row.cost,row.unpriced,row.tool?.takeIf(String::isNotEmpty)?.let {mapOf(it to (row.tokens ?: 0))}.orEmpty(),if(period.projectsIncomplete) emptyMap() else row.session?.models.orEmpty())
         }
         val collator=Collator.getInstance(Locale.ENGLISH)
         projects.values.map {sum->
@@ -45,8 +52,20 @@ internal object ProjectDisplay {
             if(sum.tokens>attributed) sum.clients[""]=sum.tokens-attributed
             val clients=sum.clients.filterValues {it.signum()>0}.map {(client,tokens)->AttributionRow(client.ifEmpty {"unknown"},if(client.isEmpty()) unknown else label(client),tokens,if(sum.tokens.signum()>0) tokens.toDouble()/sum.tokens.toDouble()*100 else 0.0,sourceClient=client)}
                 .sortedWith {a,b->b.tokens.compareTo(a.tokens).takeIf {it!=0} ?: collator.compare(a.label,b.label)}
-            ProjectRow(sum.id,sum.name,sum.tokens,sum.cost.toPlainString(),sum.unpriced,clients)
+            ProjectRow(sum.id,sum.name,sum.tokens,sum.cost.toPlainString(),sum.unpriced,clients,sum.models.toMap())
         }.sortedWith {a,b->BigDecimal(b.cost).compareTo(BigDecimal(a.cost)).takeIf {it!=0} ?: b.tokens.compareTo(a.tokens).takeIf {it!=0} ?: collator.compare(a.name,b.name)}
+    }
+    fun modelShares(row:ProjectRow,names:ModelNames?=null,observed:Collection<String> = row.models.keys,unknown:String="Unknown model"):List<AttributionRow> {
+        // Resolve aliases only after source attribution is bounded; exact sums may exceed Long.
+        val labels=names?.labels(row.models.keys,observed).orEmpty()
+        val grouped=linkedMapOf<String,BigInteger>()
+        row.models.forEach {(id,tokens)->val label=labels[id] ?: id;grouped[label]=(grouped[label] ?: BigInteger.ZERO)+tokens}
+        val remaining=row.tokens-grouped.values.fold(BigInteger.ZERO,BigInteger::add)
+        if(remaining.signum()>0) grouped[""]=remaining
+        val collator=Collator.getInstance(Locale.ENGLISH)
+        return grouped.filterValues {it.signum()>0}.map {(id,tokens)->
+            AttributionRow(id.ifEmpty {"unknown"},id.ifEmpty {unknown},tokens,if(row.tokens.signum()>0) tokens.toDouble()/row.tokens.toDouble()*100 else 0.0,sourceClient=id)
+        }.sortedWith {a,b->b.tokens.compareTo(a.tokens).takeIf {it!=0} ?: collator.compare(a.label,b.label)}
     }
     /** The source gradient sorts by client key, separately from translated accordion names. */
     fun gradient(rows:List<AttributionRow>):List<GradientStop> {

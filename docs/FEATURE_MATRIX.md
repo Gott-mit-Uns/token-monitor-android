@@ -1,10 +1,11 @@
 # Android 当前功能与数据边界
 
-当前正式发行为 Android `0.73.0-01` / code78，固定桌面 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`。本轮增量映射见[当前交接](HANDOFF.md)。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。逐上游提交、代码、字段和验收映射见[0.72 清单](archive/DESKTOP_072_ALIGNMENT.md)，既有增量见[0.70](archive/DESKTOP_070_DIFF.md)与[0.71](archive/DESKTOP_071_DIFF.md)。
+开发候选为 Android `0.74.0-01` / code79，固定桌面 `v0.74.0` / `cbed5915e294abb4a210f7ebb385e9415f706821`；代码已实现但标准构建、签名及设备验收未完成，不代表已发布。当前正式发行为 Android `0.73.0-01` / code78，固定桌面 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`。本轮增量映射见[当前交接](HANDOFF.md)。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。逐上游提交、代码、字段和验收映射见[0.72 清单](archive/DESKTOP_072_ALIGNMENT.md)，既有增量见[0.70](archive/DESKTOP_070_DIFF.md)与[0.71](archive/DESKTOP_071_DIFF.md)。
 
 | 功能 | Android 当前范围 | Hub / Agent 依赖及限制 |
 |---|---|---|
 | 统计、趋势和日/月记录 | 读取权威总量、历史与日/月明细，保留日历选日/月和时区一致性 | Hub 提供历史与周期数据；缺数据、未加载、缓存、失败和零值分别显示 |
+| 项目工具/模型占比（开发候选） | 展开后切换，权威汇总models优先，别名、未知剩余及紧凑响应式指标 | 新Agent/Hub提供projects.models；旧汇总缺模型不借会话补齐，明细不完整禁止会话模型回退；API36模拟器定向及12组窗口验收通过，生产Hub/真机未验证 |
 | 会话分组及指标 | 关系、续接、Review/Grok 分组与混合排序；去重账目汇总调用、缓存率、生成速度和最近活动 | 依赖 messageCount、input/cache/output、timed* 及关系字段；缺失指标不可用，不平均百分比/速度/时间戳 |
 | 会话活动与等待 | 消费有限租约、waitingForInput、turnEnded 等可选字段 | 不补本地活动 overlay；批准原因、远程逐轮正文（包括OMP）与 Grok 跨历史增强缺完整合同 |
 | Cursor X 套餐 | Included usage 与真实百分比、预付 USD 余额分开；账号、时效和旧套餐兼容 | Agent 负责采集及 cents → USD；手机仅消费 windows，不接入桌面 Cookie/登录，真实账号仍待验收 |

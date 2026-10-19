@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.unit.height
+import androidx.compose.ui.unit.width
 import androidx.test.platform.app.InstrumentationRegistry
 import kotlinx.serialization.json.*
 import org.junit.Assert.*
@@ -100,4 +102,60 @@ class ProjectDeviceScreenTest {
         compose.runOnIdle {state.value=state.value.copy(snapshot=snapshot.copy(devices=snapshot.devices.map {it.copy(periods=mapOf("today" to DeviceUsage(0,"0",emptyMap(),null,null,null)))}))}
         select("home");compose.onNodeWithText("No devices yet").assertIsDisplayed();assertEquals(0,actions.reads)
     }
+    @Test fun projectModelSwitchIsExpandedOnlySharedAndSurvivesMissingModelData() {
+        val actions=Actions()
+        val wire="""{"periods":{"today":{"totalTokens":150,"projects":{"a":{"label":"App","tokens":100,"costUsd":2,"clients":{"codex":100},"models":{"alpha":60,"beta":20}},"b":{"label":"Other","tokens":50,"costUsd":1,"clients":{"claude":50}}}}}}"""
+        val state=mutableStateOf(HubState(snapshot=HubParser.parse(wire),history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(mapOf("alpha" to "Model Alpha"),"off")))
+        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(reduceMotion="on")))
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,prefs.value.language,prefs.value.appearance) {HubScreen(state.value,actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}
+        select("projects");show("project-row-app")
+        compose.onNodeWithTag("project-mode-app-model").assertDoesNotExist()
+        compose.onNodeWithTag("project-row-app").performClick()
+        show("project-mode-app-model");compose.onNodeWithTag("project-mode-app-model").performClick().assertIsSelected()
+        textIn("project-model-app-0","Model Alpha")
+        textIn("project-model-app-1","beta")
+        textIn("project-model-app-2","Unknown model")
+        show("project-mode-app-model")
+        for(mode in listOf("tool","model")) {
+            val bounds=compose.onNodeWithTag("project-mode-app-$mode").getUnclippedBoundsInRoot()
+            assertTrue("Project switch keeps a 48dp touch target",bounds.height.value>=47.5f && bounds.width.value>=47.5f)
+        }
+        val matrix=InstrumentationRegistry.getArguments().getString("matrixCase") ?: "current"
+        saveVisualEvidence(compose.activity,compose.onRoot(),"project074-$matrix-en-$suffix.png")
+        compose.onNodeWithTag("project-row-app").performClick()
+        compose.onNodeWithTag("project-mode-app-model").assertDoesNotExist()
+        show("project-row-other");compose.onNodeWithTag("project-row-other").performClick()
+        show("project-mode-other-model");compose.onNodeWithTag("project-mode-other-model").assertIsSelected()
+        textIn("project-model-other-0","Unknown model")
+        compose.runOnIdle {prefs.value=prefs.value.copy(language=LanguageChoice.CHINESE)}
+        textIn("project-model-other-0","未知模型")
+        show("project-row-other")
+        saveVisualEvidence(compose.activity,compose.onRoot(),"project074-$matrix-zh-$suffix.png")
+        compose.runOnIdle {assertEquals("model",prefs.value.projectBreakdownMode);assertEquals(0,actions.reads)}
+    }
+    @Test fun projectModelsColdRestoreAndOptionalModeKeepV16PreferenceBytesCompatible() {
+        val context=compose.activity
+        val name="public-project074-"+java.util.UUID.randomUUID()
+        val prefs=DisplayPreferenceStore(context,name)
+        val store=HubStore(context,name+"-hub")
+        val file=java.io.File(context.noBackupFilesDir,name)
+        val optional=java.io.File(context.noBackupFilesDir,name+".project-breakdown")
+        val wire="""{"periods":{"today":{"projects":{"a":{"label":"App","tokens":100,"models":{"alpha":60}}}}}}"""
+        try {
+            val old=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences())
+            prefs.save(old);val v16=file.readBytes()
+            val selected=DisplayChange.ProjectBreakdownMode("model").apply(old)
+            prefs.save(selected)
+            assertTrue(v16.contentEquals(file.readBytes()));assertEquals(16,file.readBytes()[0].toInt())
+            assertEquals(selected,DisplayPreferenceStore(context,name).load())
+            optional.writeBytes(byteArrayOf(2,1));assertEquals(old,DisplayPreferenceStore(context,name).load())
+            prefs.save(selected)
+            store.save(SavedHub("https://example.invalid","public-fixture",wire,1))
+            val cold=HubStore(context,name+"-hub").load()!!
+            val row=ProjectDisplay.rows(HubParser.parse(cold.snapshot).periods.getValue("today")).single()
+            assertEquals(listOf(60L,40L),ProjectDisplay.modelShares(row).map {it.tokens.toLong()})
+            prefs.clear();assertFalse(optional.exists());assertEquals(DisplayPreferences(),prefs.load())
+        } finally {prefs.clear();store.clear()}
+    }
+
 }

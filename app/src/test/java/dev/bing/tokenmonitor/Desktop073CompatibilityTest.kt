@@ -11,7 +11,7 @@ class Desktop073CompatibilityTest {
     private fun row(body:String)=HubParser.parse(body).periods.getValue("today").sessions.single()
     @Test fun ompTitlePresentationMatchesFixedDesktopAndRetainsRawMetadata() {
         val reference=Json.parseToJsonElement(javaClass.getResource("/desktop-073-session-titles.json")!!.readText()).jsonObject
-        assertEquals(DesktopParityMetadata.sourceCommit,reference.getValue("sourceCommit").jsonPrimitive.content)
+        assertEquals("1190260afdcacd8998938de311e0435c306a18ed",reference.getValue("sourceCommit").jsonPrimitive.content)
         for(c in reference.getValue("cases").jsonArray.map {it.jsonObject}) {
             val title=c.getValue("title").jsonPrimitive.content
             val client=c.getValue("client").jsonPrimitive.content
@@ -28,14 +28,14 @@ class Desktop073CompatibilityTest {
         }
     }
     @Test fun wholeHubRegistryMatchesFixedDesktopIncludingKnownFingerprintChecks() {
-        val registry=Json.parseToJsonElement(javaClass.getResource("/desktop-073-hub-build-registry.json")!!.readText()).jsonObject
+        val registry=Json.parseToJsonElement(javaClass.getResource("/desktop-074-hub-build-registry.json")!!.readText()).jsonObject
         val expected=registry.getValue("components").jsonObject.mapValues {(_,rows)->rows.jsonArray.associate {
             it.jsonObject.getValue("revision").jsonPrimitive.long to it.jsonObject.getValue("buildId").jsonPrimitive.content
         }}
         assertEquals(expected,HubBuildRegistry.entries)
         for(rev in listOf(84L,85L)) {
             val build=HubBuildInfo("node-hub",1,rev,expected.getValue("core").getValue(rev),5,expected.getValue("node-hub").getValue(5))
-            assertEquals(if(rev==85L) "current" else "updateAvailable",build.status)
+            assertEquals("updateAvailable",build.status)
             assertEquals("unknown",build.copy(coreBuildId="sha256:"+"0".repeat(64)).status)
         }
     }
@@ -55,7 +55,7 @@ class Desktop073CompatibilityTest {
     }
     @Test fun fixedProducerHubSamplesMatchPeriodSessionAndModelReadings() {
         val reference=Json.parseToJsonElement(javaClass.getResource("/desktop-073-matched-timing.json")!!.readText()).jsonObject
-        assertEquals(DesktopParityMetadata.sourceCommit,reference.getValue("sourceCommit").jsonPrimitive.content)
+        assertEquals("1190260afdcacd8998938de311e0435c306a18ed",reference.getValue("sourceCommit").jsonPrimitive.content)
         for(c in reference.getValue("cases").jsonArray.map {it.jsonObject}) {
             val wire=c.getValue("wire").toString()
             val snapshot=HubParser.parse(HubJsonProjection.stats(wire.byteInputStream()).body)
