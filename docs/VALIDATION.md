@@ -1,6 +1,6 @@
 # 当前验收记录
 
-## 当前候选验收：桌面 v0.75.0 / Android 0.75.0-01 / code81
+## 当前正式发行验收：桌面 v0.75.0 / Android 0.75.0-01 / code81
 
 检查日期2026-10-20（Asia/Shanghai）；基线 `327d87c8fba2b3898c28796798e36936f58bb86f`，桌面正式Tag v0.75.0解引用 `877fef6002a5fee84aa502fc3454b4f700b55813`；最新Android正式基线0.74.0-02/code80。用户明确授权实现、测试、PR、合并及发布，不包含实际设备安装或生产服务部署。
 
@@ -19,7 +19,9 @@
 
 正式升级实跑与五份文件/UID回执见本机`/tmp/token075-upgrade-seed.log`、`/tmp/token075-upgrade-final.log`、`/tmp/token075-upgrade-receipts.log`；曾误用不存在的方法筛选，runner报告0 tests，该次不计验证，后续正确方法1项通过。24项实际回归使用caebd084测试包。窄屏双主题配置及结果在`/tmp/token075-window-matrix.json`，原始公开样例截图已实际查看：[首页Bot不计运行](../design/session-bot-home.png)、[Bot分组](../design/session-bot-group.png)。这些不是生产Hub或实体手机截图。
 
-此前07402四项界面行为只核对保留，未重复改布局；认证、SSE生命周期、缓存/偏好格式及费用未改。未操作真机或NAS/桌面运行服务；不把公开样例或模拟器当生产数据/实体手机。真实生产字段、OEM生命周期及用户私有资料未验证，非本次真机门槛。候选未发布；PR #21初始f5db753自动代码审查completed且无发现，未执行独立security_review。最终head审查、合并和公开附件回读仍待完成。
+此前07402四项界面行为只核对保留，未重复改布局；认证、SSE生命周期、缓存/偏好格式及费用未改。未操作真机或NAS/桌面运行服务；不把公开样例或模拟器当生产数据/实体手机。真实生产字段、OEM生命周期及用户私有资料未验证，非本次真机门槛。PR #21最终head `6970ebaa9509752cf2e315a4c90da4a11e22840f` 的自动代码审查completed、has_any_findings=false、has_unresolved_findings=false，reviews/inline comments无发现，文档CI通过；独立security_review未执行，不把空状态称为通过。按本次明确授权已合并并发布，回执如下。
+
+发布复核（2026-10-20）：PR #21合并提交与正式Tag v0.75.0-01均指向 `414ddd3afbc937db8aa0662f2d96a3ba3d966b5b`；607个生产/测试/Gradle输入与已验收buildCommit f5db753逐项一致，沿用同一71a8a5a5…正式签名APK，未重建或重跑未受影响套件。[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.75.0-01)已发布为latest，draft=false、prerelease=false。已登录latest API与匿名latest网页都指向本版。公开无凭据下载APK、SOURCE.json和SHA256SUMS.txt，全部逐字节匹配上传材料；公开APK再次核对正式证书一致。SOURCE SHA256 `5cb00051150c0ff50cb0707c8dcdd71eb4d0febb35cd7b7314dcb565251dc430`，SHA256SUMS SHA256 `263f95d42be4e48298ac1a71ec3ff3c33e4c0676a875bfc84f524b43305e1e49`，GitHub资产digest全部一致。SOURCE区分buildCommit f5db753与Tag/sourceCommit 414ddd3，不冒称APK内嵌VCS来源。发布材料及公开回读仅在本机`/tmp/token075-publication/`，不宣称随Git提供。客户端匿名更新API实际请求未验证；真实手机和生产服务未操作。此后仅原位补发行回执，不改已发Tag、APK、版本或产品输入。
 
 ## 当前正式发行验收：Android 0.74.0-02 / code80
 
