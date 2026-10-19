@@ -1,8 +1,8 @@
 # 当前验收记录
 
-## 当前开发候选验收：Android 0.74.0-02 / code80（未合并或发布）
+## 当前正式发行验收：Android 0.74.0-02 / code80
 
-检查日期2026-10-19（Asia/Shanghai）；基线 `45a6156b581d5c9ae484bd34bab48824ddc0915b`，GitHub latest正式Android已核实v0.74.0-01/code79。本轮仅额度占位过滤、关于去重、直接日历与两个等宽描边入口；功能和边界见HANDOFF。最终生产/测试输入提交 `f4f732f5034aafc1aba6ac7cefc8814f605b169e`；没有创建发行Tag或Release，没有操作NAS。
+检查日期2026-10-19（Asia/Shanghai）；基线 `45a6156b581d5c9ae484bd34bab48824ddc0915b`，开发前GitHub latest正式Android已核实v0.74.0-01/code79。本轮仅额度占位过滤、关于去重、直接日历与两个等宽描边入口；功能和边界见HANDOFF。最终生产/测试输入提交 `f4f732f5034aafc1aba6ac7cefc8814f605b169e`；现已合并并正式发布v0.74.0-02/code80，发布复核见本节末尾，没有操作NAS。
 
 | 本轮实跑 | 结果与证据边界 |
 |---|---|
@@ -27,9 +27,15 @@
 
 最终产品输入f4f732f，上列c2d367ca…APK及8a68a15d…测试APK标准构建/Lint成功，0错误/113警告/1提示不变（`/tmp/token07402-balance-fix-build.log`）。最终包重新执行5项全部通过：升级读取1、NavigationPolish2、LimitDisplay2；在额度页验证缺kind真零账户仍可见，以及仅有赠送/现金余额和套餐数据的缓存账户确实显示100%套餐剩余额度。独立只读模拟器重新用正式code79与匹配旧测试包准备资料，正常覆盖到code80，UID及五份加密/偏好文件保持；实际安装包回读与候选相同，签名再次核对。日志为balance-upgrade-seed.log、balance-upgrade-final.log、balance-navigation-final.log及balance-limit-final.log，均位于`/tmp/token07402-`前缀。本次复审只修改额度存在性判定与相关测试，继续明确继承前述未改布局的矩阵，不重复未受影响整套。
 
-未验证：真机/私有数据、生产Hub与真实账户。额度占位判定基于Hub状态和已有额度/余额，不声称生产响应已联调；不把配置/余额为零的账户误当未使用。用户已明确授权“且合并或发布”，本次选择在最新提交自动审查和CI通过后合并，不额外发布正式版；本段记录时尚未合并。与本次无关的既有未使用资源和其他待办不扩入修复。
+未验证：真机/私有数据、生产Hub与真实账户。额度占位判定基于Hub状态和已有额度/余额，不声称生产响应已联调；不把配置/余额为零的账户误当未使用。与本次无关的既有未使用资源和其他待办不扩入修复。
 
-## 当前正式发行验收：桌面 v0.74.0 / Android 0.74.0-01
+发布复核（2026-10-19）：用户对先前范围问题明确选择“合并并发布正式版”。PR #19最终fb2abd4的自动代码审查completed、has_any_findings=false、has_unresolved_findings=false，文档CI成功；未执行独立security_review，不把空状态称为通过。合并提交与Tag v0.74.0-02均指向 `96f9c744199774e49d1355b998e2712836edd64c`。逐项核对600个生产/测试及Gradle文件与已验收构建输入相同，输入指纹5159b2e5…不变；沿用同一c2d367ca…正式签名APK，没有重建或重跑未受影响套件。
+
+[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.74.0-02)已发布，draft=false、prerelease=false，设为latest。已登录latest API与匿名latest网页均指向v0.74.0-02；公开URL无凭据下载APK、SOURCE.json和SHA256SUMS.txt全部HTTP200，逐字节匹配上传材料，公开APK正式证书再次核对一致。APK 15,324,082字节，GitHub digest与上列SHA256一致；SOURCE SHA256 `9437ddc2ad1f7bd002e0b6839d2a05d3e35f287a92e8a1404379843be3327f14`，SHA256SUMS SHA256 `138b5ae8b02f24a52a9781de6052dc31094a1cd57c2cfbf488135575c18e8818`。SOURCE明确区分buildCommit f4f732f与Tag/sourceCommit 96f9c74，不冒称APK内嵌VCS来源。发布材料及公开回读在本机`/tmp/token07402-publication/`，不宣称随仓库提供。匿名latest API返回403、remaining=0，为当前出口配额耗尽；不声称本轮实际客户端匿名更新检查成功，不修改客户端认证或重试绕过。
+
+发布准备首次脚本因非UTF-8源字符被Python拒绝，尚未创建Release或上传附件；Tag已正常创建并核对目标。改用ASCII脚本读取既有中文说明后创建草稿、上传三件附件并发布，未更改产品APK。发布前核对也发现命令行PR快捷入口指向其他同名仓库，撤回误发的审查请求，最终审查、CI、合并及Release全部使用明确的Gott-mit-Uns仓库路径及提交号验证，没有向其他仓库发布产品。
+
+## 上一正式发行验收：桌面 v0.74.0 / Android 0.74.0-01
 
 检查日期2026-10-19（Asia/Shanghai）。开发前最新正式发行Android为v0.73.0-01/code78，桌面为v0.74.0，annotated Tag解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`。产品与测试输入提交 `73ba7b57f6b42e010a4dac594e9d630460b8b637`。用户随后明确授权“合并，发布”：PR #17已合并至 `69a77f8b78cf3eae9bd98ba5434854f6afba70d1`，Tag v0.74.0-01指向同提交，正式0.74.0-01/code79已发布为latest。发布沿用以下同一已验收APK，未重建；下表为此前候选实跑，本次发布仅复核原材料，未操作NAS。
 
