@@ -5,6 +5,61 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LimitDisplayTest {
+    @Test fun projectedBalanceAndUsageCachesAreNotEmptyCatalogAccounts() {
+        val balances=listOf("giftBalance","cashBalance","planUsed","planLimit","planPercent","todaySpend","weekSpend","allTimeSpend","requestCount")
+            .map {key->buildJsonObject {put("balance",buildJsonObject {put(key,0);put("currency","USD")})}}
+        val extra=listOf(
+            """{"balance":{"tranches":[{"amount":0,"currency":"USD"}]}}""",
+            """{"balance":{"planStatus":"expired"}}""",
+            """{"balance":{"quotaGroup":"Public group"}}""",
+            """{"balance":{"expiresAt":"2026-11-01T00:00:00Z"}}""",
+            """{"usageSummary":{"totalTokens":0,"requests":0}}""",
+            """{"resetCredits":{"availableCount":0}}""",
+            """{"balanceUsd":0}"""
+        ).map {Json.parseToJsonElement(it).jsonObject}
+        val empty=listOf(
+            """{"balance":{"currency":"USD"}}""",
+            """{"balance":{"giftBalance":"unknown","cashBalance":null,"planUsed":{"count":1}}}""",
+            """{"usageSummary":{"period":"202610"},"resetCredits":{}}"""
+        ).map {Json.parseToJsonElement(it).jsonObject}
+        val source=(balances+extra+empty).mapIndexed {index,body->JsonObject(body+mapOf("provider" to JsonPrimitive("cached-$index"),"status" to JsonPrimitive("noSyncedData")))}
+        val all=parsed(JsonArray(source))
+        assertEquals(all.take(balances.size+extra.size),LimitDisplay.usedAccounts(all))
+        assertEquals(source.size,all.size)
+    }
+    @Test fun missingKindDoesNotDiscardLegacyNumericQuotaOrRealZeroReadings() {
+        val all=parsed(Json.parseToJsonElement("""[
+            {"provider":"legacy-percent","status":"noSyncedData","windows":[{"remainingPercent":0}]},
+            {"provider":"legacy-remaining","status":"disabled","windows":[{"remaining":0}]},
+            {"provider":"legacy-used","status":"notConfigured","windows":[{"used":1}]},
+            {"provider":"legacy-limit","windows":[{"limit":10}]},
+            {"provider":"legacy-used-percent","windows":[{"usedPercent":0}]},
+            {"provider":"legacy-spend","status":"noSyncedData","balance":{"monthSpend":0},"windows":[]},
+            {"provider":"legacy-unlimited","status":"noSyncedData","windows":[{"showMeter":false,"detail":"unlimited"}]},
+            {"provider":"empty","status":"noSyncedData","windows":[]}
+        ]""").jsonArray)
+        val kept=LimitDisplay.usedAccounts(all)
+        assertEquals(all.dropLast(1),kept)
+        assertTrue(kept.all {it.kind==null})
+        assertEquals(0.0,kept.first().remaining!!,0.0)
+    }
+    @Test fun unusedCatalogEntriesAreHiddenWithoutDroppingConfiguredErrorsZeroQuotaOrCachedData() {
+        val all=HubParser.parse("""{"periods":{},"limits":{"providers":[
+            {"provider":"claude","status":"notConfigured","windows":[]},
+            {"provider":"gemini","status":"disabled","windows":[]},
+            {"provider":"grok","status":"noSyncedData","windows":[]},
+            {"provider":"codex","status":"ok","windows":[{"kind":"session","remainingPercent":0}]},
+            {"provider":"cursor","status":"unauthorized","windows":[]},
+            {"provider":"kiro","status":"noSyncedData","stale":true,"windows":[{"kind":"billing","used":1,"remaining":0}]},
+            {"provider":"openrouter","status":"ok","balance":{"amount":0,"currency":"USD"},"windows":[]}
+        ]}}""").limits
+        val selected=LimitDisplay.usedAccounts(all)
+        assertEquals(listOf("codex","cursor","kiro","openrouter"),LimitDisplay.groups(selected).map {it.first().provider})
+        assertEquals(0.0,selected.first().remaining!!,0.0)
+        assertEquals(7,LimitDisplay.groups(all).size)
+        assertTrue(LimitDisplay.usedAccounts(all.take(3)).isEmpty())
+        assertTrue(LimitDisplay.usedAccounts(emptyList()).isEmpty())
+    }
     private fun fixture()=javaClass.classLoader!!.getResourceAsStream("limit-display-parity.json")!!.bufferedReader().use {Json.parseToJsonElement(it.readText()).jsonObject}
     private fun parsed(providers:JsonArray)=HubParser.parse(buildJsonObject {put("periods",buildJsonObject {put("today",buildJsonObject {})});put("limits",buildJsonObject {put("providers",providers)})}.toString()).limits
     private fun row(input:JsonObject):Limit {

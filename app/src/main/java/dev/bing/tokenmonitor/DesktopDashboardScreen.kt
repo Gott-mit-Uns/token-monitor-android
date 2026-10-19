@@ -81,7 +81,10 @@ import kotlinx.coroutines.ensureActive
                 .padding(14.dp).onSizeChanged {ui.resizeOverview(with(density) {it.width.toDp().value.toDouble()})},verticalArrangement=Arrangement.spacedBy(12.dp)) {
                 if(ui.tab==DashboardTab.RECORDS) {
                     DesktopTextButton(onClick=ui::closeRecords,modifier=Modifier.testTag("dashboard-records-back")) {Text(strings.getString(R.string.dashboard_back_overview),style=quotaTextStyle(11))}
-                    Box(Modifier.testTag("dashboard-records")) {HistoryTrend(recordsHistory,historyRead.loading,historyRead.error,today)}
+                    Box(Modifier.testTag("dashboard-records")) {
+                        if(ui.recordsAnalysis) HistoryAnalysis(recordsHistory,historyRead.loading,historyRead.error)
+                        else HistoryTrend(recordsHistory,historyRead.loading,historyRead.error,today)
+                    }
                 } else if(history==null) {
                     DesktopActionButton(onRefresh,enabled=!loading,modifier=Modifier.testTag("history-load")) {Text(strings.getString(R.string.desktop_load_charts))}
                 } else if(history.daily.isEmpty() && history.monthly.isEmpty()) {
@@ -94,8 +97,15 @@ import kotlinx.coroutines.ensureActive
                     }
                     DashboardTab.RECORDS->Unit
                 }
-                if(history!=null && ui.tab!=DashboardTab.RECORDS) DesktopTextButton(onClick={ui.selectTab(DashboardTab.RECORDS)},
-                    modifier=Modifier.testTag("dashboard-open-records")) {Text(strings.getString(R.string.dashboard_records),style=quotaTextStyle(11))}
+                if(history!=null && ui.tab!=DashboardTab.RECORDS) Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min).testTag("dashboard-detail-actions"),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                    listOf(Triple(false,R.string.dashboard_records,"dashboard-open-records"),Triple(true,R.string.record_analysis_show,"dashboard-open-analysis")).forEach {(analysis,label,tag)->
+                        OutlinedButton(onClick={ui.openRecords(analysis)},modifier=Modifier.weight(1f).fillMaxHeight().heightIn(min=48.dp).testTag(tag),
+                            shape=RoundedCornerShape(8.dp),border=BorderStroke(1.dp,desktopEditLine()),contentPadding=PaddingValues(horizontal=8.dp,vertical=8.dp),
+                            colors=ButtonDefaults.outlinedButtonColors(contentColor=text)) {
+                            Text(strings.getString(label),Modifier.fillMaxWidth(),style=quotaTextStyle(11),textAlign=TextAlign.Center)
+                        }
+                    }
+                }
             }
         }
     }

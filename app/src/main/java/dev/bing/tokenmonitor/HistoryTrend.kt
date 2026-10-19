@@ -33,20 +33,15 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
     val locale = strings.configuration.locales[0]
     val numbers = remember(locale) { NumberFormat.getIntegerInstance(locale) }
     var monthly by rememberSaveable { mutableStateOf(false) }
-    var days by rememberSaveable { mutableStateOf<Int?>(30) }
-    val summary = remember(history, days) { history?.let { HistoryRanges.summarize(it, days) } }
     val latestDay = history?.daily?.maxOfOrNull { it.date } ?: today.toString()
     val latestMonth = history?.monthly?.maxOfOrNull { it.date } ?: latestDay.take(7)
     var monthKey by rememberSaveable { mutableStateOf(latestDay.take(7)) }
     var year by rememberSaveable { mutableIntStateOf(latestMonth.take(4).toInt()) }
     var selectedDay by rememberSaveable { mutableStateOf(latestDay) }
     var selectedMonth by rememberSaveable { mutableStateOf(latestMonth) }
-    var analysisExpanded by rememberSaveable { mutableStateOf(false) }
-    var costActivity by rememberSaveable { mutableStateOf(false) }
-    var activitySelection by remember { mutableStateOf<HistoryRow?>(null) }
     val month = YearMonth.parse(monthKey)
-    val dayGrid = remember(history, month, today, summary, loading, error) {
-        RecordCalendarProjection.days(history, month, today, summary, loading, error != null)
+    val dayGrid = remember(history, month, today, loading, error) {
+        RecordCalendarProjection.days(history, month, today, null, loading, error != null)
     }
     val monthGrid = remember(history, year, today, loading, error) {
         RecordCalendarProjection.months(history, year, today, loading, error != null)
@@ -62,18 +57,7 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
             FilterChip(!monthly, { monthly = false }, label = { Text(strings.getString(R.string.history_daily), style = quotaTextStyle(12)) }, modifier = Modifier.testTag("records-daily"))
             FilterChip(monthly, { monthly = true }, label = { Text(strings.getString(R.string.history_monthly), style = quotaTextStyle(12)) }, modifier = Modifier.testTag("records-monthly"))
         }
-        if (!monthly) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf(7 to R.string.range_7_days, 30 to R.string.range_30_days, 90 to R.string.range_90_days,
-                    365 to R.string.range_365_days, null to R.string.range_all).forEach { (count, label) ->
-                    FilterChip(days == count, { days = count }, label = { Text(strings.getString(label), style = quotaTextStyle(11)) })
-                }
-            }
-            summary?.let { range ->
-                Text(strings.getString(R.string.date_range, range.start, range.end), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
-                Text(strings.getString(R.string.known_tokens, if (range.knownTokenDays == 0) strings.getString(R.string.not_provided) else numbers.format(range.tokens)), style = quotaDataTextStyle(13))
-            }
-        } else Text(strings.getString(R.string.record_month_scope), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
+        if (monthly) Text(strings.getString(R.string.record_month_scope), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
         RecordCalendarHeader(
             title = if (monthly) year.toString() else month.format(DateTimeFormatter.ofPattern("LLLL yyyy", locale)),
             previous = strings.getString(if (monthly) R.string.record_previous_year else R.string.record_previous_month),
@@ -123,26 +107,31 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
         error?.let { Text(strings.getString(it), Modifier.testTag("records-error"), style = quotaTextStyle(11), color = MaterialTheme.colorScheme.error) }
         selected?.let { RecordInlineDetail(it, numbers, error) }
             ?: Text(strings.getString(R.string.record_select), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
-        if (!monthly) summary?.let { range ->
-            Text(strings.getString(R.string.history_date_note), style = quotaTextStyle(10), color = text.copy(alpha = .6f))
-            Text(strings.getString(R.string.history_coverage, numbers.format(range.recordedDays), numbers.format(range.calendarDays), numbers.format(range.knownTokenDays)), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
-            Text(strings.getString(R.string.history_known_cost_formatted, usageCostText(if (range.knownCostDays == 0) null else range.cost.toPlainString(), range.unpricedTokens), numbers.format(range.knownCostDays)), style = quotaTextStyle(11))
-            if (range.unpricedTokens.signum() > 0) Text(strings.getString(R.string.known_unpriced, numbers.format(range.unpricedTokens)), style = quotaTextStyle(11))
-            if (range.knownTokenDays.toLong() < range.calendarDays) Text(strings.getString(R.string.history_incomplete), style = quotaTextStyle(10), color = text.copy(alpha = .6f))
-        }
-        DesktopTextButton(onClick = { analysisExpanded = !analysisExpanded }, modifier = Modifier.testTag("records-analysis-toggle")) {
-            Text(strings.getString(if (analysisExpanded) R.string.record_analysis_hide else R.string.record_analysis_show), style = quotaTextStyle(11))
-        }
-        if (analysisExpanded && history != null) {
-            summary?.let { range -> DesktopHistoryChart(range.rows, range.start, range.end) { activitySelection = it } }
-            history.summary?.let { DesktopHistorySummary(it) }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(!costActivity, { costActivity = false }, label = { Text(strings.getString(R.string.desktop_total), style = quotaTextStyle(11)) })
-                FilterChip(costActivity, { costActivity = true }, label = { Text(strings.getString(R.string.activity_cost), style = quotaTextStyle(11)) })
+    }
+}
+
+/** Independent sibling of record details, backed by the same accepted history read. */
+@Composable internal fun HistoryAnalysis(history:HubHistory?,loading:Boolean=false,error:Int?=null) {
+    val strings=LocalResources.current
+    val numbers=remember(strings.configuration.locales[0]) {NumberFormat.getIntegerInstance(strings.configuration.locales[0])}
+    // Preserve the existing chart default; the sibling calendar has no range restriction.
+    val summary=remember(history) {history?.let {HistoryRanges.summarize(it,30)}}
+    var costActivity by rememberSaveable {mutableStateOf(false)}
+    var activitySelection by remember(history) {mutableStateOf<HistoryRow?>(null)}
+    Column(Modifier.fillMaxWidth().testTag("records-analysis"),verticalArrangement=Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
+        Text(strings.getString(R.string.record_analysis_show),style=quotaTextStyle(13,true))
+        if(loading) Text(strings.getString(R.string.record_loading),Modifier.testTag("records-loading"),style=quotaTextStyle(11))
+        error?.let {Text(strings.getString(it),Modifier.testTag("records-error"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.error)}
+        if(history==null) Text(strings.getString(R.string.record_not_loaded),style=quotaTextStyle(11))
+        else {
+            summary?.let {range->DesktopHistoryChart(range.rows,range.start,range.end) {activitySelection=it}}
+            history.summary?.let {DesktopHistorySummary(it)}
+            Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                FilterChip(!costActivity,{costActivity=false},label={Text(strings.getString(R.string.desktop_total),style=quotaTextStyle(11))})
+                FilterChip(costActivity,{costActivity=true},label={Text(strings.getString(R.string.activity_cost),style=quotaTextStyle(11))})
             }
-            HistoryActivity(history, metricCost = costActivity) { activitySelection = it }
-            activitySelection?.let { RecordInlineDetail(RecordCalendarCell(it.date, it,
-                if (it.tokens == null) RecordCellState.UNKNOWN else RecordCellState.RECORDED), numbers) }
+            HistoryActivity(history,metricCost=costActivity) {activitySelection=it}
+            activitySelection?.let {RecordInlineDetail(RecordCalendarCell(it.date,it,if(it.tokens==null) RecordCellState.UNKNOWN else RecordCellState.RECORDED),numbers)}
         }
     }
 }

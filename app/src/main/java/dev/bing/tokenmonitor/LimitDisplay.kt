@@ -3,7 +3,7 @@ package dev.bing.tokenmonitor
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Locale
-import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.*
 
 /** Desktop display choices. Raw Hub records and account keys are never rewritten. */
 data class LimitDisplayPreferences(val showUsed:Boolean=false,val maskEmails:Boolean=false,val showSource:Boolean=false,
@@ -94,6 +94,34 @@ internal object LimitDisplay {
             index to chosen
         }.sortedWith(compareBy<Pair<Int,Limit>> {remaining(it.second)}.thenBy {it.first}).take(2).sortedBy {it.first}.map {it.second}
     }
+    /** Data already restricted to the display schema; metadata alone is not a quota reading. */
+    private fun hasCachedDetails(record:JsonObject?):Boolean {
+        if(record==null) return false
+        fun finite(value:JsonElement?)=(value as? JsonPrimitive)?.doubleOrNull?.isFinite()==true
+        fun numbers(value:JsonObject?,metadata:Set<String>)=value?.any {(key,item)->key !in metadata && finite(item)}==true
+        val balance=record["balance"] as? JsonObject
+        val usage=record["usageSummary"] as? JsonObject
+        val resets=record["resetCredits"] as? JsonObject
+        val tranches=(balance?.get("tranches") as? JsonArray).orEmpty()
+        val plan=(balance?.get("planStatus") as? JsonPrimitive)?.contentOrNull
+        val group=(balance?.get("quotaGroup") as? JsonPrimitive)?.contentOrNull
+        val expiry=(balance?.get("expiresAt") as? JsonPrimitive)?.contentOrNull
+        return finite(record["balanceUsd"]) ||
+            numbers(balance,setOf("currency","quotaGroup","expiresAt","planStatus")) ||
+            tranches.any {finite((it as? JsonObject)?.get("amount"))} ||
+            plan=="expired" || !group.isNullOrBlank() ||
+            (expiry!=null && runCatching {java.time.Instant.parse(expiry)}.isSuccess) ||
+            numbers(usage,setOf("period")) || finite(resets?.get("availableCount"))
+    }
+    /** Hide catalog placeholders, while retaining configured errors and cached quota data. */
+    fun usedAccounts(windows:List<Limit>):List<Limit> = groups(windows).filter {account->
+        account.any {it.kind!=null || it.remaining!=null || it.presentation.usedPercent!=null ||
+            it.amount!=null || it.usedAmount!=null || it.limitAmount!=null ||
+            it.presentation.balanceAmount!=null || it.presentation.monthSpend!=null ||
+            (!it.presentation.showMeter && it.detail.equals("unlimited",true)) ||
+            hasCachedDetails(it.presentation.providerRecord)} ||
+            account.first().status?.let {it !in setOf("disabled","notConfigured","noSyncedData")}==true
+    }.flatten()
     fun groups(windows: List<Limit>): List<List<Limit>> = windows.groupBy { window ->
         window.presentation.recordIndex?.let { "record:$it" } ?: "legacy:${window.provider}:${window.account.orEmpty()}"
     }.values.toList()

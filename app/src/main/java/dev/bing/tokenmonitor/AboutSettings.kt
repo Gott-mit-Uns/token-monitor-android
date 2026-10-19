@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AboutSettings(hubBuild:HubBuildInfo?=null) {
+fun AboutSettings() {
     val context = LocalContext.current
     val strings = LocalResources.current
     val version = remember(context) {
@@ -42,26 +42,14 @@ fun AboutSettings(hubBuild:HubBuildInfo?=null) {
             val stacked=maxWidth<280.dp || LocalDensity.current.fontScale*LocalDesktopTextScale.current>1.3f
             if(stacked) Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
                 Text("Token Monitor",style=quotaTextStyle(14,true))
-                Text(strings.getString(R.string.app_version, version),Modifier.testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(strings.getString(R.string.app_version, version),Modifier.fillMaxWidth().testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
             } else Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
                 Text("Token Monitor",style=quotaTextStyle(14,true))
-                Text(strings.getString(R.string.app_version, version),Modifier.testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(strings.getString(R.string.app_version, version),Modifier.weight(1f).padding(start=8.dp).testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant,textAlign=androidx.compose.ui.text.style.TextAlign.End)
             }
         }
         Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
             Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.fillMaxWidth().testTag("about-desktop-reference"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(strings.getString(R.string.desktop_parity_partial),Modifier.fillMaxWidth().testTag("about-parity-status"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-        val runtime=when(hubBuild?.runtime) {"node-hub"->"Node Hub";"cloudflare-worker"->"Cloudflare Worker";else->"Hub"}
-        val buildLabel=if(hubBuild?.coreRevision!=null && hubBuild.runtimeRevision!=null)
-            strings.getString(R.string.hub_build_version,runtime,hubBuild.coreRevision,hubBuild.runtimeRevision)
-            else strings.getString(if(hubBuild==null) R.string.hub_version_pending else R.string.hub_version_unknown)
-        Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
-        Text(buildLabel,Modifier.fillMaxWidth().testTag("about-hub-version"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-        hubBuild?.let {info->Text(strings.getString(when(info.status) {
-            "current"->R.string.hub_build_current;"updateAvailable","legacy"->R.string.hub_build_older
-            "remoteNewer"->R.string.hub_build_newer;else->R.string.hub_build_unverified
-        }),Modifier.fillMaxWidth().testTag("about-hub-build-status"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)}
         }
         AndroidUpdateSettings(androidVersion,onLicenses = { opened = true })
     }

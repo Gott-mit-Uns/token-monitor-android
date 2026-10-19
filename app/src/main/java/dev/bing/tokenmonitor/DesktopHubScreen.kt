@@ -345,8 +345,9 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
         mainPage.name,range,breakdownPeriodEvent,rowPlacementToken,actualBreakdownPage!=null,
         preferences.appearance.reduceMotion)
     val quotaVisible=page==HubPage.LIMITS && !trendsDetail
+    val usedLimits=remember(state.snapshot?.limits) {LimitDisplay.usedAccounts(state.snapshot?.limits.orEmpty())}
     val quotaRows=remember(quotaVisible,state.snapshot?.limits,preferences.limits,strings.configuration.locales[0],calendarNow) {
-        if(quotaVisible) QuotaMotionProjection.project(state.snapshot?.limits.orEmpty(),preferences.limits,
+        if(quotaVisible) QuotaMotionProjection.project(usedLimits,preferences.limits,
             strings.configuration.locales[0],calendarNow) else emptyMap()
     }
     val quotaTargets=remember(quotaRows) {quotaRows.values.flatMap {rows->rows.mapNotNull {it.motion}}}
@@ -632,8 +633,8 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                     }
                                 }
                                 HubPage.LIMITS -> {
-                                    if (state.snapshot.limits.isEmpty()) item { Text(strings.getString(R.string.limits_empty)) }
-                                    val byProvider=LimitDisplay.groups(state.snapshot.limits).groupBy {it.first().provider}
+                                    if (usedLimits.isEmpty()) item { Text(strings.getString(R.string.limits_empty)) }
+                                    val byProvider=LimitDisplay.groups(usedLimits).groupBy {it.first().provider}
                                     val ordered=LimitPreferences.order(preferences.limits.providerOrder)+byProvider.keys.filter {it !in LimitPreferences.providers}
                                     ordered.forEach {provider->
                                         val accounts=byProvider[provider] ?: return@forEach

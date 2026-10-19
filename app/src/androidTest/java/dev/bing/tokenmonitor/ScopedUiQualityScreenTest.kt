@@ -103,16 +103,10 @@ class ScopedUiQualityScreenTest {
             compose.onNodeWithTag("quality-menu").assertDoesNotExist()
         }
     }
-    @Test fun aboutVersionExplainsMissingServerMetadataWithoutInventingVersion() {
+    @Test fun aboutKeepsVersionAndReferenceWithoutDuplicatingHubMetadata() {
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,language) {Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).safeDrawingPadding().padding(16.dp)) {AboutSettings()}}}}
-        save("about-pending");complete("about-hub-version");complete("about-android-version");complete("about-desktop-reference")
-        compose.onNodeWithTag("about-hub-version").assertTextEquals(if(language==LanguageChoice.CHINESE) "Hub 构建：等待连接验证" else "Hub build: waiting for connection verification")
-        val core=HubBuildRegistry.entries.getValue("core").getValue(74L)
-        val adapter=HubBuildRegistry.entries.getValue("node-hub").getValue(5L)
-        val info=HubBuildInfo("node-hub",1,74,core,5,adapter)
-        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,language) {Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).safeDrawingPadding().padding(16.dp)) {AboutSettings(info)}}}}
-        complete("about-hub-version");complete("about-hub-build-status");save("about-build")
-        compose.onNodeWithTag("about-hub-version").assertTextEquals(if(language==LanguageChoice.CHINESE) "Hub 构建：Node Hub · 核心 74 · 运行时 5" else "Hub build: Node Hub · core 74 · runtime 5")
+        save("about-compact");complete("about-android-version");complete("about-desktop-reference")
+        listOf("about-hub-version","about-hub-build-status","about-parity-status").forEach {compose.onNodeWithTag(it).assertDoesNotExist()}
         @Suppress("DEPRECATION") val packageInfo=compose.activity.packageManager.getPackageInfo(compose.activity.packageName,0)
         compose.onNodeWithTag("about-android-version").assertTextContains(packageInfo.versionName!!,substring=true)
     }

@@ -63,8 +63,8 @@ class EnglishScreenTest {
         compose.onNodeWithTag("view-trends").performScrollTo().performClick()
         compose.onNodeWithTag("trends-main-open-history").performClick()
         compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
-        compose.onNodeWithText("7 days").performClick()
-        compose.onNodeWithText("2026-10-03 to 2026-10-09").assertIsDisplayed()
+        compose.onNodeWithText("7 days").assertDoesNotExist()
+        compose.onNodeWithTag("records-day-grid").assertExists()
         File(compose.activity.getExternalFilesDir(null), "visual-english-history-$suffix.png").outputStream().use {
             compose.onRoot().captureToImage().asAndroidBitmap().compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
         }

@@ -77,7 +77,9 @@ class LimitDisplayScreenTest {
         try {
             val saved=prefs.value.copy(language=LanguageChoice.ENGLISH,currency="CNY",currencyRates=mapOf("CNY" to "7"),limits=LimitDisplayPreferences(true,true,true))
             compose.activityRule.scenario.onActivity {ViewModelProvider(it)[HubViewModel::class.java].updateDisplay(saved)}
-            compose.waitUntil(5000) {store.load()==saved};compose.activityRule.scenario.recreate();click("limit-settings-toggle")
+            compose.waitUntil(5000) {store.load()==saved};compose.activityRule.scenario.recreate()
+            if(compose.onAllNodesWithTag("hub-settings-panel-motion").fetchSemanticsNodes().isEmpty()) compose.onNodeWithTag("hub-settings-toggle").performClick()
+            openSettingsSection(compose,"limits")
             show("limit-mode-used");compose.onNodeWithTag("limit-mode-used").assertIsSelected();show("limit-mask-emails");compose.onNodeWithTag("limit-mask-emails").assertIsOn();show("limit-show-source");compose.onNodeWithTag("limit-show-source").assertIsOn()
             assertEquals(saved,store.load());assertEquals(0,actions.reads)
         } finally {store.save(before)}

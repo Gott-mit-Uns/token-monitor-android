@@ -51,9 +51,9 @@ class RecordCalendarScreenTest {
         compose.onNodeWithText("No record supplied by Hub; this is not zero usage.").performScrollTo().assertIsDisplayed()
         compose.onNodeWithTag("history-record-2026-10-13").performScrollTo().performClick()
         compose.onNodeWithTag("records-selected-tokens").performScrollTo().assertTextEquals("Token Not provided")
-        compose.onNodeWithText("7 days").performScrollTo().performClick()
-        compose.onNodeWithTag("history-record-2026-10-09").assertIsNotEnabled()
-        compose.onNodeWithText("All records").performScrollTo().performClick()
+        compose.onNodeWithText("7 days").assertDoesNotExist()
+        compose.onNodeWithText("All records").assertDoesNotExist()
+        compose.onNodeWithTag("history-record-2026-10-09").assertIsEnabled()
         compose.onNodeWithTag("records-calendar-previous").performScrollTo().performClick()
         compose.onNodeWithTag("history-record-2026-09-30").performScrollTo().performClick()
         compose.onNodeWithTag("records-selected-tokens").performScrollTo().assertTextEquals("Token 77")
@@ -115,7 +115,7 @@ class RecordCalendarScreenTest {
         compose.onNodeWithTag("records-selected-tokens").assertDoesNotExist()
     }
 
-    @Test fun restoredYearMonthSelectionAndRangeUseTheNewPayloadForDetails() {
+    @Test fun restoredYearMonthSelectionUsesTheNewPayloadForDetails() {
         compose.activityRule.scenario.onActivity { activity ->
             val content = activity.findViewById<ViewGroup>(android.R.id.content)
             repeat(content.childCount) { (content.getChildAt(it) as? ComposeView)?.disposeComposition() }
@@ -128,11 +128,11 @@ class RecordCalendarScreenTest {
                 HistoryTrend(source.value, today = today)
             }
         } } }
-        compose.onNodeWithText("All records").performScrollTo().performClick()
+        compose.onNodeWithText("All records").assertDoesNotExist()
         compose.onNodeWithTag("records-calendar-previous").performScrollTo().performClick()
         compose.onNodeWithTag("history-record-2026-09-30").performScrollTo().performClick()
         restore.emulateSavedInstanceStateRestore()
-        compose.onNodeWithText("All records").performScrollTo().assertIsSelected()
+        compose.onNodeWithText("All records").assertDoesNotExist()
         compose.onNodeWithTag("records-calendar-title").performScrollTo().assertTextEquals("September 2026")
         compose.onNodeWithTag("records-selected-date").performScrollTo().assertTextEquals("2026-09-30")
         compose.onNodeWithTag("records-selected-tokens").assertTextEquals("Token 77")
@@ -156,7 +156,7 @@ class RecordCalendarScreenTest {
         show(source, clock = clock)
         compose.onNodeWithTag("history-record-$sourceDate").performScrollTo().assertIsEnabled().performClick()
         compose.onNodeWithTag("records-selected-tokens").performScrollTo().assertTextEquals("Token 81")
-        compose.onNodeWithText("Known usage: 81 tokens").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("Known usage: 81 tokens").assertDoesNotExist()
         compose.onNodeWithTag("records-calendar-title").performScrollTo().assertTextEquals(monthTitle)
         compose.onNodeWithTag("records-calendar-previous").performClick()
         compose.onNodeWithTag("records-calendar-next").assertIsEnabled().performClick()
