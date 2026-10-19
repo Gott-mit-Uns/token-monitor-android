@@ -10,12 +10,16 @@
 | JVM | 完整536项通过，无失败；包含固定v0.75源码输出31组活动/身份样例的HTTP、SSE full、freshness和重新解析对照，以及新full来源替换、Antigravity关系分组、DSH项目模型、精确core89识别。旧074样例继续锁定原commit，不冒称新基准输出。 |
 | Lint/资源 | 0错误、113警告、1提示；与已发布07402记录相同。671对英中资源、文档门禁及git diff检查通过；不以抑制规则取得通过。 |
 | 签名 | 正式包名dev.bing.tokenmonitor.nativeclient，0.75.0-01/code81，正式公有证书SHA256 e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202一致。 |
-| 模拟器 | 临时只读API36 ARM64 emulator-5686，正式code80已准备公开合成加密缓存/历史及四份偏好；覆盖、冷恢复和界面专项仍进行中，不称已通过。 |
-| 上游旁证 | 固定v0.75的Grok身份及sessionLive共13项通过；Antigravity/DSH上游脚本首次因参考目录缺少undici未执行，不能计入通过。Android消费测试已通过，不证明生产采集端部署。 |
+| 模拟器 | 临时只读API36 ARM64 emulator-5686，正式code80→81覆盖升级通过；UID10213及五份文件SHA逐项保持，公开合成加密缓存/历史及四份偏好解密成功，安装APK回读SHA与候选一致；未卸载、清数据或降级。24项界面/缓存回归22通过、2项既有专项失败，见下述明确限制。新增Bot状态和冷恢复2项均通过，320dp/系统字号2双主题新增Bot界面2组各1项通过。 |
+| 上游旁证 | 固定v0.75的Grok身份、sessionLive、Antigravity与DSH共59项通过；首次参考目录缺少undici导致后两套未执行，复用现有只读依赖路径后通过，未安装新依赖。Android消费测试通过仍不证明生产采集端部署。 |
 
-当前正式签名APK 15,324,082字节，SHA256 `71a8a5a52744a7d5fdcc65562e24e8597a2fe11f4a2e615050c4eeb649ce0b98`；首轮测试APK SHA256 `cdcdc2761f7b2a4a431f6f6c0d21608fd146aa55d3ae3dcae675e6ff3f39d5d8`，新增界面专项后另建测试包，不能混用指纹。原始日志在本机 `/tmp/token075-first-build.log`、`/tmp/token075-second-build.log`、`/tmp/token075-ui-build.log`、`/tmp/token075-upstream-tests.log`；不宣称这些临时文件随Git交付。
+当前正式签名APK 15,324,082字节，SHA256 `71a8a5a52744a7d5fdcc65562e24e8597a2fe11f4a2e615050c4eeb649ce0b98`；首轮测试APK SHA256 `cdcdc2761f7b2a4a431f6f6c0d21608fd146aa55d3ae3dcae675e6ff3f39d5d8`，新增界面专项后的实际测试APK为 `caebd0843f346a0d18160460a648c6b6dbd0f7b6973cabc91ef5a1de164e22c2`，不能混用指纹。code80旧匹配测试APK SHA256 `b5e393b9d91d67407972e8f803282c922e32b6ecb5d02d944af3ea6d9b20b1f8`。生产/测试及五项Gradle输入607个文件，按路径/原始字节/NUL顺序SHA256 `8b5c0d644dabb5bdd12b5a4a203ecb332d88097ed8a7b5c72c7574cc7c9bcde5`，输入提交 `f5db753c459230c1685af0eaca8f0608ffc0ab77`。原始日志在本机 `/tmp/token075-first-build.log`、`/tmp/token075-second-build.log`、`/tmp/token075-ui-build.log`、`/tmp/token075-upstream-tests.log`；不宣称这些临时文件随Git交付。
 
-此前07402四项界面行为只核对保留，未重复改布局；认证、SSE生命周期、缓存/偏好格式及费用未改。未操作真机或NAS/桌面运行服务；不把公开样例或模拟器当生产数据/实体手机。真实生产字段、OEM生命周期及用户私有资料未验证，非本次真机门槛。候选未发布，PR审查、合并和公开附件回读尚未完成。
+本轮首次24项设备运行中，`ProjectDeviceScreenTest.originalProjectCostOrderNfcMergeToolGradientPrivacyAndPinnedTotal`第53行严格像素断言（expected -11951184、actual -10835016）和`HomeQuotaEntryScreenTest.actualHomeStopSettingsAndThreeReductionModesDoNotReplayConsumedEntry`第149行动效断言（expected 0.6、actual 0.09973595）失败；候选各自单项复现。随后独立只读API36 ARM64 emulator-5688安装公开正式0.74.0-02/code80及匹配旧测试包，1080×2400/density420/fontScale1，原断言两项再次失败且数值完全相同。两测试源码自code79、code80至本次均未改；项目条绘制和额度动效产品逻辑本次未改，作为已存在的专项测试/时序限制保留，不扩大为本次修复，不删除测试或放宽断言，不称设备全套通过。相关首次失败与复现日志：`/tmp/token075-ui-first.log`、`/tmp/token075-project-repro.log`、`/tmp/token075-quota-repro.log`、`/tmp/token075-baseline-pair.log`。基线模拟器启动期间的安装尝试被系统拒绝、未形成有效测例；等待boot完成、核实code80后才运行上述比较。
+
+正式升级实跑与五份文件/UID回执见本机`/tmp/token075-upgrade-seed.log`、`/tmp/token075-upgrade-final.log`、`/tmp/token075-upgrade-receipts.log`；曾误用不存在的方法筛选，runner报告0 tests，该次不计验证，后续正确方法1项通过。24项实际回归使用caebd084测试包。窄屏双主题配置及结果在`/tmp/token075-window-matrix.json`，原始公开样例截图已实际查看：[首页Bot不计运行](../design/session-bot-home.png)、[Bot分组](../design/session-bot-group.png)。这些不是生产Hub或实体手机截图。
+
+此前07402四项界面行为只核对保留，未重复改布局；认证、SSE生命周期、缓存/偏好格式及费用未改。未操作真机或NAS/桌面运行服务；不把公开样例或模拟器当生产数据/实体手机。真实生产字段、OEM生命周期及用户私有资料未验证，非本次真机门槛。候选未发布；PR #21初始f5db753自动代码审查completed且无发现，未执行独立security_review。最终head审查、合并和公开附件回读仍待完成。
 
 ## 当前正式发行验收：Android 0.74.0-02 / code80
 
