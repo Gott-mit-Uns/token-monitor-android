@@ -1,8 +1,8 @@
 # 当前验收记录
 
-## 当前开发验收：桌面 v0.74.0 / Android 0.74.0-01（PR交付，未合并或发布）
+## 当前正式发行验收：桌面 v0.74.0 / Android 0.74.0-01
 
-检查日期2026-10-19（Asia/Shanghai）。本轮重新查询GitHub latest及非预览正式发行：Android仍为v0.73.0-01/code78，桌面为v0.74.0，annotated Tag解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`。接续既有PR #17，产品与测试输入提交 `73ba7b57f6b42e010a4dac594e9d630460b8b637`；开发候选0.74.0-01/code79。本轮未合并、打正式Tag、上传发行或操作NAS。
+检查日期2026-10-19（Asia/Shanghai）。开发前最新正式发行Android为v0.73.0-01/code78，桌面为v0.74.0，annotated Tag解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`。产品与测试输入提交 `73ba7b57f6b42e010a4dac594e9d630460b8b637`。用户随后明确授权“合并，发布”：PR #17已合并至 `69a77f8b78cf3eae9bd98ba5434854f6afba70d1`，Tag v0.74.0-01指向同提交，正式0.74.0-01/code79已发布为latest。发布沿用以下同一已验收APK，未重建；下表为此前候选实跑，本次发布仅复核原材料，未操作NAS。
 
 | 本轮实跑 | 结果与边界 |
 |---|---|
@@ -22,6 +22,14 @@
 
 未验证：真机/私有数据、生产Hub、真实账号及新采集器部署效果。Grok推理和固定范围分类修正仍依赖生产端；本轮只验证固定源样例的正确消费。OMP逐轮正文仍缺远程合同，macOS窗口/玻璃/刘海不适用；fullyAligned=false保持。真机按AGENTS为可选，不作为PR门槛。README未修改；自动审查及CI以PR #17最新提交实际状态为准。
 
+## 本次发布复核（2026-10-19，Asia/Shanghai）
+
+用户“合并，发布”为本次明确授权。PR #17合并前最终提交24889bc的自动代码审查completed、has_any_findings=false、has_unresolved_findings=false，文档CI成功；独立security_review未执行，不将空状态称为通过。Tag v0.74.0-01解引用 `69a77f8b78cf3eae9bd98ba5434854f6afba70d1`。逐项比较app/src/main、测试树及五项Gradle输入，Tag与已验收73ba7b5对象ID全部一致。正式APK沿用SHA6f28ca11…原工件，签名、包名和0.74.0-01/code79再次核对一致，没有重建。
+
+[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.74.0-01)已发布，draft=false、prerelease=false；已登录latest API及匿名公开latest页面均指向v0.74.0-01，页面HTTP200。附件仅规范APK、SOURCE.json和SHA256SUMS.txt；APK 15,324,078字节，GitHub资产digest与本地SHA一致。SOURCE区分buildCommit73ba7b5和Tag/sourceCommit69a77f8，不冒称APK内嵌提交信息。公开URL无凭据下载三份附件，与上传材料逐字节一致，并复验下载APK正式证书。SOURCE SHA256 `6239eb2b5936c86b5ef157c55a93fb1bbd2f81bdb02248ea257ad48094369d86`；SHA256SUMS SHA256 `77d774589a85da9f725f3c92ce60218d64fcf5c637940609a3a1e37b79eebe87`。发布材料及公开回读在本机 `/tmp/token074-publication/`，不宣称随仓库提供。
+
+限制与首次失败：匿名latest API返回HTTP403，响应标明x-ratelimit-limit=60、remaining=0，属于当前出口匿名GitHub API配额耗尽；没有修改客户端认证、重试或更新逻辑来绕过。已登录latest、匿名latest网页和公开附件下载已验证，不能声称本轮实际客户端匿名更新检查成功。此前候选单元/界面/升级结果按上节提交与工件继承，本轮仅复核来源、原记录、公开工件与发行状态；真机、真实账号、生产Hub和新采集器仍未验证。没有卸载/清数据、NAS操作或其他生产部署。回执仅原位更新当前文档，不扩写README。
+
 ## 此前候选补充检查（2026-10-19，本轮接续前）
 
 检查日期2026-10-19（Asia/Shanghai）；源码基线 `d22209bbf45032f7f0af3588ae6259519dbe635d`，候选code79。固定桌面Tag/提交和逐增量处理见HANDOFF；本轮未产生候选应用APK或测试APK，故没有可填写的候选APK SHA、签名或安装记录。正式版仍为0.73.0-01，本节不得解读为已发版。
@@ -40,7 +48,7 @@
 
 当时尚未完成（标准构建、Lint、签名、覆盖安装及受影响UI现由上节补齐）：标准Wrapper构建、完整必要回归/Lint、正式签名与覆盖安装、实际Compose/截图/大字体验收、真实Hub字段及生产新采集器效果。旧0.73的设备/签名/缓存结论仅作历史参考，本轮未把它们写成候选已通过。后续在具备本地通信权限的环境补齐；不要求提供真机，不清数据、不操作NAS。当前交付草稿PR，不能合并/发布为已验收版本。
 
-## 当前发行验收：桌面 v0.73.0 / Android 0.73.0-01
+## 上一正式发行验收：桌面 v0.73.0 / Android 0.73.0-01
 
 检查日期：2026-10-18（Asia/Shanghai）。分支起点 `20d6df77cd0fc759a96386e658422a448e097649`；上游latest正式版Tag固定为 `v0.73.0` / `1190260afdcacd8998938de311e0435c306a18ed`，收尾再次查询仍为同版。用户随后明确授权合并PR #15并发布客户端、不要求真机测试、不操作NAS；PR已合并，v0.73.0-01/code78已正式发布为latest。构建生产输入提交ac96e168与Tag合并提交a06c822b逐项相同；本次复核此前同一工件与原始验证记录，未重跑不受影响套件。逐上游增量处理及合同限制只见 [HANDOFF](HANDOFF.md)。
 
