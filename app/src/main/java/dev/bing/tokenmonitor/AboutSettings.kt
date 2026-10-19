@@ -42,10 +42,10 @@ fun AboutSettings() {
             val stacked=maxWidth<280.dp || LocalDensity.current.fontScale*LocalDesktopTextScale.current>1.3f
             if(stacked) Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
                 Text("Token Monitor",style=quotaTextStyle(14,true))
-                Text(strings.getString(R.string.app_version, version),Modifier.testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(strings.getString(R.string.app_version, version),Modifier.fillMaxWidth().testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
             } else Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween,verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
                 Text("Token Monitor",style=quotaTextStyle(14,true))
-                Text(strings.getString(R.string.app_version, version),Modifier.testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(strings.getString(R.string.app_version, version),Modifier.weight(1f).padding(start=8.dp).testTag("about-android-version"),style=quotaTextStyle(11),color=MaterialTheme.colorScheme.onSurfaceVariant,textAlign=androidx.compose.ui.text.style.TextAlign.End)
             }
         }
         Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
