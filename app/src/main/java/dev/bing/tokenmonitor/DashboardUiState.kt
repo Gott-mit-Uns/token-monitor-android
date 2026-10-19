@@ -15,6 +15,8 @@ private data class DashboardChartCommit(
 @Stable internal class DashboardUiState {
     var tab by mutableStateOf(DashboardTab.OVERVIEW)
         private set
+    var recordsAnalysis by mutableStateOf(false)
+        private set
     var range by mutableStateOf("30")
         private set
     var byModel by mutableStateOf(false)
@@ -58,7 +60,7 @@ private data class DashboardChartCommit(
     }
 
     fun reset(costMetric:Boolean=true) {
-        tab=DashboardTab.OVERVIEW;previousTab=tab;range="30";byModel=false;mode=DashboardTrendMode.BARS
+        tab=DashboardTab.OVERVIEW;previousTab=tab;recordsAnalysis=false;range="30";byModel=false;mode=DashboardTrendMode.BARS
         metricCost=costMetric
         chartWidth=0.0;chartHeight=0.0;overviewWidth=0.0
         committedChartTarget=null
@@ -66,9 +68,10 @@ private data class DashboardChartCommit(
     }
     fun selectTab(next:DashboardTab) {
         if(next==tab) return
-        if(next==DashboardTab.RECORDS) previousTab=tab
+        if(next==DashboardTab.RECORDS) {previousTab=tab;recordsAnalysis=false}
         tab=next;motionReason=DashboardMotionReason.ENTRY;motionRevision++
     }
+    fun openRecords(analysis:Boolean=false) {selectTab(DashboardTab.RECORDS);recordsAnalysis=analysis}
     fun closeRecords()=selectTab(previousTab)
     fun selectRange(next:String) {
         require(next in DashboardTrendProjection.ranges)
@@ -90,12 +93,13 @@ private data class DashboardChartCommit(
 
     companion object {
         val Saver=listSaver<DashboardUiState,Any>(save={listOf(it.tab.name,it.range,it.byModel,it.mode.name,
-            it.previousTab.name,it.motionRevision,it.motionReason.name,it.metricCost)},restore={values->DashboardUiState().apply {
+            it.previousTab.name,it.motionRevision,it.motionReason.name,it.metricCost,it.recordsAnalysis)},restore={values->DashboardUiState().apply {
             tab=DashboardTab.valueOf(values[0] as String);range=values[1] as String
             byModel=values[2] as Boolean;mode=DashboardTrendMode.valueOf(values[3] as String)
             previousTab=DashboardTab.valueOf(values[4] as String);motionRevision=values[5] as Int
             motionReason=DashboardMotionReason.valueOf(values[6] as String)
             metricCost=values[7] as Boolean
+            recordsAnalysis=values.getOrNull(8) as? Boolean ?: false
         }})
     }
 }

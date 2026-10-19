@@ -5,6 +5,23 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LimitDisplayTest {
+    @Test fun unusedCatalogEntriesAreHiddenWithoutDroppingConfiguredErrorsZeroQuotaOrCachedData() {
+        val all=HubParser.parse("""{"periods":{},"limits":{"providers":[
+            {"provider":"claude","status":"notConfigured","windows":[]},
+            {"provider":"gemini","status":"disabled","windows":[]},
+            {"provider":"grok","status":"noSyncedData","windows":[]},
+            {"provider":"codex","status":"ok","windows":[{"kind":"session","remainingPercent":0}]},
+            {"provider":"cursor","status":"unauthorized","windows":[]},
+            {"provider":"kiro","status":"noSyncedData","stale":true,"windows":[{"kind":"billing","used":1,"remaining":0}]},
+            {"provider":"openrouter","status":"ok","balance":{"amount":0,"currency":"USD"},"windows":[]}
+        ]}}""").limits
+        val selected=LimitDisplay.usedAccounts(all)
+        assertEquals(listOf("codex","cursor","kiro","openrouter"),LimitDisplay.groups(selected).map {it.first().provider})
+        assertEquals(0.0,selected.first().remaining!!,0.0)
+        assertEquals(7,LimitDisplay.groups(all).size)
+        assertTrue(LimitDisplay.usedAccounts(all.take(3)).isEmpty())
+        assertTrue(LimitDisplay.usedAccounts(emptyList()).isEmpty())
+    }
     private fun fixture()=javaClass.classLoader!!.getResourceAsStream("limit-display-parity.json")!!.bufferedReader().use {Json.parseToJsonElement(it.readText()).jsonObject}
     private fun parsed(providers:JsonArray)=HubParser.parse(buildJsonObject {put("periods",buildJsonObject {put("today",buildJsonObject {})});put("limits",buildJsonObject {put("providers",providers)})}.toString()).limits
     private fun row(input:JsonObject):Limit {

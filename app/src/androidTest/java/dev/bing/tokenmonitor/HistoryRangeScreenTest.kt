@@ -20,21 +20,22 @@ import org.junit.Test
 
 class HistoryRangeScreenTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
-    @Test fun rangesExposeCoverageAndKnownTotals() {
+    @Test fun calendarOpensDirectlyAndKeepsOldDatesZeroAndMissingRecordsAccessible() {
         val dark = InstrumentationRegistry.getArguments().getString("visualDark") == "true"
         val history = HistoryParser.parse("""{"daily":[{"date":"2026-10-09","tokens":100,"cost":"1.25","unpricedTokens":10},{"date":"2026-10-08","tokens":0,"cost":"0"},{"date":"2026-09-30","tokens":200,"cost":"2.50"}],"monthly":[{"month":"2026-10","tokens":100,"cost":"1.25"}]}""")
         compose.activity.runOnUiThread { compose.activity.setContent {
             TokenTheme(dark = dark) { Surface { Column(Modifier.fillMaxSize().safeDrawingPadding().testTag("history-range-scroll").verticalScroll(rememberScrollState()).padding(24.dp)) { HistoryTrend(history, today = java.time.LocalDate.parse("2026-10-16")) } } }
         } }
-        compose.onNodeWithText("7天").performClick()
-        compose.onNodeWithText("2026-10-03 至 2026-10-09").assertIsDisplayed()
-        compose.onNodeWithText("已记录 2 / 7 天；Token 可用 2 天").assertExists()
-        compose.onNodeWithText("已知用量 100 Token").assertIsDisplayed()
-        compose.onNodeWithText("其中 10 Token 尚未定价").assertExists()
+        listOf("7天","30天","90天","365天","全部记录").forEach {compose.onNodeWithText(it).assertDoesNotExist()}
+        compose.onNodeWithTag("records-day-grid").assertExists()
+        compose.onNodeWithTag("history-record-2026-10-09").performScrollTo().performClick()
+        compose.onNodeWithTag("records-selected-tokens").performScrollTo().assertTextEquals("Token 100")
+        compose.onNodeWithText("未定价 10 Token").assertExists()
         saveVisualEvidence(compose.activity, compose.onRoot(), if (dark) "visual-history-range-dark.png" else "visual-history-range.png")
-        compose.onNodeWithText("全部记录").performClick()
-        compose.onNodeWithText("已知用量 300 Token").assertIsDisplayed()
-        compose.onNodeWithText("已记录 3 / 10 天；Token 可用 3 天").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithTag("records-calendar-previous").performScrollTo().performClick()
+        compose.onNodeWithTag("history-record-2026-09-30").performScrollTo().performClick()
+        compose.onNodeWithTag("records-selected-tokens").performScrollTo().assertTextEquals("Token 200")
+        compose.onNodeWithTag("records-calendar-next").performScrollTo().performClick()
         compose.onNodeWithTag("history-record-2026-10-08").performScrollTo().performClick()
         compose.onNodeWithText("Token 0").performScrollTo().assertIsDisplayed()
         saveVisualEvidence(compose.activity, compose.onRoot(), "visual-calendar-detail.png")

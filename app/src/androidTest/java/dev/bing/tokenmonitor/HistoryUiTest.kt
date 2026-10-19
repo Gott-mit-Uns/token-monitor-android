@@ -37,7 +37,10 @@ class HistoryUiTest {
         compose.onNodeWithText("每月").performScrollTo().performClick()
         compose.onNodeWithTag("history-record-2026-10").performScrollTo().performClick()
         compose.onNodeWithText("Token 135").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithTag("records-analysis-toggle").performScrollTo().performClick()
+        compose.onNodeWithTag("records-analysis-toggle").assertDoesNotExist()
+        compose.activity.runOnUiThread {compose.activity.setContent {
+            TokenTheme(dark=dark) {Surface {Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp)) {HistoryAnalysis(history)}}}
+        }}
         compose.onNodeWithText("最高 123 Token").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("日期间缺口表示没有记录，不代表零用量。").assertExists()
     }

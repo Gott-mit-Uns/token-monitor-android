@@ -94,6 +94,11 @@ internal object LimitDisplay {
             index to chosen
         }.sortedWith(compareBy<Pair<Int,Limit>> {remaining(it.second)}.thenBy {it.first}).take(2).sortedBy {it.first}.map {it.second}
     }
+    /** Hide catalog placeholders, while retaining configured errors and cached quota data. */
+    fun usedAccounts(windows:List<Limit>):List<Limit> = groups(windows).filter {account->
+        account.any {it.kind!=null || it.presentation.balanceAmount!=null} ||
+            account.first().status?.let {it !in setOf("disabled","notConfigured","noSyncedData")}==true
+    }.flatten()
     fun groups(windows: List<Limit>): List<List<Limit>> = windows.groupBy { window ->
         window.presentation.recordIndex?.let { "record:$it" } ?: "legacy:${window.provider}:${window.account.orEmpty()}"
     }.values.toList()

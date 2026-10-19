@@ -100,9 +100,8 @@ class RecordHistoryReadScreenTest {
             assertNoReadStatus()
             assertSelectedMessage(absent)
         }
-        compose.onNodeWithText("7 days").performScrollTo().performClick()
-        compose.onNodeWithText("2026-10-10 to 2026-10-16").performScrollTo().assertIsDisplayed()
-        compose.onNodeWithText("30 days").performScrollTo().performClick()
+        compose.onNodeWithText("7 days").assertDoesNotExist()
+        compose.onNodeWithTag("records-calendar-title").performScrollTo().assertExists()
         assertNoReadStatus()
         assertSelectedMessage(absent)
         compose.onNodeWithTag("history-record-2026-10-16").performScrollTo().performClick()
@@ -148,7 +147,7 @@ class RecordHistoryReadScreenTest {
         val nextHistory = history.copy(daily = listOf(HistoryRow("2026-10-16", 22, "0"), HistoryRow("2026-10-14", 1, "0")))
         compose.runOnIdle { state.value = state.value.copy(snapshot = nextSnapshot, history = nextHistory,
             loading = false, error = null, historyReadReceipt = nextCache) }
-        compose.onNodeWithText("7 days").performScrollTo().performClick()
+        compose.onNodeWithTag("records-calendar-title").performScrollTo().assertExists()
         assertNoReadStatus()
         assertSelectedMessage(absent)
         // The existing coordinator rejects the stale response; old-key presentation is ignored too.

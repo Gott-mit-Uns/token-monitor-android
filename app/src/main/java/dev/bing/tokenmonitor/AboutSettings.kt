@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AboutSettings(hubBuild:HubBuildInfo?=null) {
+fun AboutSettings() {
     val context = LocalContext.current
     val strings = LocalResources.current
     val version = remember(context) {
@@ -50,18 +50,6 @@ fun AboutSettings(hubBuild:HubBuildInfo?=null) {
         }
         Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
             Text(strings.getString(R.string.desktop_reference_version,DesktopParityMetadata.reference),Modifier.fillMaxWidth().testTag("about-desktop-reference"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(strings.getString(R.string.desktop_parity_partial),Modifier.fillMaxWidth().testTag("about-parity-status"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-        val runtime=when(hubBuild?.runtime) {"node-hub"->"Node Hub";"cloudflare-worker"->"Cloudflare Worker";else->"Hub"}
-        val buildLabel=if(hubBuild?.coreRevision!=null && hubBuild.runtimeRevision!=null)
-            strings.getString(R.string.hub_build_version,runtime,hubBuild.coreRevision,hubBuild.runtimeRevision)
-            else strings.getString(if(hubBuild==null) R.string.hub_version_pending else R.string.hub_version_unknown)
-        Column(verticalArrangement=Arrangement.spacedBy(3.dp)) {
-        Text(buildLabel,Modifier.fillMaxWidth().testTag("about-hub-version"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)
-        hubBuild?.let {info->Text(strings.getString(when(info.status) {
-            "current"->R.string.hub_build_current;"updateAvailable","legacy"->R.string.hub_build_older
-            "remoteNewer"->R.string.hub_build_newer;else->R.string.hub_build_unverified
-        }),Modifier.fillMaxWidth().testTag("about-hub-build-status"),style=quotaTextStyle(10),color=MaterialTheme.colorScheme.onSurfaceVariant)}
         }
         AndroidUpdateSettings(androidVersion,onLicenses = { opened = true })
     }
