@@ -1,5 +1,22 @@
 # 当前验收记录
 
+## 当前候选验收：桌面 v0.75.0 / Android 0.75.0-01 / code81
+
+检查日期2026-10-20（Asia/Shanghai）；基线 `327d87c8fba2b3898c28796798e36936f58bb86f`，桌面正式Tag v0.75.0解引用 `877fef6002a5fee84aa502fc3454b4f700b55813`；最新Android正式基线0.74.0-02/code80。用户明确授权实现、测试、PR、合并及发布，不包含实际设备安装或生产服务部署。
+
+| 本轮实跑范围 | 结果及边界 |
+|---|---|
+| 标准构建 | 既有Wrapper/Gradle9.8/JDK17/SDK37离线release及正式签名AndroidTest构建成功，未clean；首次JAVA_HOME少Contents/Home导致启动前失败，无APK产生，修正后正常。 |
+| JVM | 完整536项通过，无失败；包含固定v0.75源码输出31组活动/身份样例的HTTP、SSE full、freshness和重新解析对照，以及新full来源替换、Antigravity关系分组、DSH项目模型、精确core89识别。旧074样例继续锁定原commit，不冒称新基准输出。 |
+| Lint/资源 | 0错误、113警告、1提示；与已发布07402记录相同。671对英中资源、文档门禁及git diff检查通过；不以抑制规则取得通过。 |
+| 签名 | 正式包名dev.bing.tokenmonitor.nativeclient，0.75.0-01/code81，正式公有证书SHA256 e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202一致。 |
+| 模拟器 | 临时只读API36 ARM64 emulator-5686，正式code80已准备公开合成加密缓存/历史及四份偏好；覆盖、冷恢复和界面专项仍进行中，不称已通过。 |
+| 上游旁证 | 固定v0.75的Grok身份及sessionLive共13项通过；Antigravity/DSH上游脚本首次因参考目录缺少undici未执行，不能计入通过。Android消费测试已通过，不证明生产采集端部署。 |
+
+当前正式签名APK 15,324,082字节，SHA256 `71a8a5a52744a7d5fdcc65562e24e8597a2fe11f4a2e615050c4eeb649ce0b98`；首轮测试APK SHA256 `cdcdc2761f7b2a4a431f6f6c0d21608fd146aa55d3ae3dcae675e6ff3f39d5d8`，新增界面专项后另建测试包，不能混用指纹。原始日志在本机 `/tmp/token075-first-build.log`、`/tmp/token075-second-build.log`、`/tmp/token075-ui-build.log`、`/tmp/token075-upstream-tests.log`；不宣称这些临时文件随Git交付。
+
+此前07402四项界面行为只核对保留，未重复改布局；认证、SSE生命周期、缓存/偏好格式及费用未改。未操作真机或NAS/桌面运行服务；不把公开样例或模拟器当生产数据/实体手机。真实生产字段、OEM生命周期及用户私有资料未验证，非本次真机门槛。候选未发布，PR审查、合并和公开附件回读尚未完成。
+
 ## 当前正式发行验收：Android 0.74.0-02 / code80
 
 检查日期2026-10-19（Asia/Shanghai）；基线 `45a6156b581d5c9ae484bd34bab48824ddc0915b`，开发前GitHub latest正式Android已核实v0.74.0-01/code79。本轮仅额度占位过滤、关于去重、直接日历与两个等宽描边入口；功能和边界见HANDOFF。最终生产/测试输入提交 `f4f732f5034aafc1aba6ac7cefc8814f605b169e`；现已合并并正式发布v0.74.0-02/code80，发布复核见本节末尾，没有操作NAS。

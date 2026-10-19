@@ -12,9 +12,7 @@ internal object SessionRelationshipGroups {
             ?: meta?.nativeSessionId?.takeIf {row.source?.tool=="codex"}?.let {"codex:$it"} ?: "session:${row.id}"
     }
     private fun bot(row:SessionListRow):Boolean {
-        val source=row.source ?: return false
-        return source.tool=="cursor" && (source.session?.sessionId.orEmpty().startsWith("sand-subagent-") ||
-            source.session?.models.orEmpty().any {(name,tokens)->name.startsWith("grok-bot-") && tokens>0})
+        return row.source?.let(SessionDisplay::isGrokBot)==true
     }
     fun group(input:List<SessionListRow>,grokLabel:String,count:(Int)->String,now:Long):List<SessionListRow> {
         val rows=input.distinctBy {it.id}

@@ -131,7 +131,17 @@ object HubParser {
     private fun parseRoot(root: JsonObject, trustedObservedModelIds: List<String>?, modelIndex: HubModelIndex): Snapshot =
         HubWorkTrace.trace(HubWorkStage.SNAPSHOT_PARSE, units = (root["periods"] as? JsonObject)?.size?.toLong() ?: 0L) {
             require(root["periods"] is JsonObject) { "Missing periods" }
-            val periods = root["periods"]!!.jsonObject.mapValues { (name, value) -> period(value.jsonObject).copy(sessionsOmitted=if(name !in listOf("today","month")) 0 else ((root["sessionDetailsOmitted"] as? JsonObject)?.get(name) as? JsonPrimitive)?.longOrNull?.coerceAtLeast(0) ?: 0,projectsIncomplete=if(name=="allTime") (root["projectsIncomplete"] as? JsonPrimitive)?.booleanOrNull==true else ((root["periodProjectsOmitted"] as? JsonObject)?.get(name) as? JsonPrimitive)?.doubleOrNull?.let {it.isFinite() && it>0}==true) }
+            val parsedPeriods = root["periods"]!!.jsonObject.mapValues { (name, value) -> period(value.jsonObject).copy(sessionsOmitted=if(name !in listOf("today","month")) 0 else ((root["sessionDetailsOmitted"] as? JsonObject)?.get(name) as? JsonPrimitive)?.longOrNull?.coerceAtLeast(0) ?: 0,projectsIncomplete=if(name=="allTime") (root["projectsIncomplete"] as? JsonPrimitive)?.booleanOrNull==true else ((root["periodProjectsOmitted"] as? JsonObject)?.get(name) as? JsonPrimitive)?.doubleOrNull?.let {it.isFinite() && it>0}==true) }
+            // Identity only comes from this full snapshot, never from an earlier Hub/source.
+            // Keep raw cached JSON and all token/cost/model values unchanged.
+            val botIds=parsedPeriods.values.asSequence().flatMap {it.sessions.asSequence()}
+                .filter(SessionDisplay::isGrokBot).map {it.session?.sessionId?.trim()?.takeIf {id->id.isNotEmpty()} ?: it.id.removePrefix("cursor:")}.toHashSet()
+            val periods=if(botIds.isEmpty()) parsedPeriods else parsedPeriods.mapValues {(_,period)->
+                period.copy(sessions=period.sessions.map {row->
+                    val id=row.session?.sessionId?.trim()?.takeIf {it.isNotEmpty()} ?: row.id.removePrefix("cursor:")
+                    if(row.tool=="cursor" && id in botIds && row.session!=null) row.copy(session=row.session.copy(grokBotSession=true)) else row
+                })
+            }
             val devices = (root["devices"] as? JsonArray).orEmpty().map { element ->
                 val d = element.jsonObject
                 val windows = d["periodWindows"] as? JsonObject

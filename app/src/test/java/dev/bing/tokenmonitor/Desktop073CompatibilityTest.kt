@@ -28,7 +28,7 @@ class Desktop073CompatibilityTest {
         }
     }
     @Test fun wholeHubRegistryMatchesFixedDesktopIncludingKnownFingerprintChecks() {
-        val registry=Json.parseToJsonElement(javaClass.getResource("/desktop-074-hub-build-registry.json")!!.readText()).jsonObject
+        val registry=Json.parseToJsonElement(javaClass.getResource("/desktop-075-hub-build-registry.json")!!.readText()).jsonObject
         val expected=registry.getValue("components").jsonObject.mapValues {(_,rows)->rows.jsonArray.associate {
             it.jsonObject.getValue("revision").jsonPrimitive.long to it.jsonObject.getValue("buildId").jsonPrimitive.content
         }}

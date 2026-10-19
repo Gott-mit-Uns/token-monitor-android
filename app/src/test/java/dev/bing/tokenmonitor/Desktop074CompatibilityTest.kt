@@ -9,7 +9,7 @@ import java.math.BigInteger
 class Desktop074CompatibilityTest {
     private val reference=Json.parseToJsonElement(javaClass.getResource("/desktop-074-project-models.json")!!.readText()).jsonObject
     @Test fun fixedDesktopModelSharesSurviveWireProjectionAndFreshness() {
-        assertEquals(DesktopParityMetadata.sourceCommit,reference.getValue("sourceCommit").jsonPrimitive.content)
+        assertEquals("cbed5915e294abb4a210f7ebb385e9415f706821",reference.getValue("sourceCommit").jsonPrimitive.content)
         for(raw in reference.getValue("cases").jsonArray) {
             val c=raw.jsonObject;val wire=c.getValue("wire").toString()
             val full=HubParser.parse(HubJsonProjection.stats(wire.byteInputStream()))
@@ -56,7 +56,7 @@ class Desktop074CompatibilityTest {
     @Test fun newRegistryIncludesAllThreeExactCoreFingerprints() {
         for(rev in 86L..88L) {
             val info=HubBuildInfo("node-hub",1,rev,HubBuildRegistry.entries.getValue("core").getValue(rev),5,HubBuildRegistry.entries.getValue("node-hub").getValue(5))
-            assertEquals(if(rev==88L) "current" else "updateAvailable",info.status)
+            assertEquals("updateAvailable",info.status)
             assertEquals("unknown",info.copy(coreBuildId="sha256:"+"0".repeat(64)).status)
         }
     }
@@ -68,7 +68,7 @@ class Desktop074CompatibilityTest {
     }
     @Test fun correctedProducerGrokOutputIsConsumedOnceAndProjectModelsReachHub() {
         val f=Json.parseToJsonElement(javaClass.getResource("/desktop-074-producer.json")!!.readText()).jsonObject
-        assertEquals(DesktopParityMetadata.sourceCommit,f.getValue("sourceCommit").jsonPrimitive.content)
+        assertEquals("cbed5915e294abb4a210f7ebb385e9415f706821",f.getValue("sourceCommit").jsonPrimitive.content)
         val grok=HubParser.parse(buildJsonObject {put("periods",buildJsonObject {put("today",f.getValue("grok"))})}.toString()).periods.getValue("today")
         assertEquals(117L,grok.tokens);assertEquals(7L,grok.components.output)
         assertEquals(117L,grok.sessions.single().tokens)

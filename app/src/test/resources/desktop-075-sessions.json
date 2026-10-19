@@ -1,0 +1,811 @@
+{
+  "sourceCommit": "877fef6002a5fee84aa502fc3454b4f700b55813",
+  "now": 1792458000000,
+  "cases": [
+    {
+      "id": "model-missing",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:model": {
+                "client": "cursor",
+                "sessionId": "model",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    },
+    {
+      "id": "model-open",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:model": {
+                "client": "cursor",
+                "sessionId": "model",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": false
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": true
+    },
+    {
+      "id": "model-ended",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:model": {
+                "client": "cursor",
+                "sessionId": "model",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "ended",
+      "bot": true
+    },
+    {
+      "id": "model-expired",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:model": {
+                "client": "cursor",
+                "sessionId": "model",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:49:59.999Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    },
+    {
+      "id": "model-archived",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:model": {
+                "client": "cursor",
+                "sessionId": "model",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "archived": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    },
+    {
+      "id": "sandbox-missing",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-run": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-run",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    },
+    {
+      "id": "sandbox-open",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-run": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-run",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": false
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": true
+    },
+    {
+      "id": "sandbox-ended",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-run": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-run",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "ended",
+      "bot": true
+    },
+    {
+      "id": "sandbox-expired",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-run": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-run",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:49:59.999Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    },
+    {
+      "id": "sandbox-archived",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-run": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-run",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "archived": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    },
+    {
+      "id": "ordinary-missing",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:ordinary": {
+                "client": "cursor",
+                "sessionId": "ordinary",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "ordinary-open",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:ordinary": {
+                "client": "cursor",
+                "sessionId": "ordinary",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": false
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "ordinary-ended",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:ordinary": {
+                "client": "cursor",
+                "sessionId": "ordinary",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "ended",
+      "bot": false
+    },
+    {
+      "id": "ordinary-expired",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:ordinary": {
+                "client": "cursor",
+                "sessionId": "ordinary",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:49:59.999Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "ordinary-archived",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:ordinary": {
+                "client": "cursor",
+                "sessionId": "ordinary",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "archived": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "zero-missing",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:zero": {
+                "client": "cursor",
+                "sessionId": "zero",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 0
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "zero-open",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:zero": {
+                "client": "cursor",
+                "sessionId": "zero",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 0
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": false
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "zero-ended",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:zero": {
+                "client": "cursor",
+                "sessionId": "zero",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 0
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "ended",
+      "bot": false
+    },
+    {
+      "id": "zero-expired",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:zero": {
+                "client": "cursor",
+                "sessionId": "zero",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 0
+                },
+                "lastUsedAt": "2026-10-20T00:49:59.999Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "zero-archived",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:zero": {
+                "client": "cursor",
+                "sessionId": "zero",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 0
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "archived": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "prefixOnly-missing",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "prefixOnly-open",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": false
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "prefixOnly-ended",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "ended",
+      "bot": false
+    },
+    {
+      "id": "prefixOnly-expired",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-": 10
+                },
+                "lastUsedAt": "2026-10-20T00:49:59.999Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "prefixOnly-archived",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "cursor:sand-subagent-": {
+                "client": "cursor",
+                "sessionId": "sand-subagent-",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "archived": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "otherClient-missing",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "codex:otherClient": {
+                "client": "codex",
+                "sessionId": "otherClient",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "otherClient-open",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "codex:otherClient": {
+                "client": "codex",
+                "sessionId": "otherClient",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": false
+              }
+            }
+          }
+        }
+      },
+      "activity": "running",
+      "bot": false
+    },
+    {
+      "id": "otherClient-ended",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "codex:otherClient": {
+                "client": "codex",
+                "sessionId": "otherClient",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "turnEnded": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "ended",
+      "bot": false
+    },
+    {
+      "id": "otherClient-expired",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "codex:otherClient": {
+                "client": "codex",
+                "sessionId": "otherClient",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:49:59.999Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "otherClient-archived",
+      "wire": {
+        "periods": {
+          "today": {
+            "totalTokens": 10,
+            "costUsd": 0.1,
+            "sessions": {
+              "codex:otherClient": {
+                "client": "codex",
+                "sessionId": "otherClient",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z",
+                "archived": true
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": false
+    },
+    {
+      "id": "cross-period",
+      "wire": {
+        "periods": {
+          "today": {
+            "sessions": {
+              "cursor:cross-period": {
+                "client": "cursor",
+                "sessionId": "cross-period",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "claude": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          },
+          "month": {
+            "sessions": {
+              "cursor:cross-period": {
+                "client": "cursor",
+                "sessionId": "cross-period",
+                "totalTokens": 10,
+                "costUsd": 0.1,
+                "models": {
+                  "grok-bot-default": 10
+                },
+                "lastUsedAt": "2026-10-20T00:59:59.000Z"
+              }
+            }
+          }
+        }
+      },
+      "activity": "idle",
+      "bot": true
+    }
+  ]
+}
