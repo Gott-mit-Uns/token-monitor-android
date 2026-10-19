@@ -20,7 +20,7 @@ data class SessionMetadata(val title:String?=null,val projectLabel:String?=null,
     val contextTokens:Double?=null,val contextWindow:Double?=null,val promptCache:SessionPromptCache?=null,
     val accounting:SessionAccounting=SessionAccounting(),val excludedFromHubList:Boolean=false,
     val waitingForInput:Boolean?=null,val liveActivity:SessionLiveActivity?=null,val nativeSessionId:String?=null,
-    val parentSessionId:String?=null,val parentClient:String?=null,val t3ThreadId:String?=null)
+    val parentSessionId:String?=null,val parentClient:String?=null,val t3ThreadId:String?=null,val grokBotSession:Boolean=false)
 
 internal object SessionMetadataParser {
     fun parse(row:JsonObject,title:String?):SessionMetadata {
@@ -102,6 +102,10 @@ internal object SessionDisplay {
         }
         (active+top).distinctBy {it.row.id}.sortedWith(recentOrder).map {it.row}
     }
+    /** Fixed desktop v0.75 bot identity before display aliases; accounting is never rewritten. */
+    fun isGrokBot(row:UsageRow):Boolean = row.tool=="cursor" && (row.session?.grokBotSession==true ||
+        (row.session?.sessionId?.trim()?.takeIf {it.isNotEmpty()} ?: row.id.removePrefix("cursor:")).let {it.startsWith("sand-subagent-") && it.length>14} ||
+        row.session?.models.orEmpty().any {(model,tokens)->model.startsWith("grok-bot-") && model.length>9 && tokens>0})
     fun activity(row:UsageRow,now:Long):String=activityAt(row,now,null)
     private fun activityAt(row:UsageRow,now:Long,lastUsed:Long?,timestampKnown:Boolean=false):String {
         if(row.session?.archived==true) return "idle"
@@ -109,6 +113,7 @@ internal object SessionDisplay {
         val last=(if(timestampKnown) lastUsed else timestamp(row.lastUsed))?.takeIf {it!=0L} ?: return "idle"
         val recent=now.toDouble()-last.toDouble()<=runningWindow
         return if(!recent) "idle" else if(row.turnEnded==true) "ended"
+            else if(isGrokBot(row) && row.turnEnded!=false) "idle"
             else if(row.tool=="codex" && row.session?.waitingForInput==true) "waiting" else "running"
     }
     fun waitingForReply(row:UsageRow,now:Long)=activity(row,now)=="waiting" && row.tool=="codex" && row.session?.waitingForInput==true

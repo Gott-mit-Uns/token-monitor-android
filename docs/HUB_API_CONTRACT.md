@@ -33,3 +33,5 @@ session nativeSessionId、t3ThreadId、parentSessionId/parentClient均按验证�
 historyRevision、deviceHistoryRevision、subscriptionsUpdatedAt、syncSettingsRevisions分别驱动失效；缺字段不代表空。绑定/修订变化拒绝在途旧响应。devices历史按设备ID集合和修订绑定，集合不一致最多3次重读。源日期、时区和未知/零保持；重复日/月键按现有歧义规则处理。完整历史读取预算和保存边界只有 [HISTORY_READ_RECEIPTS](HISTORY_READ_RECEIPTS.md) 一份权威说明，日/月展示见 [COMPACT_RECORD_CALENDAR](COMPACT_RECORD_CALENDAR.md)。
 
 别名只改显示，不改原模型ID或总费用。价格version=1，null与空数组分开；非数值/负值/重复模型/无input及output的响应拒绝并保留旧值，不用价格本地重算。修订变化/后台/切Hub遵守已有缓存和取消规则。订阅保留原币种与金额单位，服务撤回联调仍未穷尽。
+
+Android对齐桌面v0.75.0的Grok Bot活动显示：继续消费原始`client`、`sessionId`、`models`及`turnEnded`；同一完整快照各周期的原始身份可用于显示识别。最近云用量且未提供明确turn边界时显示idle，不修改Token、费用或最后活动时间。该身份仅为当前快照的派生显示元数据，不写入原始缓存、不发回Hub、不跨完整快照或Hub来源保留；freshness不能更换完整用量/身份依据。缺少历史模型证据的普通ID不能猜为Bot，不发起额外历史读取。桌面Electron专有的身份投影字段不是新增远程Hub合同。
