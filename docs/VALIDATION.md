@@ -1,5 +1,26 @@
 # 当前验收记录
 
+## 当前开发候选验收：Android 0.74.0-02 / code80（未合并或发布）
+
+检查日期2026-10-19（Asia/Shanghai）；基线 `45a6156b581d5c9ae484bd34bab48824ddc0915b`，GitHub latest正式Android已核实v0.74.0-01/code79。本轮仅额度占位过滤、关于去重、直接日历与两个等宽描边入口；功能和边界见HANDOFF。最终生产/测试输入提交 `4279c0aeb675d3db2937a0c2584f3e4930aff528`；没有创建发行Tag或Release，没有操作NAS。
+
+| 本轮实跑 | 结果与证据边界 |
+|---|---|
+| 标准构建 | 既有Wrapper/JDK17/SDK37离线release及正式签名AndroidTest构建成功；最终包为0.74.0-02/code80，不通过独立编译替代构建。 |
+| JVM | 首轮完整531项、100类，0失败/错误/跳过，发生于编号递增及最后两处文字宽度修正前；领域纯逻辑此后未变。编号递增后另跑LimitDisplay/History/RecordCalendarProjection/HistoryReadPresentation四类26项全过，验证未使用占位过滤、配置异常、零额度/缓存、历史范围/空缺与读取状态。本轮没有反复重跑未受影响全套。 |
+| 界面回归 | 修正About版本宽度前的同一产品包f51e36af…上24项最终通过：升级读取1、NavigationPolish2、RecordCalendar7、RecordHistoryRead2、TrendsNavigation3、HistoryRange1、HistoryUi1、AndroidUpdate4、LimitDisplay2、English1。保留时间边界、数据源缺失、状态恢复、费用/零值、返回/重入、许可证及手动更新断言；不借删除测试取得通过。 |
+| 最终窗口矩阵 | 最终7e5785f3…包上320/393/411dp（880/1080/1130px，density440）×真实系统fontScale1/2×双主题，共12组24项全部通过；浅色英文、深色中文，另既有英文深色回归。每组检查记录/分析两入口的等宽/齐边/同高/48dp及完整文字，确认无范围快捷项、无内嵌分析开关，独立页面返回且不发额外读取；关于应用版本/桌面参考完整、重复Hub信息不存在。每组原始截图已拉回，实际查看320dp/fontScale2双主题入口、日历与关于原图。结束恢复1080×2400/density420/fontScale1。 |
+| 最终包复核 | About宽度修正后追加6项通过：正式升级读取1、占位过滤界面1、纯手动更新4。正式0.74.0-01/code79先在独立只读API36 ARM64 emulator-5684用匹配旧测试包写公开合成加密缓存/历史及四份偏好，install -r到code80，未卸载/清数据；最终包仍保留UID及五份文件SHA，并成功解密。安装APK回读与最终候选完全相同。旧包数据准备1项单列，不算新增版测试。 |
+| 静态与范围 | 最终Lint 0错误、113警告、1提示；较0.74.0-01多11条，来自已移除界面的未使用文案资源，不宣称全为既有警告，不删除资源或抑制规则掩盖。671对英中资源、文档门禁/self-test、git diff检查通过。无依赖/认证/SSE/数据格式改动；README不变。 |
+
+最终应用APK 15,324,082字节，SHA256 `7e5785f3976137e4d4cb4e763c079044bde42c7c46b06ac464ee1822fc05a28f`；包名仍dev.bing.tokenmonitor.nativeclient，min26/target37，正式证书SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。最终测试APK SHA256 `388cbf7e642c065ebe34ceda79e38ea5090d782ba9ae68d6c05928732ee3a1ca`。生产/测试及五项Gradle输入的既定路径/原始字节/NUL清单SHA256 `5d1315323446d23158020ae251e51076fef7f03e0b0f95e6674750bde1b9d7ef`。
+
+首次失败与修正保留：模拟器尚未boot completed时尝试安装被平台拒绝；确认启动完成后才安装正式旧包并准备数据，没有清数据。按钮文字最初按内容宽度取整触发溢出断言（应用e4601ee5…、测试d7b27435…），改为填满按钮可用宽度并居中，保留原字号/完整文字断言；诊断截图与日志在`/tmp/token07402-action-diagnostic.log`、`/tmp/token07402-actions-first-failure.log`。日历首次7项4过3失败（应用f51e36af…、测试c5a7dfbc…），旧测试仍点击已明确取消的All records并要求范围总量；改为验证这些元素不存在，保留月份/年份恢复、权威日期与具体数值断言，最终7项全过（`/tmp/token07402-calendar-first-failure.log`）。额度既有偏好重建测试首次没有打开实际设置页（应用f51e36af…、测试b98ee46f…），补真实设置导航，原偏好持久化断言保持，最终2项通过（`/tmp/token07402-limit-settings-first-failure.log`）。320dp首个矩阵About版本文字的内容宽度测量触发溢出（应用f51e36af…、测试388cbf7e…），改用剩余/整行宽度后12组通过，未放宽断言（`/tmp/token07402-about-first-failure.log`）。
+
+原始本轮日志：`/tmp/token07402-first-build.log`、`/tmp/token07402-final-tests-build.log`、`/tmp/token07402-about-fix-build.log`、`/tmp/token07402-ui-runner-final2.log`、各类`/tmp/token07402-<类名>-final.log`、`/tmp/token07402-matrix-summary.json`及每组matrix日志、`/tmp/token07402-final-upgrade.log`、`/tmp/token07402-final-quota.log`、`/tmp/token07402-final-manual-updates.log`、`/tmp/token07402-upgrade-receipts-final.log`。临时日志与全部矩阵截图不宣称随Git提供。选定公开原图：[浅色大字入口](../design/navigation-actions-large-light.png)、[深色大字入口](../design/navigation-actions-large-dark.png)、[直接日历](../design/records-calendar-large-dark.png)、[浅色关于](../design/about-compact-large-light.png)、[深色关于](../design/about-compact-large-dark.png)、[仅使用的额度](../design/quotas-used-only.png)。
+
+未验证：真机/私有数据、生产Hub与真实账户。额度占位判定基于Hub状态和已有额度/余额，不声称生产响应已联调；不把配置/余额为零的账户误当未使用。当前未合并或发布；最终授权范围待用户确认。与本次无关的既有未使用资源和其他待办不扩入修复。
+
 ## 当前正式发行验收：桌面 v0.74.0 / Android 0.74.0-01
 
 检查日期2026-10-19（Asia/Shanghai）。开发前最新正式发行Android为v0.73.0-01/code78，桌面为v0.74.0，annotated Tag解引用到 `cbed5915e294abb4a210f7ebb385e9415f706821`。产品与测试输入提交 `73ba7b57f6b42e010a4dac594e9d630460b8b637`。用户随后明确授权“合并，发布”：PR #17已合并至 `69a77f8b78cf3eae9bd98ba5434854f6afba70d1`，Tag v0.74.0-01指向同提交，正式0.74.0-01/code79已发布为latest。发布沿用以下同一已验收APK，未重建；下表为此前候选实跑，本次发布仅复核原材料，未操作NAS。
