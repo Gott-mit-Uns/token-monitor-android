@@ -130,8 +130,9 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                 stats.forEachIndexed {index,stat->
                     val clickable=stat.key=="cost" && note!=null
                     val multiline=stat.key=="favorite"
-                    // Long unbroken model names may wrap; a soft hyphen keeps the break at "-".
-                    val displayedValue=if(multiline) stat.value.replace("-", "-\u00AD") else stat.value
+                    // A long model name may wrap; prefer a visible break after its first hyphen.
+                    val displayedValue=if(multiline && !singleColumn && effectiveTextScale()>1.15f)
+                        stat.value.replaceFirst("-", "-\n") else stat.value
                     Column(Modifier.semantics(mergeDescendants=true) {
                         if(clickable) contentDescription=stat.value+", "+note
                     }.testTag("dashboard-card-${stat.key}")
