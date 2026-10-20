@@ -166,8 +166,17 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
     }.getOrDefault("tool")
     private val homeCountsFile=AtomicFile(File(context.noBackupFilesDir,name+".home-counts"))
     private fun homeCounts():Map<String,Int> = runCatching {
-        require(homeCountsFile.baseFile.length()==5L)
-        val data=homeCountsFile.readFully();require(data[0]==1.toByte())
+        // openRead restores a legacy backup before inspecting the base record.
+        val data=homeCountsFile.openRead().use {input->
+            val buffer=ByteArray(6);var size=0
+            while(size<buffer.size) {
+                val read=input.read(buffer,size,buffer.size-size)
+                if(read<0) break
+                size+=read
+            }
+            buffer.copyOf(size)
+        }
+        require(data.size==5 && data[0]==1.toByte())
         HomeModuleCounts.defaults.keys.mapIndexed {index,id->id to data[index+1].toInt().also {require(it in 1..50)}}.toMap()
     }.getOrDefault(emptyMap())
     private fun withNumberAnimation(value:DisplayPreferences)=value.copy(homeModuleCounts=homeCounts(),appearance=value.appearance.copy(tokenNumberAnimation=numberAnimation()),projectBreakdownMode=projectBreakdownMode())
