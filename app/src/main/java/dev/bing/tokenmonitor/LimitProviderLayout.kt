@@ -240,10 +240,11 @@ internal object LimitProviderLayout {
                 }
             }
             "antigravity" -> {
-                val rateWindows=windows.filter {it.s("kind") in setOf("session","weekly")}
-                fun group(w:JsonObject):String? {val suffix=if(w.s("kind")=="session") "\\s+5-hour$" else "\\s+weekly$";val name=w.s("label")?.trim() ?: return null;val pattern=Regex(suffix,RegexOption.IGNORE_CASE);return if(pattern.containsMatchIn(name)) name.replace(pattern,"").trim().takeIf {it.isNotEmpty()} else null}
-                if(rateWindows.isNotEmpty() && rateWindows.all {group(it)!=null}) rateWindows.groupBy {group(it)}.forEach {(name,rows)->rows.forEach {w->row(edited(w,"label" to JsonPrimitive(if(w.s("kind")=="session") "5-hour" else "Weekly")),tone=if(w.s("kind")=="session") 0.95 else 0.78,wide=rows.size==1,group=name,itemId=item(w))}}
-                else windows.forEach {row(it,tone=0.78,wide=true)}
+                val visible=windows.filter(AntigravityQuota::visible)
+                val rateWindows=visible.filter {it.s("kind") in setOf("session","weekly")}
+                fun group(w:JsonObject)=AntigravityQuota.group(w.s("kind"),w.s("label"))
+                if(rateWindows.isNotEmpty() && rateWindows.all {group(it)!=null}) rateWindows.groupBy {group(it)}.entries.sortedBy {AntigravityQuota.rank(it.key)}.forEach {(name,rows)->rows.forEach {w->row(edited(w,"label" to JsonPrimitive(if(w.s("kind")=="session") "5-hour" else "Weekly")),tone=if(w.s("kind")=="session") 0.95 else 0.78,wide=rows.size==1,group=name,itemId=item(w))}}
+                else visible.forEach {row(it,tone=0.78,wide=true)}
             }
             "opencode" -> {
                 row(first("session"),tone=0.95);row(first("weekly"));val credit=credits()

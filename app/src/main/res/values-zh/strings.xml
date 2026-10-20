@@ -685,4 +685,7 @@
     <string name="token_animation_roll">逐位滚动</string>
     <string name="token_animation_count">数值递增</string>
     <string name="project_unknown_model">未知模型</string>
+    <string name="home_configure_module">配置%1$s</string>
+    <string name="home_item_count">显示条数</string>
+    <string name="home_session_count_note">运行中和等待中的会话会在此数量之外继续显示。</string>
 </resources>

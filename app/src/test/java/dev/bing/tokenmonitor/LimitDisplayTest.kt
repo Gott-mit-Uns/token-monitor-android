@@ -106,7 +106,8 @@ class LimitDisplayTest {
     @Test fun homeCompactWindowSelectionKeepsCanonicalCodexAndTightestAntigravityGroupsAndZedUnlimited() {
         fixture().getValue("compactInputs").jsonArray.forEach {raw ->
             val item=raw.jsonObject;val windows=parsed(buildJsonArray {add(item.getValue("input"))})
-            val actual=LimitDisplay.compactWindows(windows);val expected=item.getValue("output").jsonArray
+            val actual=LimitDisplay.compactWindows(windows);val current=Json.parseToJsonElement(javaClass.getResource("/desktop-076.json")!!.readText()).jsonObject.getValue("compactLegacy").jsonArray.firstOrNull {it.jsonObject["input"]==item["input"]}
+            val expected=(current?.jsonObject ?: item).getValue("output").jsonArray
             assertEquals(expected.size,actual.size)
             expected.forEachIndexed {index,row -> val values=row.jsonObject
                 assertEquals(values.getValue("label").jsonPrimitive.content,actual[index].label)

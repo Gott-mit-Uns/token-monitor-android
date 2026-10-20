@@ -7,7 +7,7 @@ import org.junit.Test
 class Desktop075CompatibilityTest {
     private val fixture=Json.parseToJsonElement(javaClass.getResource("/desktop-075-sessions.json")!!.readText()).jsonObject
     @Test fun fixedDesktopBotActivityAndIdentitySurviveHttpSseFullAndFreshness() {
-        assertEquals(DesktopParityMetadata.sourceCommit,fixture.getValue("sourceCommit").jsonPrimitive.content)
+        assertEquals("877fef6002a5fee84aa502fc3454b4f700b55813",fixture.getValue("sourceCommit").jsonPrimitive.content)
         val now=fixture.getValue("now").jsonPrimitive.long
         for(case in fixture.getValue("cases").jsonArray.map {it.jsonObject}) {
             val wire=case.getValue("wire").toString()

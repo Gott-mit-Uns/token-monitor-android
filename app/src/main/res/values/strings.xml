@@ -689,4 +689,7 @@
     <string name="token_animation_roll">Digit roll</string>
     <string name="token_animation_count">Count up</string>
     <string name="project_unknown_model">Unknown model</string>
+    <string name="home_configure_module">Configure %1$s</string>
+    <string name="home_item_count">Visible items</string>
+    <string name="home_session_count_note">Running and waiting sessions remain visible beyond this count.</string>
 </resources>

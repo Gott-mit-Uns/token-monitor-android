@@ -133,7 +133,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val deviceClockVisible=page==HubPage.DEVICES || (page==HubPage.SETTINGS && settingsSection=="sync")
     val sessionsVisible=page==HubPage.SESSIONS || (page==HubPage.HOME && "sessions" in preferences.homeModules)
     val sessionSource=remember(state.snapshot) {SessionDisplay.source(state.snapshot)}
-    val homeSessions=remember(state.snapshot,calendarNow) {SessionDisplay.recent(state.snapshot,calendarNow.toEpochMilli())}
+    val homeSessions=remember(state.snapshot,calendarNow,preferences.homeModuleCounts) {SessionDisplay.recent(state.snapshot,calendarNow.toEpochMilli(),HomeModuleCounts.count(preferences,"sessions"))}
     LaunchedEffect(calendarClock, range, lifecycle, deviceClockVisible,state.snapshot?.updated,homeCalendarVisible, trendsCalendarVisible,dashboardCalendarVisible, sharedCalendarVisible, limitsVisible, sessionsVisible, sessionSource, state.snapshot?.devices?.map { it.periods["today"]?.ends }) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             calendarNow = calendarClock.instant()
@@ -550,7 +550,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                         "tools" -> {
                                             val attributed=period?.let {UsageAttribution.rows(it.tools,it.toolDetails,it.tokens,it.cost,it.unpriced,currency)}.orEmpty()
                                             val labels=attributed.keys.associateWith {if(it==UsageAttribution.UNATTRIBUTED) strings.getString(R.string.token_unclassified) else toolLabel(it)}
-                                            val rows=HomeUsageDisplay.rows(attributed.map {(id,value)->id to value.tokens?.let(BigInteger::valueOf)},period?.tokens,labels,true,strings.configuration.locales[0])
+                                            val rows=HomeUsageDisplay.rows(attributed.map {(id,value)->id to value.tokens?.let(BigInteger::valueOf)},period?.tokens,labels,true,strings.configuration.locales[0],HomeModuleCounts.count(preferences,"tools"))
                                             item {DesktopHomeModule(strings.getString(R.string.desktop_tools),R.drawable.desktop_view_tool,open={openDirect(HubPage.TOOLS)}) {
                                                 if(rows.isEmpty()) DesktopHomeEmpty(strings.getString(R.string.home_tools_empty))
                                                 rows.forEach {row->HomeUsageRow(row,false)}
@@ -563,7 +563,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                             val remainder=BigInteger.valueOf(period?.tokens ?: 0)-projected.values.fold(BigInteger.ZERO) {a,b->a+b}
                                             val values=(projected+if(remainder.signum()>0) mapOf(UsageAttribution.UNATTRIBUTED to remainder) else emptyMap()).toList().sortedByDescending {it.second}
                                             val labels=values.associate {it.first to if(it.first==UsageAttribution.UNATTRIBUTED) strings.getString(R.string.token_unclassified) else it.first}
-                                            val rows=HomeUsageDisplay.rows(values,period?.tokens,labels,false,strings.configuration.locales[0])
+                                            val rows=HomeUsageDisplay.rows(values,period?.tokens,labels,false,strings.configuration.locales[0],HomeModuleCounts.count(preferences,"models"))
                                             item {DesktopHomeModule(strings.getString(R.string.desktop_models),R.drawable.desktop_view_model,open={openDirect(HubPage.MODELS)}) {
                                                 if(rows.isEmpty()) DesktopHomeEmpty(strings.getString(R.string.home_models_empty))
                                                 rows.forEach {row->HomeUsageRow(row,true,period?.unknownModelSource)}
@@ -580,7 +580,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                             }
                                         }
                                         "devices" -> {
-                                            val homeDevices=DeviceDisplay.home(displayDevices,range,state.deviceAliases)
+                                            val homeDevices=DeviceDisplay.home(displayDevices,range,state.deviceAliases,cap=HomeModuleCounts.count(preferences,"devices"))
                                             item {DesktopHomeModule(strings.getString(R.string.desktop_devices),R.drawable.desktop_view_device,open={openDirect(HubPage.DEVICES)}) {
                                                 if(homeDevices.isEmpty()) DesktopHomeEmpty(strings.getString(R.string.home_devices_empty))
                                                 else Column(Modifier.testTag("home-device-list"),verticalArrangement=Arrangement.spacedBy(6.dp)) {homeDevices.forEach {HomeDeviceLine(it)}}

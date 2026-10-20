@@ -21,16 +21,16 @@ import kotlin.math.floor
 
 internal data class HomeUsage(val id:String,val name:String,val tokens:BigInteger,val share:Double)
 internal object HomeUsageDisplay {
-    fun rows(values:List<Pair<String,BigInteger?>>,total:Long?,labels:Map<String,String>,tool:Boolean,locale:Locale):List<HomeUsage> {
+    fun rows(values:List<Pair<String,BigInteger?>>,total:Long?,labels:Map<String,String>,tool:Boolean,locale:Locale,cap:Int=5):List<HomeUsage> {
         val rows=values.filter {(it.second ?: BigInteger.ZERO).signum()>0}
         val sorted=if(tool) rows.sortedWith {a,b->val n=b.second!!.compareTo(a.second!!);if(n!=0) n else Collator.getInstance(locale).compare(labels[a.first] ?: a.first,labels[b.first] ?: b.first)} else rows
-        val visible=sorted.take(5)
+        val visible=sorted.take(cap.coerceIn(1,50))
         val denominator=total?.takeIf {it>0}?.let(BigInteger::valueOf) ?: visible.fold(BigInteger.ZERO) {a,b->a+b.second!!}
         return visible.map {(id,value)->HomeUsage(id,labels[id] ?: id,value!!,if(denominator.signum()>0) value.toDouble()/denominator.toDouble() else 0.0)}
     }
 }
 
-/** Home has five compact rows; the detailed bars and account controls belong to the full views. */
+/** Home has configurable compact rows; the detailed bars and account controls belong to the full views. */
 @Composable internal fun HomeUsageRow(row:HomeUsage,model:Boolean,unknownSource:String?=null) {
     val strings=LocalResources.current;val main=LocalMainDisplay.current;val colors=MaterialTheme.colorScheme
     val tag="home-${if(model) "model" else "tool"}-${row.id}"

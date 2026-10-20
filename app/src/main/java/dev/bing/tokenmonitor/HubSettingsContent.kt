@@ -118,6 +118,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
     val strings=LocalResources.current
     var activityExpanded by rememberSaveable {mutableStateOf(false)}
     var limitsExpanded by rememberSaveable {mutableStateOf(false)}
+    var countExpanded by rememberSaveable {mutableStateOf("")}
     val labels=mapOf("limits" to R.string.home_module_limits,"tools" to R.string.home_module_tools,"models" to R.string.home_module_models,"devices" to R.string.home_module_devices,"activity" to R.string.home_module_activity,"trends" to R.string.desktop_trends,"sessions" to R.string.home_module_sessions)
     val order=HomeModulePreferences.order(preferences)
     val canonical=HomeModulePreferences.catalog(preferences)
@@ -131,6 +132,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
         val visible=id in visibleModules;val index=order.indexOf(id)
         Row(Modifier.fillMaxWidth().heightIn(min=LocalDesktopSettingsRowHeight.current),verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
             Text(strings.getString(labels.getValue(id)),Modifier.weight(1f),style=quotaTextStyle(11).copy(fontWeight=androidx.compose.ui.text.font.FontWeight.Medium),color=MaterialTheme.colorScheme.onSurface.copy(alpha=if(visible) 1f else .58f))
+            if(id in HomeModuleCounts.defaults) DesktopListIcon(strings.getString(R.string.home_configure_module,strings.getString(labels.getValue(id))),"home-count-settings-$id",drawable=R.drawable.desktop_settings_general,accent=countExpanded==id,expanded=countExpanded==id) {countExpanded=if(countExpanded==id) "" else id}
             if(id=="activity") DesktopListIcon(strings.getString(R.string.home_configure_activity),"home-activity-settings",drawable=R.drawable.desktop_settings_general,accent=activityExpanded,expanded=activityExpanded) {activityExpanded=!activityExpanded}
             if(id=="limits") DesktopListIcon(strings.getString(R.string.home_configure_limits),"home-quota-settings-toggle",drawable=R.drawable.desktop_settings_general,accent=limitsExpanded,expanded=limitsExpanded) {limitsExpanded=!limitsExpanded}
             DesktopListIcon(strings.getString(if(visible) R.string.tool_list_hide else R.string.tool_list_show,strings.getString(labels.getValue(id))),"home-module-$id",drawable=if(visible) R.drawable.desktop_eye else R.drawable.desktop_eye_off,checked=visible,accent=visible) {
@@ -144,6 +146,7 @@ internal fun HubSettingsContent(state:HubState,model:HubUiActions,localAllowed:B
                 },tag="home-module-order-menu-$id",width=132.dp,dismiss={ordering=false}) {value->ordering=false;updateDisplay(DisplayChange.HomeModuleMove(id,value.toInt()))}
             }
         }
+        if(id==countExpanded) HomeModuleCountSetting(id,preferences,updateDisplay)
         if(id=="limits" && limitsExpanded) Column(Modifier.fillMaxWidth().padding(start=14.dp).testTag("home-quota-settings-details"),verticalArrangement=Arrangement.spacedBy(4.dp)) {HomeQuotaSettings(preferences,updateDisplay,limits)}
         if(id=="activity" && activityExpanded) Column(Modifier.fillMaxWidth().padding(start=14.dp).testTag("home-activity-details")) {
             DesktopInlineChoices(strings.getString(R.string.home_heatmap_metric),listOf("tokens" to strings.getString(R.string.home_heatmap_tokens),"cost" to strings.getString(R.string.home_heatmap_cost)),preferences.heatmapMetric,"home-heatmap") {updateDisplay(DisplayChange.HeatmapMetric(it))}

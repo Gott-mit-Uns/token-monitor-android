@@ -72,20 +72,15 @@ internal object LimitDisplay {
         if(provider=="codex") return windows.filter {!it.presentation.additional}
         if(provider=="zed") return windows.map {if(it.presentation.limitId=="zed.edit-predictions" && it.detail.equals("unlimited",true)) it.copy(presentation=it.presentation.copy(compactValue="Unlimited",resetDescription="")) else it}
         if(provider!="antigravity") return windows
-        fun group(window:Limit):String? {
-            val suffix=when(window.kind) {"session" -> "\\s+5-hour$";"weekly" -> "\\s+weekly$";else -> return null}
-            val label=window.label?.trim() ?: return null
-            val pattern=Regex(suffix,RegexOption.IGNORE_CASE)
-            if(!pattern.containsMatchIn(label)) return null
-            return label.replace(pattern,"").trim().takeIf {it.isNotEmpty()}
-        }
-        if(windows.any {group(it)==null}) return windows
+        val visible=windows.filter(AntigravityQuota::visible)
+        fun group(window:Limit)=AntigravityQuota.group(window.kind,window.label)
+        if(visible.any {group(it)==null}) return visible
         fun remaining(window:Limit?)=window?.let {percent(it,false)} ?: Double.POSITIVE_INFINITY
-        val groups=windows.groupBy {group(it)}
+        val groups=visible.groupBy {group(it)}
         // Hidden windows are filtered by Home before this pick. One model group
         // can use both slots without duplicating a reading or inventing a period.
         if(groups.size==1) return listOf("session","weekly").mapNotNull {kind ->
-            windows.filter {it.kind==kind}.minByOrNull {remaining(it)}
+            visible.filter {it.kind==kind}.minByOrNull {remaining(it)}
         }
         return groups.values.mapIndexed {index,rows ->
             val session=rows.filter {it.kind=="session"}.minByOrNull {remaining(it)}
