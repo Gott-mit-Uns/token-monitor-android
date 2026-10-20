@@ -39,6 +39,7 @@ class Desktop076ScreenTest {
             compose.waitUntil(5000) {HomeModuleCounts.count(prefs.value,"models")==8}
             assertArrayEquals(original,File(compose.activity.noBackupFilesDir,name).readBytes())
             assertEquals(8,HomeModuleCounts.count(DisplayPreferenceStore(compose.activity,name).load(),"models"))
+            compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("home-count-details-models"))
             saveVisualEvidence(compose.activity,compose.onRoot(),"desktop076-count-${if(dark) "dark" else "light"}.png")
             compose.onNodeWithTag("hub-settings-toggle").performClick()
             compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("home-model-public-8"));compose.onNodeWithTag("home-model-public-8").assertIsDisplayed()
@@ -70,7 +71,8 @@ class Desktop076ScreenTest {
             compose.onNodeWithTag("hub-view-selector").performClick();compose.onNodeWithTag("view-limits").performScrollTo().performClick()
             compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("limit-group-0-Gemini 4 Argon"))
             compose.onNodeWithTag("limit-group-0-Gemini 4 Argon",true).assertExists()
-            compose.onNodeWithText("74% left",true).assertExists()
+            compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("limit-value-0-4"))
+            compose.onNodeWithText("74% left",true).assertIsDisplayed()
             saveVisualEvidence(compose.activity,compose.onRoot(),"desktop076-argon-${if(dark) "dark" else "light"}.png")
         } finally {store.clear()}
     }
