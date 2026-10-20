@@ -21,7 +21,8 @@ internal data class DashboardTrendSegment(
 internal data class DashboardTrendBar(
     val label: String, val index: Int, val x: Double, val width: Double,
     val total: BigInteger, val segments: List<DashboardTrendSegment>,
-    val attributionComplete: Boolean, val duplicate: Boolean
+    val attributionComplete: Boolean, val duplicate: Boolean,
+    val row: HistoryRow? = null
 )
 internal data class DashboardTrendLegend(val key: String, val value: BigInteger, val percent: BigDecimal)
 internal data class DashboardTrendCandle(
@@ -69,12 +70,14 @@ internal object DashboardTrendProjection {
     fun project(
         history: HubHistory, range: String = "30", byModel: Boolean = false,
         mode: DashboardTrendMode = DashboardTrendMode.BARS,
-        width: Double = 800.0, height: Double = 360.0, sourceLocale: String = "en"
+        width: Double = 800.0, height: Double = 360.0, sourceLocale: String = "en",
+        leftInset: Double = 52.0
     ): DashboardTrendModel {
         require(range in ranges)
         val w = dimension(width, 320.0, 800.0)
         val h = dimension(height, 160.0, 360.0)
-        val plot = DashboardTrendPlot(52.0, 10.0, w - 66.0, h - 34.0)
+        val inset = leftInset.coerceIn(52.0, 96.0)
+        val plot = DashboardTrendPlot(inset, 10.0, (w - inset - 14.0).coerceAtLeast(1.0), h - 34.0)
         // Validate once per row and preserve wire insertion order for diagnostics.
         val invalid = linkedSetOf<String>()
         val grouped = linkedMapOf<String, MutableList<HistoryRow>>()
@@ -102,7 +105,32 @@ internal object DashboardTrendProjection {
         daily: List<HistoryRow>, range: String, byModel: Boolean, w: Double, h: Double,
         plot: DashboardTrendPlot, sourceLocale: String, issues: DashboardTrendIssues
     ): DashboardTrendModel {
-        val folded = daily.map { fold(it, byModel) }
+        // 365/all draw sub-pixel bars on a phone; aggregate into readable weeks/months.
+        val bucketDays = when {
+            daily.size <= 90 -> 1
+            daily.size <= 400 -> 7
+            else -> 30
+        }
+        val groups: List<List<HistoryRow>> = if (bucketDays <= 1) daily.map { listOf(it) } else {
+            val last = LocalDate.parse(daily.last().date).toEpochDay()
+            daily.groupBy { ((last - LocalDate.parse(it.date).toEpochDay()) / bucketDays).toInt() }
+                .toSortedMap(compareByDescending { it })
+                .values.map { rows -> rows.sortedBy { it.date } }
+        }
+        val folded = groups.map { rows ->
+            val values = linkedMapOf<String, BigInteger>()
+            val unknown = linkedSetOf<String>()
+            var total = zero
+            var complete = true
+            rows.forEach { row ->
+                val part = fold(row, byModel)
+                part.values.forEach { (key, value) -> values[key] = (values[key] ?: zero) + value }
+                unknown += part.unknownKeys
+                total += part.total
+                complete = complete && part.complete
+            }
+            Folded(values, unknown, complete, total)
+        }
         val totals = linkedMapOf<String, BigInteger>()
         folded.forEach { row -> row.values.forEach { (key, value) -> totals[key] = (totals[key] ?: zero) + value } }
         val locale = Locale.forLanguageTag(sourceLocale).takeIf { it.language.isNotEmpty() } ?: Locale.ENGLISH
@@ -114,9 +142,21 @@ internal object DashboardTrendProjection {
         val rowTotals = folded.map { it.total }
         val maximum = maxOf(one, rowTotals.maxOrNull() ?: zero)
         val maximumDouble = maximum.toDouble()
-        val slot = plot.width / daily.size
+        val slot = plot.width / groups.size
         val barWidth = slot * .7
-        val bars = daily.mapIndexed { index, row ->
+        fun sumTokens(rows: List<HistoryRow>): Long? {
+            if (rows.any { it.tokens == null }) return null
+            val total = rows.fold(java.math.BigInteger.ZERO) { sum, row -> sum + java.math.BigInteger.valueOf(row.tokens ?: 0L) }
+            return runCatching { total.longValueExact() }.getOrNull()
+        }
+        fun money(value: String?): BigDecimal? = value?.takeIf { it.length <= 128 }
+            ?.let { runCatching { BigDecimal(it) }.getOrNull() }
+            ?.takeIf { it.signum() >= 0 && it.precision() <= 100 && it.scale() in -100..100 }
+        fun sumCost(rows: List<HistoryRow>): String? {
+            if (rows.any { money(it.cost) == null }) return null
+            return rows.fold(BigDecimal.ZERO) { sum, row -> sum.add(money(row.cost) ?: return null) }.toPlainString()
+        }
+        val bars = groups.mapIndexed { index, rows ->
             val x = plot.x + index * slot + (slot - barWidth) / 2
             var cumulative = 0.0
             val segments = keys.mapNotNull { key -> folded[index].values[key]?.let { value ->
@@ -125,8 +165,11 @@ internal object DashboardTrendProjection {
                 DashboardTrendSegment(key, value, key !in folded[index].unknownKeys,
                     x, plot.y + plot.height - cumulative, barWidth, height)
             } }
-            DashboardTrendBar(row.date, index, x, barWidth, rowTotals[index], segments,
-                folded[index].complete, row.date in issues.duplicateDates)
+            val first = rows.first(); val last = rows.last()
+            val label = if (rows.size == 1) last.date else "${first.date} – ${last.date}"
+            DashboardTrendBar(last.date, index, x, barWidth, rowTotals[index], segments,
+                folded[index].complete, rows.any { it.date in issues.duplicateDates },
+                HistoryRow(label, sumTokens(rows), sumCost(rows)))
         }
         val grand = totals.values.fold(zero, BigInteger::add)
         val legend = keys.filter { totals.getValue(it).signum() > 0 }.map { key ->
@@ -136,9 +179,9 @@ internal object DashboardTrendProjection {
         }
         val labels = axisLabels(bars.map { it.label to (it.x + it.width / 2) }, h)
         return DashboardTrendModel(range, byModel, DashboardTrendMode.BARS, w, h, plot, daily, keys, totals,
-            bars, emptyList(), legend, maximum, 0, ticks(plot, maximum), labels,
-            issues.copy(incompleteAttributionDates = daily.indices.filter { !folded[it].complete }
-                .mapTo(linkedSetOf()) { daily[it].date }))
+            bars, emptyList(), legend, maximum, if (bucketDays <= 1) 0 else bucketDays, ticks(plot, maximum), labels,
+            issues.copy(incompleteAttributionDates = groups.indices.filter { !folded[it].complete }
+                .mapTo(linkedSetOf()) { groups[it].last().date }))
     }
 
     private fun candles(
@@ -149,7 +192,8 @@ internal object DashboardTrendProjection {
         val last = LocalDate.parse(daily.last().date)
         val span = last.toEpochDay() - first.toEpochDay() + 1
         val target = max(8, floor(plot.width / 24 + .5).toInt())
-        val bucketDays = if (span <= 10) 2 else max(3, floor(span.toDouble() / target + .5).toInt())
+        // Multi-day buckets keep open/close meaningful; label the unit in the chart.
+        val bucketDays = when { span <= 10 -> 2; span <= 45 -> 3; span <= 200 -> 7; else -> 30 }
         val groups = daily.groupBy { (last.toEpochDay() - LocalDate.parse(it.date).toEpochDay()) / bucketDays }
             .toSortedMap(compareByDescending { it })
         val maximum = maxOf(one, daily.mapNotNull { count(it.tokens) }.maxOrNull() ?: zero)

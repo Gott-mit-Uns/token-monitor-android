@@ -59,6 +59,14 @@ private data class DashboardChartCommit(
         committedChartTarget=DashboardChartCommit(model,event,revision,reason,prepared)
     }
 
+    fun openFromTrends(range:String) {
+        tab=DashboardTab.TRENDS;previousTab=DashboardTab.OVERVIEW;recordsAnalysis=false
+        this.range=range.takeIf {it in DashboardTrendProjection.ranges} ?: "30"
+        chartWidth=0.0;chartHeight=0.0
+        committedChartTarget=null
+        motionReason=DashboardMotionReason.ENTRY;motionRevision++
+    }
+
     fun reset(costMetric:Boolean=true) {
         tab=DashboardTab.OVERVIEW;previousTab=tab;recordsAnalysis=false;range="30";byModel=false;mode=DashboardTrendMode.BARS
         metricCost=costMetric

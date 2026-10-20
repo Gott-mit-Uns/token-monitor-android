@@ -71,7 +71,7 @@ class DesktopParityScreenTest {
         compose.onNodeWithTag("trends-main-active-days",useUnmergedTree=true).assertTextEquals("106")
         save("desktop-trends-${if(dark) "dark" else "light"}.png")
         compose.onNodeWithTag("trends-main-open-history").performClick()
-        compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-tab-records").performClick()
         compose.onNodeWithText("柱状图").performScrollTo()
         compose.onNodeWithText("柱状图").assertIsDisplayed()
         save("desktop-history-${if(dark) "dark" else "light"}.png")

@@ -64,7 +64,7 @@ class VendorScreenTest {
         select("models");color("breakdown-color-model-gpt-5",Color.Red)
         select("limits");color("limit-color-codex",Color.Red.copy(alpha=0.68f).compositeOver(Color.Red.copy(alpha=0.16f).compositeOver(hexColor(DesktopAppearance.palette(emptyMap(),dark).getValue("bg")))))
         select("trends");compose.onNodeWithTag("trends-main-open-history").performClick()
-        compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-tab-records").performClick()
         color("history-color-codex",Color.Red);save("history",dark)
         click("history-by-model");color("history-color-gpt-5",Color.Red)
         compose.runOnIdle {assertEquals(snapshot,state.snapshot);assertEquals(history,state.history);assertEquals(0,actions.reads);assertEquals("7",prefs.value.currencyRates["CNY"])}

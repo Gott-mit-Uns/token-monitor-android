@@ -636,6 +636,12 @@
     <string name="dashboard_title">Usage Dashboard</string>
     <string name="dashboard_overview">Overview</string>
     <string name="dashboard_trends">Trends</string>
+    <string name="dashboard_bucket_days">Every %1$d days</string>
+    <string name="dashboard_bars_bucket">Aggregated every %1$d days · tap for details</string>
+    <string name="cache_short">Cached</string>
+    <string name="dashboard_tab_records">Records</string>
+    <string name="records_mode_details">Details</string>
+    <string name="records_mode_analysis">Analysis</string>
     <string name="dashboard_records">Record details</string>
     <string name="dashboard_back_overview">Back to dashboard</string>
     <string name="dashboard_stat_total_tokens">Total tokens</string>

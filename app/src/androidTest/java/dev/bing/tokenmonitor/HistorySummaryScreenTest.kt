@@ -43,7 +43,7 @@ class HistorySummaryScreenTest {
         compose.onNodeWithTag("hub-view-selector").performClick()
         compose.onNodeWithTag("view-trends").performScrollTo().performClick()
         compose.onNodeWithTag("trends-main-open-history").performClick()
-        compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-tab-records").performClick()
         fun showCost() {
             compose.onNodeWithTag("dashboard-scroll").performScrollToNode(hasTestTag("history-summary-cost"))
             if (compose.onAllNodesWithTag("history-summary-unpriced").fetchSemanticsNodes().isNotEmpty()) {

@@ -191,10 +191,20 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val trendsHistoryScroll = rememberSaveable(state.connectionRevision,saver = LazyListState.Saver) { LazyListState() }
     val trendsHistoryUiState=key(state.connectionRevision) {rememberSaveableStateHolder()}
     val dashboardUi=rememberSaveable(state.connectionRevision,saver=DashboardUiState.Saver) {DashboardUiState()}
+    var dashboardOpened by rememberSaveable(state.connectionRevision) { mutableStateOf(false) }
     LaunchedEffect(preferences.heatmapMetric) {dashboardUi.selectMetric(preferences.heatmapMetric=="cost")}
+    fun dashboardRange(value:String)=when(value) {
+        "month" -> "30"; "allTime" -> "all"; "last30" -> "30"; "last90" -> "90"; "last365" -> "365"
+        else -> "30"
+    }
     fun openDashboard() {
         trendsHistoryUiState.removeState("dashboard")
-        dashboardUi.reset(preferences.heatmapMetric=="cost")
+        // First entry carries the main Trends range and lands on the detail chart;
+        // later entries keep the tab/range the user left, per the dashboard's own state.
+        if (!dashboardOpened) {
+            dashboardUi.openFromTrends(dashboardRange(range))
+            dashboardOpened = true
+        }
         trendsHistoryOpen=true
     }
     val contentScroll=if(trendsDetail) trendsHistoryScroll else mainContentScroll
@@ -244,10 +254,11 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     LaunchedEffect(dashboardHistory) {
         if(dashboardHistory==null || (dashboardHistory.daily.isEmpty() && dashboardHistory.monthly.isEmpty())) dashboardUi.discardChart()
     }
+    val dashboardAxisInset=52.0+((effectiveTextScale()-1f).coerceAtLeast(0f)*22.0)
     val dashboardTrend=remember(dashboardHistory,dashboardUi.range,dashboardUi.byModel,dashboardUi.mode,
-        dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0]) {
+        dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0],dashboardAxisInset) {
         dashboardHistory?.let {DashboardTrendProjection.project(it,dashboardUi.range,dashboardUi.byModel,dashboardUi.mode,
-            dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0].toLanguageTag())}
+            dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0].toLanguageTag(),dashboardAxisInset)}
     }
     val dashboardEventKey=listOf(state.connectionRevision,dashboardHistory,state.modelNames,state.historyRenderRevision,homeDay)
     val dashboardChartMotion=rememberDashboardChartMotion(dashboardUi.committedChart,dashboardUi.committedChartEvent,dashboardUi.committedChartRevision,
@@ -435,8 +446,10 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     DesktopTitle(preferences.main.titleIconOnly,preferences.appearance.showLiveDot,state.live,Modifier.weight(1f),onAverage={averageRateOpen=true}) {openDirect(HubPage.HOME)}
                     if(!state.live && savedClock!=null) DesktopTextButton(onClick={sourceInfo=true},
-                        modifier=Modifier.heightIn(min=48.dp).testTag("hub-freshness"),contentPadding=PaddingValues(horizontal=4.dp,vertical=0.dp)) {
-                        Text("${strings.getString(R.string.saved_snapshot)} · $savedClock",style=quotaTextStyle(9),color=colors.onSurfaceVariant,maxLines=1)
+                        modifier=Modifier.heightIn(min=48.dp).testTag("hub-freshness").semantics {
+                            contentDescription="${strings.getString(R.string.saved_snapshot)} · $savedClock"
+                        },contentPadding=PaddingValues(horizontal=4.dp,vertical=0.dp)) {
+                        Text(strings.getString(R.string.cache_short),style=quotaTextStyle(9),color=colors.onSurfaceVariant,maxLines=1)
                     }
                     if(trendsDetail) DesktopTextButton(onClick={trendsHistoryOpen=false},modifier=Modifier.testTag("trends-history-back")) {Text("← ${strings.getString(R.string.desktop_trends)}",style=quotaTextStyle(11))}
                     }

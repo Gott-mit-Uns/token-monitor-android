@@ -33,42 +33,35 @@ class NavigationPolishScreenTest {
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,language,prefs.appearance) {
             DesktopDashboardScreen(history,false,null,ui,null,LocalDate.of(2026,10,16),prefs,null,{}, {refreshes++},{})
         }}}
-        compose.onNodeWithTag("dashboard-open-records").performScrollTo()
-        val row=compose.onNodeWithTag("dashboard-detail-actions").getUnclippedBoundsInRoot()
-        val a=compose.onNodeWithTag("dashboard-open-records").getUnclippedBoundsInRoot()
-        val b=compose.onNodeWithTag("dashboard-open-analysis").getUnclippedBoundsInRoot()
-        assertEquals(a.width.value,b.width.value,.5f);assertEquals(a.top.value,b.top.value,.5f)
-        assertEquals(a.bottom.value,b.bottom.value,.5f);assertTrue(a.height.value>=47.5f)
-        assertEquals(row.left.value,a.left.value,.5f);assertEquals(row.right.value,b.right.value,.5f)
-        save("actions")
-        for(tag in listOf("dashboard-open-records","dashboard-open-analysis")) {
-            val label=compose.onAllNodes(hasAnyAncestor(hasTestTag(tag)) and hasText("",substring=true),useUnmergedTree=true)
-            label.assertCountEquals(1)
-            val layouts=mutableListOf<TextLayoutResult>()
-            label.onFirst().performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(layouts)}
-            assertFalse("$tag: size=${layouts.single().size}, constraints=${layouts.single().layoutInput.constraints}, widthOverflow=${layouts.single().didOverflowWidth}, heightOverflow=${layouts.single().didOverflowHeight}",layouts.single().hasVisualOverflow)
+        for(tag in listOf("dashboard-tab-overview","dashboard-tab-trends","dashboard-tab-records")) {
+            val bounds=compose.onNodeWithTag(tag).getUnclippedBoundsInRoot()
+            assertTrue("$tag is ${bounds.height.value}dp",bounds.height.value>=47.5f)
         }
+        compose.onNodeWithTag("dashboard-detail-actions").assertDoesNotExist()
+        compose.onNodeWithTag("dashboard-open-records").assertDoesNotExist()
         save("actions")
-        compose.onNodeWithTag("dashboard-open-records").performClick()
+        compose.onNodeWithTag("dashboard-tab-records").performClick()
         compose.onNodeWithTag("records-day-grid").assertExists()
         compose.onNodeWithTag("records-analysis").assertDoesNotExist()
-        compose.onNodeWithTag("records-analysis-toggle").assertDoesNotExist()
         val context=compose.activity
         listOf(R.string.range_7_days,R.string.range_30_days,R.string.range_90_days,R.string.range_365_days,R.string.range_all).forEach {id->
             val label=if(language==LanguageChoice.CHINESE) android.content.res.Configuration(context.resources.configuration).apply {setLocale(java.util.Locale.SIMPLIFIED_CHINESE)}.let {context.createConfigurationContext(it).getString(id)} else android.content.res.Configuration(context.resources.configuration).apply {setLocale(java.util.Locale.ENGLISH)}.let {context.createConfigurationContext(it).getString(id)}
             compose.onNodeWithText(label).assertDoesNotExist()
         }
         save("calendar")
-        compose.onNodeWithTag("dashboard-records-back").performScrollTo().performClick()
-        compose.onNodeWithTag("dashboard-open-analysis").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-records-analysis").performClick()
         compose.onNodeWithTag("records-analysis").assertExists()
         compose.onNodeWithTag("records-day-grid").assertDoesNotExist()
         assertTrue(ui.recordsAnalysis)
         save("analysis")
-        compose.onNodeWithTag("dashboard-records-back").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-records-details").performClick()
+        compose.onNodeWithTag("records-day-grid").assertExists()
+        assertEquals(DashboardTab.RECORDS,ui.tab)
+        compose.onNodeWithTag("dashboard-tab-overview").performClick()
         assertEquals(DashboardTab.OVERVIEW,ui.tab)
         assertEquals(0,refreshes)
     }
+
     @Test fun quotaListHidesOnlyUnusedCatalogRows() {
         val state=HubState(snapshot=HubParser.parse("""{"periods":{"today":{}},"limits":{"providers":[
             {"provider":"codex","status":"ok","windows":[{"kind":"session","remainingPercent":100}]},

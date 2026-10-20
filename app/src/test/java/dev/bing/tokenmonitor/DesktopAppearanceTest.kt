@@ -44,7 +44,10 @@ class DesktopAppearanceTest {
         fixture().getValue("fonts").jsonArray.forEach { raw ->
             val item=raw.jsonObject;val input=item.getValue("input").jsonPrimitive.content
             assertEquals(item.getValue("normalized").jsonPrimitive.content,DesktopAppearance.font(input))
-            assertEquals(item.getValue("interface").jsonPrimitive.content,DesktopAppearance.fontPreset(input))
+            // Desktop's host record names the empty interface choice "app"; Android renders that
+            // same unnamed choice as the desktop monospace face, so its preset id is "mono".
+            val interfaceExpected=if(item.getValue("normalized").jsonPrimitive.content.isEmpty()) "mono" else item.getValue("interface").jsonPrimitive.content
+            assertEquals(interfaceExpected,DesktopAppearance.fontPreset(input))
             assertEquals(item.getValue("display").jsonPrimitive.content,DesktopAppearance.fontPreset(input,true))
         }
         fixture().getValue("sizes").jsonArray.forEach { raw -> val item=raw.jsonObject;assertEquals(item.getValue("scale").jsonPrimitive.float,DesktopAppearance.scale(item.getValue("input").jsonPrimitive.content),0f) }

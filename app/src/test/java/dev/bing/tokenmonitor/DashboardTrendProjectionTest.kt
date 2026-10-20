@@ -24,19 +24,29 @@ class DashboardTrendProjectionTest {
         (index + 1).toLong(), "codex" to (index + 1).toLong()) }
 
     @Test fun sourceRangesKeepLastRecordsInAscendingOrderFromDescendingWireRows() {
+        // Dense ranges aggregate to calendar-sized buckets; 7/30/90 stay per-day.
         val expected = listOf(Triple("7", 7, "2026-01-29"), Triple("30", 30, "2026-01-06"),
-            Triple("90", 90, "2025-11-07"), Triple("365", 365, "2025-02-05"), Triple("all", 400, "2025-01-01"))
+            Triple("90", 90, "2025-11-07"), Triple("365", 53, "2025-02-05"), Triple("all", 58, "2025-01-01"))
         expected.forEach { (range, count, first) ->
             val model = project(series.reversed(), range)
             assertEquals("range_$range", count, model.bars.size)
             assertEquals(first, model.bars.first().label)
             assertEquals("2026-02-04", model.bars.last().label)
-            assertEquals(model.daily.map { it.date }, model.bars.map { it.label })
+            if (range in listOf("7", "30", "90")) {
+                assertEquals(model.daily.map { it.date }, model.bars.map { it.label })
+                assertEquals(0, model.bucketDays)
+            }
             assertEquals(5, model.axisTicks.size)
             assertTrue(model.axisLabels.size <= 9)
         }
+        assertEquals(7, project(series, "365").bucketDays)
+        assertEquals(7, project(series, "all").bucketDays)
         assertEquals(listOf("1/6", "1/10", "1/14", "1/18", "1/22", "1/26", "1/30", "2/3"),
             project(series, "30").axisLabels.map { it.label })
+        // A bucket row keeps an honest range label and only sums fully known days.
+        val bucket = project(series, "365").bars.last()
+        assertEquals("2026-01-29 – 2026-02-04", bucket.row?.date)
+        assertEquals(2779L, bucket.row?.tokens)
     }
 
     @Test fun sparseLastSevenDoesNotBecomeSevenCalendarSlots() {
@@ -138,19 +148,17 @@ class DashboardTrendProjectionTest {
         assertEquals(listOf("10/1", "10/3"), model.axisLabels.map { it.label })
     }
 
-    @Test fun candleBucketSizeUsesPlotWidthAndSourceHalfUpTargetRounding() {
-        val rows = series.take(365)
-        listOf(Triple(320.0, 33, 12), Triple(366.0, 28, 14), Triple(800.0, 12, 31)).forEach { (width, days, count) ->
-            val model = project(rows, mode = DashboardTrendMode.KLINE, width = width)
-            assertEquals(days, model.bucketDays)
+    @Test fun candlesUseCalendarBucketsInsteadOfPlotWidth() {
+        listOf(Triple(365, 30, 13), Triple(90, 7, 13), Triple(30, 3, 10)).forEach { (take, bucket, count) ->
+            val rows = series.take(take)
+            val model = project(rows, mode = DashboardTrendMode.KLINE)
+            assertEquals(bucket, model.bucketDays)
             assertEquals(count, model.candles.size)
             assertEquals(52.0, model.plot.x, 0.0)
-            assertEquals(width - 66, model.plot.width, 0.0)
-            assertEquals("2025-12-31", model.candles.last().endKey)
+            assertEquals(254.0, model.plot.width, 0.0)
+            assertEquals(rows.last().date, model.candles.last().endKey)
         }
-        assertEquals("2025-01-02", project(rows, mode = DashboardTrendMode.KLINE).candles.first().endKey)
-        assertEquals(listOf("1/1", "2/5", "4/12", "6/17", "8/22", "10/27"),
-            project(rows, mode = DashboardTrendMode.KLINE).axisLabels.map { it.label })
+        assertEquals("2025-01-05", project(series.take(365).reversed(), mode = DashboardTrendMode.KLINE).candles.first().endKey)
     }
 
     @Test fun minimumAndFallbackDimensionsDoNotRemoveAxisSpace() {

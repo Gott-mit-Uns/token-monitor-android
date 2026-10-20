@@ -62,7 +62,8 @@ class DashboardParityScreenTest {
             saveVisualEvidence(compose.activity,compose.onRoot(),"dashboard-$view-${if(english) "en" else "zh-CN"}-${if(dark) "dark" else "light"}-$suffix.png")
         }
         open()
-        compose.onNodeWithTag("dashboard-tab-overview").assertIsSelected()
+        compose.onNodeWithTag("dashboard-tab-trends").assertIsSelected()
+        compose.onNodeWithTag("dashboard-tab-overview").performClick()
         compose.onNodeWithTag("dashboard-trends").assertDoesNotExist()
         compose.onNodeWithTag("dashboard-card-tokens-value",useUnmergedTree=true).assertTextEquals("165.2M")
         compose.onNodeWithTag("dashboard-card-cost-value",useUnmergedTree=true).assertTextEquals("$136.08")
@@ -109,6 +110,7 @@ class DashboardParityScreenTest {
             }
         }}
         open()
+        compose.onNodeWithTag("dashboard-tab-overview").performClick()
         compose.onNodeWithTag("dashboard-heatmap").assertExists()
         compose.onNodeWithTag("dashboard-empty").assertDoesNotExist()
         compose.onNodeWithTag("dashboard-card-tokens-value",useUnmergedTree=true).assertTextEquals("—")
