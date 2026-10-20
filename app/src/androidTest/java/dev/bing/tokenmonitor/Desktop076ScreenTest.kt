@@ -16,7 +16,8 @@ class Desktop076ScreenTest {
     @get:Rule val compose=createAndroidComposeRule<MainActivity>()
     @Test fun countSettingsCommitNormalizeReloadAndRenderMoreModels() {
         val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-        val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("models"),appearance=AppearancePreferences(reduceMotion="on")))
+        val language=if(InstrumentationRegistry.getArguments().getString("visualLanguage")=="zh") LanguageChoice.CHINESE else LanguageChoice.ENGLISH
+        val prefs=mutableStateOf(DisplayPreferences(language=language,homeModules=listOf("models"),appearance=AppearancePreferences(reduceMotion="on")))
         val name="desktop076-${UUID.randomUUID()}.bin";val store=DisplayPreferenceStore(compose.activity,name)
         val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":772,"models":{"public-1":100,"public-2":99,"public-3":98,"public-4":97,"public-5":96,"public-6":95,"public-7":94,"public-8":93}}}}""")
         val actions=object:HubUiActions {
@@ -31,11 +32,11 @@ class Desktop076ScreenTest {
             compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("home-count-settings-models"));compose.onNodeWithTag("home-count-settings-models").performClick()
             val field=compose.onNodeWithTag("home-count-models")
             field.performScrollTo().performTextReplacement("999");field.performImeAction()
-            compose.waitUntil(5000) {prefs.value.homeModuleCounts["models"]==50}
+            compose.waitUntil(5000) {HomeModuleCounts.count(prefs.value,"models")==50}
             field.performTextReplacement("bad");field.performImeAction()
-            compose.waitUntil(5000) {prefs.value.homeModuleCounts["models"]==5}
+            compose.waitUntil(5000) {HomeModuleCounts.count(prefs.value,"models")==5}
             field.performTextReplacement("8");field.performImeAction()
-            compose.waitUntil(5000) {prefs.value.homeModuleCounts["models"]==8}
+            compose.waitUntil(5000) {HomeModuleCounts.count(prefs.value,"models")==8}
             assertArrayEquals(original,File(compose.activity.noBackupFilesDir,name).readBytes())
             assertEquals(8,HomeModuleCounts.count(DisplayPreferenceStore(compose.activity,name).load(),"models"))
             saveVisualEvidence(compose.activity,compose.onRoot(),"desktop076-count-${if(dark) "dark" else "light"}.png")
@@ -62,7 +63,12 @@ class Desktop076ScreenTest {
                 assertEquals("74% left",rows.last().value)
             }
             val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
-            compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH,AppearancePreferences(reduceMotion="on")) {DesktopAccount(cold.limits)}}}
+            val actions=object:HubUiActions {
+                override fun connect(address:String,credential:String,alternate:String) {};override fun refreshSaved() {};override fun switchEndpoint() {};override fun hasAlternate()=false;override fun endpointType()="https";override fun loadHistory() {};override fun loadModelNames() {};override fun loadSubscriptions() {};override fun forget() {};override fun renameDevice(id:String,input:String) {}
+            }
+            compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(dark,LanguageChoice.ENGLISH,AppearancePreferences(reduceMotion="on")) {HubScreen(HubState(snapshot=cold,live=true,modelNames=ModelNames(emptyMap(),"off")),actions,preferences=DisplayPreferences(language=LanguageChoice.ENGLISH,appearance=AppearancePreferences(reduceMotion="on")))}}}
+            compose.onNodeWithTag("hub-view-selector").performClick();compose.onNodeWithTag("view-limits").performScrollTo().performClick()
+            compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("limit-group-0-Gemini 4 Argon"))
             compose.onNodeWithTag("limit-group-0-Gemini 4 Argon",true).assertExists()
             compose.onNodeWithText("74% left",true).assertExists()
             saveVisualEvidence(compose.activity,compose.onRoot(),"desktop076-argon-${if(dark) "dark" else "light"}.png")
