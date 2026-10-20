@@ -2,11 +2,15 @@ package dev.bing.tokenmonitor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -46,11 +50,16 @@ internal fun dashboardColor(key:String,byModel:Boolean,palette:Map<String,Long>)
     }.padding(2.dp),
         horizontalArrangement=Arrangement.spacedBy(2.dp)) {
         options.forEach { (id,label)->
+            val interaction=remember { MutableInteractionSource() }
+            val pressed by interaction.collectIsPressedAsState()
             Box(Modifier.heightIn(min=48.dp).widthIn(min=48.dp).testTag("$tag-$id")
                 .semantics {this.selected=id==selected}
-                .clickable(role=Role.RadioButton) {if(id!=selected) onSelect(id)},
+                .clickable(interactionSource=interaction, indication=null, role=Role.RadioButton) {if(id!=selected) onSelect(id)},
                 contentAlignment=androidx.compose.ui.Alignment.Center) {
-                Text(label,Modifier.background(if(id==selected) overlay.copy(alpha=.12f) else Color.Transparent,
+                Text(label,Modifier.background(
+                    when {id==selected -> overlay.copy(alpha=if(pressed) .18f else .12f)
+                        pressed -> overlay.copy(alpha=.06f)
+                        else -> Color.Transparent},
                     RoundedCornerShape(5.dp)).padding(horizontal=if(small) 8.dp else 10.dp,vertical=if(small) 3.dp else 5.dp),
                     style=quotaTextStyle(if(small) 10 else 11),
                     color=MaterialTheme.colorScheme.onSurface.copy(alpha=if(id==selected) 1f else .6f))

@@ -1,5 +1,20 @@
 # 当前交接
 
+## 当前开发（未发行）：界面一致性与二级界面修正
+
+2026-10-20（Asia/Shanghai），从正式 v0.75.0-01/code81 的 `fb0e293` 建立 `feat/android-ui-refinements`。用户明确：页面身份/标题不改，主页保持与桌面一致；会话底部色条、Status 页、Pricing/Subscriptions 死路由不改；字体与 Material 皮肤、触摸反馈、状态与新鲜度按评审建议优化；趋势/仪表板按上一轮建议修改；跑 320dp+2.0 字体全屏矩阵。未授权合并或发行。
+
+| 项 | 本轮处理 |
+|---|---|
+| 字体 | 未显式选择时界面字体解析为桌面等宽（`interfaceFont("")`→Monospace）；界面字体下拉移除“应用默认”，重置回等宽；Token UI、Token Data、系统、自定义、等宽仍可选。中文仍走 CJK 回退，数字仍用 JetBrains Mono，显示字体未变。 |
+| Material 皮肤 | 8 个 AlertDialog 统一 `DesktopAlertDialog`：12dp 圆角、panel 表面、hairline 边、无 tonal elevation；8 个 Material FilterChip 换 48dp 桌面 pill（`DesktopFilterChip`，选中 12% overlay）；项目/设备行涟漪裁剪到 8dp；设置/关于/连接对话框随共享皮肤。 |
+| 触摸 | 首页模块头加 13dp chevron；会话行用 120ms 桌面按压底色（`desktopPressable`，无 splash）；项目/设备行涟漪裁剪；分段控件不再产生整块 48dp 灰色涟漪。 |
+| 状态 | 非实时/缓存快照在顶栏显示短“缓存”徽标（读屏含时间，点开来源信息）；刷新按钮完成后 900ms 显示 ✓，失败显示 !；维度空状态（工具/模型无数据）提供刷新动作。 |
+| 仪表板 | 记录成为第三 tab；移除底部“记录明细/图表与活动”双按钮和页内返回；记录页内用“明细/分析”pill 切换。首次从趋势进入时带一级范围并停在趋势 tab；同连接后续进入保留用户 tab/范围。总览热力图默认滚到今天并留 12dp 尾部；365/全部柱状按月/周自适应聚合并显示桶宽；K 线按 2/3/7/30 天日历桶、显示“每 N 天”与首日/最高/最低/末日；图表高度 160–240dp；Y 轴左侧留白随字号实测扩展；2.0 字体下统计格单列、收藏模型按 hyphen 换行、排名条换行；图表 TalkBack 默认最新一天。 |
+| 未改 | 页面标题/顶栏身份、底部 switcher 截断、会话 5dp 色条、Status 页、Pricing/Subscriptions 入口、Hub/SSE/缓存/费用合同、README。 |
+
+验证入口与实跑/继承范围见 [VALIDATION](VALIDATION.md)。当前代码提交：`8e9550e`（产品），前序 `63c3092`、`6e70799`。未递增 versionName/versionCode，未创建 Tag/Release，未合并。真机与生产 Hub 未操作；公开 fixture/模拟器截图不能替代真机。下一步：最终 36 组矩阵全过后提交 PR，等待用户合并/发布授权；合并前不开展版本递增或发行材料。
+
 ## 当前发行：桌面 v0.75.0 / Android 0.75.0-01 / code81
 
 2026-10-20（Asia/Shanghai），用户明确授权分别完成Android和NAS对齐、测试、提交PR、合并后发布。Android从最新主分支 `327d87c8fba2b3898c28796798e36936f58bb86f` 接续，固定最新桌面正式Tag v0.75.0（annotated d115ac27，解引用 `877fef6002a5fee84aa502fc3454b4f700b55813`），仅比较v0.74.0之后10个提交。正式0.75.0-01/code81，fullyAligned=false保持。
