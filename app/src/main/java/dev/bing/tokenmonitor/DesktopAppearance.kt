@@ -74,7 +74,7 @@ internal object DesktopAppearance {
         val normalized=font(value)
         return when { normalized.equals(bundledUiFont,true) -> "bundled-ui"; normalized.equals(bundledDataFont,true) -> "bundled-data"
             display && normalized==defaultDisplayFont -> "app"; normalized==systemFont -> "system"
-            normalized==defaultInterfaceFont -> "mono"; normalized.isNotEmpty() -> "custom"; display -> "follow"; else -> "app" }
+            normalized==defaultInterfaceFont -> "mono"; normalized.isNotEmpty() -> "custom"; display -> "follow"; else -> "mono" }
     }
     fun valid(value: AppearancePreferences) = value.textSize in sizes && cleanColors(value.colors)==value.colors &&
         font(value.interfaceFont)==value.interfaceFont && font(value.displayFont)==value.displayFont && DesktopVendorPalette.clean(value.vendorColors)==value.vendorColors && value.reduceMotion in listOf("system","on","off")

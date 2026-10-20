@@ -54,8 +54,8 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
     Column(verticalArrangement = Arrangement.spacedBy(CompactUiTokens.SectionSpacing)) {
         Text(strings.getString(R.string.history_title), style = quotaTextStyle(13, true))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(!monthly, { monthly = false }, label = { Text(strings.getString(R.string.history_daily), style = quotaTextStyle(12)) }, modifier = Modifier.testTag("records-daily"))
-            FilterChip(monthly, { monthly = true }, label = { Text(strings.getString(R.string.history_monthly), style = quotaTextStyle(12)) }, modifier = Modifier.testTag("records-monthly"))
+            DesktopFilterChip(!monthly, { monthly = false }, modifier = Modifier.testTag("records-daily")) { Text(strings.getString(R.string.history_daily), style = quotaTextStyle(12)) }
+            DesktopFilterChip(monthly, { monthly = true }, modifier = Modifier.testTag("records-monthly")) { Text(strings.getString(R.string.history_monthly), style = quotaTextStyle(12)) }
         }
         if (monthly) Text(strings.getString(R.string.record_month_scope), style = quotaTextStyle(11), color = text.copy(alpha = .6f))
         RecordCalendarHeader(
@@ -127,8 +127,8 @@ fun HistoryTrend(history: HubHistory?, loading: Boolean = false, error: Int? = n
             summary?.let {range->DesktopHistoryChart(range.rows,range.start,range.end) {activitySelection=it}}
             history.summary?.let {DesktopHistorySummary(it)}
             Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                FilterChip(!costActivity,{costActivity=false},label={Text(strings.getString(R.string.desktop_total),style=quotaTextStyle(11))})
-                FilterChip(costActivity,{costActivity=true},label={Text(strings.getString(R.string.activity_cost),style=quotaTextStyle(11))})
+                DesktopFilterChip(!costActivity,{costActivity=false}) {Text(strings.getString(R.string.desktop_total),style=quotaTextStyle(11))}
+                DesktopFilterChip(costActivity,{costActivity=true}) {Text(strings.getString(R.string.activity_cost),style=quotaTextStyle(11))}
             }
             HistoryActivity(history,metricCost=costActivity) {activitySelection=it}
             activitySelection?.let {RecordInlineDetail(RecordCalendarCell(it.date,it,if(it.tokens==null) RecordCellState.UNKNOWN else RecordCellState.RECORDED),numbers)}

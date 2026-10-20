@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
     }
 }
 
-private fun fontChoices(display:Boolean)=buildList {if(display) add("follow" to R.string.appearance_font_follow);add("app" to R.string.appearance_font_app);add("bundled-ui" to R.string.appearance_font_bundled_ui);add("bundled-data" to R.string.appearance_font_bundled_data);add("system" to R.string.appearance_font_system);add("mono" to R.string.appearance_font_mono);add("custom" to R.string.appearance_custom)}
+private fun fontChoices(display:Boolean)=buildList {if(display) add("follow" to R.string.appearance_font_follow);if(display) add("app" to R.string.appearance_font_app);add("bundled-ui" to R.string.appearance_font_bundled_ui);add("bundled-data" to R.string.appearance_font_bundled_data);add("system" to R.string.appearance_font_system);add("mono" to R.string.appearance_font_mono);add("custom" to R.string.appearance_custom)}
 
 @Composable private fun FontControl(value:String,display:Boolean,titleWidth:androidx.compose.ui.unit.Dp,controlWidth:androidx.compose.ui.unit.Dp,change:(DisplayChange)->Unit) {
     val strings=LocalResources.current;val role=if(display) "display" else "interface"

@@ -70,12 +70,12 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(ChartMode.BARS to R.string.chart_bars, ChartMode.KLINE to R.string.chart_kline, ChartMode.LINE to R.string.chart_line).forEach { (choice, label) ->
-                FilterChip(mode == choice, { mode = choice }, label = { Text(strings.getString(label)) })
+                DesktopFilterChip(mode == choice, { mode = choice }) { Text(strings.getString(label)) }
             }
         }
         if (mode == ChartMode.BARS) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(!byModel, { byModel = false }, label = { Text(strings.getString(R.string.chart_by_tool)) },modifier=Modifier.testTag("history-by-tool"))
-            FilterChip(byModel, { byModel = true }, label = { Text(strings.getString(R.string.chart_by_model)) },modifier=Modifier.testTag("history-by-model"))
+            DesktopFilterChip(!byModel, { byModel = false },modifier=Modifier.testTag("history-by-tool")) { Text(strings.getString(R.string.chart_by_tool)) }
+            DesktopFilterChip(byModel, { byModel = true },modifier=Modifier.testTag("history-by-model")) { Text(strings.getString(R.string.chart_by_model)) }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(strings.getString(R.string.history_peak, peak?.let(numbers::format) ?: "—"), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
@@ -173,7 +173,7 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
         }
         Text(strings.getString(if (mode == ChartMode.KLINE) R.string.chart_kline_note else R.string.history_gap_note), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
     }
-    candleDetail?.let { candle -> AlertDialog(onDismissRequest = { candleDetail = null }, title = { Text("${candle.start} – ${candle.end}") }, text = {
+    candleDetail?.let { candle -> DesktopAlertDialog(onDismissRequest = { candleDetail = null }, title = { Text("${candle.start} – ${candle.end}") }, text = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(R.string.chart_open to candle.open, R.string.chart_close to candle.close, R.string.chart_high to candle.high, R.string.chart_low to candle.low).forEach { (name, value) ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Text(strings.getString(name)); Text(value?.let(numbers::format) ?: "—") }

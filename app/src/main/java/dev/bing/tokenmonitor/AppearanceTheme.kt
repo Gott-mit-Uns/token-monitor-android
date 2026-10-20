@@ -57,6 +57,9 @@ internal fun nativeFont(value:String, fallback:FontFamily=BundledFonts.ui):FontF
     return fallback
 }
 
+/** The desktop defaults to its monospace interface face; keep that identity when no explicit choice exists. */
+internal fun interfaceFont(value:String):FontFamily = if(value.isBlank()) FontFamily.Monospace else nativeFont(value)
+
 /** Android surfaces are opaque; source palette/overlays retain their roles. */
 internal fun desktopColorScheme(values:Map<String,String>):ColorScheme {
     val bg=hexColor(values.getValue("bg"));val text=hexColor(values.getValue("text"));val muted=hexColor(values.getValue("muted"));val accent=hexColor(values.getValue("accent"))

@@ -34,7 +34,8 @@ import kotlinx.coroutines.ensureActive
     trend:DashboardTrendModel?,today:LocalDate,preferences:DisplayPreferences,
     updateDisplay:((DisplayChange)->Unit)?,onBack:()->Unit,onRefresh:()->Unit,onSettings:()->Unit,
     chartMotion:State<DashboardChartFrame>?=null,overviewMotion:DashboardOverviewMotionState?=null,chartEventKey:Any?=history,
-    recordsHistory:HubHistory?=history,historyRead:HistoryReadPresentation=HistoryReadPresentation()
+    recordsHistory:HubHistory?=history,historyRead:HistoryReadPresentation=HistoryReadPresentation(),
+    refreshFeedback:Int=0
 ) {
     val strings=LocalResources.current
     val text=MaterialTheme.colorScheme.onSurface
@@ -57,7 +58,7 @@ import kotlinx.coroutines.ensureActive
                 Text(strings.getString(R.string.dashboard_title),Modifier.weight(1f).padding(start=4.dp),
                     style=quotaTextStyle(13,true).copy(fontWeight=FontWeight.SemiBold,
                         letterSpacing=(.26f*LocalDesktopTextScale.current).sp),color=text)
-                DashboardHeaderAction(R.drawable.desktop_refresh,strings.getString(R.string.refresh),"hub-refresh",!loading,onRefresh)
+                DashboardHeaderAction(R.drawable.desktop_refresh,strings.getString(R.string.refresh),"hub-refresh",!loading,onRefresh,refreshFeedback)
                 DashboardHeaderAction(R.drawable.desktop_settings,strings.getString(R.string.nav_settings),"hub-settings-toggle",true,onSettings)
             }
             HorizontalDivider(color=overlay.copy(alpha=.14f))
@@ -117,12 +118,18 @@ import kotlinx.coroutines.ensureActive
 private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Unit)=
     this.clickable(role=Role.Tab,onClick=click).testTag(tag).semantics {selected=active}
 
-@Composable private fun DashboardHeaderAction(icon:Int,label:String,tag:String,enabled:Boolean,click:()->Unit) {
+@Composable private fun DashboardHeaderAction(icon:Int,label:String,tag:String,enabled:Boolean,click:()->Unit,feedback:Int=0) {
     val text=MaterialTheme.colorScheme.onSurface
     Box(Modifier.size(48.dp).clickable(enabled,role=Role.Button,onClick=click).testTag(tag)
         .semantics {contentDescription=label},contentAlignment=Alignment.Center) {
         Box(Modifier.size(26.dp).alpha(if(enabled) 1f else .4f).background(LocalDesktopOverlayColor.current.copy(alpha=.05f),RoundedCornerShape(6.dp)),
-            contentAlignment=Alignment.Center) {Icon(painterResource(icon),null,if(icon==R.drawable.desktop_refresh) Modifier.size(8.3.dp,8.dp) else Modifier.size(12.dp),tint=text)}
+            contentAlignment=Alignment.Center) {
+            when {
+                icon==R.drawable.desktop_refresh && feedback==1 -> Text("✓",style=quotaTextStyle(12,true),color=LocalDesktopSuccessColor.current)
+                icon==R.drawable.desktop_refresh && feedback==2 -> Text("!",style=quotaTextStyle(12,true),color=MaterialTheme.colorScheme.error)
+                else -> Icon(painterResource(icon),null,if(icon==R.drawable.desktop_refresh) Modifier.size(8.3.dp,8.dp) else Modifier.size(12.dp),tint=text)
+            }
+        }
     }
 }
 
@@ -226,7 +233,7 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
     val numbers=NumberFormat.getIntegerInstance(strings.configuration.locales[0])
     val display=LocalMainDisplay.current
     val locale=strings.configuration.locales[0]
-    AlertDialog(onDismissRequest=close,title={Text(row.date)},text={
+    DesktopAlertDialog(onDismissRequest=close,title={Text(row.date)},text={
         Column(Modifier.verticalScroll(rememberScrollState()).testTag("dashboard-day-detail"),verticalArrangement=Arrangement.spacedBy(12.dp)) {
             if(bar!=null) {
                 Text(strings.getString(R.string.dashboard_attributed_tokens)+": "+DesktopCompactTokens.format(bar.total.toDouble(),display.compactUnits,DesktopCompactTokens.localeTag(locale)),style=quotaTextStyle(13,true))
@@ -249,7 +256,7 @@ private fun Modifier.selectableDashboard(active:Boolean,tag:String,click:()->Uni
 @Composable private fun DashboardCandleDialog(candle:DashboardTrendCandle,close:()->Unit) {
     val strings=LocalResources.current
     val numbers=NumberFormat.getIntegerInstance(strings.configuration.locales[0])
-    AlertDialog(onDismissRequest=close,title={Text(if(candle.key==candle.endKey) candle.key else "${candle.key} – ${candle.endKey}")},text={
+    DesktopAlertDialog(onDismissRequest=close,title={Text(if(candle.key==candle.endKey) candle.key else "${candle.key} – ${candle.endKey}")},text={
         Column(Modifier.verticalScroll(rememberScrollState()).testTag("dashboard-candle-detail"),verticalArrangement=Arrangement.spacedBy(12.dp)) {
             listOf(R.string.chart_open to candle.open,R.string.chart_high to candle.high,R.string.chart_low to candle.low,R.string.chart_close to candle.close).forEach {(label,value)->
                 Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.spacedBy(8.dp)) {

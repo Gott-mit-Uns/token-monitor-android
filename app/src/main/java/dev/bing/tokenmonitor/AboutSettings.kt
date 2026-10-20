@@ -57,7 +57,7 @@ fun AboutSettings() {
         val paragraphs = remember(context) {
             runCatching { context.assets.open("open-source-notices.txt").bufferedReader().use { it.readText().split("\n\n") } }.getOrNull()
         }
-        AlertDialog(onDismissRequest = { opened = false }, title = { Text(strings.getString(R.string.licenses_title)) }, text = {
+        DesktopAlertDialog(onDismissRequest = { opened = false }, title = { Text(strings.getString(R.string.licenses_title)) }, text = {
             if (paragraphs == null) Text(strings.getString(R.string.licenses_unavailable))
             else LazyColumn(Modifier.heightIn(max = 400.dp).testTag("about-licenses-content"), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(paragraphs) { paragraph -> SelectionContainer { Text(paragraph, style = quotaTextStyle(11)) } }

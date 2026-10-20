@@ -83,7 +83,7 @@ import java.util.Locale
     var contextOpen by rememberSaveable(display.id) {mutableStateOf(false)}
     var summaryOpen by rememberSaveable(display.id) {mutableStateOf(false)}
     fun titleModifier(text:String):Modifier=if(models.size>1 && (text.endsWith(modelLabel) || (reviewRun && text==shownName))) Modifier.clickable {modelsOpen=true}.testTag("session-models-${display.id}") else Modifier
-    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).clickable {if(display.review) openReview() else summaryOpen=true}.testTag("session-row-${display.id}").semantics {if(active) stateDescription=strings.getString(R.string.session_running) else if(activityState=="waiting") stateDescription=strings.getString(R.string.session_waiting)},verticalArrangement=Arrangement.spacedBy(5.dp)) {
+    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).desktopPressable {if(display.review) openReview() else summaryOpen=true}.testTag("session-row-${display.id}").semantics {if(active) stateDescription=strings.getString(R.string.session_running) else if(activityState=="waiting") stateDescription=strings.getString(R.string.session_waiting)},verticalArrangement=Arrangement.spacedBy(5.dp)) {
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             Row(Modifier.weight(1f),verticalAlignment=Alignment.Top,horizontalArrangement=Arrangement.spacedBy(7.dp)) {
                 Box(Modifier.padding(top=2.dp).size(11.dp)) {

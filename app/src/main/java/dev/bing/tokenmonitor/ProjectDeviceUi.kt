@@ -9,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.CornerRadius
@@ -74,7 +76,7 @@ private val sourceFallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFF
     val gradient=ProjectDisplay.gradient(shares).map {it.position to color(it.client)}
     var expanded by rememberSaveable(row.id) {mutableStateOf(false)}
     var summary by rememberSaveable(row.id) {mutableStateOf(false)}
-    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).combinedClickable(role=Role.Button,onClick={expanded=!expanded},onLongClick={summary=true},onLongClickLabel=strings.getString(R.string.usage_summary)).semantics {stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)}.testTag("project-row-${row.id}")) {
+    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).clip(RoundedCornerShape(8.dp)).combinedClickable(role=Role.Button,onClick={expanded=!expanded},onLongClick={summary=true},onLongClickLabel=strings.getString(R.string.usage_summary)).semantics {stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)}.testTag("project-row-${row.id}")) {
         Row(Modifier.fillMaxWidth().testTag("project-head-${row.id}"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)) {
             if(LocalDesktopToolIcons.current) Icon(painterResource(R.drawable.desktop_project_row),null,Modifier.size(10.dp)) else Canvas(Modifier.size(8.dp)) {drawCircle(fallback)}
             Text(name,Modifier.weight(1f).testTag("project-title-${row.id}"),style=quotaTextStyle(12),maxLines=1,overflow=TextOverflow.Ellipsis)
@@ -130,7 +132,7 @@ private val sourceFallbackColors=listOf(0xFF6AB4F0L,0xFF5FBF8AL,0xFFA57DF0L,0xFF
     val version=if(!device.agentVersion.isNullOrEmpty()) (if(runtime.isEmpty()) "" else "$runtime ")+"v${device.agentVersion}" else runtime
     val age=DeviceDisplay.age(device.updated,now)?.let {(unit,value)->strings.getString(when(unit) {"minutes"->R.string.device_age_minutes;"hours"->R.string.device_age_hours;"days"->R.string.device_age_days;else->R.string.device_age_now},value)}
     val meta=listOf(DeviceDisplay.platform(device),version,age?.let {strings.getString(R.string.device_synced,it)}.orEmpty()).filter(String::isNotEmpty).joinToString(" · ")
-    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).combinedClickable(role=Role.Button,onClick={expanded=!expanded},onLongClick=details,onLongClickLabel=strings.getString(R.string.device_details)).semantics {stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)}.testTag("device-row-${device.id}")) {
+    Column(Modifier.fillMaxWidth().heightIn(min=48.dp).clip(RoundedCornerShape(8.dp)).combinedClickable(role=Role.Button,onClick={expanded=!expanded},onLongClick=details,onLongClickLabel=strings.getString(R.string.device_details)).semantics {stateDescription=strings.getString(if(expanded) R.string.desktop_collapse else R.string.desktop_expand)}.testTag("device-row-${device.id}")) {
         Row(Modifier.fillMaxWidth().testTag("device-head-${device.id}"),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(10.dp)) {
             DeviceMark(device.rawPlatform ?: device.platform.orEmpty(),stale,device.id)
             Text(DeviceDisplay.name(device,alias),Modifier.weight(1f).testTag("device-name-${device.id}"),style=quotaTextStyle(12),color=if(stale) colors.onSurfaceVariant else colors.onSurface,maxLines=1,overflow=TextOverflow.Ellipsis)
