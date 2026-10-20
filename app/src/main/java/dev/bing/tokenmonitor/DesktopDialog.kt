@@ -1,6 +1,8 @@
 package dev.bing.tokenmonitor
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.heightIn
@@ -11,6 +13,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,15 +59,36 @@ internal fun DesktopFilterChip(
 ) {
     val overlay = LocalDesktopOverlayColor.current
     val shape = RoundedCornerShape(6.dp)
-    ProvideTextStyle(quotaTextStyle(11)) {
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    Box(
+        modifier
+            .heightIn(min = 48.dp)
+            .clip(shape)
+            .selectable(
+                selected = selected,
+                interactionSource = interaction,
+                indication = null,
+                enabled = enabled,
+                role = Role.RadioButton,
+                onClick = onClick
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        // Keep the 48dp target, but paint only the visible pill around the label.
         Box(
-            modifier
-                .heightIn(min = 48.dp)
-                .clip(shape)
-                .background(if (selected) overlay.copy(alpha = .12f) else Color.Transparent, shape)
-                .selectable(selected = selected, enabled = enabled, role = Role.RadioButton, onClick = onClick)
-                .padding(horizontal = 10.dp, vertical = 3.dp),
-            contentAlignment = Alignment.Center
-        ) { label() }
+            Modifier
+                .background(
+                    when {
+                        selected -> overlay.copy(alpha = .12f)
+                        pressed -> overlay.copy(alpha = .06f)
+                        else -> Color.Transparent
+                    },
+                    shape
+                )
+                .padding(horizontal = 10.dp, vertical = 4.dp)
+        ) {
+            ProvideTextStyle(quotaTextStyle(11)) { label() }
+        }
     }
 }
