@@ -1,0 +1,350 @@
+{
+  "sourceCommit": "fbbe4c1cb04e3277b73499016d432338c1d2ab4e",
+  "compactLegacy": [
+    {
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 5-hour",
+            "remainingPercent": 75
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini weekly",
+            "remainingPercent": 50
+          },
+          {
+            "kind": "session",
+            "label": "Claude 5-hour",
+            "remainingPercent": 55
+          },
+          {
+            "kind": "weekly",
+            "label": "Claude weekly",
+            "remainingPercent": 10
+          },
+          {
+            "kind": "session",
+            "label": "Other 5-hour",
+            "remainingPercent": 80
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Gemini 5-hour",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Claude weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Gemini 5-hour"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini weekly",
+            "remainingPercent": 50
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Gemini 5-hour",
+          "value": null,
+          "resetDescription": null
+        },
+        {
+          "label": "Gemini weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    },
+    {
+      "input": {
+        "provider": "antigravity",
+        "windows": [
+          {
+            "kind": "session",
+            "label": "Unrecognized"
+          },
+          {
+            "kind": "weekly",
+            "label": "Gemini weekly",
+            "remainingPercent": 50
+          }
+        ]
+      },
+      "output": [
+        {
+          "label": "Gemini weekly",
+          "value": null,
+          "resetDescription": null
+        }
+      ]
+    }
+  ],
+  "counts": [
+    {
+      "input": null,
+      "expected": {
+        "tool": 5,
+        "model": 5,
+        "session": 5,
+        "device": 4
+      }
+    },
+    {
+      "input": {},
+      "expected": {
+        "tool": 5,
+        "model": 5,
+        "session": 5,
+        "device": 4
+      }
+    },
+    {
+      "input": [],
+      "expected": {
+        "tool": 5,
+        "model": 5,
+        "session": 5,
+        "device": 4
+      }
+    },
+    {
+      "input": {
+        "tool": "8.9",
+        "model": -2,
+        "session": 999,
+        "device": "bad"
+      },
+      "expected": {
+        "tool": 8,
+        "model": 1,
+        "session": 50,
+        "device": 4
+      }
+    },
+    {
+      "input": {
+        "tool": null,
+        "model": "",
+        "session": true,
+        "device": 0
+      },
+      "expected": {
+        "tool": 5,
+        "model": 5,
+        "session": 5,
+        "device": 1
+      }
+    },
+    {
+      "input": {
+        "tool": 50,
+        "model": 1,
+        "session": 2,
+        "device": 7
+      },
+      "expected": {
+        "tool": 50,
+        "model": 1,
+        "session": 2,
+        "device": 7
+      }
+    },
+    {
+      "input": {
+        "tool": 1e+100,
+        "model": -1e+100,
+        "session": "NaN",
+        "device": "Infinity"
+      },
+      "expected": {
+        "tool": 50,
+        "model": 1,
+        "session": 5,
+        "device": 4
+      }
+    }
+  ],
+  "quotaCases": [
+    {
+      "windows": [
+        {
+          "kind": "session",
+          "label": "Gemini 5-hour",
+          "remainingPercent": 90
+        },
+        {
+          "kind": "weekly",
+          "label": "Gemini weekly",
+          "remainingPercent": 95
+        },
+        {
+          "kind": "weekly",
+          "label": "Gemini 4 Argon weekly",
+          "remainingPercent": 74
+        },
+        {
+          "kind": "session",
+          "label": "Claude/GPT 5-hour",
+          "remainingPercent": null,
+          "showMeter": false
+        },
+        {
+          "kind": "weekly",
+          "label": "Claude/GPT weekly",
+          "remainingPercent": 0
+        }
+      ],
+      "visible": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "compact": [
+        "Gemini 4 Argon weekly",
+        "Claude/GPT weekly"
+      ]
+    },
+    {
+      "windows": [
+        {
+          "kind": "weekly",
+          "label": "Unavailable pool",
+          "remainingPercent": null,
+          "showMeter": false
+        },
+        {
+          "kind": "weekly",
+          "label": "Real zero",
+          "remainingPercent": 0
+        },
+        {
+          "kind": "weekly",
+          "label": "Used zero",
+          "usedPercent": 0
+        }
+      ],
+      "visible": [
+        false,
+        true,
+        true
+      ],
+      "compact": [
+        "Real zero",
+        "Used zero"
+      ]
+    },
+    {
+      "windows": [
+        {
+          "kind": "session",
+          "label": "Gemini 5-hour",
+          "remainingPercent": 90
+        },
+        {
+          "kind": "weekly",
+          "label": "Gemini weekly",
+          "remainingPercent": 95
+        },
+        {
+          "kind": "weekly",
+          "label": "Gemini 4 Argon weekly",
+          "remainingPercent": 74
+        }
+      ],
+      "visible": [
+        true,
+        true,
+        true
+      ],
+      "compact": [
+        "Gemini 5-hour",
+        "Gemini 4 Argon weekly"
+      ]
+    },
+    {
+      "windows": [
+        {
+          "kind": "session",
+          "label": "Gemini 5-hour",
+          "remainingPercent": 90
+        },
+        {
+          "kind": "weekly",
+          "label": "Gemini weekly",
+          "remainingPercent": 95
+        },
+        {
+          "kind": "weekly",
+          "label": "Gemini 4 Argon weekly",
+          "remainingPercent": 74
+        },
+        {
+          "kind": "session",
+          "label": "Claude/GPT 5-hour",
+          "remainingPercent": null,
+          "showMeter": false
+        },
+        {
+          "kind": "weekly",
+          "label": "Claude/GPT weekly",
+          "remainingPercent": 0
+        },
+        {
+          "kind": "weekly",
+          "label": "Unavailable pool",
+          "remainingPercent": null,
+          "showMeter": false
+        },
+        {
+          "kind": "weekly",
+          "label": "Real zero",
+          "remainingPercent": 0
+        },
+        {
+          "kind": "weekly",
+          "label": "Used zero",
+          "usedPercent": 0
+        }
+      ],
+      "visible": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "compact": [
+        "Gemini 5-hour",
+        "Gemini weekly",
+        "Gemini 4 Argon weekly",
+        "Claude/GPT 5-hour",
+        "Claude/GPT weekly",
+        "Real zero",
+        "Used zero"
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ data class DisplayPreferences(val theme: ThemeChoice = ThemeChoice.SYSTEM, val h
     val homeModules: List<String> = HomeModulePreferences.freshVisible, val hiddenTools: Set<String> = emptySet(),
     val pinnedTools: List<String> = emptyList(), val toolOrder: List<String> = emptyList(), val monthMode: String = "month", val lastPeriod: String = "today",
     val heatmapMetric: String = "cost", val homeActiveDaysWindow: String = "all", val currency: String = "USD", val currencyRates: Map<String, String> = emptyMap(),
-    val appearance: AppearancePreferences = AppearancePreferences(), val limits: LimitDisplayPreferences = LimitDisplayPreferences(),val main:MainDisplayPreferences = MainDisplayPreferences(),val modelRanking:String="tokens",val homeModuleOrder:List<String> = emptyList(), val sessionTitlesEnabled:Boolean=true,val projectBreakdownMode:String="tool") {
+    val appearance: AppearancePreferences = AppearancePreferences(), val limits: LimitDisplayPreferences = LimitDisplayPreferences(),val main:MainDisplayPreferences = MainDisplayPreferences(),val modelRanking:String="tokens",val homeModuleOrder:List<String> = emptyList(), val sessionTitlesEnabled:Boolean=true,val projectBreakdownMode:String="tool",val homeModuleCounts:Map<String,Int> = emptyMap()) {
     val hideSessionTitles:Boolean get() = hideTitles || !sessionTitlesEnabled
 }
 
@@ -65,6 +65,7 @@ sealed interface DisplayChange {
     data class Language(val choice: LanguageChoice) : DisplayChange
     data class HideTitles(val hidden: Boolean) : DisplayChange
     data class HomeModules(val modules: List<String>) : DisplayChange
+    data class HomeModuleCount(val id:String,val input:String):DisplayChange
     data class HomeModuleVisibility(val id:String):DisplayChange
     data class HomeModuleMove(val id:String,val direction:Int):DisplayChange
     data object ResetHomeModuleOrder:DisplayChange
@@ -117,6 +118,7 @@ sealed interface DisplayChange {
         is RestoreLimitOrder -> current.copy(limits=if(home) current.limits.copy(homeProviderOrder=emptyList()) else current.limits.copy(providerOrder=emptyList()))
         is HomeLimitProviderVisibility -> if(id !in LimitPreferences.providers) current else current.copy(limits=current.limits.copy(hiddenHomeProviders=if(id in current.limits.hiddenHomeProviders) current.limits.hiddenHomeProviders-id else current.limits.hiddenHomeProviders+id))
         ShowAllHomeLimitProviders -> current.copy(limits=current.limits.copy(hiddenHomeProviders=emptySet()))
+        is HomeModuleCount -> if(id !in HomeModuleCounts.defaults) current else current.copy(homeModuleCounts=HomeModuleCounts.update(current.homeModuleCounts,id,input))
         is HomeLimitCount -> if(count !in 1..12) current else current.copy(limits=current.limits.copy(homeAccountCount=count))
         is HomeLimitBars -> current.copy(limits=current.limits.copy(homeBars=bars))
         is HighlightLowHomeLimits -> current.copy(limits=current.limits.copy(highlightLowHomeLimits=enabled))
@@ -162,7 +164,22 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
         require(projectBreakdownFile.baseFile.length()==2L)
         if(projectBreakdownFile.readFully().contentEquals(byteArrayOf(1,1))) "model" else "tool"
     }.getOrDefault("tool")
-    private fun withNumberAnimation(value:DisplayPreferences)=value.copy(appearance=value.appearance.copy(tokenNumberAnimation=numberAnimation()),projectBreakdownMode=projectBreakdownMode())
+    private val homeCountsFile=AtomicFile(File(context.noBackupFilesDir,name+".home-counts"))
+    private fun homeCounts():Map<String,Int> = runCatching {
+        // openRead restores a legacy backup before inspecting the base record.
+        val data=homeCountsFile.openRead().use {input->
+            val buffer=ByteArray(6);var size=0
+            while(size<buffer.size) {
+                val read=input.read(buffer,size,buffer.size-size)
+                if(read<0) break
+                size+=read
+            }
+            buffer.copyOf(size)
+        }
+        require(data.size==5 && data[0]==1.toByte())
+        HomeModuleCounts.defaults.keys.mapIndexed {index,id->id to data[index+1].toInt().also {require(it in 1..50)}}.toMap()
+    }.getOrDefault(emptyMap())
+    private fun withNumberAnimation(value:DisplayPreferences)=value.copy(homeModuleCounts=homeCounts(),appearance=value.appearance.copy(tokenNumberAnimation=numberAnimation()),projectBreakdownMode=projectBreakdownMode())
     fun load(): DisplayPreferences = synchronized(diskLock) {
         if (!file.baseFile.exists()) return withNumberAnimation(DisplayPreferences())
         require(file.baseFile.length() <= maxBytes)
@@ -260,6 +277,7 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
         require(preferences.currency in UsageCurrency.codes)
         require(preferences.currencyRates.size <= 3 && preferences.currencyRates.all { (code, value) -> code in UsageCurrency.codes && code != "USD" && UsageCurrency.validRate(value) })
         require(DesktopAppearance.valid(preferences.appearance))
+        require(preferences.homeModuleCounts.isEmpty() || preferences.homeModuleCounts==HomeModuleCounts.normalized(preferences.homeModuleCounts))
         require(preferences.projectBreakdownMode in listOf("tool","model"))
         require(preferences.modelRanking in listOf("tokens","cost"))
         require(MainDisplay.valid(preferences.main))
@@ -308,6 +326,12 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
             output.write(bytes)
             file.finishWrite(output)
         } catch (error: Exception) { file.failWrite(output); throw error }
+        if(HomeModuleCounts.normalized(preferences.homeModuleCounts)==HomeModuleCounts.defaults) homeCountsFile.delete()
+        else {
+            val countOutput=homeCountsFile.startWrite()
+            try {countOutput.write(byteArrayOf(1)+HomeModuleCounts.defaults.keys.map {HomeModuleCounts.count(preferences,it).toByte()}.toByteArray());homeCountsFile.finishWrite(countOutput)}
+            catch(error:Exception) {homeCountsFile.failWrite(countOutput);throw error}
+        }
         if(preferences.projectBreakdownMode=="tool") projectBreakdownFile.delete()
         else {
             val modeOutput=projectBreakdownFile.startWrite()
@@ -321,5 +345,5 @@ class DisplayPreferenceStore(context: Context, name: String = "display-preferenc
             catch(error:Exception) {numberAnimationFile.failWrite(modeOutput);throw error}
         }
     }
-    fun clear() = synchronized(diskLock) { file.delete();numberAnimationFile.delete();projectBreakdownFile.delete() }
+    fun clear() = synchronized(diskLock) { file.delete();numberAnimationFile.delete();projectBreakdownFile.delete();homeCountsFile.delete() }
 }
