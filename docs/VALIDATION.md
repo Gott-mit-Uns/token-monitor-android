@@ -1,5 +1,26 @@
 # 当前验收记录
 
+## 当前候选验收：Android 0.76.0-01 / code83
+
+2026-10-20（Asia/Shanghai）。开发前Android latest v0.75.0-02/code82，桌面latest v0.76.0/fbbe4c1；固定范围及逐提交映射见HANDOFF。用户本次已明确授权测试、PR、合并和正式发布；以下是候选实跑，发行尚未执行。
+
+| 本轮实跑 | 结果与证据边界 |
+|---|---|
+| 标准构建/JVM | 既有Wrapper/JDK17/SDK37，offline release、正式签名AndroidTest及Lint构建成功。最终完整539项、102类，0失败/错误/跳过；包含7种固定桌面数量规范样例、4组额度可见性/紧凑投影、活跃会话超上限及份额不变。 |
+| 上游 | 固定v0.76.0的homeModuleCounts、limitProviderPresentation、Antigravity limits/OAuth/probe共328项通过；第一次参考目录缺undici，复用本机既有只读依赖后通过，没有安装依赖或改变产品依赖。 |
+| 静态 | Lint 0错误、118警告、2提示；较正式0.75.0-02的128警告减少，不抑制告警。680对英中资源、文档self-test和git diff检查通过。 |
+| 设备升级 | 独立只读API36 ARM64 emulator-5690，公开正式code82与匹配旧测试包准备合成数据，install -r到code83成功，升级解密/偏好读取1项通过。未卸载、清数据、操作其他已运行模拟器或实体手机。 |
+| 设备回归 | 新增3项通过：数量999→50、无效→默认5、8条提交与冷读取、V16主文件字节不变、损坏旁文件回默认；额度HTTP/SSE full/freshness及加密冷恢复保留5窗口并按新分组顺序显示Argon74%。相关13项通过：HomeOrder1、HomeSession1、LimitDisplay2、NavigationPolish2、TrendsNavigation3、AndroidUpdate4。旧版准备1项单列，不计新版测试。 |
+| 本轮窗口 | 320/411dp（880/1130px，density440）×真实系统fontScale2×双主题，共4组12项通过。数量设置浅色英文/深色中文，额度保持英文数值便于对照；均使用最终744fd98f…测试包与同一29e15c21…应用包。实际查看320dp双主题数量、模型、Argon截图，要求完整数量行与74%读数进入视口，未放宽可见性断言。结束恢复1080×2400/density420/fontScale1。 |
+
+产品输入提交7a27974，最终产品/测试输入 `3cd1bd6ff7388c324ed7f6ac6ef72ff2f6ba286d`；后续只修测试样例与界面取证容器，产品未变。APK 15,345,326字节，SHA256 `29e15c213542809b906facb94655d0495aac62c2d2ebd59ee476d31e9d82c03f`，包名dev.bing.tokenmonitor.nativeclient，正式0.76.0-01/code83，min26/target37，签名SHA256仍 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。最终AndroidTest SHA256 `744fd98fa6d5147b8dd16b23cf14376786ad2519094d859a722a267cf67afdf9`；615个生产/测试/sharedTest及五项Gradle输入按目录顺序、目录内路径排序、路径NUL原始字节NUL计算SHA256 `a7f50851f4117220ea40752096b150581e712c4c7bb5e268d500b66dba7f017b`，明确包含共享fixture树。实际安装APK回读与候选逐字节一致；升级前后PUBLIC_UPGRADE_UID及五份合成加密/偏好文件指纹逐项保持。
+
+原始日志在`/tmp/token076-final-build3.log`、upstream-final.log、upgrade-seed.log、upgrade-final.log、regression-各类.log、final-matrix-各组.log、final-matrix-summary.json（均同token076前缀）。正常字号新增3项通过及13项旧UI定向运行在最终可见性取证修改前；新测试包仅修滚动目标/容器与语言参数，最终4组12项覆盖同3方法，旧回归方法与产品保持，按实际阶段继承，不声称完整androidTest通过。首轮数量/额度设备失败使用应用29e15c21…、测试62db3cd3…；无效输入测试误判使用42bb71ac…；独立卡片透明底容器阶段为9fe5afff…，后改完整HubScreen且保留HTTP/缓存/数值断言。最终公开原图见[中文数量设置](../design/desktop076-count-large-dark-zh.png)、[英文数量设置](../design/desktop076-count-large-light-en.png)、[浅色模型](../design/desktop076-models-large-light-en.png)、[深色Argon](../design/desktop076-argon-large-dark-zh.png)、[浅色Argon](../design/desktop076-argon-large-light-en.png)；截图中旧底部切换器截断为0.75.0-02明确保留项，本次未扩范围。临时材料不宣称随Git提供。
+
+首次失败保留：首轮539项中3失败，新增额度fixture缺必需periods；旧075测试将固定旧fixture来源误与当前metadata比较；旧紧凑窗口期望仍按升级前规则保留空占位。补结构、固定旧fixture自身来源，并以固定v0.76生产代码重算旧输入的期望，保留原断言，最后完整539项通过。首轮XML在`/tmp/token076-first-unit-failures/`，构建日志first-build.log；定向12项复跑通过。额度设置图标XML分组首次结束标签不匹配使资源编译失败，改为XML树生成且以实际20单位中心缩放，final-build.log/final-build2.log保留；final-build3.log为成功标准构建。应用97780b01…和测试53d9ee1d…是最终图标修正前的阶段工件，不混作最终APK。首次界面样例总量大于模型和，未分类行占用默认5个位置，修正合成总量后保留原模型条数断言；其后无效输入复原为默认时旁文件正常删除，测试误直接访问空映射，改为检查实际默认解析值，不放宽数值或持久化断言。原始失败与复跑日志按`/tmp/token076-`前缀分别保留。
+
+未验证：真机/私有资料、真实账户、生产Hub的Argon采集与新采集器部署。HTTP/SSE/缓存的合成消费不等于生产联调；本次不操作NAS、路由或桌面运行服务。未改网络认证、SSE生命周期、缓存主格式、计费及README。此前0.75.0-02的未受影响仪表板布局矩阵按该版本/环境/范围继承，不冒称在本版重跑。
+
 ## 当前发行验收：Android 0.75.0-02 / code82
 
 检查日期 2026-10-20（Asia/Shanghai）；基线 `fb0e293`（正式 v0.75.0-01/code81）。PR #23 已合并至 `9538369a159053768ecb7219677df00e4cd844f8`，annotated Tag `v0.75.0-02`（`5e2ff1cb91c28139d4e2bcccc7691f2484944403`）解引用同提交，[正式 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.75.0-02) 已发布为 latest。正式版本 0.75.0-02/code82，fixed desktop v0.75.0/`877fef6`，fullyAligned=false。用户批准范围与未改项见 [HANDOFF](HANDOFF.md)。

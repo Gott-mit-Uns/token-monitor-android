@@ -1,5 +1,19 @@
 # 当前交接
 
+## 当前候选：桌面 v0.76.0 / Android 0.76.0-01 / code83
+
+2026-10-20（Asia/Shanghai），用户明确要求“再次对齐到最新版，直接合并，发布”。开发前实时核对Android最新正式版v0.75.0-02/code82，最新主分支 `9305810`；桌面最新正式Tag v0.76.0（annotated `fe25cbc67d94dcbdcc0b2f345be4562a584fc3c0`，解引用 `fbbe4c1cb04e3277b73499016d432338c1d2ab4e`）。只比较v0.75.0之后9个提交，不采用浮动main。候选0.76.0-01/code83，fullyAligned=false保持；沿用0.75.0-02已验收的字体、皮肤、状态与仪表板记录tab，不回退为旧双按钮。
+
+| 上游增量 | Android处理与合同边界 |
+|---|---|
+| 0a072e3 / 首页显示数量 | 工具、模型、会话、设备分别配置1–50条，默认5/5/5/4；设置位于现有主页模块配置中，独立保存、失焦或完成提交，异常输入回默认，越界夹到边界。活跃/等待会话仍可超出最近数量。数量只影响首页投影，不截断源数据或详细页，不发网络写入。新增可选`.home-counts`旁文件，旧V16主偏好字节保持，缺失/损坏回默认，旧版可忽略。 |
+| e61ef14 / Antigravity Argon | 已有windows合同消费Argon，无需新增凭据/采集字段。按固定桌面过滤无读数旧模型池，保留分组禁用窗口和真实零，完整页分组顺序Gemini、Claude/GPT、Gemini 4 Argon；首页沿用紧凑最紧窗口选择。RPC/OAuth合并与客户端版本下限属于生产采集端，不在手机重采集；未证明生产Hub已提供Argon。 |
+| c60fd03 / 图标统一 | 同步适用viewBox及设备/项目绘图，主页、工具、模型、项目、会话、设备、趋势和外观/同步设置图标统一；额度设置图形按源端放大13%，保持Android触控范围。桌面采集和窗口设置在Android无对应项。 |
+| 115709a、e77b2b9、e93e1a2、28915b9 | Windows Edge Dock恢复、macOS Notch鼠标/滑动/闪电图标及遮罩性能属于桌面窗口，不移植到Android、不操作桌面服务。 |
+| 7cf0c4c、fbbe4c1 | Linux启动文档及发行元数据不改变Android合同；Hub精确注册表仍为core89等既有指纹，无新修订可登记，不猜测未知构建。 |
+
+正式构建、539项JVM和固定上游328项测试通过；设备回归、工件及首次失败见VALIDATION。当前仅开发分支，后续完成必要设备验证、自动审查和CI后按本次授权合并发布。无依赖、认证、SSE生命周期、费用、生产数据格式变更，README未改；未操作真机、NAS或生产Hub。若需回退行为，从v0.75.0-02源码按新修订号和高于已安装版本的versionCode、同签名构建修复版并经PR/测试和授权发布，不卸载、清数据或改写已发Tag。
+
 ## 当前发行：Android 0.75.0-02 / code82（界面一致性批次）
 
 2026-10-20（Asia/Shanghai），用户明确“合并，发布”。PR #23 从 `feat/android-ui-refinements` 合并至 `9538369a159053768ecb7219677df00e4cd844f8`；annotated Tag `v0.75.0-02`（`5e2ff1cb91c28139d4e2bcccc7691f2484944403`）解引用同提交；[正式 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.75.0-02) 已发布为 latest。版本 82，桌面目标仍 v0.75.0 / `877fef6002a5fee84aa502fc3454b4f700b55813`，fullyAligned=false 保持。未操作真机、NAS 或生产 Hub；发布不证明这些环境已更新。

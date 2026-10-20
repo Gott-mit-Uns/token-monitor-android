@@ -1,6 +1,6 @@
 # Android 当前功能与数据边界
 
-当前正式发行为 Android `0.75.0-01` / code81，固定桌面 `v0.75.0` / `877fef6002a5fee84aa502fc3454b4f700b55813`；来源及验证状态以[当前验收](VALIDATION.md)为准，增量映射见[当前交接](HANDOFF.md)。PR #21合并后已正式发布；发行不证明实际NAS或手机已更新。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留。
+当前候选为 Android `0.76.0-01` / code83，固定桌面 `v0.76.0` / `fbbe4c1cb04e3277b73499016d432338c1d2ab4e`；开发前正式版为0.75.0-02/code82。来源及验证状态以[当前验收](VALIDATION.md)为准，增量映射见[当前交接](HANDOFF.md)。首页工具/模型/会话/设备数量可独立配置1–50条；Argon按现有Hub windows合同消费，不承担OAuth/RPC采集。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留，发行不证明NAS或手机已更新。
 
 | 功能 | Android 当前范围 | Hub / Agent 依赖及限制 |
 |---|---|---|
