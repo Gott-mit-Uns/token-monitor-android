@@ -70,16 +70,21 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(ChartMode.BARS to R.string.chart_bars, ChartMode.KLINE to R.string.chart_kline, ChartMode.LINE to R.string.chart_line).forEach { (choice, label) ->
-                FilterChip(mode == choice, { mode = choice }, label = { Text(strings.getString(label)) })
+                DesktopFilterChip(mode == choice, { mode = choice }) { Text(strings.getString(label)) }
             }
         }
         if (mode == ChartMode.BARS) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(!byModel, { byModel = false }, label = { Text(strings.getString(R.string.chart_by_tool)) },modifier=Modifier.testTag("history-by-tool"))
-            FilterChip(byModel, { byModel = true }, label = { Text(strings.getString(R.string.chart_by_model)) },modifier=Modifier.testTag("history-by-model"))
+            DesktopFilterChip(!byModel, { byModel = false },modifier=Modifier.testTag("history-by-tool")) { Text(strings.getString(R.string.chart_by_tool)) }
+            DesktopFilterChip(byModel, { byModel = true },modifier=Modifier.testTag("history-by-model")) { Text(strings.getString(R.string.chart_by_model)) }
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(strings.getString(R.string.history_peak, peak?.let(numbers::format) ?: "—"), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
-            Text(strings.getString(if (mode == ChartMode.KLINE) R.string.chart_tap_detail else R.string.daily_chart_inspect_hint), Modifier.weight(1f).padding(start = 8.dp), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
+        val peakText=strings.getString(R.string.history_peak, peak?.let(numbers::format) ?: "—")
+        val hintText=strings.getString(if (mode == ChartMode.KLINE) R.string.chart_tap_detail else R.string.daily_chart_inspect_hint)
+        if(effectiveTextScale()>1.15f) Column(verticalArrangement=Arrangement.spacedBy(4.dp)) {
+            Text(peakText,style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)
+            Text(hintText,Modifier.testTag("history-chart-hint"),style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
+        } else Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {
+            Text(peakText,style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)
+            Text(hintText,Modifier.weight(1f).padding(start=8.dp).testTag("history-chart-hint"),style=MaterialTheme.typography.labelSmall,color=colors.onSurfaceVariant)
         }
         BoxWithConstraints(Modifier.fillMaxWidth()) {
             val width = if (mode == ChartMode.BARS) maxOf(maxWidth, (calendar.size * 7).dp) else maxWidth
@@ -164,16 +169,30 @@ private fun seriesColor(key: String, byModel: Boolean, palette:Map<String,Long>)
         }
         if (mode == ChartMode.BARS) {
             val grand = totals.fold(BigInteger.ZERO) { sum, entry -> sum + entry.second }
-            totals.forEach { (key, value) -> Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(8.dp).background(seriesColor(key, byModel,palette)).testTag("history-color-$key")); Spacer(Modifier.width(8.dp))
-                Text(if (key == HistoryAnalytics.UNATTRIBUTED) strings.getString(R.string.chart_unattributed) else if (byModel) key else toolLabel(key), Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
-                Text(numbers.format(value), style = quotaDataTextStyle(12))
-                Text(if (grand.signum() > 0) " ${(value.toDouble() / grand.toDouble() * 100).let { String.format(strings.configuration.locales[0], "%.1f", it) }}%" else " —", style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
-            } }
+            val large=effectiveTextScale()>1.15f
+            totals.forEach { (key, value) ->
+                val name=if (key == HistoryAnalytics.UNATTRIBUTED) strings.getString(R.string.chart_unattributed) else if (byModel) key else toolLabel(key)
+                val percent=if (grand.signum() > 0) " ${(value.toDouble() / grand.toDouble() * 100).let { String.format(strings.configuration.locales[0], "%.1f", it) }}%" else " —"
+                if(large) Column(Modifier.fillMaxWidth().padding(vertical=2.dp)) {
+                    Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
+                        Box(Modifier.size(8.dp).background(seriesColor(key, byModel,palette)).testTag("history-color-$key")); Spacer(Modifier.width(8.dp))
+                        Text(name,Modifier.weight(1f),style=MaterialTheme.typography.bodySmall,maxLines=1,overflow=androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+                    }
+                    Row(Modifier.fillMaxWidth().padding(start=16.dp),horizontalArrangement=Arrangement.End,verticalAlignment=Alignment.CenterVertically) {
+                        Text(numbers.format(value),style=quotaDataTextStyle(12))
+                        Text(percent,style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)
+                    }
+                } else Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(8.dp).background(seriesColor(key, byModel,palette)).testTag("history-color-$key")); Spacer(Modifier.width(8.dp))
+                    Text(name, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
+                    Text(numbers.format(value), style = quotaDataTextStyle(12))
+                    Text(percent, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
+                }
+            }
         }
         Text(strings.getString(if (mode == ChartMode.KLINE) R.string.chart_kline_note else R.string.history_gap_note), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
     }
-    candleDetail?.let { candle -> AlertDialog(onDismissRequest = { candleDetail = null }, title = { Text("${candle.start} – ${candle.end}") }, text = {
+    candleDetail?.let { candle -> DesktopAlertDialog(onDismissRequest = { candleDetail = null }, title = { Text("${candle.start} – ${candle.end}") }, text = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(R.string.chart_open to candle.open, R.string.chart_close to candle.close, R.string.chart_high to candle.high, R.string.chart_low to candle.low).forEach { (name, value) ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Text(strings.getString(name)); Text(value?.let(numbers::format) ?: "—") }

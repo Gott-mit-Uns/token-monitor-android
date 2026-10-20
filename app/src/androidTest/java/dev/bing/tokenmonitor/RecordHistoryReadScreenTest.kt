@@ -64,7 +64,7 @@ class RecordHistoryReadScreenTest {
         compose.onNodeWithTag("view-trends").performScrollTo().performClick()
         compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("trends-main-open-history"))
         compose.onNodeWithTag("trends-main-open-history").performClick()
-        compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-tab-records").performClick()
         compose.onNodeWithTag("history-record-2026-10-15").performScrollTo().performClick()
     }
     private fun assertSelectedMessage(message: String) {

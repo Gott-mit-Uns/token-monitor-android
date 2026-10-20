@@ -100,6 +100,7 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
     val missing=summary?.unpricedTokens?.takeIf {it>0}
     val note=missing?.let {strings.getString(R.string.known_unpriced,NumberFormat.getIntegerInstance(locale).format(it))}
     var showNote by remember(missing) {mutableStateOf(false)}
+    val singleColumn=effectiveTextScale()>1.6f
     val text=MaterialTheme.colorScheme.onSurface
     val overlay=LocalDesktopOverlayColor.current
     val scale=LocalDesktopTextScale.current
@@ -116,8 +117,9 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                 measurer.measure(AnnotatedString(stat.label.uppercase(Locale.ROOT)),captionStyle,maxLines=1,softWrap=false).size.width
             ).toDp().value.toDouble()+padding.value*2}}
             val width=maxWidth.value.toDouble()
-            val bounded=requirements.map {it.coerceAtMost(width/2)}
+            val bounded=requirements.map {it.coerceAtMost(if(singleColumn) width else width/2)}
             val columns=when {
+                singleColumn -> 1
                 width>=8*92 && bounded.sum()+80<=width ->8
                 width>=4*92 && bounded.chunked(4).all {it.sum()+40<=width}->4
                 else->2
@@ -127,6 +129,10 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                 .background(overlay.copy(alpha=.03f)).testTag("dashboard-summary"),content={
                 stats.forEachIndexed {index,stat->
                     val clickable=stat.key=="cost" && note!=null
+                    val multiline=stat.key=="favorite"
+                    // A long model name may wrap; prefer a visible break after its first hyphen.
+                    val displayedValue=if(multiline && !singleColumn && effectiveTextScale()>1.15f)
+                        stat.value.replaceFirst("-", "-\n") else stat.value
                     Column(Modifier.semantics(mergeDescendants=true) {
                         if(clickable) contentDescription=stat.value+", "+note
                     }.testTag("dashboard-card-${stat.key}")
@@ -136,7 +142,8 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                             if(index>=columns) drawLine(overlay.copy(alpha=.06f),Offset.Zero,Offset(size.width,0f),1.dp.toPx())
                         }.heightIn(min=if(clickable) CompactUiTokens.InteractiveMinHeight else CompactUiTokens.DetailRowMinHeight)
                         .padding(horizontal=padding,vertical=CompactUiTokens.CardContentPadding),verticalArrangement=Arrangement.spacedBy(CompactUiTokens.ChartTitleSpacing)) {
-                        Text(stat.value,Modifier.fillMaxWidth().testTag("dashboard-card-${stat.key}-value"),style=valueStyle,color=text)
+                        Text(displayedValue,Modifier.fillMaxWidth().testTag("dashboard-card-${stat.key}-value"),style=valueStyle,color=text,
+                            maxLines=if(multiline) 2 else 1,softWrap=multiline,overflow=TextOverflow.Ellipsis)
                         Text(stat.label.uppercase(Locale.ROOT),Modifier.fillMaxWidth().testTag("dashboard-card-${stat.key}-label"),style=captionStyle,color=text.copy(alpha=.55f))
                     }
                 }
@@ -181,7 +188,11 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
     val latestSelect by rememberUpdatedState(onRowSelect)
     fun select(cell:HomeHeatCell) {latestSelect(cell.value ?: HistoryRow(cell.date,null,null))}
     val description=strings.getString(R.string.dashboard_heatmap_description,model.cells.first().date,model.today.toString())
-    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+    val scroll=rememberScrollState()
+    // A 12-month window is wider than a phone: anchor the first view to the present,
+    // not to the oldest month, so recent activity is visible without a blind swipe.
+    LaunchedEffect(scroll.maxValue,model.cells.size) {if(scroll.maxValue>0) scroll.scrollTo(scroll.maxValue)}
+    Row(Modifier.fillMaxWidth().horizontalScroll(scroll)) {
         Column(Modifier.width(geometry.width.dp)) {
             Canvas(Modifier.fillMaxWidth().height(geometry.height.dp).testTag("dashboard-heatmap")
                 .pointerInput(model.today,geometry,density.density) {detectTapGestures {position->
@@ -204,6 +215,7 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                     .testTag("dashboard-heatmap-month-${month.month}"),style=quotaTextStyle(10),color=line.copy(alpha=.5f))}
             }
         }
+        Spacer(Modifier.width(12.dp))
     }
 }
 
@@ -213,6 +225,7 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
     val text=MaterialTheme.colorScheme.onSurface
     val overlay=LocalDesktopOverlayColor.current
     val group=if(byModel) "models" else "tools"
+    val largeText=effectiveTextScale()>1.6f
     val units=LocalMainDisplay.current.compactUnits
     val locale=DesktopCompactTokens.localeTag(strings.configuration.locales[0])
     Column(Modifier.fillMaxWidth().then(modifier).testTag("dashboard-ranking-$group"),verticalArrangement=Arrangement.spacedBy(6.dp)) {
@@ -242,10 +255,11 @@ private data class DashboardStat(val key:String,val label:String,val value:Strin
                 val numericSpace=(constraints.maxWidth-gap*2-24.dp.roundToPx()).coerceAtLeast(0)
                 val percent=children[3].measure(Constraints(maxWidth=numericSpace/2))
                 val value=children[2].measure(Constraints(maxWidth=numericSpace-percent.width))
-                val nameWidth=minOf(110.dp.roundToPx(),(constraints.maxWidth-value.width-percent.width-gap*3-24.dp.roundToPx()).coerceAtLeast(24.dp.roundToPx()))
+                val availableName=(constraints.maxWidth-value.width-percent.width-gap*3-24.dp.roundToPx()).coerceAtLeast(24.dp.roundToPx())
+                val nameWidth=if(largeText) availableName else minOf(110.dp.roundToPx(),availableName)
                 val name=children[0].measure(Constraints(maxWidth=nameWidth))
                 val remaining=constraints.maxWidth-name.width-value.width-percent.width-gap*3
-                val stacked=remaining<24.dp.roundToPx()
+                val stacked=largeText || remaining<48.dp.roundToPx()
                 val barWidth=if(stacked) constraints.maxWidth else remaining
                 val bar=children[1].measure(Constraints.fixed(barWidth.coerceAtLeast(0),4.dp.roundToPx()))
                 val rowHeight=maxOf(name.height,value.height,percent.height)

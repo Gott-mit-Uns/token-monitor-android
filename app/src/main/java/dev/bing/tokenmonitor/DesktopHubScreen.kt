@@ -161,6 +161,24 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     var renamed by remember { mutableStateOf<Device?>(null) }
     var deviceName by remember { mutableStateOf("") }
     var sourceInfo by remember { mutableStateOf(false) }
+    var refreshFeedback by remember { mutableStateOf(0) }
+    var refreshPending by remember { mutableStateOf(false) }
+    LaunchedEffect(state.loading) {
+        if (state.loading) refreshPending = true
+        else if (refreshPending) {
+            refreshPending = false
+            refreshFeedback = if (state.error == null) 1 else 2
+        }
+    }
+    LaunchedEffect(refreshFeedback) {
+        if (refreshFeedback != 0) {
+            kotlinx.coroutines.delay(900)
+            refreshFeedback = 0
+        }
+    }
+    val savedClock = remember(state.savedAt) {
+        state.savedAt?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm")) }
+    }
     var expandedBreakdown by rememberSaveable { mutableStateOf<String?>(null) }
     var toolDetailMode by remember { mutableStateOf("tokens") }
     fun rowKey(raw: String, isModel: Boolean = false) = "${page.name}:${if(isModel) "model" else "tool"}:$raw"
@@ -173,10 +191,20 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val trendsHistoryScroll = rememberSaveable(state.connectionRevision,saver = LazyListState.Saver) { LazyListState() }
     val trendsHistoryUiState=key(state.connectionRevision) {rememberSaveableStateHolder()}
     val dashboardUi=rememberSaveable(state.connectionRevision,saver=DashboardUiState.Saver) {DashboardUiState()}
+    var dashboardOpened by rememberSaveable(state.connectionRevision) { mutableStateOf(false) }
     LaunchedEffect(preferences.heatmapMetric) {dashboardUi.selectMetric(preferences.heatmapMetric=="cost")}
+    fun dashboardRange(value:String)=when(value) {
+        "month" -> "30"; "allTime" -> "all"; "last30" -> "30"; "last90" -> "90"; "last365" -> "365"
+        else -> "30"
+    }
     fun openDashboard() {
         trendsHistoryUiState.removeState("dashboard")
-        dashboardUi.reset(preferences.heatmapMetric=="cost")
+        // First entry carries the main Trends range and lands on the detail chart;
+        // later entries keep the tab/range the user left, per the dashboard's own state.
+        if (!dashboardOpened) {
+            dashboardUi.openFromTrends(dashboardRange(range))
+            dashboardOpened = true
+        }
         trendsHistoryOpen=true
     }
     val contentScroll=if(trendsDetail) trendsHistoryScroll else mainContentScroll
@@ -226,10 +254,11 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     LaunchedEffect(dashboardHistory) {
         if(dashboardHistory==null || (dashboardHistory.daily.isEmpty() && dashboardHistory.monthly.isEmpty())) dashboardUi.discardChart()
     }
+    val dashboardAxisInset=52.0+((effectiveTextScale()-1f).coerceAtLeast(0f)*22.0)
     val dashboardTrend=remember(dashboardHistory,dashboardUi.range,dashboardUi.byModel,dashboardUi.mode,
-        dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0]) {
+        dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0],dashboardAxisInset) {
         dashboardHistory?.let {DashboardTrendProjection.project(it,dashboardUi.range,dashboardUi.byModel,dashboardUi.mode,
-            dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0].toLanguageTag())}
+            dashboardUi.chartWidth,dashboardUi.chartHeight,strings.configuration.locales[0].toLanguageTag(),dashboardAxisInset)}
     }
     val dashboardEventKey=listOf(state.connectionRevision,dashboardHistory,state.modelNames,state.historyRenderRevision,homeDay)
     val dashboardChartMotion=rememberDashboardChartMotion(dashboardUi.committedChart,dashboardUi.committedChartEvent,dashboardUi.committedChartRevision,
@@ -391,7 +420,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     val subscriptionContext=SubscriptionReadContext(state.subscriptions.orEmpty(),subscriptionAccounts,state.snapshot?.periods?.get("month")?.toolDetails.orEmpty().mapValues {it.value.cost},homeDay,strings.configuration.locales[0],currency)
     if(trendsDetail) {
         trendsHistoryUiState.SaveableStateProvider("dashboard") {
-            val dashboardFont=nativeFont(preferences.appearance.interfaceFont)
+            val dashboardFont=interfaceFont(preferences.appearance.interfaceFont)
             val typography=MaterialTheme.typography
             MaterialTheme(typography=typography.copy(
                 bodySmall=typography.bodySmall.copy(fontFamily=dashboardFont),bodyMedium=typography.bodyMedium.copy(fontFamily=dashboardFont),bodyLarge=typography.bodyLarge.copy(fontFamily=dashboardFont),
@@ -401,7 +430,8 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
             DesktopDashboardScreen(dashboardHistory,state.loading,state.error,dashboardUi,dashboardTrend,homeDay,preferences,updateDisplay,
                 {trendsHistoryOpen=false},{model.loadHistory(true)},{directPage=null;page=HubPage.SETTINGS},dashboardChartMotion,dashboardOverviewMotion,dashboardEventKey,
                 recordsHistory=dashboardRawHistory,
-                historyRead=HistoryReadPresentation.project(HistoryReadKey(state.connectionRevision,historySignature),state.historyReadReceipt))
+                historyRead=HistoryReadPresentation.project(HistoryReadKey(state.connectionRevision,historySignature),state.historyReadReceipt),
+                refreshFeedback=refreshFeedback)
             }
             }
         }
@@ -415,6 +445,12 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                 @Composable fun title() {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     DesktopTitle(preferences.main.titleIconOnly,preferences.appearance.showLiveDot,state.live,Modifier.weight(1f),onAverage={averageRateOpen=true}) {openDirect(HubPage.HOME)}
+                    if(!state.live && savedClock!=null) DesktopTextButton(onClick={sourceInfo=true},
+                        modifier=Modifier.heightIn(min=48.dp).testTag("hub-freshness").semantics {
+                            contentDescription="${strings.getString(R.string.saved_snapshot)} · $savedClock"
+                        },contentPadding=PaddingValues(horizontal=4.dp,vertical=0.dp)) {
+                        Text(strings.getString(R.string.cache_short),style=quotaTextStyle(9),color=colors.onSurfaceVariant,maxLines=1)
+                    }
                     if(trendsDetail) DesktopTextButton(onClick={trendsHistoryOpen=false},modifier=Modifier.testTag("trends-history-back")) {Text("← ${strings.getString(R.string.desktop_trends)}",style=quotaTextStyle(11))}
                     }
                 }
@@ -476,7 +512,7 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                         if(rateVisible && !stackedRate) LiveTokenRateControl(liveRate,preferences.main,updateDisplay)
                         Row(horizontalArrangement=Arrangement.spacedBy(0.dp)) {
                         listOf(if(preferences.main.swapActions) "settings" else "refresh",if(preferences.main.swapActions) "refresh" else "settings").forEach {action->
-                            if(action=="refresh") DesktopFooterAction(true,strings.getString(R.string.refresh),"hub-refresh",!state.loading && state.snapshot!=null) {when(page) {HubPage.PRICING -> model.loadPricing();HubPage.SUBSCRIPTIONS -> model.loadSubscriptions();HubPage.HOME -> model.refreshSaved(forceHistory=true);HubPage.TRENDS -> if(trendsDetail) model.loadHistory(true) else model.refreshSaved();else -> model.refreshSaved()}}
+                            if(action=="refresh") DesktopFooterAction(true,strings.getString(R.string.refresh),"hub-refresh",!state.loading && state.snapshot!=null,feedback=when(refreshFeedback){1->RefreshFeedback.SUCCESS;2->RefreshFeedback.ERROR;else->RefreshFeedback.NONE}) {when(page) {HubPage.PRICING -> model.loadPricing();HubPage.SUBSCRIPTIONS -> model.loadSubscriptions();HubPage.HOME -> model.refreshSaved(forceHistory=true);HubPage.TRENDS -> if(trendsDetail) model.loadHistory(true) else model.refreshSaved();else -> model.refreshSaved()}}
                             else DesktopFooterAction(false,strings.getString(R.string.nav_settings),"hub-settings-toggle") {directPage=null;page=if(page==HubPage.SETTINGS && state.snapshot!=null) HubPage.entries.first {it.name.lowercase()==MainDisplay.preferred(preferences.main,previousPage.name.lowercase())} else HubPage.SETTINGS}
                         }
                         }
@@ -568,8 +604,14 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
                                 HubPage.TOOLS, HubPage.MODELS -> {
                                     val rows=mainBreakdown.rows
                                     val details=mainBreakdown.details
-                                    if(rows.isEmpty()) item {Text(if(page==HubPage.TOOLS && mainBreakdown.allRowCount>0)
-                                        strings.getString(R.string.tool_list_all_hidden) else strings.getString(R.string.dimension_no_data,strings.getString(page.title)))}
+                                    if(rows.isEmpty()) item {Column {
+                                        Text(if(page==HubPage.TOOLS && mainBreakdown.allRowCount>0)
+                                            strings.getString(R.string.tool_list_all_hidden) else strings.getString(R.string.dimension_no_data,strings.getString(page.title)))
+                                        if(mainBreakdown.allRowCount==0) DesktopTextButton(onClick={model.refreshSaved()},
+                                            modifier=Modifier.heightIn(min=48.dp).testTag("dimension-empty-refresh")) {
+                                            Text(strings.getString(R.string.refresh),style=quotaTextStyle(11))
+                                        }
+                                    }}
                                     items(rows,key={"breakdown:${page.name}:${it.first}"}) {(name,value)->
                                       DesktopBreakdownMotionRow("${mainPage.name}:$name",rowPlacementToken,rowPlacementMotion) {
                                         BreakdownLine(if(name==UsageAttribution.UNATTRIBUTED) strings.getString(R.string.token_unclassified) else if(page==HubPage.TOOLS) toolLabel(name) else name,
@@ -735,10 +777,10 @@ internal fun DesktopHubScreen(state: HubState, model: HubUiActions, localAllowed
     displayDevices.firstOrNull { it.id == deviceDetail }?.let { device -> DeviceDetails(device, state.deviceAliases[device.id], { deviceDetail = null }, {
         renamed = device; deviceName = state.deviceAliases[device.id].orEmpty(); deviceDetail = null
     }, initialRange = range) }
-    renamed?.let { device -> AlertDialog(onDismissRequest = { renamed = null }, title = { Text(strings.getString(R.string.device_local_name)) }, text = {
+    renamed?.let { device -> DesktopAlertDialog(onDismissRequest = { renamed = null }, title = { Text(strings.getString(R.string.device_local_name)) }, text = {
         Column { Text(strings.getString(R.string.rename_device_note, device.name)); OutlinedTextField(deviceName, { deviceName = it }, label = { Text(strings.getString(R.string.name_label)) }, singleLine = true) }
     }, confirmButton = { DesktopTextButton(onClick = { model.renameDevice(device.id, deviceName); renamed = null }) { Text(strings.getString(R.string.save)) } }, dismissButton = { DesktopTextButton(onClick = { model.renameDevice(device.id, ""); renamed = null }) { Text(strings.getString(R.string.restore_name)) } }) }
-    if (sourceInfo) AlertDialog(onDismissRequest = { sourceInfo = false }, title = { Text(strings.getString(R.string.desktop_updated)) }, text = {
+    if (sourceInfo) DesktopAlertDialog(onDismissRequest = { sourceInfo = false }, title = { Text(strings.getString(R.string.desktop_updated)) }, text = {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(strings.getString(R.string.hub_updated_at) + "\n" + (state.snapshot?.updated ?: "—"))
             Text(strings.getString(R.string.snapshot_read_at, state.savedAt?.let { Instant.ofEpochMilli(it).toString() } ?: "—"))

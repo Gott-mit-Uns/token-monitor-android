@@ -76,7 +76,7 @@ class CurrencyScreenTest {
             select("sessions");show("¥5.60 + 40 未定价 tokens")
             select("limits");show("EUR 7.50")
             select("trends");compose.onNodeWithTag("trends-main-open-history").performClick()
-            compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
+            compose.onNodeWithTag("dashboard-tab-records").performClick()
             val historyCost="已知估算费用：¥5.60 + 40 未定价 tokens（费用可用 1 天）"
             compose.onNodeWithTag("dashboard-scroll").performScrollToNode(hasText(historyCost))
             compose.onAllNodesWithText(historyCost).onFirst().assertIsDisplayed()

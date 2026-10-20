@@ -40,3 +40,15 @@ All ordinary setting-value dropdowns use the shared `DesktopSettingSelect` → `
 This is an explicit user-approved exception to the general 48dp interactive minimum for popup option rows. Adjacent targets must not overlap. The settings row and collapsed dropdown control retain their existing 48dp targets. Navigation, period and business menus keep their existing geometry and typography. Shared popup anchoring, visible screen/IME bounds, height cap, scrolling, dismissal, keyboard navigation and selected/accessibility semantics are preserved. No search, grouping or extra motion is added.
 
 Gate: `CompactSettingsDropdownScreenTest` checks real popup geometry, selected semantics, exact adjacent touch edges, complete natural text, long-list scroll and keyboard/outside dismissal; capture both themes at narrow/ordinary widths and standard/large system font. Added tests are not executed evidence until the combined release coordinator runs them. Evidence and APK fingerprints belong in VALIDATION, with the actual source and execution scope.
+
+## Component skin additions (2026-10-20)
+
+The user-approved UI pass keeps all existing geometry and touch minimums, and adds:
+
+- **Default interface face**: an unset interface font resolves to the desktop monospace face; Chinese still uses its CJK fallback and numerals keep the data font. "Token UI", "Token Data", system and custom faces remain explicit choices.
+- **Dialogs**: shared `DesktopAlertDialog` uses a 12dp shape, the panel surface and a 1dp hairline; no Material tonal elevation.
+- **Filter pills**: shared `DesktopFilterChip` replaces Material `FilterChip` in records, device detail and chart modes. It keeps a 48dp touch target, a 6dp visible radius and a 12% selected overlay.
+- **Press feedback**: flat rows and segments use a short 4.5% overlay tint (`desktopPressable`) rather than a 48dp splash; Material surfaces that retain a ripple must clip it to their visible shape.
+- **Module headers** keep the 48dp module button and add a 9dp chevron so the detail affordance is visible without hover.
+
+These are semantic rules, not fixed pixel heights; large-font and narrow-width behaviour still follows the measurement rules above.

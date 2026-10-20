@@ -16,7 +16,7 @@ fun DeviceDetails(device: Device, alias: String?, onDismiss: () -> Unit, onRenam
     val numbers = NumberFormat.getIntegerInstance(strings.configuration.locales[0])
     var range by remember(device.id) { mutableStateOf(initialRange) }
     val period = device.periods[range]
-    AlertDialog(onDismissRequest = onDismiss, title = { Text(DeviceDisplay.name(device,alias,strings.getString(R.string.devices))) }, text = {
+    DesktopAlertDialog(onDismissRequest = onDismiss, title = { Text(DeviceDisplay.name(device,alias,strings.getString(R.string.devices))) }, text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (alias != null) Text(strings.getString(R.string.hub_original_name, device.displayName(strings)))
             Text(when (device.stale) { true -> strings.getString(R.string.device_stale); false -> strings.getString(R.string.device_not_stale); null -> strings.getString(R.string.freshness_unknown) })
@@ -29,7 +29,7 @@ fun DeviceDetails(device: Device, alias: String?, onDismiss: () -> Unit, onRenam
             Text(strings.getString(R.string.device_usage_note), style = MaterialTheme.typography.bodySmall)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 mapOf("today" to strings.getString(R.string.period_today), "month" to strings.getString(R.string.period_month), "allTime" to strings.getString(R.string.period_all_time)).plus(device.periods.keys.filter(FixedPeriods::derived).associateWith(FixedPeriods::label)).forEach { (key, title) ->
-                    FilterChip(range == key, { range = key }, label = { Text(title) })
+                    DesktopFilterChip(range == key, { range = key }) { Text(title) }
                 }
             }
             if (period == null) Text(strings.getString(R.string.device_period_missing)) else {

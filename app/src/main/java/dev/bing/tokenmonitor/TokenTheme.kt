@@ -15,7 +15,7 @@ fun TokenTheme(dark: Boolean = isSystemInDarkTheme(), language: LanguageChoice =
     AppLanguage(language) {
     val palette=androidx.compose.runtime.remember(dark,appearance.colors) { DesktopAppearance.palette(appearance.colors,dark) }
     val numberColor=androidx.compose.runtime.remember(dark,appearance.colors) { hexColor(DesktopAppearance.numberColor(appearance.colors,dark)) }
-    val font=androidx.compose.runtime.remember(appearance.interfaceFont) { nativeFont(appearance.interfaceFont) }
+    val font=androidx.compose.runtime.remember(appearance.interfaceFont) { interfaceFont(appearance.interfaceFont) }
     val displayFont=androidx.compose.runtime.remember(appearance.displayFont,font) { nativeFont(appearance.displayFont,font) }
     val dataFont=if(appearance.interfaceFont.isEmpty()) BundledFonts.data else font
     val scale=DesktopAppearance.scale(appearance.textSize)

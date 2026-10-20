@@ -134,7 +134,7 @@ internal class HubConnectionDraft {
             ConnectionButton(strings.getString(R.string.forget_connection),"connection-forget",!state.loading) {clearDraft();model.forget();onForgot()}
         }
     }
-    if(confirmLan) AlertDialog(onDismissRequest={confirmLan=false},
+    if(confirmLan) DesktopAlertDialog(onDismissRequest={confirmLan=false},
         title={Text(strings.getString(R.string.lan_associate))},
         text={Column(Modifier.heightIn(max=320.dp).verticalScroll(rememberScrollState())) {Text(strings.getString(R.string.lan_association_warning),Modifier.testTag("connection-lan-warning"))}},
         confirmButton={TextButton(onClick={confirmLan=false;model.configureLan(true,true)},modifier=Modifier.testTag("connection-lan-confirm")) {Text(strings.getString(R.string.lan_confirm))}},

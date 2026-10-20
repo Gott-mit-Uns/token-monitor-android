@@ -150,7 +150,8 @@ class CompactV5ScreenTest {
         if(!baseline) listOf("tokens","cost","active-days","streak","time","peak","favorite","messages").forEach {
             completeText("dashboard-card-$it-value"); completeText("dashboard-card-$it-label")
         }
-        compose.onNodeWithTag("dashboard-open-records").performScrollTo().performClick()
+        compose.onNodeWithTag("dashboard-tab-records").performClick()
+        compose.onNodeWithTag("dashboard-records-analysis").performClick()
         compose.onNodeWithTag("desktop-history-chart").performScrollTo()
         record("record-bars",listOf("desktop-history-chart"))
         val kline=if(language==LanguageChoice.CHINESE) "K 线" else "K-line"
@@ -159,12 +160,13 @@ class CompactV5ScreenTest {
         record("record-kline",listOf("desktop-history-chart"))
         compose.onNodeWithText(line).performScrollTo().performClick()
         record("record-line",listOf("desktop-history-chart"))
-        val row=compose.onNode(hasText(today.toString()) and hasClickAction()).performScrollTo()
-        val bounds=row.getUnclippedBoundsInRoot()
+        compose.onNodeWithTag("dashboard-records-details").performClick()
+        val tile=compose.onNodeWithTag("history-record-${today}").performScrollTo()
+        val bounds=tile.getUnclippedBoundsInRoot()
         File(compose.activity.getExternalFilesDir(null),"v5-layout.tsv").appendText("record-row\ttoday\t${bounds.width.value}\t${bounds.height.value}\n")
         assertTrue("Record action retains 48dp",bounds.height.value>=47.5f)
         saveVisualEvidence(compose.activity,compose.onRoot(),"v5-record-row.png")
-        row.performClick()
+        tile.performClick()
         compose.onNodeWithText("Token 2,000").assertExists()
     }
 }

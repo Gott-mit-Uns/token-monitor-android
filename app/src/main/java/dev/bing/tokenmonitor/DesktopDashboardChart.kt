@@ -329,13 +329,14 @@ internal suspend fun prepareDashboardChart(
     val denseCache=remember(model.bars,barColors,model.width,model.height,model.mode,density,dense,preparedTarget) {
         preparedTarget?.denseCache ?: if(dense) DashboardDenseBarCache(model.bars,barColors,model.width,model.height) else null
     }
-    var accessibleIndex by remember(model.daily,model.mode) {mutableIntStateOf(0)}
     val count=if(model.mode==DashboardTrendMode.BARS) model.bars.size else model.candles.size
+    // TalkBack's default click should inspect the latest record, not the oldest.
+    var accessibleIndex by remember(model.daily,model.mode,count) {mutableIntStateOf((count-1).coerceAtLeast(0))}
     fun choose(index:Int) {
         if(count==0) return
         accessibleIndex=index.coerceIn(0,count-1)
         if(model.mode==DashboardTrendMode.BARS) {
-            val bar=model.bars[accessibleIndex];onBar(bar,model.daily[accessibleIndex])
+            val bar=model.bars[accessibleIndex];onBar(bar,bar.row ?: model.daily.getOrNull(accessibleIndex) ?: return)
         } else onCandle(model.candles[accessibleIndex])
     }
     val inspection = rememberDailyChartInspection(model.daily.map { it.date }, model.range to model.mode)
