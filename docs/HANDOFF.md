@@ -8,7 +8,7 @@
 |---|---|
 | 字体 | 未显式选择时界面字体解析为桌面等宽（`interfaceFont("")`→Monospace）；界面字体下拉移除“应用默认”，重置回等宽；Token UI、Token Data、系统、自定义、等宽仍可选。中文仍走 CJK 回退，数字仍用 JetBrains Mono，显示字体未变。 |
 | Material 皮肤 | 8 个 AlertDialog 统一 `DesktopAlertDialog`：12dp 圆角、panel 表面、hairline 边、无 tonal elevation；8 个 Material FilterChip 换 48dp 桌面 pill（`DesktopFilterChip`，选中 12% overlay）；项目/设备行涟漪裁剪到 8dp；设置/关于/连接对话框随共享皮肤。 |
-| 触摸 | 首页模块头加 13dp chevron；会话行用 120ms 桌面按压底色（`desktopPressable`，无 splash）；项目/设备行涟漪裁剪；分段控件不再产生整块 48dp 灰色涟漪。 |
+| 触摸 | 首页模块头加 9dp chevron；会话行用桌面按压底色（`desktopPressable`，无 splash）；项目/设备行涟漪裁剪；分段控件与 FilterChip 不再产生整块 48dp 灰色涟漪。 |
 | 状态 | 非实时/缓存快照在顶栏显示短“缓存”徽标（读屏含时间，点开来源信息）；刷新按钮完成后 900ms 显示 ✓，失败显示 !；维度空状态（工具/模型无数据）提供刷新动作。 |
 | 仪表板 | 记录成为第三 tab；移除底部“记录明细/图表与活动”双按钮和页内返回；记录页内用“明细/分析”pill 切换。首次从趋势进入时带一级范围并停在趋势 tab；同连接后续进入保留用户 tab/范围。总览热力图默认滚到今天并留 12dp 尾部；365/全部柱状按月/周自适应聚合并显示桶宽；K 线按 2/3/7/30 天日历桶、显示“每 N 天”与首日/最高/最低/末日；图表高度 160–240dp；Y 轴左侧留白随字号实测扩展；2.0 字体下统计格单列、收藏模型按 hyphen 换行、排名条换行；图表 TalkBack 默认最新一天。 |
 | 未改 | 页面标题/顶栏身份、底部 switcher 截断、会话 5dp 色条、Status 页、Pricing/Subscriptions 入口、Hub/SSE/缓存/费用合同、README。 |
