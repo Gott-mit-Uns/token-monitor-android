@@ -18,7 +18,7 @@ class Desktop076ScreenTest {
         val dark=InstrumentationRegistry.getArguments().getString("visualDark")!="false"
         val prefs=mutableStateOf(DisplayPreferences(language=LanguageChoice.ENGLISH,homeModules=listOf("models"),appearance=AppearancePreferences(reduceMotion="on")))
         val name="desktop076-${UUID.randomUUID()}.bin";val store=DisplayPreferenceStore(compose.activity,name)
-        val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":2000,"models":{"public-1":100,"public-2":99,"public-3":98,"public-4":97,"public-5":96,"public-6":95,"public-7":94,"public-8":93}}}}""")
+        val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":772,"models":{"public-1":100,"public-2":99,"public-3":98,"public-4":97,"public-5":96,"public-6":95,"public-7":94,"public-8":93}}}}""")
         val actions=object:HubUiActions {
             override fun connect(address:String,credential:String,alternate:String) {};override fun refreshSaved() {};override fun switchEndpoint() {};override fun hasAlternate()=false;override fun endpointType()="https";override fun loadHistory() {};override fun loadModelNames() {};override fun loadSubscriptions() {};override fun forget() {};override fun renameDevice(id:String,input:String) {}
         }
@@ -30,7 +30,11 @@ class Desktop076ScreenTest {
             compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"main");compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("main-view-home-settings"));compose.onNodeWithTag("main-view-home-settings").performClick()
             compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("home-count-settings-models"));compose.onNodeWithTag("home-count-settings-models").performClick()
             val field=compose.onNodeWithTag("home-count-models")
-            field.performScrollTo().performTextReplacement("8");field.performImeAction()
+            field.performScrollTo().performTextReplacement("999");field.performImeAction()
+            compose.waitUntil(5000) {prefs.value.homeModuleCounts["models"]==50}
+            field.performTextReplacement("bad");field.performImeAction()
+            compose.waitUntil(5000) {prefs.value.homeModuleCounts["models"]==5}
+            field.performTextReplacement("8");field.performImeAction()
             compose.waitUntil(5000) {prefs.value.homeModuleCounts["models"]==8}
             assertArrayEquals(original,File(compose.activity.noBackupFilesDir,name).readBytes())
             assertEquals(8,HomeModuleCounts.count(DisplayPreferenceStore(compose.activity,name).load(),"models"))
