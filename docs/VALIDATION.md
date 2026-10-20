@@ -1,8 +1,8 @@
 # 当前验收记录
 
-## 当前候选验收：Android 0.76.0-01 / code83
+## 当前正式发行验收：Android 0.76.0-01 / code83
 
-2026-10-20（Asia/Shanghai）。开发前Android latest v0.75.0-02/code82，桌面latest v0.76.0/fbbe4c1；固定范围及逐提交映射见HANDOFF。用户本次已明确授权测试、PR、合并和正式发布；以下是候选实跑，发行尚未执行。
+2026-10-20（Asia/Shanghai）。开发前Android latest v0.75.0-02/code82，桌面latest v0.76.0/fbbe4c1；固定范围及逐提交映射见HANDOFF。用户本次已明确授权测试、PR、合并和正式发布；以下保留候选实际阶段测试，现已合并PR #24并发布正式v0.76.0-01/code83为latest，发行回执见本节末尾。
 
 | 本轮实跑 | 结果与证据边界 |
 |---|---|
@@ -22,6 +22,12 @@
 自动审查追加：PR #24在34247aa发现P2——数量旁文件先检查base长度可能阻止AtomicFile恢复有效备份。改为openRead先恢复、最多读6字节，再验证5字节版本/范围；保持缺失/损坏回默认且不读任意大文件。新增主文件残缺/缺失但.bak有效两种实际恢复断言；恢复后备份消失、设置正确、V16主文件字节保持。修正后标准构建/Lint成功（review-fix-build.log，0错误/118警告/2提示），四类17项JVM通过；全新只读API36中重新从正式code82准备合成资料，覆盖到7d40d746…最终APK，升级1项、新设备3项及四组12项窗口均通过，实际安装包回读一致，UID/五份文件指纹不变。复审不改布局/用量/网络，前述13项旧UI回归按原29e15c21…阶段明确继承；最终539项不重复实跑、不冒称重跑。最终回执在`/tmp/token076-review-`前缀的upgrade、new-ui、matrix各日志及matrix-summary.json；公开选图已换为最终包截图。
 
 未验证：真机/私有资料、真实账户、生产Hub的Argon采集与新采集器部署。HTTP/SSE/缓存的合成消费不等于生产联调；本次不操作NAS、路由或桌面运行服务。未改网络认证、SSE生命周期、缓存主格式、计费及README。此前0.75.0-02的未受影响仪表板布局矩阵按该版本/环境/范围继承，不冒称在本版重跑。
+
+发布复核（2026-10-20）：PR #24最终head `7a9b821bd26d0482a827e2a6f9af1c7f1330bae7`自动代码审查completed、has_any_findings=false、has_unresolved_findings=false，文档CI成功；未执行独立security_review，不把空状态称为通过。按用户明确“再次对齐到最新版，直接合并，发布”合并至 `9624598e33442f046661031b332ec578bbfe42ce`。annotated Tag v0.76.0-01对象 `48ceeec2c925a0f5b749c94f4cba61e08450042a`解引用同提交。615个产品/测试/sharedTest/Gradle输入与已验收f81f5d5逐项相同，203b5612…输入指纹一致；沿用同一最终7d40d746…正式签名APK，未重建或重跑未受影响套件。
+
+[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.76.0-01)已发布，draft=false、prerelease=false，设为latest；已登录latest API和匿名latest页面均指向本版。公开无凭据下载规范APK、SOURCE.json及SHA256SUMS.txt全部HTTP200，三份文件逐字节匹配上传材料，GitHub资产digest与本地SHA一致；下载APK再次验证版本/code83及正式证书不变。APK15,345,326字节，SHA见上；SOURCE SHA256 `4ea2e571600c8fa6089771c167b834e36d32f90e0e1554f9f22c1297d59e7d6c`，SHA256SUMS SHA256 `61769398416a1a7e6176ca0b00dea4ef1726f5c91f56f3d8b952f41a3eeda1a0`。SOURCE区分build/acceptanceCommit f81f5d5与Tag/sourceCommit 9624598，列出539项初期全量、修复后17项定向与最终设备实跑/继承范围，不冒称APK内嵌VCS来源。材料与公开回读在本机`/tmp/token076-publication/`；公开verification结果不宣称随Git交付。
+
+匿名latest API本次返回403、remaining=0，为当前出口匿名配额耗尽；未修改客户端认证/重试绕过，不声称实体手机实际更新检查通过。实际公开下载与latest网页已验证，手机/生产账户仍为未验证。测试只读模拟器已关闭，其他已运行模拟器及NAS保持原状。其后仅原位补发行回执，不改已发Tag、工件或产品输入。
 
 ## 当前发行验收：Android 0.75.0-02 / code82
 
