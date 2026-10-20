@@ -1,19 +1,21 @@
 # 当前验收记录
 
-## 当前开发（未发行）：界面一致性与二级界面修正
+## 当前发行验收：Android 0.75.0-02 / code82
 
-检查日期 2026-10-20（Asia/Shanghai）；基线 `fb0e293`（正式 v0.75.0-01/code81），分支 `feat/android-ui-refinements`，最终产品提交 `f01fdf8`（前序 `6e70799`、`63c3092`、`8e9550e`、`7cbb77d`）。用户批准范围与未改项见 [HANDOFF](HANDOFF.md)。未递增 versionName/versionCode，未合并、未创建 Tag 或 Release。
+检查日期 2026-10-20（Asia/Shanghai）；基线 `fb0e293`（正式 v0.75.0-01/code81）。PR #23 已合并至 `9538369a159053768ecb7219677df00e4cd844f8`，annotated Tag `v0.75.0-02`（`5e2ff1cb91c28139d4e2bcccc7691f2484944403`）解引用同提交，[正式 Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.75.0-02) 已发布为 latest。正式版本 0.75.0-02/code82，fixed desktop v0.75.0/`877fef6`，fullyAligned=false。用户批准范围与未改项见 [HANDOFF](HANDOFF.md)。
 
 | 本轮实跑 | 结果与边界 |
 |---|---|
-| 构建 | 既有 Wrapper/Gradle9.8/JDK17/SDK37 debug 与 androidTest 构建成功；这是 PR 候选的调试包，不是正式签名发行包。最终应用 APK SHA256 `3efa133ad0221d7519a20b1b7c549573fb9fa6a090f07a8b42c920645725dbf5`，测试 APK `15f2e01babec19052aa2eee01c6abce50359f0b0b01339c2d09f26bed3aeab02`。 |
+| 构建/签名 | 既有 Wrapper/Gradle9.8/JDK17/SDK37 从合并提交 `9538369` 构建正式签名 Release：APK `token-monitor-android-0.75.0-02.apk`，15,343,162 字节，SHA256 `2a29dfe30caed51ef596538e267a15962e1bad72864467be779c7136d6fe5151`；包名 `dev.bing.tokenmonitor.nativeclient`，versionCode 82 / versionName 0.75.0-02；apksigner 证书 SHA256 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`。测试 APK `15f2e01babec19052aa2eee01c6abce50359f0b0b01339c2d09f26bed3aeab02`。 |
 | JVM | 最终源码完整 536 项、100 类，0 失败/错误/跳过（Robolectric 与单位测试同轮）。首次全量有 4 项失败：2 项 Robolectric 因沙箱 home 不可写 `~/.robolectric-download-lock`，以 `JAVA_TOOL_OPTIONS=-Duser.home=/tmp/tmhome` 并复制现有 `~/.m2` 后通过；2 项字体预设仍期待旧的界面 `app`，按本次默认改为桌面等宽更新期望后通过。没有删除测试、放宽断言或用 `clean` 掩盖。 |
+| Lint | `:app:lintRelease` 0 错误、128 警告、2 提示。警告主要为 100 项未使用资源、9 项 plurals 建议和既有版本/KTX 提示；未删除资源或抑制规则，较上一版 113 警告的差异如实保留。 |
 | 36 组 V5 矩阵 | `tools/run-v5-ui.py`，emulator-5588，320/393/411dp（880/1080/1130px，density440）× fontScale 1.0/1.3/2.0 × 深/浅 × 中/英，每组 `CompactV5ScreenTest` 2 项，共 36 组 72 项全部 PASS。矩阵构建产品提交 `8e9550e`，debug APK SHA256 `3a08b778b153945dfd2afa89597b757ccecfaa60bb4eb7070215ee8f6889918d`。首次在 320dp/1.3 失败 `dashboard-card-favorite-value remains complete`（收藏模型单行溢出），改为 2 行并按 hyphen 换行后通过；V5 smoke 首次在记录流程失败（记录 tab 与明细/分析分离后旧断言仍找图表/日期行），按新 UI 更新测试后通过。 |
-| 最终 320/2.0 复跑 | 矩阵后的收尾提交（段控件按压、chip pill、记录页大字号 hint/legend 堆叠）不改变矩阵断言的几何/文本语义，但最终 APK 仍在 320dp/fontScale2.0 四组（深/浅 × 中/英）各跑 `CompactV5ScreenTest` 2 项，全部通过；实际查看记录分析页 chip/legend 与 Dashboard 截图。 |
+| 最终 320/2.0 复跑 | 矩阵后的收尾提交（段控件按压、chip pill、记录页大字号 hint/legend 堆叠）不改变矩阵断言的几何/文本语义，但 320dp/fontScale2.0 四组（深/浅 × 中/英）各在 `3efa133a…` 上跑 `CompactV5ScreenTest` 2 项全部通过（该包与发布包只差 versionCode/Name 元数据）；实际查看记录分析页 chip/legend 与 Dashboard 截图。 |
 | 受影响界面回归 | 重写记录 tab/范围后 `TrendsNavigationScreenTest` 3 项、`NavigationPolishScreenTest` 2 项、`DashboardParityScreenTest` 首项 1 项通过；`CompactV5ScreenTest` smoke 2 项通过。完整 androidTest 套件未全跑。 |
 | 大字体全应用抽查 | `MobileDensityScreenTest` 在 320dp/fontScale2.0 深色下 2/3 通过；`settingsShareTypographyAndCompactControlsWithoutLosingToolActions` 的 “Hub 用量” 在同一配置的未修改基线上同样失败（临时 stash 后重跑），保留为既有测试/配置限制，不称新回归、不删除或放宽断言。 |
 | 视觉检查 | 实际查看首页（1x/2x）、设置、Dashboard 总览/柱状/K 线、记录分析（1x/2x）、compact 与大字号截图：顶栏缓存短徽标、模块 chevron、chip pill、2x 统计单列、收藏模型 hyphen 换行、Y 轴不压图、热力图初始滚到今天、记录第三 tab 与明细/分析切换。截图在 workspace `work/shots/`，为公开 fixture、模拟器截图，不入库。 |
-| 未运行/未验证 | 完整 androidTest 套件、正式 Release 签名与覆盖升级、实体手机、生产 Hub/账号、桌面端实机。HANDOFF 记录的两项旧 UI 专项（项目行像素、Home quota entry 动效）本轮未触碰也未重跑，不称通过。 |
+| 发布复核 | 公开下载 APK/SHA256SUMS.txt/SOURCE.json，`shasum -c` 通过；APK 证书、包名、版本与安装回读一致；GitHub asset digest 与本地 SHA 匹配；latest API 指向 v0.75.0-02。0.75.0-01 code81→02 code82 `install -r` 未卸载，UID 10234 与 firstInstallTime 09:44:07 保留，安装后 base.apk SHA256/证书与发布包一致。 |
+| 未运行/未验证 | 完整 androidTest 套件、实体手机、生产 Hub/账号、桌面端实机、正式签名真机覆盖升级。HANDOFF 记录的两项旧 UI 专项（项目行像素、Home quota entry 动效）本轮未触碰也未重跑，不称通过。 |
 
 本轮未改 Hub/SSE/缓存/偏好格式/费用/签名/包名，未操作真机、NAS 或生产服务。矩阵与截图均为公开合成 fixture 和模拟器结果，不能替代生产数据或真机验收。
 
