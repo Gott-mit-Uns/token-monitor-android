@@ -1,5 +1,31 @@
 # 当前验收记录
 
+## 当前候选验收：Android 0.77.0-01 / code84
+
+2026-10-22（Asia/Shanghai），固定桌面v0.77.0/c83ee3a；范围及逐提交映射见HANDOFF。当前候选正在测试，合并/发布回执将在实际完成后补充，不能由版本号推断已发布或设备已更新。
+
+桌面固定源码：tokenRate、Cursor、Cline、thirdparty、Hub protocol及persistence六文件187项全部通过，无安装新依赖。tools/capture-desktop-077.cjs固定commit生成14组速率事件流（保留旧12组输入并以新版重算期望）、42组实际桌面DOM样例（含2组Cursor无额度原生占位差异）、完整构建指纹表和实际扇出事件；公开合成数据，隔离浏览器禁止外网访问。
+
+首轮定向构建/JVM成功；完整回归首次旧wholeHubRegistry测试要求旧075指纹表等于当前全表，新增5个真实指纹后失败。保留所有旧指纹逐项断言，并新增固定077全表精确相等检查，不删除测试或放宽未知指纹校验。原日志/tmp/token077-final-build.log和首次XML保留。首次桌面捕获因缺少WorkBuddy identity依赖失败，补固定源码脚本依赖后重新捕获；移除不相关的图标mask脚本避免about:blank URL警告，最终capture-registry日志成功；没有改产品依赖。
+
+未验证：真机、真实账户和生产Hub联调；合成fixture与只读模拟器结果不证明生产端已部署新采集器。本轮沿用既有导航、历史日历/记录tab、字体/皮肤、存储主格式和连接安全处理，未受影响范围按0.76.0-01记录继承，不宣称完整androidTest重跑。
+
+本轮实跑结果：
+
+| 检查 | 结果与边界 |
+|---|---|
+| 构建/JVM/Lint | JDK17/SDK37及既有Wrapper offline正式构建成功；完整541项/103类，0失败、错误、跳过；后续只补Cursor桌面无窗口/Android无数据文字占位的明确差异及测试断言，定向Desktop077两项再次通过。Lint0错误/118警告/2提示；680对英中资源和文档门禁通过。 |
+| 旧正式版升级 | 独立只读API36 ARM64 emulator-5690，公开正式0.76.0-01/code83及匹配6bfd5d…旧测试包准备公开资料，install-r升级至正式签名code84，升级验证1项通过；日志六行回执逐项相同，UID及五份加密/偏好文件SHA保持。未卸载或清数据。 |
+| 新功能设备 | 最终f19972…测试包两项通过；实际桌面full/legacy/freshness、HTTP及加密冷恢复均保留周期和账户；并发模型40/10tok/s同屏、设备加权20tok/s、首模型过期后10tok/s，详情分别消失。 |
+| 相关回归 | 最终测试包实跑MainDisplayScreen3、MainDisplayPreference2、LimitDisplayScreen2、AndroidUpdateScreen4，共11项通过，覆盖切换速率/设备/前后台重置、偏好、额度及更新器生命周期。 |
+| 窗口 | 320/411dp（880/1130px、density440）×系统fontScale2×双主题，4组8项全部通过。查看320dp双主题截图，今日/月摘要完整换行、展开四周期数值可见、并发模型及速率可读。卡片抬头滚动到固定页头后部分遮挡为原有滚动状态，不把截图宣称为全页面重新设计验收。结束恢复默认尺寸/密度及fontScale1。 |
+
+最终APK15,345,322字节，SHA256 `699c9fba01ffc4790487e6c525bc8fc63266b3348f7946fd8ced5407baa64e6b`；包名dev.bing.tokenmonitor.nativeclient，versionName0.77.0-01/code84，min26/target37。正式证书SHA256 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`与上一正式版一致。安装后base.apk回读与候选逐字节一致。最终测试APK SHA256 `f19972f0b6df0992844d1fe1212c97bd374535c882063fd5899cfc655aaf8671`；618个生产/测试/sharedTest及Gradle输入，沿用旧版路径NUL原字节NUL顺序指纹 `8b50119a444734d0e9e270429f0ee299f037e91ea4b48bad78f8bf9e922276de`。完整541项在c6f0473测试输入阶段通过，最终两项定向/两项设备/四组8项使用上述最终测试包；541项通过阶段与最终设备阶段的生产APK字节相同，明确不将541项说成最终测试变动后重跑。
+
+首次失败与阶段证据：/tmp/token077-first-unit-failures保留旧指纹全表失败XML及新增Cursor桌面无窗口比较失败XML；final-build.log、build-recheck.log保留完整旧断言失败和新增测试字段名误写导致编译失败；build-final.log为541项成功阶段，ui-corrected-build.log为最终定向及构建/Lint成功。首次new-ui-first.log中1/2：原生Cursor无数据说明行与桌面空DOM有既定差异；保留两端原样例，最终明确断言桌面无窗口、Android仅无数据文字且percent为空，没有删除边界检查或变更已验收占位行为。该失败应用699c9f…、测试2a42aad…；最终矩阵和正常字号两项均使用f19972…，旧升级测试代码未改。原始日志、升级六行回执、窗口结果及截图在/tmp/token077-前缀；临时材料不宣称随Git提供。
+
+PR #26首次自动审查c6f0473发现P2：新增Cursor仪器测试错误要求空投影；与现场首次失败一致。保留Cursor072既定无数据说明策略，以固定桌面实际空DOM、Android仅文字且无percent两端精确断言明确差异；最终42个DOM样例、两项定向/设备、4组8项及11项回归通过。产品代码无需为测试误假设删掉已验收占位。修订后的head须重新审查后才合并。
+
 ## 当前正式发行验收：Android 0.76.0-01 / code83
 
 2026-10-20（Asia/Shanghai）。开发前Android latest v0.75.0-02/code82，桌面latest v0.76.0/fbbe4c1；固定范围及逐提交映射见HANDOFF。用户本次已明确授权测试、PR、合并和正式发布；以下保留候选实际阶段测试，现已合并PR #24并发布正式v0.76.0-01/code83为latest，发行回执见本节末尾。

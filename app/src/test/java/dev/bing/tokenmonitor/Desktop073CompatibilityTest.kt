@@ -32,7 +32,7 @@ class Desktop073CompatibilityTest {
         val expected=registry.getValue("components").jsonObject.mapValues {(_,rows)->rows.jsonArray.associate {
             it.jsonObject.getValue("revision").jsonPrimitive.long to it.jsonObject.getValue("buildId").jsonPrimitive.content
         }}
-        assertEquals(expected,HubBuildRegistry.entries)
+        assertEquals(expected,HubBuildRegistry.entries.mapValues {(component,rows)->rows.filterKeys {it<=expected.getValue(component).keys.max()}})
         for(rev in listOf(84L,85L)) {
             val build=HubBuildInfo("node-hub",1,rev,expected.getValue("core").getValue(rev),5,expected.getValue("node-hub").getValue(5))
             assertEquals("updateAvailable",build.status)

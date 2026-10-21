@@ -1,5 +1,21 @@
 # 当前交接
 
+## 当前候选：桌面 v0.77.0 / Android 0.77.0-01 / code84
+
+2026-10-22（Asia/Shanghai）。用户明确“继续对齐桌面端最新版，合并，发布”，授权本轮测试、PR、合并及正式发行。预检Android latest为v0.76.0-01/code83，主分支ca255f36；桌面latest为v0.77.0，annotated Tag 085d9be71a58baccc63a52397615cb3148d4f41c解引用c83ee3aeb6d23505257113c29ef010040deb52f7。仅比较上次fbbe4c1之后13个提交，固定源码，不采用浮动main；fullyAligned=false保留。
+
+| 增量提交 | Android处理 |
+|---|---|
+| 22eb608 并发模型速率 | 按模型保存匹配计数差分及独立8秒期限；同设备活跃部分按匹配时长加权，跨设备求和。重复快照不延寿，归属不一致退回本次总差分，不伪造模型速率；保留3分钟灰显和生命周期重置。 |
+| e0f39d6 New API账户消费 | 仅newapi-account显示今日/本月，缺失时选择最多两个实际可用周期；展开保留账户明细及今日/周/月/全部周期。零值有效，未知不转零；newapi-token/sub2api/custom仍按月/全部消费。 |
+| e6ca86c Cursor未知套餐 | 生产采集端不再虚构全额座位额度；Android消费unavailable/空windows，不重建旧窗口。 |
+| 86ebb9f、1a81afb Cline身份/已保存API配置 | 采集和凭据处理属于源端；验证同邮箱不同accountKey记录保持独立。手机不读取或补采集API密钥。 |
+| 590b29e、543a441 Hub持久化/紧凑磁盘写入/SSE扇出 | 服务端性能和停机策略；compact指持久化序列化，不误删wire字段。以实际prepareSseFanout生成的full、legacy、freshness事件验证消费及加密冷恢复；登记core90/91、node6/7、worker7精确指纹。 |
+| ce26462、c3b38e7 | Electron设置刷新跳过扫描、窗口mask空行优化为桌面专属，不移植。 |
+| a9419fb、5c5f068、c3ab1f3、c83ee3a | Argon样例、Windows/CI时限测试及发布元数据；无新Android合同字段，既有Argon处理保留。 |
+
+完整541项JVM、固定桌面187项及最终两项设备/4组8项窗口通过；升级与工件见VALIDATION。Cursor原生无数据占位沿用，既无额度值也无进度条，桌面空窗口差异有明确样例。PR #26审查中，尚未合并/发布。未操作NAS、路由、真机或桌面运行服务；无依赖、认证、SSE生命周期、缓存格式、费用算法及README修改。签名沿用既有正式配置。若需回退，从上一稳定源行为构建更高versionCode、同签名的修复版，经PR/测试和授权发布，不卸载、清数据或改写已发Tag。
+
 ## 当前发行：桌面 v0.76.0 / Android 0.76.0-01 / code83
 
 2026-10-20（Asia/Shanghai），用户明确要求“再次对齐到最新版，直接合并，发布”。开发前实时核对Android最新正式版v0.75.0-02/code82，最新主分支 `9305810`；桌面最新正式Tag v0.76.0（annotated `fe25cbc67d94dcbdcc0b2f345be4562a584fc3c0`，解引用 `fbbe4c1cb04e3277b73499016d432338c1d2ab4e`）。只比较v0.75.0之后9个提交，不采用浮动main。候选0.76.0-01/code83，fullyAligned=false保持；沿用0.75.0-02已验收的字体、皮肤、状态与仪表板记录tab，不回退为旧双按钮。
