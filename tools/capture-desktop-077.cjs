@@ -21,6 +21,7 @@ for(const adapterId of ['newapi-account','newapi-token','sub2api','custom']) for
  {todaySpend:0,weekSpend:0,monthSpend:0,allTimeSpend:0},
  {weekSpend:7,allTimeSpend:40},{todaySpend:null,monthSpend:12},{}
 ]) providers.push({provider:'thirdparty',adapterId,status:'ok',windows:[],balance:{currency:'USD',...balance}});
+providers.push({provider:'cursor',status:'unavailable',windows:[]});
 const scripts=['src/shared/clientCatalog.js','src/shared/vendorPresentation.js','src/shared/compactTokens.js','src/shared/limits/providers.js','src/shared/limits/windowLabels.js','src/shared/limits/usageItems.js','src/shared/limits/balanceDisplay.js','src/shared/limits/windowText.js','src/shared/currency.js','src/shared/subscriptionDisplay.js','src/shared/subscriptionText.js','src/electron/renderer/accountIdentity.js','src/electron/renderer/i18n.js','src/shared/providers/workbuddy/identity.js','src/electron/renderer/limits/providerPresentation.js','src/electron/renderer/limits/resetMotion.js','src/electron/renderer/limits/displayMode.js','src/electron/renderer/limits/windowsView.js'];
 (async()=>{let browser;try {
  browser=await chromium.launch({executablePath:'/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',headless:true});

@@ -2463,6 +2463,15 @@
       "rows": []
     },
     {
+      "locale": "en",
+      "provider": {
+        "provider": "cursor",
+        "status": "unavailable",
+        "windows": []
+      },
+      "rows": []
+    },
+    {
       "locale": "zh-CN",
       "provider": {
         "provider": "thirdparty",
@@ -2939,6 +2948,15 @@
         "balance": {
           "currency": "USD"
         }
+      },
+      "rows": []
+    },
+    {
+      "locale": "zh-CN",
+      "provider": {
+        "provider": "cursor",
+        "status": "unavailable",
+        "windows": []
       },
       "rows": []
     }

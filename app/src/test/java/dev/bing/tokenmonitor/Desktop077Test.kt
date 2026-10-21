@@ -17,6 +17,12 @@ class Desktop077Test {
             val case=raw.jsonObject;val provider=case.getValue("provider").jsonObject
             val actual=LimitProviderLayout.project(provider,locale=Locale.forLanguageTag(case.getValue("locale").jsonPrimitive.content))
             val expected=case.getValue("rows").jsonArray
+            if(provider.getValue("provider").jsonPrimitive.content=="cursor") {
+                // Android retains its established no-data explanation; neither surface invents a quota.
+                assertTrue(expected.isEmpty());assertEquals(1,actual.size);assertNull(actual.single().percent)
+                assertEquals(if(case.getValue("locale").jsonPrimitive.content=="en") "Allowance unavailable" else "额度数据未提供",actual.single().value)
+                return@forEachIndexed
+            }
             assertEquals("case $index count",expected.size,actual.size)
             expected.forEachIndexed {i,row->val r=row.jsonObject
                 assertEquals("case $index label",r.getValue("label").jsonPrimitive.content,actual[i].label)

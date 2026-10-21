@@ -35,7 +35,8 @@ class Desktop077ScreenTest {
                 assertEquals(4,LimitDisplay.groups(snapshot.limits).size)
                 val cursor=snapshot.limits.single {it.provider=="cursor"}
                 assertEquals("unavailable",cursor.status);assertNull(cursor.remaining)
-                assertTrue(LimitProviderLayout.project(cursor.presentation.providerRecord!!).isEmpty())
+                val unavailable=LimitProviderLayout.project(cursor.presentation.providerRecord!!).single()
+                assertNull(unavailable.percent);assertEquals("Allowance unavailable",unavailable.value)
                 assertEquals(listOf("public-a","public-b"),snapshot.limits.filter {it.provider=="cline"}.map {it.presentation.identity.key})
                 val spend=LimitProviderLayout.project(snapshot.limits.first().presentation.providerRecord!!).single()
                 assertEquals("Today $1.00 · Month $12.00",spend.value)
