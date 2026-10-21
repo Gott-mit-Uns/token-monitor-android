@@ -1,8 +1,8 @@
 # 当前验收记录
 
-## 当前候选验收：Android 0.77.0-01 / code84
+## 当前正式发行验收：Android 0.77.0-01 / code84
 
-2026-10-22（Asia/Shanghai），固定桌面v0.77.0/c83ee3a；范围及逐提交映射见HANDOFF。当前候选正在测试，合并/发布回执将在实际完成后补充，不能由版本号推断已发布或设备已更新。
+2026-10-22（Asia/Shanghai），固定桌面v0.77.0/c83ee3a；范围及逐提交映射见HANDOFF。已完成测试、PR复审、合并及正式发布；下列按实际阶段区分，不将公开发行推断为设备已更新。
 
 桌面固定源码：tokenRate、Cursor、Cline、thirdparty、Hub protocol及persistence六文件187项全部通过，无安装新依赖。tools/capture-desktop-077.cjs固定commit生成14组速率事件流（保留旧12组输入并以新版重算期望）、42组实际桌面DOM样例（含2组Cursor无额度原生占位差异）、完整构建指纹表和实际扇出事件；公开合成数据，隔离浏览器禁止外网访问。
 
@@ -24,7 +24,13 @@
 
 首次失败与阶段证据：/tmp/token077-first-unit-failures保留旧指纹全表失败XML及新增Cursor桌面无窗口比较失败XML；final-build.log、build-recheck.log保留完整旧断言失败和新增测试字段名误写导致编译失败；build-final.log为541项成功阶段，ui-corrected-build.log为最终定向及构建/Lint成功。首次new-ui-first.log中1/2：原生Cursor无数据说明行与桌面空DOM有既定差异；保留两端原样例，最终明确断言桌面无窗口、Android仅无数据文字且percent为空，没有删除边界检查或变更已验收占位行为。该失败应用699c9f…、测试2a42aad…；最终矩阵和正常字号两项均使用f19972…，旧升级测试代码未改。原始日志、升级六行回执、窗口结果及截图在/tmp/token077-前缀；临时材料不宣称随Git提供。
 
-PR #26首次自动审查c6f0473发现P2：新增Cursor仪器测试错误要求空投影；与现场首次失败一致。保留Cursor072既定无数据说明策略，以固定桌面实际空DOM、Android仅文字且无percent两端精确断言明确差异；最终42个DOM样例、两项定向/设备、4组8项及11项回归通过。产品代码无需为测试误假设删掉已验收占位。修订后的head须重新审查后才合并。
+PR #26首次自动审查c6f0473发现P2：新增Cursor仪器测试错误要求空投影；与现场首次失败一致。保留Cursor072既定无数据说明策略，以固定桌面实际空DOM、Android仅文字且无percent两端精确断言明确差异；最终42个DOM样例、两项定向/设备、4组8项及11项回归通过。产品代码无需为测试误假设删掉已验收占位。最终13a3b5f复审completed、has_any_findings=false、has_unresolved_findings=false，CI成功；未运行独立security_review，不把空状态称为安全审查通过。
+
+2026-10-22正式发布回执：[产品PR #26](https://github.com/Gott-mit-Uns/token-monitor-android/pull/26)合并至 `1f0af5f244dc34ad3601e4e3715153a69c5381b1`；annotated v0.77.0-01对象 `6b3d80422b23dcf5f0ded69e5216f9614456e8bf`解引用同提交。九项输入树/Gradle blob与最终13a3b5f逐项相同，618文件指纹8b50119a…保持；沿用同一699c9f…正式APK，没有重建。最终f19972…测试包再次执行升级读取1项通过，旧code83准备的UID及五文件仍保持。
+
+[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.77.0-01)为非预发布、非草稿latest。三项公开附件通过无认证请求下载，逐字节与本地材料一致：APK15,345,322字节/699c9f…；SOURCE.json3152字节/SHA256 `84dca779b481f3a6118d4fda4609b222f317f8c61c0527118bf4035890fc8a61`；SHA256SUMS.txt180字节/SHA256 `3ebca953b14182a5190e4b9e3c08ec9d040c9dfaef0cb3e1628ce1b47810995e`，清单两项再计算一致。公开APK再次核对正式证书e5c6fe…、包名及0.77.0-01/code84。认证latest、匿名latest页面、匿名latest API均指向v0.77.0-01，不把网络探测称为真机应用内更新验收。
+
+上传恢复：draft Release创建成功；APK上传成功，SOURCE上传返回unexpected EOF但服务端实际已完成。先查询既有asset状态并通过认证下载逐字节核对SOURCE，未重复创建发行或替换附件；补上传校验清单、确认三项uploaded后才公开发布。完整回读在/tmp/token077-publication/public-verification.json；SOURCE记录合并来源、固定桌面、阶段测试和精确输入指纹。发布后仅文档回执，不修改Tag/APK/资产。真机及生产Hub仍未验证，未操作NAS/路由/桌面服务。
 
 ## 当前正式发行验收：Android 0.76.0-01 / code83
 
