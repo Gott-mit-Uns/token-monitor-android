@@ -184,7 +184,11 @@ internal object LimitProviderLayout {
             val cache=(usage?.n("cacheReadTokens") ?: 0.0)+(usage?.n("cacheCreationTokens") ?: 0.0);if(cache>0) countDetail(8,cache)
             usage?.n("averageDurationMs")?.let {ms->details+=listOf(captions[9],if(ms<1000) "${Math.round(ms)} ms" else String.format(Locale.US,if(ms<10000) "%.1f s" else "%.0f s",ms/1000))}
             usage?.n("standardCost")?.let {details+=listOf(captions[10],money(it,currency))}
-            val summary=listOfNotNull(balance?.n("monthSpend")?.let {"Month ${money(it,currency)}"},balance?.n("allTimeSpend")?.let {"All time ${money(it,currency)}"}).joinToString(" · ")
+            val account=provider.s("adapterId")=="newapi-account"
+            val periods=listOf("Today" to "todaySpend","Week" to "weekSpend","Month" to "monthSpend","All time" to "allTimeSpend").mapNotNull {(label,key)->balance?.n(key)?.let {label to money(it,currency)}}.filter {account || it.first in setOf("Month","All time")}
+            val selected=if(account) periods.filter {it.first in setOf("Today","Month")}.ifEmpty {periods.take(2)} else periods
+            val summary=selected.joinToString(" · ") {"${it.first} ${it.second}"}
+            if(account && periods.size>selected.size) {if(details.isNotEmpty()) details+=listOf("");details.addAll(periods.map {listOf(it.first,it.second)})}
             if(summary.isNotEmpty() || details.isNotEmpty()) result+=ProviderQuotaRow(if(summary.isEmpty()) "Details" else "Spend",summary,wide=true,item="spend",details=details)
         }
         fun rates(monthly:Boolean=false,monthlyTone:Double=0.5) {

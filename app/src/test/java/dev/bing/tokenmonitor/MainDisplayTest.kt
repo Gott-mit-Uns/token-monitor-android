@@ -45,8 +45,8 @@ class MainDisplayTest {
             assertEquals("move $i",c.getValue("move").jsonPrimitive.content.split(','),MainDisplay.move(value,"models",-1).viewOrder.ifEmpty {MainDisplay.order(value.viewOrder)})
         }
     }
-    @Test fun originalDeviceMatchedCounterStreamsResetExpiryAndMissingModelAttributionMatch() {
-        data().getValue("scenarios").jsonArray.forEachIndexed {scenario,raw->var now=0L;val tracker=LiveTokenRateTracker {now}
+    @Test fun desktop077DeviceAndModelCounterStreamsResetExpiryAndMissingAttributionMatch() {
+        Json.parseToJsonElement(javaClass.getResource("/desktop-077.json")!!.readText()).jsonObject.getValue("scenarios").jsonArray.forEachIndexed {scenario,raw->var now=0L;val tracker=LiveTokenRateTracker {now}
             raw.jsonObject.getValue("events").jsonArray.forEachIndexed {i,event->val c=event.jsonObject;now=c.getValue("at").jsonPrimitive.long
                 fun entries(key:String)=(c[key] as? JsonArray)?.map {r->val row=r.jsonObject
                     RateEntry(row.getValue("id").jsonPrimitive.content,row.getValue("name").jsonPrimitive.content,(row["period"] as? JsonObject)?.let(ThroughputParser::parse))}

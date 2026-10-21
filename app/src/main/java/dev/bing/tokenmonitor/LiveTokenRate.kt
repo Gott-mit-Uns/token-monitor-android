@@ -23,26 +23,47 @@ internal object ThroughputParser {
 
 /** Original matched performance-counter deltas, independently tracked per Hub device. */
 internal class LiveTokenRateTracker(private val now:()->Long) {
-    private data class Sample(val speed:Double,val burn:Double,val sampledAt:Long,val revision:Long,val models:List<RateModel>)
+    private data class Sample(val speed:Double,val burn:Double,val sampledAt:Long,val revision:Long,val models:List<RateModel>,val expiresAt:Long)
     private class Tracker(private val now:()->Long) {
+        private data class Part(val counters:TimedUsage,val sampledAt:Long,val independent:Boolean=false)
         private var baseline:Throughput?=null
         private var revision=0L
+        private var modelSamples=linkedMapOf<String,Part>()
+        private var unattributed:Part?=null
         var sample:Sample?=null;private set
-        fun reset(value:Throughput?) {baseline=value;sample=null}
+        private fun clear() {modelSamples.clear();unattributed=null;sample=null}
+        fun reset(value:Throughput?) {baseline=value;clear()}
+        fun at(timestamp:Long):Sample? {
+            val models=modelSamples.filterValues {timestamp<it.sampledAt+8000}
+            val parts=models.values.toList()+listOfNotNull(unattributed?.takeIf {timestamp<it.sampledAt+8000})
+            if(parts.isEmpty()) return null
+            val counters=parts.fold(TimedUsage(0.0,0.0,0.0)) {sum,part->plus(sum,part.counters)}
+            return Sample(speed(counters),burn(counters),parts.maxOf {it.sampledAt},revision,
+                models.map {(name,part)->RateModel(name,speed(part.counters),burn(part.counters))},parts.minOf {it.sampledAt+8000})
+        }
         fun observe(current:Throughput?):Sample? {
             val previous=baseline;baseline=current
-            if(previous==null || current==null) {sample=null;return null}
+            if(previous==null || current==null) {clear();return null}
             val change=delta(current.counters,previous.counters)
-            if(negative(change)) {sample=null;return null}
+            if(negative(change)) {clear();return null}
             if(change.timedDurationMs<=0) return sample
-            val models=if(previous.models==null) emptyList() else current.models.orEmpty().mapNotNull {(name,counters)->
-                val difference=delta(counters,previous.models[name] ?: TimedUsage(0.0,0.0,0.0))
-                if(negative(difference) || difference.timedTokens>change.timedTokens || difference.timedOutputTokens>change.timedOutputTokens || difference.timedDurationMs>change.timedDurationMs || difference.timedDurationMs<=0) null
-                else RateModel(name,speed(difference),burn(difference))
+            val timestamp=now();val next=linkedMapOf<String,Part>();var attributed=TimedUsage(0.0,0.0,0.0)
+            val models=current.models;val old=previous.models
+            var consistent=models!=null && old!=null && old.all {(name,counters)->models[name]?.let { !negative(delta(it,counters)) }==true}
+            if(consistent) for((name,counters) in models.orEmpty()) {
+                val difference=delta(counters,old?.get(name) ?: TimedUsage(0.0,0.0,0.0))
+                if(negative(difference) || negative(delta(change,difference))) {consistent=false;break}
+                if(difference.timedDurationMs>0) {attributed=plus(attributed,difference);next[name]=Part(difference,timestamp)}
+                else if(difference.timedTokens==0.0 && difference.timedOutputTokens==0.0) modelSamples[name]?.takeIf {timestamp<it.sampledAt+8000}?.let {next[name]=it}
+                else {consistent=false;break}
             }
-            revision++
-            sample=Sample(speed(change),burn(change),now(),revision,models)
-            return sample
+            val remainder=delta(change,attributed)
+            if(consistent && !negative(remainder) && (remainder.timedDurationMs>0 || (remainder.timedTokens==0.0 && remainder.timedOutputTokens==0.0))) {
+                modelSamples=next
+                if(remainder.timedDurationMs>0) unattributed=Part(remainder,timestamp,true)
+                else if(unattributed?.independent!=true || timestamp>=unattributed!!.sampledAt+8000) unattributed=null
+            } else {modelSamples.clear();unattributed=Part(change,timestamp)}
+            revision++;sample=at(timestamp);return sample
         }
     }
     private data class Device(val tracker:Tracker,var name:String)
@@ -70,19 +91,20 @@ internal class LiveTokenRateTracker(private val now:()->Long) {
     }
     fun sample():RateSample? {
         val timestamp=now()
-        val active=devices.entries.mapNotNull {(id,device)->device.tracker.sample?.takeIf {timestamp<it.sampledAt+8000}?.let {Triple(id,device,it)}}
+        val active=devices.entries.mapNotNull {(id,device)->device.tracker.at(timestamp)?.let {Triple(id,device,it)}}
         if(active.isNotEmpty()) {
             val time=active.maxOf {it.third.sampledAt}
             val sample=RateSample(cap(active.sumOf {it.third.speed}),cap(active.sumOf {it.third.burn}),time,revision,
                 active.filter {it.third.models.isNotEmpty()}.map {DeviceRate(it.first,it.second.name,it.third.models)},active.size,time+180000,false)
             retained=sample
-            return sample.copy(expiresAt=active.minOf {it.third.sampledAt+8000})
+            return sample.copy(expiresAt=active.minOf {it.third.expiresAt})
         }
         val previous=retained ?: return null
         return previous.takeIf {timestamp<it.expiresAt}?.copy(idle=true)
     }
     companion object {
         private fun delta(current:TimedUsage,previous:TimedUsage)=TimedUsage(current.timedTokens-previous.timedTokens,current.timedOutputTokens-previous.timedOutputTokens,current.timedDurationMs-previous.timedDurationMs)
+        private fun plus(a:TimedUsage,b:TimedUsage)=TimedUsage(a.timedTokens+b.timedTokens,a.timedOutputTokens+b.timedOutputTokens,a.timedDurationMs+b.timedDurationMs)
         private fun negative(value:TimedUsage)=value.timedTokens<0 || value.timedOutputTokens<0 || value.timedDurationMs<0
         private fun cap(value:Double)=if(value.isNaN() || value<=0) 0.0 else min(1e12,value)
         private fun speed(value:TimedUsage)=if(value.timedDurationMs<=0 || value.timedOutputTokens<=0) 0.0 else cap(value.timedOutputTokens*1000/value.timedDurationMs)

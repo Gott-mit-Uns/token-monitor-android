@@ -1,6 +1,6 @@
 # Android 当前功能与数据边界
 
-当前正式发行为 Android `0.76.0-01` / code83，固定桌面 `v0.76.0` / `fbbe4c1cb04e3277b73499016d432338c1d2ab4e`；PR #24合并后已按授权正式发布。来源及验证状态以[当前验收](VALIDATION.md)为准，增量映射见[当前交接](HANDOFF.md)。首页工具/模型/会话/设备数量可独立配置1–50条；Argon按现有Hub windows合同消费，不承担OAuth/RPC采集。客户端适用功能对齐不等于全平台功能对等，`fullyAligned=false` 保留，发行不证明NAS或手机已更新。
+当前候选 Android `0.77.0-01` / code84，固定桌面 `v0.77.0` / `c83ee3aeb6d23505257113c29ef010040deb52f7`；上一正式版为0.76.0-01/code83。并发模型实时速率、New API账户分周期消费及Hub/Cursor/Cline消费兼容见[当前验收](VALIDATION.md)，13项增量映射见[当前交接](HANDOFF.md)。不补手机采集，`fullyAligned=false`保留；合并/发布状态以实际回执为准，发行不证明NAS或手机已更新。
 
 | 功能 | Android 当前范围 | Hub / Agent 依赖及限制 |
 |---|---|---|

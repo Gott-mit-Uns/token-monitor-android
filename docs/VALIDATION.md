@@ -1,5 +1,15 @@
 # 当前验收记录
 
+## 当前候选验收：Android 0.77.0-01 / code84
+
+2026-10-22（Asia/Shanghai），固定桌面v0.77.0/c83ee3a；范围及逐提交映射见HANDOFF。当前候选正在测试，合并/发布回执将在实际完成后补充，不能由版本号推断已发布或设备已更新。
+
+桌面固定源码：tokenRate、Cursor、Cline、thirdparty、Hub protocol及persistence六文件187项全部通过，无安装新依赖。tools/capture-desktop-077.cjs固定commit生成14组速率事件流（保留旧12组输入并以新版重算期望）、40组实际桌面DOM周期样例、完整构建指纹表和实际扇出事件；公开合成数据，隔离浏览器禁止外网访问。
+
+首轮定向构建/JVM成功；完整回归首次旧wholeHubRegistry测试要求旧075指纹表等于当前全表，新增5个真实指纹后失败。保留所有旧指纹逐项断言，并新增固定077全表精确相等检查，不删除测试或放宽未知指纹校验。原日志/tmp/token077-final-build.log和首次XML保留。首次桌面捕获因缺少WorkBuddy identity依赖失败，补固定源码脚本依赖后重新捕获；移除不相关的图标mask脚本避免about:blank URL警告，最终capture-registry日志成功；没有改产品依赖。
+
+未验证：真机、真实账户和生产Hub联调；合成fixture与只读模拟器结果不证明生产端已部署新采集器。本轮沿用既有导航、历史日历/记录tab、字体/皮肤、存储主格式和连接安全处理，未受影响范围按0.76.0-01记录继承，不宣称完整androidTest重跑。
+
 ## 当前正式发行验收：Android 0.76.0-01 / code83
 
 2026-10-20（Asia/Shanghai）。开发前Android latest v0.75.0-02/code82，桌面latest v0.76.0/fbbe4c1；固定范围及逐提交映射见HANDOFF。用户本次已明确授权测试、PR、合并和正式发布；以下保留候选实际阶段测试，现已合并PR #24并发布正式v0.76.0-01/code83为latest，发行回执见本节末尾。
