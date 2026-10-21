@@ -1,6 +1,6 @@
 # 当前交接
 
-## 当前候选：桌面 v0.77.0 / Android 0.77.0-01 / code84
+## 当前发行：桌面 v0.77.0 / Android 0.77.0-01 / code84
 
 2026-10-22（Asia/Shanghai）。用户明确“继续对齐桌面端最新版，合并，发布”，授权本轮测试、PR、合并及正式发行。预检Android latest为v0.76.0-01/code83，主分支ca255f36；桌面latest为v0.77.0，annotated Tag 085d9be71a58baccc63a52397615cb3148d4f41c解引用c83ee3aeb6d23505257113c29ef010040deb52f7。仅比较上次fbbe4c1之后13个提交，固定源码，不采用浮动main；fullyAligned=false保留。
 
@@ -14,7 +14,9 @@
 | ce26462、c3b38e7 | Electron设置刷新跳过扫描、窗口mask空行优化为桌面专属，不移植。 |
 | a9419fb、5c5f068、c3ab1f3、c83ee3a | Argon样例、Windows/CI时限测试及发布元数据；无新Android合同字段，既有Argon处理保留。 |
 
-完整541项JVM、固定桌面187项及最终两项设备/4组8项窗口通过；升级与工件见VALIDATION。Cursor原生无数据占位沿用，既无额度值也无进度条，桌面空窗口差异有明确样例。PR #26审查中，尚未合并/发布。未操作NAS、路由、真机或桌面运行服务；无依赖、认证、SSE生命周期、缓存格式、费用算法及README修改。签名沿用既有正式配置。若需回退，从上一稳定源行为构建更高versionCode、同签名的修复版，经PR/测试和授权发布，不卸载、清数据或改写已发Tag。
+完整541项JVM、固定桌面187项及最终两项设备/4组8项窗口通过；升级与工件见VALIDATION。Cursor原生无数据占位沿用，既无额度值也无进度条，桌面空窗口差异有明确样例。PR #26最终13a3b5f复审completed、无发现/未解决项，CI通过；已按授权合并至1f0af5f244dc34ad3601e4e3715153a69c5381b1并发布[正式v0.77.0-01](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.77.0-01)为latest。未操作NAS、路由、真机或桌面运行服务；无依赖、认证、SSE生命周期、缓存格式、费用算法及README修改。签名沿用既有正式配置。若需回退，从上一稳定源行为构建更高versionCode、同签名的修复版，经PR/测试和授权发布，不卸载、清数据或改写已发Tag。
+
+发行回执：annotated Tag对象6b3d80422b23dcf5f0ded69e5216f9614456e8bf解引用同1f0af5f合并提交；618个产品/测试/sharedTest及Gradle输入与最终13a3b5f逐项相同。发布同一699c9f…正式APK，未重建；三附件公开回读逐字节一致，匿名latest页面/API及认证latest均指向0.77.0-01。正式证书与版本再次核对；真机/生产Hub未验证，未部署NAS。回执详情及失败恢复见VALIDATION。任务已完成，不自动扩展下一版本。
 
 ## 当前发行：桌面 v0.76.0 / Android 0.76.0-01 / code83
 

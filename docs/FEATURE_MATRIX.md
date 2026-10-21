@@ -1,6 +1,6 @@
 # Android 当前功能与数据边界
 
-当前候选 Android `0.77.0-01` / code84，固定桌面 `v0.77.0` / `c83ee3aeb6d23505257113c29ef010040deb52f7`；上一正式版为0.76.0-01/code83。并发模型实时速率、New API账户分周期消费及Hub/Cursor/Cline消费兼容见[当前验收](VALIDATION.md)，13项增量映射见[当前交接](HANDOFF.md)。不补手机采集，`fullyAligned=false`保留；合并/发布状态以实际回执为准，发行不证明NAS或手机已更新。
+当前正式发行 Android `0.77.0-01` / code84，固定桌面 `v0.77.0` / `c83ee3aeb6d23505257113c29ef010040deb52f7`；PR #26合并后已正式发布为latest。并发模型实时速率、New API账户分周期消费及Hub/Cursor/Cline消费兼容见[当前验收](VALIDATION.md)，13项增量映射见[当前交接](HANDOFF.md)。不补手机采集，`fullyAligned=false`保留；公开发行回执已核对，发行不证明NAS或手机已更新。
 
 | 功能 | Android 当前范围 | Hub / Agent 依赖及限制 |
 |---|---|---|
