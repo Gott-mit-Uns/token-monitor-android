@@ -1,6 +1,6 @@
 # Android 版本规则
 
-参照 Token Monitor NAS：`<固定上游版本>-<两位 Android 修订号>`。当前候选为 `0.78.0-01` / code86，正式Tag及APK采用同号；上一正式发行0.77.0-02。实际发行和签名/公开下载回执见 [HANDOFF](docs/HANDOFF.md) 与 [VALIDATION](docs/VALIDATION.md)。
+参照 Token Monitor NAS：`<固定上游版本>-<两位 Android 修订号>`。当前正式发行 `0.78.0-01` / code86，Tag `v0.78.0-01`，APK `token-monitor-android-0.78.0-01.apk`，Release设为latest；上一正式发行0.77.0-02保留。实际发行和签名/公开下载回执见 [HANDOFF](docs/HANDOFF.md) 与 [VALIDATION](docs/VALIDATION.md)。
 
 同基础后续修订为 `-02`、`-03`；切换新上游基础时从 `-01` 开始。Android修订号独立于NAS；versionCode严格递增。包名、正式签名及数据目录保持原有身份。
 
