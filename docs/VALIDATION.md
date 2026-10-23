@@ -1,12 +1,14 @@
 # 当前验收记录
 
-## 2026-10-24 Android0.78.0-01/code86 候选验收
+## 2026-10-24 Android0.78.0-01/code86 发行验收
 
 固定桌面v0.78.0/d52e0b9；仅版本/参考元数据改动，ZCode适用行为由现有通用实现消费。新增固定源码捕获脚本，校验三个源码SHA并使用真实合成SQLite解析标题/父关系，生成complete、missing-parent、legacy三个HTTP/SSE full/freshness与桌面归组对照。JVM精确比较Token/金额/成员、fork/side chat独立和未知父降级，设备测试覆盖加密冷恢复及会话详情。
 
 本轮JDK17/SDK37/既有Wrapper离线正式签名构建与测试APK成功；539项JVM、103类全部通过，Lint0错误/117警告/2提示。API36 ARM64独立只读模拟器emulator-5698：正式code85到86 install-r升级，公开合成加密历史及偏好读取1项通过；ZCode新功能1项、既有Session069两项和Android更新四项共7项通过。320dp（880px/density440）、系统fontScale2.0、深浅双主题共2项通过，并实际查看截图；仅覆盖会话详情滚动到指定行，不声称整页重新设计验收。UID10213及五份加密/偏好文件SHA逐项保持。正式签名证书沿用e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202。实体手机、真实ZCode账户和生产Hub端到端未测试，免真机规则保持；本轮没有手机私有数据操作。
 
 最终APK 15318030字节，SHA256 `df9a086037e137d63336e164166a5a4e6876287ccc9dbaaff57c6c27756b4897`；测试APK SHA256 `d64a4d33dfdbd407c0e8af07e49182293f0f5345f7d6c6964cfa4224b81ad233`。
+
+发行：PR #30合并至d34d10c，annotated v0.78.0-01解引用同提交，与最终5501b7c的tree完全相同。616个main/test/androidTest/sharedTest及Gradle输入（路径NUL原字节NUL排序）SHA256 `2578c7f8d64d735efbb677264a72002f917e990c6513a54c21a7b76518522b56`；使用已验收df9a0860…APK，不重建。原自动审查运行超过20分钟无更新，对同一head手动重审后completed、has_any_findings=false、has_unresolved_findings=false，未运行独立security_review。三个资产均uploaded并经认证回读与本地逐字节一致后发布为非草稿/非预发布latest；匿名公开回读三附件均与本地逐字节一致，认证latest指向v0.78.0-01。公开APK15,318,030字节/SHA256 df9a0860…；SOURCE.json2155字节/SHA256 fa5b266ef12c2efbc7104d33c0f60f37162d5379f52e20c02e09d46857e6ccc9；SHA256SUMS.txt180字节/SHA256 cb6505e1c6ab2ee814b5710fce2b089826caf8de5bb42be70fd24e5451d12a7d；清单两项独立重算一致。SOURCE.json关联build/merged提交、固定上游、签名及范围。
 
 首次失败保留/tmp/android078-first-build.log（写入新测试时并行Lint内部分析异常）、final-build.log（桌面0.1+0.2+0.3浮点尾差与Android精确十进制差异）、verified-build.log（重叠构建的测试结果临时文件冲突）；随后停止所有同目录构建，以稳定输入串行完成stable-build.log。合成金额改为二进制可精确表示的1/8递增，仍精确比较，不改生产费用、不加容差。NAS类历史费用告警不因此关闭。
 

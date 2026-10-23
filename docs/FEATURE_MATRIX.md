@@ -1,6 +1,6 @@
 # Android 当前功能与数据边界
 
-当前候选 Android `0.78.0-01` / code86，固定桌面 `v0.78.0` / `d52e0b9cf970a03a30a5f5a1e9139693bb211cd8`；上一正式发行0.77.0-02。本轮验证ZCode保存标题、子代理/工作流归组，fork和side chat保持独立；复用现有Hub解析与展示，不在Android读取SQLite。三项持续排除规则及既有功能保持，`fullyAligned=false`。实跑与未测见[当前验收](VALIDATION.md)。
+当前正式发行 Android `0.78.0-01` / code86，固定桌面 `v0.78.0` / `d52e0b9cf970a03a30a5f5a1e9139693bb211cd8`；PR #30已合并并正式发布为latest。本轮验证ZCode保存标题、子代理/工作流归组，fork和side chat保持独立；复用现有Hub解析与展示，不在Android读取SQLite。三项持续排除规则及既有功能保持，`fullyAligned=false`。实跑与未测见[当前验收](VALIDATION.md)。
 
 上一正式基线0.77.0-01的并发模型实时速率、New API账户分周期消费及Hub/Cursor/Cline兼容保持，13项增量映射仍见[当前交接](HANDOFF.md)。不补手机采集，`fullyAligned=false`保留；公开发行不证明NAS或手机已更新。
 

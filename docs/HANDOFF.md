@@ -1,8 +1,8 @@
 # 当前交接
 
-## 2026-10-24 桌面v0.78.0对齐候选
+## 2026-10-24 Android0.78.0-01已正式发布
 
-本次用户明确授权分别完成Android/NAS对齐、测试、PR、合并、发布及部署。Android候选0.78.0-01/code86，固定上游d52e0b9，从3bb5783接续；9个上游提交/111路径逐项检查。ZCode标题及父关系沿用现有Hub合同和通用归组，不移植SQLite采集；独立fork/side chat不折叠。Claude私有探测、HTTP依赖修复属于生产端；Windows/macOS玻璃、Dock/Notch及悬停提示不适用。Hub注册表在上游078未变，固定对照后原样保留；原077样例仍以其固定源码验证，不把旧期望改为当前源码。三项手机设置排除、只读定位、费用/缓存/偏好/签名均保持。当前等待PR与正式发布，不声称手机已部署。
+本次用户明确授权分别完成Android/NAS对齐、测试、PR、合并、发布及部署。Android正式0.78.0-01/code86，固定上游d52e0b9，从3bb5783接续；9个上游提交/111路径逐项检查。ZCode标题及父关系沿用现有Hub合同和通用归组，不移植SQLite采集；独立fork/side chat不折叠。Claude私有探测、HTTP依赖修复属于生产端；Windows/macOS玻璃、Dock/Notch及悬停提示不适用。Hub注册表在上游078未变，固定对照后原样保留；原077样例仍以其固定源码验证，不把旧期望改为当前源码。三项手机设置排除、只读定位、费用/缓存/偏好/签名均保持。[产品PR #30](https://github.com/Gott-mit-Uns/token-monitor-android/pull/30)最终5501b7c自动重审完成且无发现，文档CI通过后合并至`d34d10c6756dc188e64b34ab88f833962f96e4be`；合并tree与已验证输入完全相同。annotated Tag v0.78.0-01解引用同提交，[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.78.0-01)已设latest，沿用同一df9a0860…正式签名APK，没有重建。三附件上传后及匿名公开下载回读均与本地逐字节相同，认证latest核对通过。实体手机未安装，不以发布或模拟器安装代替手机部署；APK可保留数据覆盖安装。
 
 
 ## 当前发行：手机设置精简 / Android 0.77.0-02 / code85
