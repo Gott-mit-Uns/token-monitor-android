@@ -2,6 +2,8 @@
 
 参照 Token Monitor NAS：`<固定上游版本>-<两位 Android 修订号>`。当前正式发行编号为 `0.77.0-01` / code84，Git Tag为 `v0.77.0-01`，APK文件名为 `token-monitor-android-0.77.0-01.apk`，该正式Release设为GitHub latest。
 
+本轮未发布候选为 `0.77.0-02` / code85，仅用于PR与验证；没有创建Tag或Release，正式latest仍以上述已发布版为准。
+
 同基础后续修订为 `-02`、`-03`；切换新上游基础时从 `-01` 开始。Android修订号独立于NAS；versionCode严格递增。包名、正式签名及数据目录保持原有身份。
 
 ## 唯一正式编号与下载入口

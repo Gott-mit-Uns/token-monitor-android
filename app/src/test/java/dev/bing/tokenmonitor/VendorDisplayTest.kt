@@ -25,12 +25,12 @@ class VendorDisplayTest {
             }
         }
     }
-    @Test fun localVendorAndVisibilityChangesPreserveThemeCodeFontsMoneyToolsAndSourceDefaults() {
+    @Test fun localVendorAndVisibilityChangesPreservePaletteFontsMoneyToolsAndSourceDefaults() {
         val original=DisplayPreferences(currency="CNY",currencyRates=mapOf("CNY" to "7"),hiddenTools=setOf("claude"),lastPeriod="last30",monthMode="last30",appearance=AppearancePreferences(mapOf("chart" to "#abcdef"),"largest","serif",""))
-        val code=DesktopAppearance.encode(original.appearance.colors)
+        val colors=original.appearance.colors
         val red=DisplayChange.VendorColor("codex"," #FF0000 ").apply(original)
         assertEquals(mapOf("codex" to "#ff0000"),red.appearance.vendorColors)
-        assertEquals(code,DesktopAppearance.encode(red.appearance.colors));assertEquals(original,red.copy(appearance=red.appearance.copy(vendorColors=emptyMap())))
+        assertEquals(colors,red.appearance.colors);assertEquals(original,red.copy(appearance=red.appearance.copy(vendorColors=emptyMap())))
         for(invalid in listOf(DisplayChange.VendorColor("bad","#123456"),DisplayChange.VendorColor("codex","#123"))) assertEquals(red,invalid.apply(red))
         val hidden=DisplayChange.LiveDot(false).apply(DisplayChange.ToolIcons(false).apply(red))
         assertFalse(hidden.appearance.showToolIcons);assertFalse(hidden.appearance.showLiveDot)

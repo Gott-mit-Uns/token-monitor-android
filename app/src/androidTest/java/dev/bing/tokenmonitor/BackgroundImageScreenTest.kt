@@ -89,7 +89,7 @@ class BackgroundImageScreenTest {
         assertEquals(1,launches);assertEquals(28,BackgroundImageStore(target).load().opacity)
         val picture=compose.onNodeWithTag("appearance-background-controls").fetchSemanticsNode().positionInRoot.y
         val motion=compose.onNodeWithTag("settings-motion-on").fetchSemanticsNode().positionInRoot.y
-        val theme=compose.onNodeWithTag("appearance-theme-code-field").fetchSemanticsNode().positionInRoot.y
+        val theme=compose.onNodeWithTag("appearance-preset-default").fetchSemanticsNode().positionInRoot.y
         assertTrue("Desktop picture controls must precede motion and interface theme",picture<motion && motion<theme)
         compose.onNodeWithTag("appearance-background-choose").assertHeightIsAtLeast(48.dp)
         compose.onNodeWithTag("appearance-background-remove").assertHeightIsAtLeast(48.dp)

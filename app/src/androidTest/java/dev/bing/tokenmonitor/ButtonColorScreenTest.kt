@@ -42,7 +42,7 @@ class ButtonColorScreenTest {
         SemanticsMatcher.keyIsDefined(SemanticsActions.GetTextLayoutResult) and hasAnyAncestor(hasTestTag(tag)),
         useUnmergedTree=true))
     private fun pageTextColor()=textColor(compose.onNode(
-        hasText("Theme Code") and hasAnyAncestor(hasTestTag("appearance-controls")),useUnmergedTree=true))
+        hasTestTag("appearance-interface-value") and hasAnyAncestor(hasTestTag("appearance-controls")),useUnmergedTree=true))
     private fun save(page:String,dialog:String?=null)=saveVisualEvidence(compose.activity,
         if(dialog==null) compose.onRoot() else compose.onNodeWithTag(dialog),
         "button-color-$page-${if(dark) "dark" else "light"}.png")
@@ -55,7 +55,6 @@ class ButtonColorScreenTest {
         val state=HubState(snapshot=snapshot,history=HubHistory(emptyList(),emptyList()),modelNames=ModelNames(emptyMap(),"off"))
         val actions=Actions();var commits=0
         val text=if(dark) Color(0xFFEEF5FB) else Color(0xFF1C1F26)
-        val code=DesktopAppearance.encode(DesktopAppearance.palette(initial.appearance.colors,dark))
         compose.activity.runOnUiThread {compose.activity.setContent {
             TokenTheme(dark,prefs.value.language,prefs.value.appearance) {
                 HubScreen(state,actions,preferences=prefs.value,updateDisplay={commits++;prefs.value=it.apply(prefs.value)})
@@ -73,7 +72,7 @@ class ButtonColorScreenTest {
         save("settings")
 
         openSettingsSection(compose,"appearance");click("appearance-colors-toggle")
-        show("appearance-theme-code-field");compose.onNodeWithTag("appearance-theme-code-field").assertTextEquals(code)
+        compose.onNodeWithTag("appearance-theme-code-field").assertDoesNotExist()
         click("appearance-color-text-open")
         compose.onNodeWithTag("appearance-color-text").performTextReplacement("#ff0000")
         compose.onNodeWithTag("appearance-color-text-apply").performScrollTo().assertIsEnabled()
@@ -94,7 +93,7 @@ class ButtonColorScreenTest {
         compose.onNodeWithTag("appearance-color-text-cancel").performClick()
         compose.onNodeWithTag("appearance-color-text-dialog").assertDoesNotExist()
         assertEquals(text,pageTextColor())
-        show("appearance-theme-code-field");compose.onNodeWithTag("appearance-theme-code-field").assertTextEquals(code)
+        compose.onNodeWithTag("appearance-theme-code-field").assertDoesNotExist()
         assertEquals(initial,prefs.value);assertEquals(0,commits)
 
         click("appearance-color-accent-open")
@@ -104,8 +103,7 @@ class ButtonColorScreenTest {
         compose.onNodeWithTag("appearance-color-accent-apply").performClick()
         compose.onNodeWithTag("appearance-color-accent-dialog").assertDoesNotExist()
         assertEquals("#00aa00",prefs.value.appearance.colors["accent"]);assertEquals(1,commits)
-        show("appearance-theme-code-field");compose.onNodeWithTag("appearance-theme-code-field")
-            .assertTextEquals(DesktopAppearance.encode(DesktopAppearance.palette(prefs.value.appearance.colors,dark)))
+        compose.onNodeWithTag("appearance-theme-code-field").assertDoesNotExist()
         compose.onNodeWithTag("hub-settings-toggle").performClick()
         compose.onNodeWithTag("hub-period-today").assertIsSelected()
         assertEquals(Color(0xFF00AA00),buttonTextColor("hub-period-today"))

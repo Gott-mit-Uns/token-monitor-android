@@ -124,31 +124,30 @@ class AndroidUpdateLifecycleTest {
         assertFalse(preferences.contains("last-success-ms"))
         assertFalse(preferences.contains("last-failure-ms"))
     }
-    @Test fun oldAutomaticPreferencesCannotTriggerEitherSourceAndDesktopRequestSurvivesRecreation() {
+    @Test fun oldAutomaticPreferencesCannotTriggerAndroidAndManualRequestSurvivesRecreation() {
         val preferences=application.getSharedPreferences("android-release-check",0)
         preferences.edit().putLong("last-success-ms",1L).putLong("last-failure-ms",1L).commit()
-        val owner=ViewModelStore();var androidCalls=0;var desktopCalls=0
+        val owner=ViewModelStore();var androidCalls=0
         val factory=object:ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T:ViewModel> create(modelClass:Class<T>):T = AndroidUpdateModel(application,
-                AndroidReleaseSource {androidCalls++;awaitCancellation()},"0.72.0-01",
-                DesktopReleaseSource {desktopCalls++;awaitCancellation()}) as T
+                AndroidReleaseSource {androidCalls++;awaitCancellation()},"0.72.0-01") as T
         }
         try {
             val model=ViewModelProvider(owner,factory)[AndroidUpdateModel::class.java]
             repeat(5) {model.setForeground(true);drain();model.setForeground(false);drain()}
-            assertEquals(0,androidCalls);assertEquals(0,desktopCalls)
-            model.setForeground(true);model.desktopController.check();model.desktopController.check();drain()
-            assertEquals(1,desktopCalls);assertEquals(0,androidCalls)
+            assertEquals(0,androidCalls)
+            model.setForeground(true);model.controller.check();model.controller.check();drain()
+            assertEquals(1,androidCalls)
             repeat(5) {
                 model.onActivityStopped(true)
                 val recreated=ViewModelProvider(owner,factory)[AndroidUpdateModel::class.java]
                 assertSame(model,recreated);recreated.setForeground(true);drain()
-                assertEquals(1,desktopCalls)
+                assertEquals(1,androidCalls)
             }
             model.onActivityStopped(false);drain();model.setForeground(true);drain()
-            assertEquals(1,desktopCalls)
-            model.desktopController.check();drain();assertEquals(2,desktopCalls)
+            assertEquals(1,androidCalls)
+            model.controller.check();drain();assertEquals(2,androidCalls)
             assertEquals(1L,preferences.getLong("last-success-ms",0))
             assertEquals(1L,preferences.getLong("last-failure-ms",0))
         } finally {owner.clear();drain();preferences.edit().clear().commit()}

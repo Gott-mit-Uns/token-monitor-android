@@ -1,8 +1,5 @@
 package dev.bing.tokenmonitor
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.os.Build
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
@@ -37,52 +34,38 @@ class EditControlsScreenTest {
     }
     private fun click(tag:String) {compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag(tag));compose.onNodeWithTag(tag).performClick()}
     private fun save(page:String,tag:String?=null) {saveVisualEvidence(compose.activity,if(tag==null) compose.onRoot() else compose.onNodeWithTag(tag),"edit-$page-${if(dark) "dark" else "light"}.png")}
-    @Test fun sourceCodeFieldCopyPasteAndKeyboardApplyKeepFontsVendorRatesAndHubData() {
+    @Test fun retiredThemeAndFontInputsStayAbsentWhilePresetsPreserveOtherChoices() {
         val initial=DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT,language=LanguageChoice.ENGLISH,currency="CNY",currencyRates=mapOf("CNY" to "7"),appearance=AppearancePreferences(interfaceFont="serif",displayFont="monospace",vendorColors=mapOf("codex" to "#ff0000")))
         val prefs=mutableStateOf(initial);val actions=Actions()
         val snapshot=HubParser.parse("""{"periods":{"today":{"totalTokens":1000,"costUsd":1}}}""")
-        val instrumentation=InstrumentationRegistry.getInstrumentation()
-        val manager=compose.activity.getSystemService(ClipboardManager::class.java)
-        var before:ClipData?=null
-        instrumentation.runOnMainSync {before=manager.primaryClip}
-        try {
-            compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(prefs.value.theme!=ThemeChoice.LIGHT,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(HubState(snapshot=snapshot),actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
-            compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"appearance")
-            click("appearance-code-copy")
-            val canonical=DesktopAppearance.encode(DesktopAppearance.palette(initial.appearance.colors,dark))
-            compose.waitUntil(5000) {manager.primaryClip?.getItemAt(0)?.text?.toString()==canonical}
-            compose.onNodeWithTag("appearance-theme-code-field").assertTextEquals(canonical)
-            instrumentation.runOnMainSync {manager.setPrimaryClip(ClipData.newPlainText("Public theme","TM1-2563EB-F6F7F9-1C1F26-5B626D"))}
-            click("appearance-code-paste")
-            compose.waitUntil(5000) {prefs.value.appearance.colors["bg"]=="#f6f7f9"}
-            compose.onNodeWithTag("appearance-code-status").assertTextEquals("Theme applied.")
-            val applied=prefs.value.appearance.colors
-            click("appearance-theme-code-field");compose.onNodeWithTag("appearance-theme-code-field").performTextReplacement("TM3-000000");compose.onNodeWithTag("appearance-theme-code-field").performImeAction()
-            compose.onNodeWithTag("appearance-code-status").assertTextEquals("This theme code version is not supported yet.")
-            compose.runOnIdle {assertEquals(applied,prefs.value.appearance.colors)}
-            compose.onNodeWithTag("appearance-theme-code-field").performTextReplacement("TM2-B7EAD4-303438-EEF5FB-A3ADBB-73BDF5");compose.onNodeWithTag("appearance-theme-code-field").performImeAction()
-            compose.waitUntil(5000) {prefs.value.appearance.colors["bg"]=="#303438"}
-            compose.runOnIdle {
-                assertEquals(initial.appearance.interfaceFont,prefs.value.appearance.interfaceFont)
-                assertEquals(initial.appearance.displayFont,prefs.value.appearance.displayFont)
-                assertEquals(initial.appearance.vendorColors,prefs.value.appearance.vendorColors)
-                assertEquals(initial.currencyRates,prefs.value.currencyRates);assertEquals(0,actions.reads)
-            }
-            click("appearance-preset-${if(dark) "default" else "porcelain"}");save("theme")
-            click("appearance-colors-toggle");click("appearance-interface-reset");click("appearance-display-reset")
-            compose.runOnIdle {assertEquals("",prefs.value.appearance.interfaceFont);assertEquals(DesktopAppearance.defaultDisplayFont,prefs.value.appearance.displayFont)}
-            save("fonts")
-            click("appearance-interface-select")
-            compose.onNodeWithTag("appearance-interface-app").assertIsSelected().assertIsFocused()
-            save("font-menu","appearance-interface-menu")
-            compose.onNodeWithTag("appearance-interface-app").performKeyInput {pressKey(Key.S)}
-            compose.onNodeWithTag("appearance-interface-system").assertIsFocused()
-            compose.onNodeWithTag("appearance-interface-system").performKeyInput {pressKey(Key.Escape)}
-            compose.onNodeWithTag("appearance-interface-menu").assertDoesNotExist()
-            assertEquals("",prefs.value.appearance.interfaceFont)
-        } finally {
-            instrumentation.runOnMainSync {val previous=before;if(previous!=null) manager.setPrimaryClip(previous) else if(Build.VERSION.SDK_INT>=28) manager.clearPrimaryClip() else manager.setPrimaryClip(ClipData.newPlainText("",""))}
+        compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(prefs.value.theme!=ThemeChoice.LIGHT,prefs.value.language,prefs.value.appearance) {CompositionLocalProvider(LocalDesktopAnimationClock provides animationClock) {HubScreen(HubState(snapshot=snapshot),actions,preferences=prefs.value,updateDisplay={prefs.value=it.apply(prefs.value)})}}}}
+        compose.onNodeWithTag("hub-settings-toggle").performClick();openSettingsSection(compose,"appearance")
+        listOf("appearance-code-copy","appearance-code-paste","appearance-theme-code-field","appearance-code-status").forEach {compose.onNodeWithTag(it).assertDoesNotExist()}
+        click("appearance-preset-${if(dark) "default" else "porcelain"}");save("theme")
+        compose.runOnIdle {
+            assertEquals(initial.appearance.interfaceFont,prefs.value.appearance.interfaceFont)
+            assertEquals(initial.appearance.displayFont,prefs.value.appearance.displayFont)
+            assertEquals(initial.appearance.vendorColors,prefs.value.appearance.vendorColors)
+            assertEquals(initial.currencyRates,prefs.value.currencyRates);assertEquals(0,actions.reads)
         }
+        click("appearance-colors-toggle")
+        compose.onNodeWithTag("appearance-interface-custom-field").assertDoesNotExist()
+        click("appearance-interface-select")
+        compose.onNodeWithTag("appearance-interface-custom").assertDoesNotExist()
+        compose.onNodeWithTag("appearance-interface-system").performClick()
+        assertEquals(DesktopAppearance.systemFont,prefs.value.appearance.interfaceFont)
+        assertEquals(initial.appearance.displayFont,prefs.value.appearance.displayFont)
+        click("appearance-interface-reset");click("appearance-display-reset")
+        compose.runOnIdle {assertEquals("",prefs.value.appearance.interfaceFont);assertEquals(DesktopAppearance.defaultDisplayFont,prefs.value.appearance.displayFont)}
+        save("fonts")
+        click("appearance-interface-select")
+        compose.onNodeWithTag("appearance-interface-mono").assertIsSelected().assertIsFocused()
+        save("font-menu","appearance-interface-menu")
+        compose.onNodeWithTag("appearance-interface-mono").performKeyInput {pressKey(Key.S)}
+        compose.onNodeWithTag("appearance-interface-system").assertIsFocused()
+        compose.onNodeWithTag("appearance-interface-system").performKeyInput {pressKey(Key.Escape)}
+        compose.onNodeWithTag("appearance-interface-menu").assertDoesNotExist()
+        assertEquals("",prefs.value.appearance.interfaceFont)
     }
     @Test fun colorDialogCancelRgbAndManualRateFallbackOperateActualControlsWithoutReads() {
         val prefs=mutableStateOf(DisplayPreferences(theme=if(dark) ThemeChoice.DARK else ThemeChoice.LIGHT,language=LanguageChoice.ENGLISH))

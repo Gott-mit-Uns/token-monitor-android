@@ -53,9 +53,9 @@ class ThemeSemanticScreenTest {
         }}
         compose.onNodeWithTag("hub-total-tokens").assertTextEquals("123,456,789")
     }
-    private fun layout(tag:String):TextLayoutResult {
+    private fun layout(tag:String,unmerged:Boolean=false):TextLayoutResult {
         val values=mutableListOf<TextLayoutResult>()
-        compose.onNodeWithTag(tag).performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(values)}
+        compose.onNodeWithTag(tag,useUnmergedTree=unmerged).performSemanticsAction(SemanticsActions.GetTextLayoutResult) {it(values)}
         return values.single()
     }
     private fun assertHeadline(color:Color) {
@@ -87,10 +87,11 @@ class ThemeSemanticScreenTest {
         if(expectPersistedOpen) assertTrue("advanced customization must stay expanded as the desktop does",expanded)
         if(!expanded) click("appearance-colors-toggle")
     }
-    private fun applyDefaultCode() {
-        compose.onNodeWithTag("hub-content").performScrollToNode(hasTestTag("appearance-theme-code-field"))
-        compose.onNodeWithTag("appearance-theme-code-field").performTextReplacement("TM1-B7EAD4-303438-EEF5FB-A3ADBB")
-        compose.onNodeWithTag("appearance-theme-code-field").performImeAction()
+    private fun applyExplicitDefaultText() {
+        openColorRows()
+        click("appearance-color-text-open")
+        compose.onNodeWithTag("appearance-color-text").performTextReplacement("#eef5fb")
+        compose.onNodeWithTag("appearance-color-text").performImeAction()
     }
 
     @Test fun actualHeadlineDistinguishesGraphiteAndImportedDefaultAndActivityCountHasIndependentInk() {
@@ -106,7 +107,7 @@ class ThemeSemanticScreenTest {
             openAppearance();click("appearance-preset-$preset");closeSettings();assertHeadline(color)
         }
         assertTrue(prefs.value.appearance.colors.isEmpty())
-        openAppearance();applyDefaultCode();closeSettings()
+        openAppearance();applyExplicitDefaultText();closeSettings()
         assertTrue(prefs.value.appearance.colors.containsKey("text"))
         assertHeadline(Color(0xFFEEF5FB))
         openAppearance();click("appearance-reset-colors");closeSettings();assertHeadline(Color(0xFFF3FBF7))
@@ -141,7 +142,7 @@ class ThemeSemanticScreenTest {
             // can be clipped by imePadding or obscured by a different Window.
             // Also inspect the real page field's rendered text style to prove that
             // preview reached the page theme, rather than only the modal's draft.
-            assertEquals(Color(0xFFABCDEF),layout("appearance-theme-code-field").layoutInput.style.color)
+            assertEquals(Color(0xFFABCDEF),layout("appearance-interface-value",unmerged=true).layoutInput.style.color)
             val previewNode=compose.onNodeWithTag("appearance-color-text-preview").performScrollTo().assertIsDisplayed()
             val swatch=previewNode.captureToImage().toPixelMap()
             assertEquals(Color(0xFFABCDEF).toArgb(),swatch[swatch.width/2,swatch.height/2].toArgb())
@@ -157,7 +158,7 @@ class ThemeSemanticScreenTest {
             closeSettings();assertHeadline(Color(0xFFABCDEF))
             assertEquals("#abcdef",store.load().appearance.colors["text"])
             openAppearance();openColorRows(expectPersistedOpen=true);click("appearance-color-text-reset");closeSettings();assertHeadline(Color(0xFFF3FBF7))
-            openAppearance();applyDefaultCode();closeSettings();assertHeadline(Color(0xFFEEF5FB))
+            openAppearance();applyExplicitDefaultText();closeSettings();assertHeadline(Color(0xFFEEF5FB))
 
             val imported=store.load()
             assertTrue(imported.appearance.colors.containsKey("text"))

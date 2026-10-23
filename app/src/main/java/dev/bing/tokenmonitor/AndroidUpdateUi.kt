@@ -35,7 +35,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
-@Composable internal fun AndroidUpdateSettings(currentVersion: String, source: AndroidReleaseSource? = null,onLicenses:(()->Unit)?=null, desktopSource:DesktopReleaseSource?=null) {
+@Composable internal fun AndroidUpdateSettings(currentVersion: String, source: AndroidReleaseSource? = null,onLicenses:(()->Unit)?=null) {
     val scope = rememberCoroutineScope()
     val releaseSource = remember(source) {source ?: GitHubAndroidReleaseSource()}
     val sharedController = LocalAndroidUpdateController.current.takeIf { source == null }
@@ -49,55 +49,22 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
         lifecycle.addObserver(observer)
         onDispose {lifecycle.removeObserver(observer); controller.setForeground(false)}
     }
-    val desktopReleaseSource=remember(desktopSource) {desktopSource ?: GitHubDesktopReleaseSource()}
-    val sharedDesktopController=LocalDesktopReleaseController.current.takeIf { desktopSource == null }
-    val desktopController=sharedDesktopController ?: remember(desktopReleaseSource,scope) {DesktopReleaseController(desktopReleaseSource,scope)}
-    val desktopState by desktopController.state.collectAsState()
-    DisposableEffect(desktopController,lifecycle,sharedDesktopController) {
-        if(sharedDesktopController!=null) return@DisposableEffect onDispose {}
-        fun update() {
-            val active=lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
-            desktopController.setForeground(active)
-        }
-        update()
-        val observer=LifecycleEventObserver {_,_->update()}
-        lifecycle.addObserver(observer)
-        onDispose {lifecycle.removeObserver(observer);desktopController.setForeground(false)}
-    }
     val uri = LocalUriHandler.current
     var browserFailed by remember {mutableStateOf(false)}
     AndroidUpdateContent(currentVersion, state, controller::check, {url ->
         browserFailed = runCatching {uri.openUri(url)}.isFailure
-    },onLicenses,desktopState,desktopController::check)
+    },onLicenses)
     if (browserFailed) Text(LocalResources.current.getString(R.string.android_update_browser_failed), style = quotaTextStyle(11), color = MaterialTheme.colorScheme.error)
 }
 
-@Composable internal fun AndroidUpdateContent(currentVersion: String, state: AndroidUpdateState, check: () -> Unit, open: (String) -> Unit,onLicenses:(()->Unit)?=null,desktopState:DesktopReleaseState=DesktopReleaseState.Idle,checkDesktop:()->Unit={}) {
+@Composable internal fun AndroidUpdateContent(currentVersion: String, state: AndroidUpdateState, check: () -> Unit, open: (String) -> Unit,onLicenses:(()->Unit)?=null) {
     val strings = LocalResources.current
     Column(Modifier.fillMaxWidth().testTag("about-android-updates"), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         val actions=listOf(
             AboutAction("android-update-check",strings.getString(R.string.android_update_check),R.drawable.desktop_refresh,state!=AndroidUpdateState.Checking,check),
-            AboutAction("about-desktop-latest",if(desktopState is DesktopReleaseState.Ready) strings.getString(R.string.desktop_latest_version,desktopState.release.version) else strings.getString(R.string.desktop_latest),R.drawable.desktop_arrow_right,desktopState!=DesktopReleaseState.Checking) {
-                checkDesktop()
-            },
             AboutAction("android-update-current-notes",strings.getString(R.string.android_update_current_notes),R.drawable.desktop_view_session,true) {open(AndroidReleases.currentNotes(currentVersion))}
         ) + listOfNotNull(onLicenses?.let {AboutAction("about-open-licenses",strings.getString(R.string.open_licenses),R.drawable.desktop_project_row,true,it)})
         AboutActionGroup(actions)
-        if(desktopState is DesktopReleaseState.Ready) DesktopTextButton({open(desktopState.release.notesUrl)},Modifier.testTag("desktop-release-notes")) {
-            Text(strings.getString(R.string.desktop_latest_notes),style=quotaTextStyle(10))
-        }
-        val desktopMessage=when(desktopState) {
-            DesktopReleaseState.Idle->strings.getString(R.string.desktop_latest_idle)
-            DesktopReleaseState.Checking->strings.getString(R.string.desktop_latest_checking)
-            is DesktopReleaseState.Ready->strings.getString(R.string.desktop_latest_ready,desktopState.release.version)
-            is DesktopReleaseState.Failed->strings.getString(when(desktopState.reason) {
-                AndroidUpdateFailure.RATE_LIMIT->R.string.desktop_latest_rate
-                AndroidUpdateFailure.ACCESS->R.string.desktop_latest_access
-                AndroidUpdateFailure.INVALID_RELEASE->R.string.desktop_latest_invalid
-                else->R.string.desktop_latest_network
-            })
-        }
-        Text(desktopMessage,Modifier.fillMaxWidth().testTag("desktop-release-status").semantics {liveRegion=LiveRegionMode.Polite},style=quotaTextStyle(10),color=if(desktopState is DesktopReleaseState.Failed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant)
         Text(strings.getString(R.string.android_update_manual_note), style = quotaTextStyle(10), color = MaterialTheme.colorScheme.onSurfaceVariant)
         val message = when (state) {
             AndroidUpdateState.Idle -> null
@@ -122,7 +89,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 
 private data class AboutAction(val tag:String,val label:String,val icon:Int,val enabled:Boolean,val click:()->Unit)
 
-/** Four fixed peer actions stay in one row on a phone; large text gets two natural-height columns. */
+/** Android update, notes and license actions stay in one row on a phone; large text gets two natural-height columns. */
 @Composable private fun AboutActionGroup(actions:List<AboutAction>) {
     val density=LocalDensity.current
     val scale=density.fontScale*LocalDesktopTextScale.current
