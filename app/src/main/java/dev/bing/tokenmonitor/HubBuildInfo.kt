@@ -48,7 +48,7 @@ data class HubBuildInfo(val runtime:String, val schemaVersion:Long?=null,
     }
 }
 
-/** Exact build registry from desktop v0.77.0 (c83ee3a), under its MIT license. */
+/** Exact build registry from desktop v0.78.0 (d52e0b9; unchanged from v0.77.0), under its MIT license. */
 internal object HubBuildRegistry {
     val entries=mapOf(
         "core" to mapOf(

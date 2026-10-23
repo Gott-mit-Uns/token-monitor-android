@@ -1,5 +1,16 @@
 # 当前验收记录
 
+## 2026-10-24 Android0.78.0-01/code86 候选验收
+
+固定桌面v0.78.0/d52e0b9；仅版本/参考元数据改动，ZCode适用行为由现有通用实现消费。新增固定源码捕获脚本，校验三个源码SHA并使用真实合成SQLite解析标题/父关系，生成complete、missing-parent、legacy三个HTTP/SSE full/freshness与桌面归组对照。JVM精确比较Token/金额/成员、fork/side chat独立和未知父降级，设备测试覆盖加密冷恢复及会话详情。
+
+本轮JDK17/SDK37/既有Wrapper离线正式签名构建与测试APK成功；539项JVM、103类全部通过，Lint0错误/117警告/2提示。API36 ARM64独立只读模拟器emulator-5698：正式code85到86 install-r升级，公开合成加密历史及偏好读取1项通过；ZCode新功能1项、既有Session069两项和Android更新四项共7项通过。320dp（880px/density440）、系统fontScale2.0、深浅双主题共2项通过，并实际查看截图；仅覆盖会话详情滚动到指定行，不声称整页重新设计验收。UID10213及五份加密/偏好文件SHA逐项保持。正式签名证书沿用e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202。实体手机、真实ZCode账户和生产Hub端到端未测试，免真机规则保持；本轮没有手机私有数据操作。
+
+最终APK 15318030字节，SHA256 `df9a086037e137d63336e164166a5a4e6876287ccc9dbaaff57c6c27756b4897`；测试APK SHA256 `d64a4d33dfdbd407c0e8af07e49182293f0f5345f7d6c6964cfa4224b81ad233`。
+
+首次失败保留/tmp/android078-first-build.log（写入新测试时并行Lint内部分析异常）、final-build.log（桌面0.1+0.2+0.3浮点尾差与Android精确十进制差异）、verified-build.log（重叠构建的测试结果临时文件冲突）；随后停止所有同目录构建，以稳定输入串行完成stable-build.log。合成金额改为二进制可精确表示的1/8递增，仍精确比较，不改生产费用、不加容差。NAS类历史费用告警不因此关闭。
+
+
 ## 正式发布验收：Android 0.77.0-02 / code85
 
 2026-10-23（Asia/Shanghai）。用户明确授权合并PR #28并发布，背景按钮旧问题不处理。PR最终81d3cbe自动审查completed、has_any_findings=false、has_unresolved_findings=false，文档CI成功；合并提交 `883fd4b96defc10d7bf134bcc365901acb2a0c4d`。没有独立security_review，不将空状态称为通过。
