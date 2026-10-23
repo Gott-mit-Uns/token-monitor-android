@@ -42,7 +42,6 @@ sealed interface DisplayChange {
     data class Theme(val choice: ThemeChoice) : DisplayChange
     data class ThemePreset(val id: String) : DisplayChange
     data class ThemeColor(val key: String, val value: String?) : DisplayChange
-    data class ThemeCode(val value: String) : DisplayChange
     data class VendorColor(val id: String, val value: String?) : DisplayChange
     data object ResetVendorColors : DisplayChange
     data class ToolIcons(val visible: Boolean) : DisplayChange
@@ -103,7 +102,6 @@ sealed interface DisplayChange {
         is ThemePreset -> DesktopAppearance.presetOverrides(id)?.let { colors -> current.copy(theme = if(DesktopAppearance.light(DesktopAppearance.presets.getValue(id).getValue("bg"))) ThemeChoice.LIGHT else ThemeChoice.DARK, appearance = current.appearance.copy(colors=colors)) } ?: current
         is ThemeColor -> if(key !in DesktopAppearance.colorKeys || (value!=null && DesktopAppearance.hex(value)==null)) current
             else current.copy(appearance=current.appearance.copy(colors=if(value==null) current.appearance.colors-key else current.appearance.colors+(key to DesktopAppearance.hex(value)!!)))
-        is ThemeCode -> DesktopAppearance.decode(value).colors?.let { colors -> current.copy(theme=if(DesktopAppearance.light(colors.getValue("bg"))) ThemeChoice.LIGHT else ThemeChoice.DARK,appearance=current.appearance.copy(colors=colors)) } ?: current
         is VendorColor -> if(id !in desktopVendorColors || (value!=null && DesktopAppearance.hex(value)==null)) current
             else current.copy(appearance=current.appearance.copy(vendorColors=if(value==null) current.appearance.vendorColors-id else current.appearance.vendorColors+(id to DesktopAppearance.hex(value)!!)))
         ResetVendorColors -> current.copy(appearance=current.appearance.copy(vendorColors=emptyMap()))

@@ -350,9 +350,7 @@
     <string name="appearance_font_app">应用默认</string>
     <string name="appearance_font_system">系统字体</string>
     <string name="appearance_font_mono">等宽字体</string>
-    <string name="appearance_font_note">自定义字体使用当前 Android 设备已有字体，不可用时回退到系统字体。不会下载字体。</string>
-    <string name="appearance_font_family">自定义字体名称</string>
-    <string name="appearance_font_sample">Aa 中文 0123</string>
+    <string name="appearance_font_note">选择内置、系统或等宽字体。旧版保存的自定义字体继续使用可用字体及回退规则；不会下载字体。</string>
     <string name="appearance_apply">应用</string>
     <string name="appearance_reset">重置</string>
     <string name="appearance_colors">高级自定义</string>
@@ -362,13 +360,6 @@
     <string name="appearance_color_bg">背景</string>
     <string name="appearance_color_text">文字</string>
     <string name="appearance_color_muted">次要文字</string>
-    <string name="appearance_theme_code">主题代码</string>
-    <string name="appearance_copy_code">复制主题代码</string>
-    <string name="appearance_import_code">粘贴主题代码</string>
-    <string name="appearance_code_version">暂不支持这个主题代码版本。</string>
-    <string name="appearance_code_invalid">主题代码格式无效。</string>
-    <string name="appearance_import">导入</string>
-    <string name="appearance_code_note">仅分享界面配色。厂商色和外观偏好会保留在本机。</string>
     <string name="shared_details">详情</string>
     <string name="shared_rate_units">USD / 百万 Token</string>
     <string name="shared_topup_month">本月充值：%1$s</string>
@@ -547,10 +538,6 @@
     <string name="appearance_theme_title">界面主题</string>
     <string name="appearance_color_hex">十六进制颜色</string>
     <string name="appearance_cancel">取消</string>
-    <string name="appearance_code_applied">已应用主题。</string>
-    <string name="appearance_code_copied">已复制主题代码。</string>
-    <string name="appearance_code_clipboard_failed">无法访问剪贴板。</string>
-    <string name="appearance_code_paste_apply">粘贴并应用</string>
     <string name="usage_currency_usd">USD - 美元</string>
     <string name="usage_currency_twd">TWD - 新台币</string>
     <string name="usage_currency_hkd">HKD - 港元</string>
@@ -688,4 +675,5 @@
     <string name="home_configure_module">配置%1$s</string>
     <string name="home_item_count">显示条数</string>
     <string name="home_session_count_note">运行中和等待中的会话会在此数量之外继续显示。</string>
+    <string name="appearance_font_saved">已保存的自定义字体</string>
 </resources>

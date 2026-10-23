@@ -27,27 +27,6 @@ class CurrentReleaseAcceptanceScreenTest {
         assertEquals("${AndroidReleases.repository}/releases/tag/v$expected",release.notesUrl)
         assertEquals("${AndroidReleases.repository}/releases/download/v$expected/token-monitor-android-$expected.apk",release.apkUrl)
     }
-    @Test fun upstreamDesktopReleaseIsFetchedByTheRealAnonymousAndroidClient() {
-        val expected=InstrumentationRegistry.getArguments().getString("expectedDesktopVersion") ?: "0.72.0"
-        val source=GitHubDesktopReleaseSource()
-        val release=try {kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {source.latest()}}
-        catch(failure:AndroidUpdateException) {
-            // Public-endpoint diagnostics only. Reuse this exact anonymous client without changing its configuration.
-            val diagnostic=runCatching {kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
-                val field=source.javaClass.getDeclaredField("client").apply {isAccessible=true}
-                val client=field.get(source) as okhttp3.OkHttpClient
-                client.newCall(okhttp3.Request.Builder().url(DesktopReleases.apiUrl).header("Accept","application/vnd.github+json").header("X-GitHub-Api-Version","2022-11-28").build()).execute().use {
-                    val body=it.body.source();body.request(2048)
-                    val text=body.readUtf8(minOf(body.buffer.size,2048L))
-                    val message=runCatching {org.json.JSONObject(text).optString("message")}.getOrDefault("non-JSON error").replace(Regex("[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+"),"[address]").take(256)
-                    "HTTP ${it.code}; remaining=${it.header("X-RateLimit-Remaining")}; reset=${it.header("X-RateLimit-Reset")}; retryAfter=${it.header("Retry-After")}; message=$message"
-                }
-            }}.getOrElse {it.javaClass.simpleName}
-            throw AssertionError("Real anonymous desktop query failed: ${failure.reason}; $diagnostic",failure)
-        }
-        assertEquals(expected,release.version)
-        assertEquals("${DesktopReleases.repository}/releases/tag/v$expected",release.notesUrl)
-    }
     @Test fun finalInstalledReleaseHasExactNotesAndNoUpdateLoop() {
         val args=InstrumentationRegistry.getArguments()
         val context=InstrumentationRegistry.getInstrumentation().targetContext
@@ -68,14 +47,14 @@ class CurrentReleaseAcceptanceScreenTest {
         compose.activity.runOnUiThread {compose.activity.setContent {TokenTheme(false,LanguageChoice.ENGLISH) {
             CompositionLocalProvider(LocalDesktopAnimationClock provides clock,LocalUriHandler provides object:UriHandler {override fun openUri(uri:String) {urls+=uri}}) {
                 Column(Modifier.verticalScroll(rememberScrollState())) {
-                    AndroidUpdateSettings(expected,source,desktopSource=DesktopReleaseSource {DesktopRelease("0.72.0","${DesktopReleases.repository}/releases/tag/v0.72.0")})
+                    AndroidUpdateSettings(expected,source)
                 }
             }
         }}}
         assertEquals(0,checks)
         compose.onNodeWithTag("android-update-current-notes").performClick()
-        compose.onNodeWithTag("about-desktop-latest").performClick()
-        assertEquals(listOf(AndroidReleases.currentNotes(expected),"${DesktopReleases.repository}/releases/tag/v0.72.0"),urls)
+        compose.onNodeWithTag("about-desktop-latest").assertDoesNotExist()
+        assertEquals(listOf(AndroidReleases.currentNotes(expected)),urls)
         compose.onNodeWithTag("android-update-check").performClick()
         compose.onNodeWithTag("android-update-status").performScrollTo().assertTextEquals("The Android client is up to date.")
         compose.onNodeWithTag("android-update-apk").assertDoesNotExist()

@@ -58,8 +58,10 @@ class CompactSettingsFormsScreenTest {
         if(fontScale==1f) {assertTrue(first.top<firstLabel.bottom && first.bottom>firstLabel.top);assertTrue(second.top<secondLabel.bottom && second.bottom>secondLabel.top)}
         listOf("interface","display").forEach {role->
             fullText("appearance-$role-value")
-            val reset=compose.onNodeWithTag("appearance-$role-reset").getUnclippedBoundsInRoot()
-            assertTrue(reset.width>=48.dp && reset.height>=48.dp)
+            // Compare measured pixels: subtracting fractional dp edges can turn 48dp into 47.999996dp.
+            val reset=compose.onNodeWithTag("appearance-$role-reset").fetchSemanticsNode().size
+            val minimum=with(compose.density) {48.dp.roundToPx()}
+            assertTrue("Reset target $role must be at least ${minimum}px: $reset",reset.width>=minimum && reset.height>=minimum)
         }
         compose.onNodeWithTag("appearance-interface-reset").assertContentDescriptionEquals("重置界面字体")
         compose.onNodeWithTag("appearance-display-reset").assertContentDescriptionEquals("重置总量数字字体")
@@ -73,8 +75,8 @@ class CompactSettingsFormsScreenTest {
         compose.onNodeWithTag("appearance-interface-reset").performClick();assertEquals("",preferences.value.appearance.interfaceFont)
         save("fonts")
     }
-    @Test fun customFontDraftSurvivesSavedStateWithoutPrematurelyChangingPreferences() {
-        val preferences=mutableStateOf(DisplayPreferences(language=LanguageChoice.CHINESE))
+    @Test fun savedCustomFontSurvivesRestorationWithoutAnEditableChoice() {
+        val preferences=mutableStateOf(DisplayPreferences(language=LanguageChoice.CHINESE,appearance=AppearancePreferences(interfaceFont="Public font family",displayFont="serif")))
         compose.activityRule.scenario.onActivity {activity->
             val content=activity.findViewById<android.view.ViewGroup>(android.R.id.content)
             repeat(content.childCount) {index->(content.getChildAt(index) as? androidx.compose.ui.platform.ComposeView)?.disposeComposition()}
@@ -82,14 +84,21 @@ class CompactSettingsFormsScreenTest {
         }
         val tester=StateRestorationTester(compose)
         tester.setContent {Surface {FontSettingsControls(preferences.value) {preferences.value=it.apply(preferences.value)}}}
-        compose.onNodeWithTag("appearance-interface-select").performClick();compose.onNodeWithTag("appearance-interface-custom").performClick()
-        compose.onNodeWithTag("appearance-interface-custom-field").performScrollTo().performTextReplacement("Public font family")
-        assertEquals("",preferences.value.appearance.interfaceFont)
+        compose.onNodeWithTag("appearance-interface-value",useUnmergedTree=true).assertTextEquals("已保存的自定义字体")
+        fullText("appearance-interface-value")
+        compose.onNodeWithTag("appearance-interface-select").performClick()
+        compose.onNodeWithTag("appearance-interface-custom").assertDoesNotExist()
+        compose.onNodeWithTag("appearance-interface-system").performKeyInput {pressKey(androidx.compose.ui.input.key.Key.Escape)}
         tester.emulateSavedInstanceStateRestore()
-        compose.onNodeWithTag("appearance-interface-custom-field").assertTextEquals("Public font family")
-        compose.onNodeWithTag("appearance-interface-apply").performScrollTo().performClick()
+        compose.onNodeWithTag("appearance-interface-custom-field").assertDoesNotExist()
+        compose.onNodeWithTag("appearance-display-custom-field").assertDoesNotExist()
         assertEquals("Public font family",preferences.value.appearance.interfaceFont)
-        save("font-draft")
+        assertEquals("serif",preferences.value.appearance.displayFont)
+        save("saved-font")
+        compose.onNodeWithTag("appearance-interface-select").performClick()
+        compose.onNodeWithTag("appearance-interface-system").performClick()
+        assertEquals(DesktopAppearance.systemFont,preferences.value.appearance.interfaceFont)
+        assertEquals("serif",preferences.value.appearance.displayFont)
     }
     @Test fun pricingExpandsInPlacePagesSearchesAndTracksAuthoritativeUpdates() {
         val original=HubPricing(true,7,"2026-10-16T00:00:00Z",(0..40).map {ModelPrice("public-${it.toString().padStart(2,'0')}",mapOf("inputPerM" to BigDecimal("2.5"),"outputPerM" to BigDecimal.ZERO))})

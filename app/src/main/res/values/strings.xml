@@ -352,9 +352,7 @@
     <string name="appearance_font_app">App default</string>
     <string name="appearance_font_system">System UI</string>
     <string name="appearance_font_mono">Monospace</string>
-    <string name="appearance_font_note">Custom font families use fonts available on this Android device. Unavailable fonts fall back to the system font. No fonts are downloaded.</string>
-    <string name="appearance_font_family">Custom font family</string>
-    <string name="appearance_font_sample">Aa 中文 0123</string>
+    <string name="appearance_font_note">Choose bundled, system or monospace fonts. Previously saved custom fonts keep their available-font fallback behavior. No fonts are downloaded.</string>
     <string name="appearance_apply">Apply</string>
     <string name="appearance_reset">Reset</string>
     <string name="appearance_colors">Advanced customization</string>
@@ -364,13 +362,6 @@
     <string name="appearance_color_bg">Background</string>
     <string name="appearance_color_text">Text</string>
     <string name="appearance_color_muted">Muted text</string>
-    <string name="appearance_theme_code">Theme Code</string>
-    <string name="appearance_copy_code">Copy theme code</string>
-    <string name="appearance_import_code">Paste theme code</string>
-    <string name="appearance_code_version">This theme code version is not supported yet.</string>
-    <string name="appearance_code_invalid">Invalid theme code.</string>
-    <string name="appearance_import">Import</string>
-    <string name="appearance_code_note">Shares interface colours only. Vendor colours and appearance preferences stay local.</string>
     <string name="shared_details">Details</string>
     <string name="shared_rate_units">USD per million tokens</string>
     <string name="shared_topup_month">This month: %1$s</string>
@@ -551,10 +542,6 @@
     <string name="appearance_theme_title">Interface theme</string>
     <string name="appearance_color_hex">Hex colour</string>
     <string name="appearance_cancel">Cancel</string>
-    <string name="appearance_code_applied">Theme applied.</string>
-    <string name="appearance_code_copied">Theme code copied.</string>
-    <string name="appearance_code_clipboard_failed">Couldn\'t access the clipboard.</string>
-    <string name="appearance_code_paste_apply">Paste &amp; apply</string>
     <string name="usage_currency_usd">USD - US Dollar</string>
     <string name="usage_currency_twd">TWD - New Taiwan Dollar</string>
     <string name="usage_currency_hkd">HKD - Hong Kong Dollar</string>
@@ -692,4 +679,5 @@
     <string name="home_configure_module">Configure %1$s</string>
     <string name="home_item_count">Visible items</string>
     <string name="home_session_count_note">Running and waiting sessions remain visible beyond this count.</string>
+    <string name="appearance_font_saved">Saved custom font</string>
 </resources>

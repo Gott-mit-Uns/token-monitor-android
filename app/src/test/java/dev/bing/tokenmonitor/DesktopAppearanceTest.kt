@@ -7,13 +7,13 @@ import org.junit.Test
 class DesktopAppearanceTest {
     private fun fixture()=javaClass.classLoader!!.getResourceAsStream("appearance-parity.json")!!.bufferedReader().use { Json.parseToJsonElement(it.readText()).jsonObject }
     private fun JsonElement.map()=jsonObject.mapValues { it.value.jsonPrimitive.content }
-    @Test fun presetsColoursCodesAndBrightnessMatchFixedDesktop() {
+    @Test fun presetsColoursAndBrightnessMatchFixedDesktop() {
         val fixture=fixture()
         fixture.getValue("presets").jsonArray.forEach { raw -> val item=raw.jsonObject;assertEquals(item.getValue("colors").map(),DesktopAppearance.presets.getValue(item.getValue("id").jsonPrimitive.content)) }
         fixture.getValue("colors").jsonArray.forEach { raw ->
             val item=raw.jsonObject;val input=item.getValue("input").map();val palette=DesktopAppearance.palette(input)
             assertEquals(item.getValue("clean").map(),DesktopAppearance.cleanColors(input));assertEquals(item.getValue("palette").map(),palette)
-            assertEquals(item.getValue("code").jsonPrimitive.content,DesktopAppearance.encode(input));assertEquals(item.getValue("light").jsonPrimitive.boolean,DesktopAppearance.light(palette.getValue("bg")))
+            assertEquals(item.getValue("light").jsonPrimitive.boolean,DesktopAppearance.light(palette.getValue("bg")))
             item.getValue("heat").jsonArray.forEachIndexed { index, entry ->
                 val expected=entry.jsonObject.getValue("value").jsonPrimitive.contentOrNull
                 if(expected!=null) assertEquals(expected,DesktopAppearance.heatColors(palette.getValue("chart"))[index].drop(1).chunked(2).joinToString(", ") { it.toInt(16).toString() })
@@ -27,16 +27,9 @@ class DesktopAppearanceTest {
         assertEquals("#6ab4f0",DesktopAppearance.chartBarColor("invalid"))
         assertEquals("#2060a0",DesktopAppearance.chartBarColor("#2060a0"))
     }
-    @Test fun themeCodeVersionsAndInvalidCodesMatchWithoutChangingExistingChoices() {
-        fixture().getValue("codes").jsonArray.forEach { raw ->
-            val item=raw.jsonObject;val expected=item.getValue("expected").jsonObject;val actual=DesktopAppearance.decode(item.getValue("input").jsonPrimitive.content)
-            if(expected.getValue("ok").jsonPrimitive.boolean) {
-                assertEquals(expected.getValue("colors").map(),actual.colors)
-                assertEquals(expected.getValue("code").jsonPrimitive.content,DesktopAppearance.encode(actual.colors!!))
-            } else assertEquals(expected.getValue("reason").jsonPrimitive.content,actual.reason)
-        }
+    @Test fun invalidColoursAndFontsDoNotChangeExistingChoices() {
         val good=DisplayPreferences(appearance=AppearancePreferences(colors=mapOf("chart" to "#123456")))
-        assertEquals(good,DisplayChange.ThemeCode("TM3-AAAAAA").apply(good));assertEquals(good,DisplayChange.ThemeColor("bg","broken").apply(good))
+        assertEquals(good,DisplayChange.ThemeColor("bg","broken").apply(good))
         assertEquals(good,DisplayChange.ThemeColor("illegal","#000000").apply(good));assertEquals(good,DisplayChange.Font(false,"{bad}").apply(good))
         assertEquals(good,DisplayChange.TextSize("invalid").apply(good))
     }
@@ -60,7 +53,7 @@ class DesktopAppearanceTest {
         assertEquals(original.appearance.copy(colors=paper.appearance.colors),paper.appearance)
         val cleared=DisplayChange.Theme(ThemeChoice.SYSTEM).apply(paper)
         assertEquals(original.copy(theme=ThemeChoice.SYSTEM),cleared)
-        val imported=DisplayChange.ThemeCode("TM1-2563EB-F6F7F9-1C1F26-5B626D").apply(original)
+        val imported=original.copy(appearance=original.appearance.copy(colors=mapOf("accent" to "#2563eb","bg" to "#f6f7f9","text" to "#1c1f26","muted" to "#5b626d")))
         assertEquals("#73bdf5",DesktopAppearance.palette(imported.appearance.colors).getValue("chart"))
         assertEquals("CNY",imported.currency);assertEquals(setOf("claude"),imported.hiddenTools)
     }

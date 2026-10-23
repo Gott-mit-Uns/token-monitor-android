@@ -1,5 +1,23 @@
 # 当前验收记录
 
+## 当前PR验收：Android 0.77.0-02 / code85，未合并未发布
+
+2026-10-23（Asia/Shanghai），基线main `3aca67c8a8ac077323c4b2af8ff5804458732895`、已发布0.77.0-01/code84；仅删除桌面最新版查询、自定义字体名称输入、主题码操作。持续排除边界见UPSTREAM_SYNC，授权与保留项见HANDOFF。
+
+| 实跑范围 | 结果与边界 |
+|---|---|
+| 构建和逻辑 | JDK17/SDK37、既有Wrapper离线隔离Debug构建成功。首轮完整537项JVM全部通过；删除专属桌面查询测试后较原541项少4项，保留功能测试改用配色模型而非已删除的主题码。最终资源清理后28项定向JVM通过，未重复完整套件。 |
+| 静态与文档 | 最终产品包Lint 0错误、117警告、2提示；668对英中资源、文档门禁、自测及diff检查通过。未抑制规则。 |
+| 界面与兼容 | 独立只读API36 ARM64模拟器，初轮22项中21通过；字体文字测试改用unmerged节点后复跑通过，未改产品或放宽断言。新增跟进中小组件排除2项及候选版本说明1项通过；旧V7/当前V16偏好读取、旧自定义字体恢复、主题预设/配色与Android手动更新已覆盖。最终更新文案包的Android更新4项、字体预设/恢复2项再次通过。 |
+| 大字体 | 320dp、真实系统fontScale2、深浅双主题：旧字体恢复和更新入口通过。原字体重置尺寸测试因浮点边界相减得到47.999996dp失败；改用实际像素严格验证48dp（density440下132px），不降低阈值。最终双主题各3项，共6项全部通过；实际查看最终浅色关于页及深色字体截图，更新说明已仅提Android。 |
+| 已知限制 | 背景图片专项在按钮高度处失败：实际44dp、要求48dp。以修改前3aca67c源码和匹配APK在同一模拟器正常字号复现同一断言；相关按钮实现未修改，保留失败和原断言，不冒称背景图片全流程通过。大字体浮点断言也在未修改基线复现，随后仅修正测量方法。 |
+
+最终产品APK SHA256 `f9c93e598b83775a2a2441e67db46309668eb37082296e4128404ab98d304ab1`（19,804,344字节），测试APK `894ab66d4a4883ed6fd2ed89fee9cace2d26bc9f9a523d4afe5114107ab7cd86`。隔离测试包名`dev.bing.tokenmonitor.nativeclient.acceptance`，实际安装检查为0.77.0-02/code85、min26/target37；Debug证书SHA256 `560f4beedb200ebd4ac974702d3f5417e57929f1293f203c8d20f28b5d732107`。安装后base.apk回读SHA256与上述产品包一致。这不是正式签名发行包。614个main/test/androidTest/sharedTest和五项Gradle输入按路径排序、路径NUL原始字节NUL计算SHA256 `9c29c64dc6cb09706fa56515a076f0daa3178f01e970589719412d79cef0df55`。
+
+首次与复跑分别保留本机`/tmp/token-mobile-trim-`前缀日志：ui-first、ui-followup、matrix-false/true、baseline-background/fonts、final-matrix-false/true、final-normal、pixel-matrix-false/true；构建为build-first、final-checks、resume-build、pixel-test-build。临时材料不随Git交付。初期产品指纹6baea785…；修正unmerged定位后的测试为3f0f21ab…；最终产品配旧浮点断言测试为4c4d8f23…；初轮unmerged定位失败之前的测试APK未单独归档指纹，明确此证据缺口，不把后续指纹冒充首次。对照基线APK为75918cea…、匹配测试9fd890dd…，分别从未修改3aca67c构建。中途执行中断后重新启动单个任务模拟器、安装基线再覆盖候选；不卸载、不清数据。
+
+未执行完整androidTest、正式签名覆盖升级、实体手机、生产Hub或真实账户测试；无NAS、路由、桌面服务操作。本次未改Hub合同、费用、缓存与偏好存储格式，旧正式版本其他历史验收仅按原版本保留，不声称本候选重跑。未创建Tag/Release，未合并。
+
 ## 当前正式发行验收：Android 0.77.0-01 / code84
 
 2026-10-22（Asia/Shanghai），固定桌面v0.77.0/c83ee3a；范围及逐提交映射见HANDOFF。已完成测试、PR复审、合并及正式发布；下列按实际阶段区分，不将公开发行推断为设备已更新。

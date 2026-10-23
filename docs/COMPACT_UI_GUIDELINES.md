@@ -45,7 +45,7 @@ Gate: `CompactSettingsDropdownScreenTest` checks real popup geometry, selected s
 
 The user-approved UI pass keeps all existing geometry and touch minimums, and adds:
 
-- **Default interface face**: an unset interface font resolves to the desktop monospace face; Chinese still uses its CJK fallback and numerals keep the data font. "Token UI", "Token Data", system and custom faces remain explicit choices.
+- **Default interface face**: an unset interface font resolves to the desktop monospace face; Chinese still uses its CJK fallback and numerals keep the data font. "Token UI", "Token Data" and system faces remain explicit choices. Previously saved custom faces still render, but no custom-font input or menu option is exposed; see [upstream exclusions](UPSTREAM_SYNC.md#android-持续排除项).
 - **Dialogs**: shared `DesktopAlertDialog` uses a 12dp shape, the panel surface and a 1dp hairline; no Material tonal elevation.
 - **Filter pills**: shared `DesktopFilterChip` replaces Material `FilterChip` in records, device detail and chart modes. It keeps a 48dp touch target, a 6dp visible radius and a 12% selected overlay.
 - **Press feedback**: flat rows and segments use a short 4.5% overlay tint (`desktopPressable`) rather than a 48dp splash; Material surfaces that retain a ripple must clip it to their visible shape.

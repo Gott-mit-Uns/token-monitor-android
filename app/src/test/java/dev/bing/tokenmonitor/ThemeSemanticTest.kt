@@ -4,14 +4,14 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ThemeSemanticTest {
-    @Test fun graphiteSelectionResetAndExplicitDefaultCodeRetainDifferentNumberSemantics() {
+    @Test fun graphiteSelectionResetAndSavedExplicitDefaultRetainDifferentNumberSemantics() {
         val original=DisplayPreferences(theme=ThemeChoice.DARK,appearance=AppearancePreferences(colors=mapOf("text" to "#123456")))
         val graphite=DisplayChange.ThemePreset("default").apply(original)
         assertEquals(emptyMap<String,String>(),graphite.appearance.colors)
         assertEquals("#eef5fb",DesktopAppearance.palette(graphite.appearance.colors).getValue("text"))
         assertEquals("#f3fbf7",DesktopAppearance.numberColor(graphite.appearance.colors))
 
-        val imported=DisplayChange.ThemeCode("TM1-B7EAD4-303438-EEF5FB-A3ADBB").apply(graphite)
+        val imported=graphite.copy(appearance=graphite.appearance.copy(colors=DesktopAppearance.presets.getValue("default")-"chart"))
         assertTrue(imported.appearance.colors.containsKey("text"))
         assertEquals("#eef5fb",DesktopAppearance.numberColor(imported.appearance.colors))
         assertEquals(DesktopAppearance.palette(graphite.appearance.colors),DesktopAppearance.palette(imported.appearance.colors))
