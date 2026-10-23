@@ -18,8 +18,8 @@ android {
         applicationId = "dev.bing.tokenmonitor.nativeclient"
         minSdk = 26
         targetSdk = 37
-        versionCode = 85
-        versionName = "0.77.0-02"
+        versionCode = 86
+        versionName = "0.78.0-01"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {

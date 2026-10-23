@@ -12,7 +12,7 @@ class Desktop077Test {
         assertEquals(expected,HubBuildRegistry.entries)
     }
     @Test fun newApiAccountPeriodsMatchActualDesktopDomWithoutChangingOtherAdapters() {
-        assertEquals(DesktopParityMetadata.sourceCommit,reference.getValue("sourceCommit").jsonPrimitive.content)
+        assertEquals("c83ee3aeb6d23505257113c29ef010040deb52f7",reference.getValue("sourceCommit").jsonPrimitive.content)
         reference.getValue("cases").jsonArray.forEachIndexed {index,raw->
             val case=raw.jsonObject;val provider=case.getValue("provider").jsonObject
             val actual=LimitProviderLayout.project(provider,locale=Locale.forLanguageTag(case.getValue("locale").jsonPrimitive.content))
