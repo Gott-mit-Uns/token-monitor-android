@@ -1,6 +1,20 @@
 # 当前验收记录
 
-## 当前PR验收：Android 0.77.0-02 / code85，未合并未发布
+## 正式发布验收：Android 0.77.0-02 / code85
+
+2026-10-23（Asia/Shanghai）。用户明确授权合并PR #28并发布，背景按钮旧问题不处理。PR最终81d3cbe自动审查completed、has_any_findings=false、has_unresolved_findings=false，文档CI成功；合并提交 `883fd4b96defc10d7bf134bcc365901acb2a0c4d`。没有独立security_review，不将空状态称为通过。
+
+- 正式签名构建：既有JDK17/SDK37/Gradle9.8离线release、匹配AndroidTest及Lint成功；28项Release定向JVM通过，0失败/错误/跳过。Lint 0错误、117警告、2提示。此前537项完整Debug与PR界面矩阵按下方实际阶段继承，未冒称在Release上全套重跑。
+- 正式升级：独立只读API36 ARM64 emulator-5694，公开正式0.77.0-01/code84（699c9f…）与匹配测试f19972…准备合成资料1项通过；install-r覆盖正式code85及新测试包，升级恢复1项通过。UID与五份加密/偏好文件SHA逐项保持，旧自定义字体、主题、配色、历史及Keystore均可读取；没有卸载、清数据或改签名。首次回执提取误从instrumentation文本找println、未找到行；改从同次System.out日志提取12条公开回执，前后6行严格相同，没有重跑或替换数据。
+- 正式界面：AndroidUpdateScreenTest四项、AppearanceScreenTest两项、精确安装版本/说明入口一项，共7项通过。已安装base.apk回读与发布APK逐字节一致。前述背景按钮旧失败保留，未重跑或修复；本轮不声称完整androidTest通过。
+
+正式APK `token-monitor-android-0.77.0-02.apk` 15,318,026字节，SHA256 `354582858a485626f0f63478fe5ccbec0e5bd3291c5248607ea63e6afdc74ac0`；包名dev.bing.tokenmonitor.nativeclient、code85、min26/target37，正式证书SHA256 `e5c6fe0c7b0a4fb2834c05126b5b99fa0056dff9274a38eda682bd67f5f7e202`保持。匹配测试APK SHA256 `510b7ec7cc6c5523e360e2a29ffebd375e544de58575a47392a92974fd6adb8a`。614项源码/测试/sharedTest/Gradle指纹仍为下方9c29c64d…；build/acceptanceCommit为81d3cbe，Tag/sourceCommit为883fd4b，输入逐项相同，不声称APK内嵌VCS证明。
+
+[正式Release](https://github.com/Gott-mit-Uns/token-monitor-android/releases/tag/v0.77.0-02)非草稿、非预发布且为latest；annotated Tag对象 `73a3dcca09a8516829103c4d138715622f3eaa1a` 解引用883fd4b。三附件公开无凭据下载均逐字节匹配本地上传材料，GitHub资产digest一致，公开APK正式签名再次通过：SOURCE.json 3,052字节/SHA256 `48549759173184406b9f5fd3ac42e12518b1f3134eab2562ff22f66a672ecc5c`；SHA256SUMS.txt 180字节/SHA256 `f351489f135a3211f710f31422c8e1499af1cd96f513b48ff290061276075ae3`；清单两项重新计算一致。发布包来自已验收构建，没有为上传重建。
+
+发布后真实匿名Android查询1项失败于HTTP非2xx分支；同机匿名latest API返回403、X-RateLimit-Remaining=0，认证latest指向0.77.0-02、公开附件下载正常。保留首次失败，不修改认证/重试绕过配额，不将客户端实网更新发现写成通过。实体手机、真实账户、生产Hub及完整androidTest未验证；无生产服务操作。日志为本机`/tmp/token07702-`前缀release-build、upgrade-seed/final/receipts、release-ui、public-client；公开回读和三附件在`/tmp/token07702-publication/`，临时材料不随Git交付。
+
+## PR阶段验收：Android 0.77.0-02 / code85（发布前记录）
 
 2026-10-23（Asia/Shanghai），基线main `3aca67c8a8ac077323c4b2af8ff5804458732895`、已发布0.77.0-01/code84；仅删除桌面最新版查询、自定义字体名称输入、主题码操作。持续排除边界见UPSTREAM_SYNC，授权与保留项见HANDOFF。
 
